@@ -8,7 +8,7 @@ I've just started developing my own PNGtubing software, and I'm excited to make 
 ## Current Status
 
 At the moment, it's a simple application with a basic feature:
-- A window that changes colors (work in progress).
+- A window that lists assets to use (work in progress).
 
 ## Future Plans
 
