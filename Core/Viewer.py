@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import QApplication
 import sys
 
 class LayeredImageViewer(QWebEngineView):
-    def __init__(self, image_list, color="limegreen", parent=None):
+    def __init__(self, image_list, color="#b8cdee", parent=None):
         super(LayeredImageViewer, self).__init__(parent)
         self.image_list = image_list
         self.color = color

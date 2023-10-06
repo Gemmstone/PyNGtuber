@@ -11,6 +11,107 @@ class ImageGallery(QToolBox):
     def __init__(self):
         super().__init__()
 
+        StyleSheet = """
+
+        QWidget{
+            background: #b8cdee;
+        }
+
+        QToolBox::tab {
+            background: #009deb;
+            border-radius: 5px;
+            text-align: center;
+            color: black;
+        }
+        
+        /* 
+        QToolBox::tab:first {
+            background: #4ade00;
+            border-radius: 5px;
+            color: black;
+        }
+
+        QToolBox::tab:last {
+            background: #f95300;
+            border-radius: 5px;
+            color: black;
+        }
+        */
+
+        QToolBox::tab:selected { /* italicize selected tabs */
+            font: italic;
+            font-weight: bold;
+            background: pink;
+            text-align: center;
+            color: black;   
+        }
+        
+        @QScrollBar:vertical
+        {
+            background-color: white;
+            width: 3px;
+            margin: 0px 0px 0px 0px;
+            border: 0px transparent white;
+            border-radius: 5px;
+        }
+    
+        QScrollBar::handle:vertical
+        {
+            background-color: white;
+            min-height: 5px;
+            border-radius: 5px;
+        }
+    
+        QScrollBar::sub-line:vertical
+        {
+            margin: 0px 0px 0px 0px;
+            border-image: url(:/qss_icons/rc/up_arrow_disabled.png);
+            height: 0px;
+            width: 0px;
+            subcontrol-position: top;
+            subcontrol-origin: margin;
+        }
+    
+        QScrollBar::add-line:vertical
+        {
+            margin: 3px 0px 3px 0px;
+            border-image: url(:/qss_icons/rc/down_arrow_disabled.png);
+            height: 0px;
+            width: 0px;
+            subcontrol-position: bottom;
+            subcontrol-origin: margin;
+        }
+    
+        QScrollBar::sub-line:vertical:hover,QScrollBar::sub-line:vertical:on
+        {
+            border-image: url(:/qss_icons/rc/up_arrow.png);
+            height: 0px;
+            width: 0px;
+            subcontrol-position: top;
+            subcontrol-origin: margin;
+        }
+    
+        QScrollBar::add-line:vertical:hover, QScrollBar::add-line:vertical:on
+        {
+            border-image: url(:/qss_icons/rc/down_arrow.png);
+            height: 0px;
+            width: 0px;
+            subcontrol-position: bottom;
+            subcontrol-origin: margin;
+        }
+    
+        QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical
+        {
+            background: none;
+        }
+    
+        QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
+        {
+            background: none;
+        }@
+        """
+        self.setStyleSheet(StyleSheet)
+
         self.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
         # self.setVerticalPolicy(QSizePolicy.verticalPolicy.MinimumExpanding)
         script_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the current script
@@ -65,7 +166,7 @@ class ImageGallery(QToolBox):
 
         # Convert the cropped and resized image to a QPixmap
         pixmap = QPixmap.fromImage(
-            QImage(img_copy.tobytes("raw", "RGBA"), img_copy.size[0], img_copy.size[1], QImage.Format_RGBA8888))
+            QImage(img_copy.tobytes("raw", "RGBA"), img_copy.size[0], img_copy.size[1], QImage.Format.Format_RGBA8888))
 
         # Save the QPixmap as the thumbnail with compression
         pixmap.save(thumbnail_path, quality=quality)
@@ -81,8 +182,10 @@ class ImageGallery(QToolBox):
                 page_widget = QFrame()
                 # page_widget.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
                 page_layout = QVBoxLayout(page_widget)
+                page_layout.setContentsMargins(0, 0, 6, 0)
 
                 row_layout = QHBoxLayout()
+                row_layout.setContentsMargins(0, 0, 0, 0)
                 page_layout.addLayout(row_layout)
                 column_count = 0
 
@@ -104,14 +207,6 @@ class ImageGallery(QToolBox):
                             row_layout = QHBoxLayout()
                             page_layout.addLayout(row_layout)
                             column_count = 0
-
-                if row_layout.count():
-                    if row_layout.count() < 2:
-                        row_layout.addSpacerItem(
-                            QSpacerItem(
-                                73, 0, QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred
-                            )
-                        )
 
                 if fileCount > 0:
                     folder_name = os.path.basename(subdir)

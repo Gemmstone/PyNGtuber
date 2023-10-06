@@ -69,14 +69,14 @@ class MainWindow(QtWidgets.QMainWindow):
         return super().event(event)
 
     def showUI(self):
-        self.scrollArea.show()
+        self.frame_4.show()
         self.frame.show()
         self.frame_2.show()
         self.frame_3.show()
 
     def hideUI(self):
-        if self.UIhide.isChecked():
-            self.scrollArea.hide()
+        if self.actionHide_UI.isChecked():
+            self.frame_4.hide()
             self.frame.hide()
             self.frame_2.hide()
             self.frame_3.hide()
@@ -94,8 +94,10 @@ class MainWindow(QtWidgets.QMainWindow):
                 color = "hotpink"
             case "Yellow":
                 color = "yellow"
-            case _:
+            case "White":
                 color = "white"
+            case _:
+                color = "#b8cdee"
         self.viewer.setColor(color)
 
 
