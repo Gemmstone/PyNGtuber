@@ -196,6 +196,7 @@ class ImageGallery(QToolBox):
                         item = QPushButton()
                         item.setIcon(self.create_thumbnail(os.path.join(subdir, file)))
                         item.setIconSize(QSize(50, 50))
+                        item.setAccessibleName(str(os.path.join(subdir, file)))
                         item.setCheckable(True)
                         item.clicked.connect(self.handle_button_click)
                         row_layout.addWidget(item)
@@ -219,7 +220,7 @@ class ImageGallery(QToolBox):
             page_widget = self.widget(index)
             for button in page_widget.findChildren(QPushButton):
                 if button.isChecked():
-                    selected_images.append(button.text())
+                    selected_images.append(button.accessibleName())
 
         # Emit the selectionChanged signal with the list of selected images
         self.selectionChanged.emit(selected_images)

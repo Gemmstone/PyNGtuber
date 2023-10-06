@@ -1,6 +1,7 @@
 from PyQt6 import QtWidgets, uic, QtCore
 from Core.imageGallery import ImageGallery
 from Core.Viewer import LayeredImageViewer
+from PIL import Image
 import pyaudio
 import sys
 
@@ -13,11 +14,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.list_microphones()
 
         self.ImageGallery = ImageGallery()
+        self.ImageGallery.selectionChanged.connect(self.getFiles)
         self.scrollArea.setWidget(self.ImageGallery)
 
         image_list = [
             {
-                "route": "/home/gemmstone/PycharmProjects/PNGtubing/Assets/hairback/hairback_039.png",
+                "route": "Assets/ears/20230411_202335.gif",
                 "sizeX": 600,
                 "sizeY": 600,
                 "posX": 0,
@@ -26,7 +28,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 "animation": []
             },
             {
-                "route": "/home/gemmstone/PycharmProjects/PNGtubing/Assets/body/body_017.png",
+                "route": "Assets/body/body_017.png",
                 "sizeX": 600,
                 "sizeY": 600,
                 "posX": 0,
@@ -39,8 +41,30 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.comboBox.currentIndexChanged.connect(self.setBGColor)
 
-        self.viewer = LayeredImageViewer(image_list=image_list)
+        self.viewer = LayeredImageViewer()
         self.viewerFrame.layout().addWidget(self.viewer)
+
+    def getFiles(self, files):
+        print(files)
+
+        images_list = []
+        count = 1
+        for file in files:
+            image = Image.open(file)
+            width, height = image.size
+
+            images_list.append({
+                "route": file,
+                "sizeX": width,
+                "sizeY": height,
+                "posX": 0,
+                "posY": 0,
+                "posZ": count,
+                "animation": []
+            })
+            count += 1
+
+        self.viewer.updateImages(images_list)
 
     def list_microphones(self):
         excluded = ["sysdefault", "surround21", "lavrate", "samplerate", "speexrate", "speex", "upmix", "vdownmix"]

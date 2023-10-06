@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>954</width>
-    <height>648</height>
+    <height>688</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -119,7 +119,7 @@
                <x>0</x>
                <y>0</y>
                <width>165</width>
-               <height>602</height>
+               <height>642</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout">
@@ -411,7 +411,7 @@
                <x>0</x>
                <y>0</y>
                <width>130</width>
-               <height>602</height>
+               <height>642</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -506,7 +506,7 @@
     <bool>true</bool>
    </property>
    <property name="checked">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Hide UI</string>
