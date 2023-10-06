@@ -1,6 +1,6 @@
 import sys
 import os
-from PyQt6.QtWidgets import QApplication, QWidget, QToolBox, QVBoxLayout, QPushButton, QFrame, QHBoxLayout, QSizePolicy
+from PyQt6.QtWidgets import QApplication, QWidget, QToolBox, QVBoxLayout, QPushButton, QFrame, QHBoxLayout, QSizePolicy, QSpacerItem
 from PyQt6.QtGui import QIcon, QPixmap, QImage
 from PyQt6.QtCore import Qt, pyqtSignal, QSize
 from PIL import Image, ImageChops
@@ -100,10 +100,18 @@ class ImageGallery(QToolBox):
                         fileCount += 1
 
                         # Start a new row after 3 columns
-                        if column_count == 3:
+                        if column_count == 2:
                             row_layout = QHBoxLayout()
                             page_layout.addLayout(row_layout)
                             column_count = 0
+
+                if row_layout.count():
+                    if row_layout.count() < 2:
+                        row_layout.addSpacerItem(
+                            QSpacerItem(
+                                73, 0, QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred
+                            )
+                        )
 
                 if fileCount > 0:
                     folder_name = os.path.basename(subdir)
@@ -126,4 +134,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     gallery = ImageGallery()
     gallery.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

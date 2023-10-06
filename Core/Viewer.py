@@ -1,10 +1,12 @@
 from PyQt6.QtWebEngineWidgets import QWebEngineView
-
+from PyQt6.QtWidgets import QApplication
+import sys
 
 class LayeredImageViewer(QWebEngineView):
-    def __init__(self, image_list, parent=None):
+    def __init__(self, image_list, color="limegreen", parent=None):
         super(LayeredImageViewer, self).__init__(parent)
         self.image_list = image_list
+        self.color = color
         self.initUI()
 
     def initUI(self):
@@ -17,6 +19,10 @@ class LayeredImageViewer(QWebEngineView):
         # self.setUrl("www.google.com")
         # self.load(QUrl.fromUserInput("https://www.google.com"))
 
+    def setColor(self, color):
+        self.color = color
+        self.setHtml(self.generate_html())
+
     def generate_html(self):
         # Generate the HTML content dynamically based on your image_list, JS, and CSS
         html = """
@@ -26,7 +32,7 @@ class LayeredImageViewer(QWebEngineView):
                 body {
                     margin: 0;
                     overflow: hidden;
-                    background-color: limegreen; /* Set your background color here */
+                    background-color: """ + self.color + """; /* Set your background color here */
                 }
                 /* Define CSS animations here */
                 @keyframes fadeIn {
@@ -71,3 +77,9 @@ class LayeredImageViewer(QWebEngineView):
         """
         return html
 
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    gallery = LayeredImageViewer()
+    gallery.show()
+    sys.exit(app.exec())
