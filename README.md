@@ -10,6 +10,10 @@ I've just started developing my own PNGtubing software, and I'm excited to make 
 At the moment, it's a simple application with a basic feature:
 - A window that lists assets to use (work in progress).
 
+https://github.com/Gemmstone/PyNGtuber/assets/31828821/58535416-e645-4584-ae5f-7439610c0635
+
+
+
 ## Future Plans
 
 I have ambitious plans for the software, including:
