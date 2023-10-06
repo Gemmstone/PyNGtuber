@@ -42,13 +42,29 @@ class LayeredImageViewer(QWebEngineView):
         image_div = soup.find('div', id='image-wrapper')
         image_div.clear()
 
+        # Move the runtime_page and soup_runtime here
+        self.page().toHtml(lambda html: self.handle_runtime_html(html, soup, image_div, image_list))
+
+    def handle_runtime_html(self, runtime_page, soup, image_div, image_list):
+        soup_runtime = BeautifulSoup(runtime_page, 'html.parser')
+        input_element = soup_runtime.find('input', {'id': 'scaleFactorInput'})
+        if input_element:
+            value = input_element.get('value')
+            if value:
+                scale_factor = float(value)
+                print("Scale Factor:", scale_factor)
+            else:
+                scale_factor = 1.0
+        else:
+            scale_factor = 1.0
+
         if image_list is not None:
             for layer in sorted(image_list, key=lambda x: x['posZ']):
                 img_tag = soup.new_tag('img', src=layer['route'], style=f"""
                         position: absolute;
                         left: calc(50% + {layer['posX']}px);
                         top: calc(50% + {layer['posY']}px);
-                        transform: translate(-50%, -50%);
+                        transform: translate(-50%, -50%) scale({scale_factor});
                         width: {layer['sizeX']}px; 
                         height: {layer['sizeY']}px;
                     """)

@@ -211,7 +211,7 @@ class ImageGallery(QToolBox):
 
                 if fileCount > 0:
                     folder_name = os.path.basename(subdir)
-                    self.addItem(page_widget, folder_name)  # Set folder name as the page title dynamically
+                    self.addItem(page_widget, folder_name.title())  # Set folder name as the page title dynamically
 
     def handle_button_click(self):
         selected_images = []

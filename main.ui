@@ -119,7 +119,7 @@
                <x>0</x>
                <y>0</y>
                <width>165</width>
-               <height>642</height>
+               <height>620</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout">
@@ -140,6 +140,13 @@
               </property>
              </layout>
             </widget>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Art by: &lt;a href=&quot;https://chereverie.art/&quot;&gt;Chereverie&lt;/a&gt;</string>
+            </property>
            </widget>
           </item>
          </layout>
@@ -411,7 +418,7 @@
                <x>0</x>
                <y>0</y>
                <width>130</width>
-               <height>642</height>
+               <height>604</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -432,6 +439,13 @@
               </property>
              </layout>
             </widget>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="Download">
+            <property name="text">
+             <string>Save Image</string>
+            </property>
            </widget>
           </item>
          </layout>
@@ -457,7 +471,6 @@
     </property>
     <addaction name="actionLoad_Avatar"/>
     <addaction name="actionSave_Avatar"/>
-    <addaction name="actionSave_As"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -478,12 +491,12 @@
   </widget>
   <action name="actionLoad_Avatar">
    <property name="text">
-    <string>Load Avatar</string>
+    <string>Export Avatars</string>
    </property>
   </action>
   <action name="actionSave_Avatar">
    <property name="text">
-    <string>Save Avatar</string>
+    <string>Import Avatars</string>
    </property>
   </action>
   <action name="actionSave_As">
@@ -506,13 +519,24 @@
     <bool>true</bool>
    </property>
    <property name="checked">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Hide UI</string>
    </property>
    <property name="toolTip">
     <string>Hide UI when cursor is not pressent</string>
+   </property>
+  </action>
+  <action name="actionNone">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>None</string>
    </property>
   </action>
  </widget>

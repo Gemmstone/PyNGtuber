@@ -3,6 +3,7 @@ from Core.imageGallery import ImageGallery
 from Core.Viewer import LayeredImageViewer
 from PIL import Image
 import pyaudio
+import json
 import sys
 
 
@@ -13,58 +14,59 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.list_microphones()
 
+        self.file_parameters = {}
+        self.json_file = "parameters.json"
+
+        try:
+            with open(self.json_file, "r") as f:
+                self.file_parameters = json.load(f)
+        except FileNotFoundError:
+            pass
+
         self.ImageGallery = ImageGallery()
         self.ImageGallery.selectionChanged.connect(self.getFiles)
         self.scrollArea.setWidget(self.ImageGallery)
-
-        image_list = [
-            {
-                "route": "Assets/ears/20230411_202335.gif",
-                "sizeX": 600,
-                "sizeY": 600,
-                "posX": 0,
-                "posY": 0,
-                "posZ": 1,
-                "animation": []
-            },
-            {
-                "route": "Assets/body/body_017.png",
-                "sizeX": 600,
-                "sizeY": 600,
-                "posX": 0,
-                "posY": 0,
-                "posZ": 2,
-                "animation": []
-            }
-            # Add more image layers as needed
-        ]
 
         self.comboBox.currentIndexChanged.connect(self.setBGColor)
 
         self.viewer = LayeredImageViewer()
         self.viewerFrame.layout().addWidget(self.viewer)
 
-    def getFiles(self, files):
-        print(files)
+    def save_parameters_to_json(self):
+        # Save the file parameters to the JSON file
+        with open(self.json_file, "w") as f:
+            json.dump(self.file_parameters, f, indent=4)
 
+    def getFiles(self, files):
         images_list = []
         count = 1
         for file in files:
-            image = Image.open(file)
-            width, height = image.size
+            if file in self.file_parameters:
+                parameters = self.file_parameters[file]
+            else:
+                image = Image.open(file)
+                width, height = image.size
+
+                parameters = {
+                    "sizeX": width,  # Default value for sizeX
+                    "sizeY": height,  # Default value for sizeY
+                    "posX": 0,  # Default value for posX
+                    "posY": 0,  # Default value for posY
+                    "posZ": count,  # Default value for posZ
+                    "animation": []  # Default value for animation
+                }
+
+                self.file_parameters[file] = parameters  # Store default parameters
 
             images_list.append({
                 "route": file,
-                "sizeX": width,
-                "sizeY": height,
-                "posX": 0,
-                "posY": 0,
-                "posZ": count,
-                "animation": []
+                **parameters  # Include the parameters in the dictionary
             })
             count += 1
 
         self.viewer.updateImages(images_list)
+
+        self.save_parameters_to_json()
 
     def list_microphones(self):
         excluded = ["sysdefault", "surround21", "lavrate", "samplerate", "speexrate", "speex", "upmix", "vdownmix"]
