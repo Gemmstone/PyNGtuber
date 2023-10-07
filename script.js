@@ -1,7 +1,7 @@
 // Get the image container and the first image
 const imageContainer = document.getElementById("image-wrapper");
 const moveContainer = document.getElementById("move-wrapper");
-const firstImage = imageContainer.querySelector("img");
+const container = document.getElementById("container");
 const minimumScaleFactor = 0.3; // Adjust this value as needed
 
 // Get the hidden input field for storing the scale factor
@@ -19,14 +19,11 @@ function applyScaleToImages() {
 let scaleFactor = parseFloat(localStorage.getItem("zoomScale")) || 1.0;
 scaleFactorInput.value = scaleFactor; // Set the initial value of the hidden input
 
-// Apply the saved scale factor to the first image
-firstImage.style.transform = `translate(-50%, -50%) scale(${scaleFactor})`;
-
 // Add an event listener for the mousewheel event on the container
 imageContainer.addEventListener("wheel", (event) => {
   // Calculate the new scale factor based on scroll direction
   if (event.deltaY > 0) {
-    scaleFactor = Math.max(scaleFactor - 0.1, minimumScaleFactor);; // Decrease scale on scroll down
+    scaleFactor = Math.max(scaleFactor - 0.1, minimumScaleFactor); // Decrease scale on scroll down
   } else {
     scaleFactor += 0.1; // Increase scale on scroll up
   }
@@ -48,31 +45,45 @@ let initialMouseY;
 let initialImageX;
 let initialImageY;
 
+// Variables to store the current offset due to mouse movement
+let mouseMovementX = 0;
+let mouseMovementY = 0;
+
 // Function to handle the mouse down event
 function onMouseDown(event) {
   isDragging = true;
   initialMouseX = event.clientX;
   initialMouseY = event.clientY;
-  initialImageX = parseFloat(getComputedStyle(imageContainer).left);
-  initialImageY = parseFloat(getComputedStyle(imageContainer).top);
+  // Initialize mouse movement offsets with the current position
+  mouseMovementX = 0;
+  mouseMovementY = 0;
+
   // Add "grabbing" cursor style
   moveContainer.style.cursor = "grabbing";
 }
 
 // Function to handle the mouse move event
 function onMouseMove(event) {
-  if (!isDragging) return;
+   if (!isDragging) return;
 
   const deltaX = event.clientX - initialMouseX;
   const deltaY = event.clientY - initialMouseY;
 
-  // Calculate the new position of the image-container
-  const newX = initialImageX + deltaX;
-  const newY = initialImageY + deltaY;
+  // Apply the new position to each image separately while preserving their existing offset
+  const images = imageContainer.querySelectorAll("img");
+  images.forEach((img) => {
+    const imgLeft = img.style.left;
+    const imgTop = img.style.top;
+    console.log(imgLeft + " " + imgTop)
+    const newLeft = `calc(${imgLeft} + ${deltaX}px)`;
+    const newTop = `calc(${imgTop} + ${deltaY}px)`;
+    img.style.left = `${newLeft}`;
+    img.style.top = `${newTop}`;
+  });
 
-  // Apply the new position
-  moveContainer.style.left = `${newX}px`;
-  moveContainer.style.top = `${newY}px`;
+  // Update the initial mouse position
+  initialMouseX = event.clientX;
+  initialMouseY = event.clientY;
 }
 
 // Function to handle the mouse up event
@@ -87,10 +98,10 @@ function preventDefaultDrag(event) {
   event.preventDefault();
 }
 
-// Add event listeners for mouse events on the image-container
-imageContainer.addEventListener("mousedown", onMouseDown);
+// Add event listeners for mouse events on the move-container
+document.addEventListener("mousedown", onMouseDown);
 document.addEventListener("mousemove", onMouseMove);
 document.addEventListener("mouseup", onMouseUp);
 
-// Add an event listener to prevent default drag behavior on the image-wrapper
+// Add an event listener to prevent default drag behavior on the move-container
 moveContainer.addEventListener("dragstart", preventDefaultDrag);

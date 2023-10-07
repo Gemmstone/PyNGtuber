@@ -52,7 +52,6 @@ class LayeredImageViewer(QWebEngineView):
             value = input_element.get('value')
             if value:
                 scale_factor = float(value)
-                print("Scale Factor:", scale_factor)
             else:
                 scale_factor = 1.0
         else:

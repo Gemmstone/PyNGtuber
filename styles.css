@@ -1,5 +1,12 @@
 body {
-    background-color: #b8cdee
+    background-color: #b8cdee;
+    -moz-user-select: none;
+    /* Firefox */
+    -webkit-user-select: none;
+    /* Chrome, Safari, and Opera */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    overflow: hidden
     }
 #zoomableDiv {
     width: 100%;
@@ -9,6 +16,6 @@ body {
     }
 #imageContainer {
     position: absolute;
-    top: 0;
-    left: 0
+    top: 700;
+    left: 700
     }
