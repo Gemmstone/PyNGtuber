@@ -1,16 +1,17 @@
 import sys
 import os
-from PyQt6.QtWidgets import QApplication, QWidget, QToolBox, QVBoxLayout, QPushButton, QFrame, QHBoxLayout, QSizePolicy, QSpacerItem
+from PyQt6.QtWidgets import QApplication, QWidget, QToolBox, QVBoxLayout, QPushButton, QFrame, QHBoxLayout, QSizePolicy
 from PyQt6.QtGui import QIcon, QPixmap, QImage
-from PyQt6.QtCore import Qt, pyqtSignal, QSize
-from PIL import Image, ImageChops
+from PyQt6.QtCore import pyqtSignal, QSize
+from PIL import Image
+
 
 class ImageGallery(QToolBox):
     selectionChanged = pyqtSignal(list)
 
-    def __init__(self):
+    def __init__(self, load_model=None):
         super().__init__()
-
+        
         StyleSheet = """
 
         QWidget{
@@ -118,7 +119,7 @@ class ImageGallery(QToolBox):
         folder_path = os.path.join(script_dir, "../Assets")
 
         if os.path.exists(folder_path) and os.path.isdir(folder_path):
-            self.load_images(folder_path)
+            self.load_images(folder_path, load_model)
         else:
             self.addItem(QWidget(), "Assets Folder Not Found")  # Add a placeholder page if the folder doesn't exist
 
@@ -175,10 +176,9 @@ class ImageGallery(QToolBox):
         # Return the created QIcon
         return QIcon(pixmap)
 
-    def load_images(self, folder_path):
+    def load_images(self, folder_path, load_model):
         for subdir, dirs, files in os.walk(folder_path):
             if "thumb" not in subdir.lower():
-                print(subdir)
                 # Create a widget for each subfolder
                 page_widget = QFrame()
                 # page_widget.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
@@ -194,11 +194,14 @@ class ImageGallery(QToolBox):
                 for file in files:
                     # Check if the file is an image (you can add more image formats)
                     if file.lower().endswith((".png", ".jpg", ".jpeg", ".gif")):
+                        button_name = str(os.path.join(subdir, file)).split("/../")[-1]
                         item = QPushButton()
                         item.setIcon(self.create_thumbnail(os.path.join(subdir, file)))
                         item.setIconSize(QSize(50, 50))
-                        item.setAccessibleName(str(os.path.join(subdir, file)).split("/../")[-1])
+                        item.setAccessibleName(button_name)
                         item.setCheckable(True)
+                        if load_model is not None:
+                            item.setChecked(button_name in load_model)
                         item.clicked.connect(self.handle_button_click)
                         row_layout.addWidget(item)
                         column_count += 1

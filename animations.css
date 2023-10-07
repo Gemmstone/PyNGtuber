@@ -1,0 +1,115 @@
+#image-wrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes floaty {
+  0% {transform: translateY(0px);}
+  50% {transform: translateY(20px);}
+  100% {transform: translateY(0px);}
+}
+
+@keyframes floatx {
+  0% {transform: translateX(0px);}
+  50% {transform: translateX(20px);}
+  100% {transform: translateX(0px);}
+}
+
+/*
+@keyframes float {
+  0% {transform: translate(0px, 0px);}
+  25% {transform: translate(20px, 20px);}
+  50% {transform: translate(0px, 0px);}
+  75% {transform: translate(-20px, 20px);}
+  100% {transform: translate(0px, 0px);}
+}
+*/
+
+@keyframes thinImage {
+    0% {
+        transform: scaleX(1); /* Start with normal width */
+    }
+    50% {
+        transform: scaleX(0.5); /* Shrink to 50% width */
+    }
+    100% {
+        transform: scaleX(1); /* Back to normal width */
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+      transform: translate(0, 0);
+    }
+    25% {
+      transform: translate(-20px, -20px);
+    }
+    50% {
+      transform: translate(0, 0);
+    }
+    75% {
+      transform: translate(20px, -20px);
+    }
+  }
+
+ /* Define the blinking_closed and blinking_open classes for your images */
+.blinking_closed {
+  animation: blinkClosed 30s infinite, showClosed 5s infinite;
+}
+
+.blinking_open {
+  animation: blinkOpen 30s infinite, hideOpen 5s infinite;
+}
+
+/* Define the keyframes for the blinking animation */
+@keyframes blinkOpen {
+  0%, 100% {
+    opacity: 1; /* Start and end with full opacity */
+  }
+  50% {
+    opacity: 0; /* Hide the open images at the halfway point */
+  }
+}
+
+@keyframes blinkClosed {
+  0%, 100% {
+    opacity: 0; /* Start and end with zero opacity */
+  }
+  50% {
+    opacity: 1; /* Show the closed images at the halfway point */
+  }
+}
+
+/* Define keyframes to control the time the images are hidden and shown */
+@keyframes hideOpen {
+  0% {
+    opacity: 1;
+    display: block;
+  }
+  90% {
+    opacity: 1;
+    display: block;
+  }
+  100% {
+    opacity: 0;
+    display: none;
+  }
+}
+
+@keyframes showClosed {
+  0% {
+    opacity: 0;
+    display: none;
+  }
+  90% {
+    opacity: 0;
+    display: none;
+  }
+  100% {
+    opacity: 1;
+    display: block;
+  }
+}

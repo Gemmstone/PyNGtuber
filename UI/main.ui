@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>954</width>
-    <height>688</height>
+    <width>1148</width>
+    <height>741</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -119,7 +119,7 @@
                <x>0</x>
                <y>0</y>
                <width>165</width>
-               <height>620</height>
+               <height>673</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout">
@@ -186,14 +186,14 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QFrame" name="frame">
+           <widget class="QFrame" name="frame_2">
             <property name="frameShape">
              <enum>QFrame::NoFrame</enum>
             </property>
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
              <property name="leftMargin">
               <number>0</number>
              </property>
@@ -204,17 +204,36 @@
               <number>0</number>
              </property>
              <property name="bottomMargin">
-              <number>0</number>
+              <number>6</number>
              </property>
              <item>
-              <widget class="QPushButton" name="pushButton">
+              <widget class="QLabel" name="label_3">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
-                <string>PushButton</string>
+                <string>Microphone:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="microphones">
+               <property name="toolTip">
+                <string>Microphone selection</string>
                </property>
               </widget>
              </item>
              <item>
               <widget class="QComboBox" name="comboBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <item>
                 <property name="text">
                  <string>None</string>
@@ -250,40 +269,6 @@
                  <string>White</string>
                 </property>
                </item>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_3">
-               <property name="text">
-                <string>PushButton</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_2">
-               <property name="text">
-                <string>PushButton</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_4">
-               <property name="text">
-                <string>PushButton</string>
-               </property>
               </widget>
              </item>
             </layout>
@@ -356,37 +341,6 @@
             </layout>
            </widget>
           </item>
-          <item>
-           <widget class="QFrame" name="frame_2">
-            <property name="frameShape">
-             <enum>QFrame::NoFrame</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>6</number>
-             </property>
-             <item>
-              <widget class="QComboBox" name="microphones">
-               <property name="toolTip">
-                <string>Microphone selection</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
@@ -424,13 +378,13 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>130</width>
+              <width>240</width>
               <height>0</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>130</width>
+              <width>240</width>
               <height>16777215</height>
              </size>
             </property>
@@ -451,8 +405,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>130</width>
-               <height>604</height>
+               <width>240</width>
+               <height>695</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -475,13 +429,6 @@
             </widget>
            </widget>
           </item>
-          <item>
-           <widget class="QPushButton" name="Download">
-            <property name="text">
-             <string>Save Image</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
@@ -495,7 +442,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>954</width>
+     <width>1148</width>
      <height>34</height>
     </rect>
    </property>
@@ -518,6 +465,7 @@
      <string>Settings</string>
     </property>
     <addaction name="actionHide_UI"/>
+    <addaction name="actionAutosave"/>
    </widget>
    <addaction name="menuArchive"/>
    <addaction name="menuSettings"/>
@@ -571,6 +519,17 @@
    </property>
    <property name="text">
     <string>None</string>
+   </property>
+  </action>
+  <action name="actionAutosave">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Autosave</string>
    </property>
   </action>
  </widget>

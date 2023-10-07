@@ -1,11 +1,8 @@
 body {
     background-color: #b8cdee;
     -moz-user-select: none;
-    /* Firefox */
     -webkit-user-select: none;
-    /* Chrome, Safari, and Opera */
     -ms-user-select: none;
-    /* Internet Explorer/Edge */
     overflow: hidden
     }
 #zoomableDiv {
@@ -13,4 +10,8 @@ body {
     height: 100%;
     overflow: hidden;
     position: relative
+    }
+#image-wrapper {
+    -webkit-filter: drop-shadow(5px 5px 5px #888);
+    filter: drop-shadow(5px 5px 5px #888)
     }

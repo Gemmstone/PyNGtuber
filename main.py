@@ -1,21 +1,25 @@
 from PyQt6 import QtWidgets, uic, QtCore
 from Core.imageGallery import ImageGallery
 from Core.Viewer import LayeredImageViewer
+from Core.Settings import SettingsToolBox
 from PIL import Image
 import pyaudio
 import json
+import copy
 import sys
 
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi("main.ui", self)
+        uic.loadUi("UI/main.ui", self)
 
         self.list_microphones()
 
         self.file_parameters = {}
+        self.current_files = []
         self.json_file = "parameters.json"
+        self.current_json_file = "current.json"
 
         try:
             with open(self.json_file, "r") as f:
@@ -23,28 +27,41 @@ class MainWindow(QtWidgets.QMainWindow):
         except FileNotFoundError:
             pass
 
-        self.ImageGallery = ImageGallery()
+        try:
+            with open(self.current_json_file, "r") as f:
+                self.current_files = json.load(f)
+        except FileNotFoundError:
+            pass
+
+        self.ImageGallery = ImageGallery(self.current_files)
         self.ImageGallery.selectionChanged.connect(self.getFiles)
         self.scrollArea.setWidget(self.ImageGallery)
+
+        self.SettingsGallery = SettingsToolBox()
+        self.SettingsGallery.settings_changed.connect(self.saveSettings)
+        self.scrollArea_2.setWidget(self.SettingsGallery)
 
         self.comboBox.currentIndexChanged.connect(self.setBGColor)
 
         self.viewer = LayeredImageViewer()
         self.viewerFrame.layout().addWidget(self.viewer)
+        self.getFiles(self.current_files, opening=True)
+
+    def saveSettings(self, settings):
+        self.file_parameters[settings['route']] = copy.deepcopy(settings)
+        self.file_parameters[settings['route']].pop("route")
+        self.getFiles(self.current_files)
 
     def save_parameters_to_json(self):
         # Save the file parameters to the JSON file
         with open(self.json_file, "w") as f:
             json.dump(self.file_parameters, f, indent=4)
 
-    def save_current_to_json(self):
-        # Save the file parameters to the JSON file
-        with open(self.json_file, "w") as f:
-            json.dump(self.file_parameters, f, indent=4)
+        with open(self.current_json_file, "w") as f:
+            json.dump(self.current_files, f, indent=4)
 
-    def getFiles(self, files):
+    def getFiles(self, files=None, opening=False):
         images_list = []
-        count = 1
         for file in files:
             if file in self.file_parameters:
                 parameters = self.file_parameters[file]
@@ -57,7 +74,11 @@ class MainWindow(QtWidgets.QMainWindow):
                     "sizeY": height,  # Default value for sizeY
                     "posX": 0,  # Default value for posX
                     "posY": 0,  # Default value for posY
-                    "posZ": count,  # Default value for posZ
+                    "posZ": 40,  # Default value for posZ
+                    "blinking": "ignore",
+                    "talking": "ignore",
+                    "css": "",
+                    "hotkeys": [],
                     "animation": []  # Default value for animation
                 }
 
@@ -67,11 +88,14 @@ class MainWindow(QtWidgets.QMainWindow):
                 "route": file,
                 **parameters  # Include the parameters in the dictionary
             })
-            count += 1
 
         self.viewer.updateImages(images_list)
 
-        # self.save_parameters_to_json()
+        if self.current_files != files or opening:
+            self.SettingsGallery.set_items(images_list)
+        self.current_files = files
+
+        self.save_parameters_to_json()
 
     def list_microphones(self):
         excluded = ["sysdefault", "surround21", "lavrate", "samplerate", "speexrate", "speex", "upmix", "vdownmix"]
@@ -101,14 +125,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def showUI(self):
         self.frame_4.show()
-        self.frame.show()
+        self.frame_5.show()
         self.frame_2.show()
         self.frame_3.show()
 
     def hideUI(self):
         if self.actionHide_UI.isChecked():
             self.frame_4.hide()
-            self.frame.hide()
+            self.frame_5.hide()
             self.frame_2.hide()
             self.frame_3.hide()
     def setBGColor(self):
@@ -134,6 +158,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
+    screen = app.primaryScreen()
+    screen_geometry = screen.availableGeometry()
+    quarter_width = screen_geometry.width() // 1
+    quarter_height = screen_geometry.height() // 1
     window = MainWindow()
+    window.setGeometry(100, 100, quarter_width, quarter_height)
     window.show()
     app.exec()

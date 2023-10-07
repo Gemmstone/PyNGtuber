@@ -63,10 +63,11 @@ class LayeredImageViewer(QWebEngineView):
                         position: absolute;
                         left: calc(50% + {layer['posX']}px);
                         top: calc(50% + {layer['posY']}px);
-                        transform: translate(-50%, -50%) scale({scale_factor});
+                        transform: translate(-50%, -50%) scale({scale_factor}) rotate({layer['rotation']}deg);
                         width: {layer['sizeX']}px; 
                         height: {layer['sizeY']}px;
                     """)
+                img_tag['class'] = [layer['blinking'], layer['talking']]
                 # Append the img tag to the div
                 image_div.append(img_tag)
 
