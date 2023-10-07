@@ -14,8 +14,3 @@ body {
     overflow: hidden;
     position: relative
     }
-#imageContainer {
-    position: absolute;
-    top: 700;
-    left: 700
-    }

@@ -178,6 +178,7 @@ class ImageGallery(QToolBox):
     def load_images(self, folder_path):
         for subdir, dirs, files in os.walk(folder_path):
             if "thumb" not in subdir.lower():
+                print(subdir)
                 # Create a widget for each subfolder
                 page_widget = QFrame()
                 # page_widget.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
@@ -196,7 +197,7 @@ class ImageGallery(QToolBox):
                         item = QPushButton()
                         item.setIcon(self.create_thumbnail(os.path.join(subdir, file)))
                         item.setIconSize(QSize(50, 50))
-                        item.setAccessibleName(str(os.path.join(subdir, file)))
+                        item.setAccessibleName(str(os.path.join(subdir, file)).split("/../")[-1])
                         item.setCheckable(True)
                         item.clicked.connect(self.handle_button_click)
                         row_layout.addWidget(item)

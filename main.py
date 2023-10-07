@@ -37,6 +37,11 @@ class MainWindow(QtWidgets.QMainWindow):
         with open(self.json_file, "w") as f:
             json.dump(self.file_parameters, f, indent=4)
 
+    def save_current_to_json(self):
+        # Save the file parameters to the JSON file
+        with open(self.json_file, "w") as f:
+            json.dump(self.file_parameters, f, indent=4)
+
     def getFiles(self, files):
         images_list = []
         count = 1
@@ -66,7 +71,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.viewer.updateImages(images_list)
 
-        self.save_parameters_to_json()
+        # self.save_parameters_to_json()
 
     def list_microphones(self):
         excluded = ["sysdefault", "surround21", "lavrate", "samplerate", "speexrate", "speex", "upmix", "vdownmix"]
