@@ -49,7 +49,7 @@ class LayeredImageViewer(QWebEngineView):
 
         if image_list is not None:
             for layer in sorted(image_list, key=lambda x: x['posZ']):
-                img_tag = soup.new_tag('img', src=layer['route'], style=f"""
+                img_tag = soup.new_tag('img', src=f"../{layer['route']}", style=f"""
                         position: absolute;
                         left: calc(50% + {layer['posX']}px);
                         top: calc(50% + {layer['posY']}px);

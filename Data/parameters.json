@@ -11,7 +11,7 @@
         "talking": "ignore",
         "hotkeys": [],
         "rotation": 0,
-        "use_css": true
+        "use_css": false
     },
     "Assets/right eye/right eye_002.png": {
         "sizeX": 600,

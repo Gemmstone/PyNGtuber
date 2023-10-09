@@ -1,6 +1,6 @@
-import sys
+
 import os
-from PyQt6.QtWidgets import QApplication, QWidget, QToolBox, QVBoxLayout, QPushButton, QFrame, QHBoxLayout, QSizePolicy
+from PyQt6.QtWidgets import QWidget, QToolBox, QVBoxLayout, QPushButton, QFrame, QHBoxLayout, QSizePolicy
 from PyQt6.QtGui import QIcon, QPixmap, QImage
 from PyQt6.QtCore import pyqtSignal, QSize
 from PIL import Image
@@ -228,10 +228,3 @@ class ImageGallery(QToolBox):
 
         # Emit the selectionChanged signal with the list of selected images
         self.selectionChanged.emit(selected_images)
-
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    gallery = ImageGallery()
-    gallery.show()
-    sys.exit(app.exec())

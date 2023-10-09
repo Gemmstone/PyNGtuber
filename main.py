@@ -51,6 +51,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.actionSave_Current_Avatar_As.triggered.connect(self.save_screenshot)
 
+        QtCore.QTimer.singleShot(300, self.showUI)
+
     def save_screenshot(self):
         screenshot = self.viewer.grab()
         qimage = screenshot.toImage()
