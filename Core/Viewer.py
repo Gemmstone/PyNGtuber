@@ -15,30 +15,20 @@ class LayeredImageViewer(QWebEngineView):
         self.updateImages()
 
     def setColor(self, color):
-        with open('styles.css', 'r') as css_file:
-            css_content = css_file.read()
-
-        stylesheet = cssutils.CSSParser().parseString(css_content)
-
-        for rule in stylesheet:
-            for prop in rule.style:
-                if prop.name == 'background-color':
-                    prop.value = color
-
-        with open('styles.css', 'wb') as css_file:
-            css_file.write(stylesheet.cssText)
-        self.reload()
+        self.page().runJavaScript(f'document.body.style.backgroundColor = "{color}";')
 
     def reload(self):
-        file = "viewer.html"
+        file = 'Viewer/viewer.html'
         file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), file)
         self.load(QUrl.fromLocalFile(file))
 
-    def updateImages(self, image_list=None):
-        with open('viewer.html', 'r') as html_file:
+    def updateImages(self, image_list=None, bg_color="#b8cdee"):
+        with open('Viewer/viewer.html', 'r') as html_file:
             html_code = html_file.read()
 
         soup = BeautifulSoup(html_code, 'html.parser')
+        body_tag = soup.body
+        body_tag['style'] = f'background-color: {bg_color};'
         image_div = soup.find('div', id='image-wrapper')
         image_div.clear()
 
@@ -72,7 +62,7 @@ class LayeredImageViewer(QWebEngineView):
                 image_div.append(img_tag)
 
         beautiful_html = soup.prettify()
-        with open('viewer.html', 'w') as html_file:
+        with open('Viewer/viewer.html', 'w') as html_file:
             html_file.write(beautiful_html)
 
         QTimer.singleShot(10, self.reload)

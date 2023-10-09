@@ -113,3 +113,31 @@
     display: block;
   }
 }
+
+/* Define the open and closed classes for your mouth image */
+.mouth_open {
+  animation: openMouth 0.5s;
+}
+
+.mouth_closed {
+  animation: closeMouth 0.5s;
+}
+
+/* Define the keyframes for the mouth animation */
+@keyframes openMouth {
+  0%, 100% {
+    transform: scaleY(1); /* Start and end with full width (closed mouth) */
+  }
+  50% {
+    transform: scaleY(0.2); /* Halfway point, scale vertically to open the mouth */
+  }
+}
+
+@keyframes closeMouth {
+  0%, 100% {
+    transform: scaleY(0.2); /* Start and end with an open mouth */
+  }
+  50% {
+    transform: scaleY(1); /* Halfway point, scale vertically to close the mouth */
+  }
+}

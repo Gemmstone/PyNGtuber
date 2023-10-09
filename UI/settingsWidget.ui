@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>242</width>
-    <height>671</height>
+    <height>583</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -101,7 +101,7 @@ QFrame{
         </property>
         <layout class="QGridLayout" name="gridLayout_3">
          <item row="1" column="0" colspan="4" alignment="Qt::AlignRight">
-          <widget class="QCheckBox" name="checkBox">
+          <widget class="QCheckBox" name="aspectRatio">
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
@@ -625,6 +625,12 @@ QCheckBox::indicator:unchecked {
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
            </property>
            <property name="cursor" stdset="0">
             <cursorShape>IBeamCursor</cursorShape>

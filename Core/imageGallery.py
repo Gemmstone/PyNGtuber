@@ -123,7 +123,7 @@ class ImageGallery(QToolBox):
         else:
             self.addItem(QWidget(), "Assets Folder Not Found")  # Add a placeholder page if the folder doesn't exist
 
-    def create_thumbnail(self, input_path, max_size=(50, 50), quality=90):
+    def create_thumbnail(self, input_path, max_size=(50, 50), quality=90, custom_name=None):
         # Extract the file name and directory from the input path
         file_name = os.path.basename(input_path)
         directory = os.path.dirname(input_path)

@@ -5,7 +5,7 @@
   <script crossorigin="anonymous" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" src="https://code.jquery.com/jquery-3.7.1.min.js">
   </script>
  </head>
- <body oncontextmenu="return false;">
+ <body oncontextmenu="return false;" style="background-color: limegreen;">
   <div id="container">
    <div id="move-wrapper">
     <div id="image-wrapper">
@@ -105,7 +105,7 @@
                         width: 600px; 
                         height: 600px;
                     "/>
-     <img class="ignore ignore" src="Assets/glasses/glasses_053.png" style="
+     <img class="ignore ignore" src="Assets/glasses/glasses_044.png" style="
                         position: absolute;
                         left: calc(50% + 0px);
                         top: calc(50% + 0px);
@@ -217,19 +217,15 @@
                         width: 600px; 
                         height: 600px;
                     "/>
-     <img class="ignore ignore" src="Assets/hands/hands_049.png" style="
-                        position: absolute;
-                        left: calc(50% + 0px);
-                        top: calc(50% + 0px);
-                        transform: translate(-50%, -50%) scale(1.0) rotate(0deg);
-                        width: 600px; 
-                        height: 600px;
-                    "/>
     </div>
    </div>
   </div>
   <input id="scaleFactorInput" type="hidden" value="1.0"/>
-  <script src="script.js">
+  <script src="mouseControl.js">
+  </script>
+  <script src="microphone.js">
+  </script>
+  <script src="custom.js">
   </script>
  </body>
 </html>

@@ -125,7 +125,7 @@ class SettingsToolBox(QToolBox):
                 }
 
                 QToolBox::tab {
-                    background: white;
+                    background: #009deb;
                     border-radius: 5px;
                     text-align: center;
                     color: black;

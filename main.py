@@ -16,10 +16,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.list_microphones()
 
+        self.color = (184, 205, 238)  # Default to a light blue color
         self.file_parameters = {}
         self.current_files = []
-        self.json_file = "parameters.json"
-        self.current_json_file = "current.json"
+        self.json_file = "Data/parameters.json"
+        self.current_json_file = "Data/current.json"
 
         try:
             with open(self.json_file, "r") as f:
@@ -45,7 +46,47 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.viewer = LayeredImageViewer()
         self.viewerFrame.layout().addWidget(self.viewer)
+        self.viewer.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
         self.getFiles(self.current_files, opening=True)
+
+        self.actionSave_Current_Avatar_As.triggered.connect(self.save_screenshot)
+
+    def save_screenshot(self):
+        screenshot = self.viewer.grab()
+        qimage = screenshot.toImage()
+        image = Image.fromqpixmap(qimage)
+        image = image.convert("RGBA")
+
+        image_data = list(image.getdata())
+
+        new_image_data = []
+
+        color_map = {
+            "Green": (50, 205, 50),  # Lime Green
+            "Magenta": (255, 0, 255),  # Magenta
+            "Cyan": (0, 255, 255),  # Cyan
+            "Blue": (0, 0, 255),  # Blue
+            "Pink": (255, 105, 180),  # Hot Pink
+            "Yellow": (255, 255, 0),  # Yellow
+            "White": (255, 255, 255),  # White
+        }
+
+        target_color = color_map.get(self.comboBox.currentText())
+        if target_color is None:
+            target_color = (184, 205, 238)
+
+        tolerance = 30
+        for pixel in image_data:
+            r, g, b, a = pixel
+            if abs(r - target_color[0]) <= tolerance and \
+                    abs(g - target_color[1]) <= tolerance and \
+                    abs(b - target_color[2]) <= tolerance:
+                new_image_data.append((r, g, b, 0))
+            else:
+                new_image_data.append((r, g, b, a))
+
+        image.putdata(new_image_data)
+        image.save("output.png")
 
     def saveSettings(self, settings):
         self.file_parameters[settings['route']] = copy.deepcopy(settings)
@@ -89,13 +130,14 @@ class MainWindow(QtWidgets.QMainWindow):
                 **parameters  # Include the parameters in the dictionary
             })
 
-        self.viewer.updateImages(images_list)
+        self.viewer.updateImages(images_list, self.color)
 
         if self.current_files != files or opening:
             self.SettingsGallery.set_items(images_list)
         self.current_files = files
 
         self.save_parameters_to_json()
+        QtCore.QTimer.singleShot(300, self.setBGColor)
 
     def list_microphones(self):
         excluded = ["sysdefault", "surround21", "lavrate", "samplerate", "speexrate", "speex", "upmix", "vdownmix"]
@@ -126,42 +168,46 @@ class MainWindow(QtWidgets.QMainWindow):
     def showUI(self):
         self.frame_4.show()
         self.frame_5.show()
-        self.frame_2.show()
         self.frame_3.show()
+        self.frame_8.show()
+        self.viewerFrame_2.setStyleSheet(f"border-radius: 20px; background-color: {self.color}")
 
     def hideUI(self):
-        if self.actionHide_UI.isChecked():
+        if self.HideUI.isChecked():
             self.frame_4.hide()
             self.frame_5.hide()
-            self.frame_2.hide()
             self.frame_3.hide()
+            self.frame_8.hide()
+            self.viewerFrame_2.setStyleSheet(f"background-color: {self.color}")
+
     def setBGColor(self):
-        match self.sender().currentText():
+        match self.comboBox.currentText():
             case "Green":
-                color = "limegreen"
+                self.color = "limegreen"
             case "Magenta":
-                color = "magenta"
+                self.color = "magenta"
             case "Cyan":
-                color = "cyan"
+                self.color = "cyan"
             case "Blue":
-                color = "blue"
+                self.color = "blue"
             case "Pink":
-                color = "hotpink"
+                self.color = "hotpink"
             case "Yellow":
-                color = "yellow"
+                self.color = "yellow"
             case "White":
-                color = "white"
+                self.color = "white"
             case _:
-                color = "#b8cdee"
-        self.viewer.setColor(color)
+                self.color = "#b8cdee"
+
+        self.viewer.setColor(self.color)
 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     screen = app.primaryScreen()
     screen_geometry = screen.availableGeometry()
-    quarter_width = screen_geometry.width() // 1
-    quarter_height = screen_geometry.height() // 1
+    quarter_width = int(screen_geometry.width() // 1.7)
+    quarter_height = int(screen_geometry.height() // 1.5)
     window = MainWindow()
     window.setGeometry(100, 100, quarter_width, quarter_height)
     window.show()

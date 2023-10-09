@@ -4,7 +4,7 @@ folder_to_update = "right eye"
 new_posZ_value = "blinking_open"  # Set the new posZ value here
 
 # Load the JSON data from your file
-with open('parameters.json', 'r') as json_file:
+with open('Data/parameters.json', 'r') as json_file:
     data = json.load(json_file)
 
 # Construct the target folder path
@@ -16,7 +16,7 @@ for key, value in data.items():
         value['blinking'] = new_posZ_value
 
 # Save the updated JSON back to the file
-with open('parameters.json', 'w') as json_file:
+with open('Data/parameters.json', 'w') as json_file:
     json.dump(data, json_file, indent=4)
 
 print(f"posZ values updated successfully for items within /Assets/{folder_to_update}/ folder.")
