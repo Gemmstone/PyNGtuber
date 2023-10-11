@@ -1,9 +1,10 @@
 
-import os
-from PyQt6.QtWidgets import QWidget, QToolBox, QVBoxLayout, QPushButton, QFrame, QHBoxLayout, QSizePolicy
+from PyQt6.QtWidgets import QWidget, QToolBox, QVBoxLayout, QPushButton, QFrame, QHBoxLayout, QSizePolicy, QGridLayout, QCheckBox
 from PyQt6.QtGui import QIcon, QPixmap, QImage
 from PyQt6.QtCore import pyqtSignal, QSize
 from PIL import Image
+import json
+import os
 
 
 class ImageGallery(QToolBox):
@@ -133,7 +134,7 @@ class ImageGallery(QToolBox):
         os.makedirs(thumbnail_folder, exist_ok=True)  # Create the Thumbnails folder if it doesn't exist
 
         # Define the thumbnail path
-        thumbnail_path = os.path.join(thumbnail_folder, file_name)
+        thumbnail_path = os.path.join(thumbnail_folder, file_name.replace("gif", "png").replace("webp", "png"))
 
         # Check if a thumbnail already exists
         if os.path.exists(thumbnail_path):
@@ -141,7 +142,11 @@ class ImageGallery(QToolBox):
             return QIcon(thumbnail_path)
 
         # Open the image using Pillow
-        img = Image.open(input_path)
+        try:
+            img = Image.open(input_path).convert("RGBA")
+        except Exception as e:
+            print(f"Error opening image: {e}")
+            return None
 
         # Create a copy of the original image
         img_copy = img.copy()
@@ -228,3 +233,58 @@ class ImageGallery(QToolBox):
 
         # Emit the selectionChanged signal with the list of selected images
         self.selectionChanged.emit(selected_images)
+
+
+class ExpressionSelector(QWidget):
+    def __init__(self, folder_path):
+        super().__init__()
+
+        self.selected_folders = []
+
+        layout = QGridLayout()
+
+        folders = [folder for folder in os.listdir(folder_path) if "." not in folder]
+        self.checkboxes = {}
+        row = 0  # Initialize the row variable
+
+        for i, folder in enumerate(folders):
+            checkbox = QCheckBox(folder)
+            checkbox.setStyleSheet("*{font-size: 8px}")
+            checkbox.toggled.connect(self.save_to_json)
+            self.checkboxes[folder] = checkbox
+
+            # Calculate the column number based on whether i is even or odd
+            col = i % 2
+
+            # Add the checkbox to the grid layout at the specified row and column
+            layout.addWidget(checkbox, row, col)
+
+            # If the current checkbox is in the second column, increment the row
+            if col == 1:
+                row += 1
+
+        self.setLayout(layout)
+        # Load saved data and preselect checkboxes
+        self.load_from_json()
+
+    def save_to_json(self, state):
+        sender = self.sender()
+        if state is True:  # Qt.Checked
+            self.selected_folders.append(sender.text())
+        else:  # Qt.Unchecked
+            if sender.text() in self.selected_folders:
+                self.selected_folders.remove(sender.text())
+
+        if self.selected_folders:
+            with open("Data/expressionFolders.json", "w") as json_file:
+                json.dump(self.selected_folders, json_file, indent=4)
+
+    def load_from_json(self):
+        try:
+            with open("Data/expressionFolders.json", "r") as json_file:
+                self.selected_folders = json.load(json_file)
+                for folder, checkbox in self.checkboxes.items():
+                    if folder in self.selected_folders:
+                        checkbox.setChecked(True)
+        except BaseException as e:
+            print(e)

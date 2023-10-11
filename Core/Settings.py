@@ -39,14 +39,16 @@ class Settings(QWidget):
 
         self.blinkOpen.setChecked(self.parameters["blinking"] == "blinking_open")
         self.blinkClosed.setChecked(self.parameters["blinking"] == "blinking_closed")
+
         self.talkOpen.setChecked(self.parameters["talking"] == "talking_open")
         self.talkClosed.setChecked(self.parameters["talking"] == "talking_closed")
-
+        self.talkScreaming.setChecked(self.parameters["talking"] == "talking_screaming")
 
         self.blinkOpen.toggled.connect(self.save)
         self.blinkClosed.toggled.connect(self.save)
         self.talkOpen.toggled.connect(self.save)
         self.talkClosed.toggled.connect(self.save)
+        self.talkScreaming.toggled.connect(self.save)
 
         # Connect CSS field finishedit signal to the save method
         self.css.textChanged.connect(self.css_finished_edit)
@@ -82,7 +84,6 @@ class Settings(QWidget):
             self.cssGroup.setStyleSheet("QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
         self.save()
 
-
     def save(self):
         self.parameters["sizeX"] = self.sizeX.value()
         self.parameters["sizeY"] = self.sizeY.value()
@@ -105,7 +106,10 @@ class Settings(QWidget):
     def getTalking(self):
         if self.talkOpen.isChecked():
             return "talking_open"
-        return "talking_closed"
+        elif self.talkScreaming.isChecked():
+            return "talking_screaming"
+        else:
+            return "talking_closed"
 
     def css_finished_edit(self):
         # When CSS field editing is finished, save it

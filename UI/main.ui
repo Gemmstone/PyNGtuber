@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1148</width>
+    <width>1273</width>
     <height>741</height>
    </rect>
   </property>
@@ -21,6 +21,9 @@
     <string notr="true">QWidget{
 	background: #b8cdee;
 	color: black;
+}
+* QToolTip {
+	background-color: pink;
 }</string>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -126,12 +129,25 @@ QTabBar::tab:hover {
 }</string>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>30</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="usesScrollButtons">
+             <bool>false</bool>
             </property>
             <property name="documentMode">
              <bool>true</bool>
             </property>
             <widget class="QWidget" name="tab_5">
+             <attribute name="icon">
+              <iconset>
+               <normaloff>../Icons/mobile-ui-user-svgrepo-com.svg</normaloff>../Icons/mobile-ui-user-svgrepo-com.svg</iconset>
+             </attribute>
              <attribute name="title">
               <string>Avatars</string>
              </attribute>
@@ -149,40 +165,347 @@ QTabBar::tab:hover {
                <number>0</number>
               </property>
               <item>
-               <widget class="QScrollArea" name="scrollArea_4">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
+               <widget class="QToolBox" name="toolBox">
+                <property name="styleSheet">
+                 <string notr="true">QWidget{
+                    background: #b8cdee;
+                }
+
+                QToolBox::tab {
+                    background: #009deb;
+                    border-radius: 5px;
+                    text-align: center;
+                    color: black;
+                }
+
+                /* 
+                QToolBox::tab:first {
+                    background: #4ade00;
+                    border-radius: 5px;
+                    color: black;
+                }
+
+                QToolBox::tab:last {
+                    background: #f95300;
+                    border-radius: 5px;
+                    color: black;
+                }
+                */
+
+                QToolBox::tab:selected { /* italicize selected tabs */
+                    font: italic;
+                    font-weight: bold;
+                    background: pink;
+                    text-align: center;
+                    color: black;   
+                }
+
+                @QScrollBar:vertical
+                {
+                    background-color: white;
+                    width: 3px;
+                    margin: 0px 0px 0px 0px;
+                    border: 0px transparent white;
+                    border-radius: 5px;
+                }
+
+                QScrollBar::handle:vertical
+                {
+                    background-color: white;
+                    min-height: 5px;
+                    border-radius: 5px;
+                }
+
+                QScrollBar::sub-line:vertical
+                {
+                    margin: 0px 0px 0px 0px;
+                    border-image: url(:/qss_icons/rc/up_arrow_disabled.png);
+                    height: 0px;
+                    width: 0px;
+                    subcontrol-position: top;
+                    subcontrol-origin: margin;
+                }
+
+                QScrollBar::add-line:vertical
+                {
+                    margin: 3px 0px 3px 0px;
+                    border-image: url(:/qss_icons/rc/down_arrow_disabled.png);
+                    height: 0px;
+                    width: 0px;
+                    subcontrol-position: bottom;
+                    subcontrol-origin: margin;
+                }
+
+                QScrollBar::sub-line:vertical:hover,QScrollBar::sub-line:vertical:on
+                {
+                    border-image: url(:/qss_icons/rc/up_arrow.png);
+                    height: 0px;
+                    width: 0px;
+                    subcontrol-position: top;
+                    subcontrol-origin: margin;
+                }
+
+                QScrollBar::add-line:vertical:hover, QScrollBar::add-line:vertical:on
+                {
+                    border-image: url(:/qss_icons/rc/down_arrow.png);
+                    height: 0px;
+                    width: 0px;
+                    subcontrol-position: bottom;
+                    subcontrol-origin: margin;
+                }
+
+                QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical
+                {
+                    background: none;
+                }
+
+                QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
+                {
+                    background: none;
+                }@</string>
                 </property>
-                <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
+                <property name="currentIndex">
+                 <number>0</number>
                 </property>
-                <property name="verticalScrollBarPolicy">
-                 <enum>Qt::ScrollBarAlwaysOff</enum>
-                </property>
-                <property name="horizontalScrollBarPolicy">
-                 <enum>Qt::ScrollBarAlwaysOff</enum>
-                </property>
-                <property name="widgetResizable">
-                 <bool>true</bool>
-                </property>
-                <widget class="QWidget" name="scrollAreaWidgetContents_4">
+                <widget class="QWidget" name="page">
                  <property name="geometry">
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>173</width>
-                   <height>698</height>
+                   <width>208</width>
+                   <height>545</height>
                   </rect>
                  </property>
+                 <attribute name="icon">
+                  <iconset>
+                   <normaloff>../Icons/mobile-ui-user-svgrepo-com.svg</normaloff>../Icons/mobile-ui-user-svgrepo-com.svg</iconset>
+                 </attribute>
+                 <attribute name="label">
+                  <string>Models</string>
+                 </attribute>
+                 <layout class="QVBoxLayout" name="verticalLayout_8">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QScrollArea" name="scrollArea_4">
+                    <property name="frameShape">
+                     <enum>QFrame::NoFrame</enum>
+                    </property>
+                    <property name="verticalScrollBarPolicy">
+                     <enum>Qt::ScrollBarAlwaysOff</enum>
+                    </property>
+                    <property name="horizontalScrollBarPolicy">
+                     <enum>Qt::ScrollBarAlwaysOff</enum>
+                    </property>
+                    <property name="widgetResizable">
+                     <bool>true</bool>
+                    </property>
+                    <widget class="QWidget" name="scrollAreaWidgetContents_4">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>0</y>
+                       <width>208</width>
+                       <height>545</height>
+                      </rect>
+                     </property>
+                     <layout class="QVBoxLayout" name="verticalLayout_30">
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QFrame" name="frame_11">
+                        <property name="frameShape">
+                         <enum>QFrame::NoFrame</enum>
+                        </property>
+                        <property name="frameShadow">
+                         <enum>QFrame::Raised</enum>
+                        </property>
+                        <layout class="QVBoxLayout" name="verticalLayout_31">
+                         <property name="leftMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="topMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="rightMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="bottomMargin">
+                          <number>0</number>
+                         </property>
+                         <item>
+                          <widget class="QLabel" name="label">
+                           <property name="text">
+                            <string>TextLabel</string>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                      <item>
+                       <spacer name="verticalSpacer_5">
+                        <property name="orientation">
+                         <enum>Qt::Vertical</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>20</width>
+                          <height>514</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                     </layout>
+                    </widget>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QWidget" name="page_2">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>208</width>
+                   <height>545</height>
+                  </rect>
+                 </property>
+                 <attribute name="icon">
+                  <iconset>
+                   <normaloff>../Icons/emotcon-mobile-ui-svgrepo-com.svg</normaloff>../Icons/emotcon-mobile-ui-svgrepo-com.svg</iconset>
+                 </attribute>
+                 <attribute name="label">
+                  <string>Expressions</string>
+                 </attribute>
+                 <layout class="QVBoxLayout" name="verticalLayout_15">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QScrollArea" name="scrollArea_6">
+                    <property name="frameShape">
+                     <enum>QFrame::NoFrame</enum>
+                    </property>
+                    <property name="verticalScrollBarPolicy">
+                     <enum>Qt::ScrollBarAlwaysOff</enum>
+                    </property>
+                    <property name="horizontalScrollBarPolicy">
+                     <enum>Qt::ScrollBarAlwaysOff</enum>
+                    </property>
+                    <property name="widgetResizable">
+                     <bool>true</bool>
+                    </property>
+                    <widget class="QWidget" name="scrollAreaWidgetContents_6">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>0</y>
+                       <width>208</width>
+                       <height>545</height>
+                      </rect>
+                     </property>
+                     <layout class="QVBoxLayout" name="verticalLayout_33">
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QFrame" name="frame_9">
+                        <property name="frameShape">
+                         <enum>QFrame::NoFrame</enum>
+                        </property>
+                        <property name="frameShadow">
+                         <enum>QFrame::Raised</enum>
+                        </property>
+                        <layout class="QVBoxLayout" name="verticalLayout_32">
+                         <property name="leftMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="topMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="rightMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="bottomMargin">
+                          <number>0</number>
+                         </property>
+                         <item>
+                          <widget class="QLabel" name="label_3">
+                           <property name="text">
+                            <string>TextLabel</string>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                      <item>
+                       <spacer name="verticalSpacer_4">
+                        <property name="orientation">
+                         <enum>Qt::Vertical</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>20</width>
+                          <height>514</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                     </layout>
+                    </widget>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </widget>
               </item>
              </layout>
             </widget>
             <widget class="QWidget" name="tab_4">
+             <attribute name="icon">
+              <iconset>
+               <normaloff>../Icons/image-mobile-ui-svgrepo-com.svg</normaloff>../Icons/image-mobile-ui-svgrepo-com.svg</iconset>
+             </attribute>
              <attribute name="title">
               <string>Assets</string>
              </attribute>
@@ -212,15 +535,67 @@ QTabBar::tab:hover {
                 </property>
                 <property name="minimumSize">
                  <size>
-                  <width>165</width>
+                  <width>0</width>
                   <height>0</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>165</width>
+                  <width>16777215</width>
                   <height>16777215</height>
                  </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QTabBar{  
+    background-color: rgba(255, 255, 255, 0);
+}
+QTabBar::tab {  
+    background-color: rgba(255, 255, 255, 40);
+	background-color: rgb(0, 157, 235);
+    min-width: 70px; 
+    min-height:22px;
+    padding: 0px  2px; 
+    color: white;
+	border-radius: 10px;
+    margin-left:2px;
+    margin-right:2px;
+}
+QTabBar::tab:selected {  
+    color: white;
+	background-color: black;;
+}
+QTabBar::tab:hover {  
+    color: black;
+    background-color: rgba(255, 0, 0, 100);
+}
+*{
+	color: black;
+}
+
+QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}
+
+#creditsFrame{
+	background-color: rgba(255, 255, 255, 0);
+}</string>
                 </property>
                 <property name="frameShape">
                  <enum>QFrame::NoFrame</enum>
@@ -239,8 +614,8 @@ QTabBar::tab:hover {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>165</width>
-                   <height>698</height>
+                   <width>208</width>
+                   <height>617</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout">
@@ -265,6 +640,26 @@ QTabBar::tab:hover {
               </item>
              </layout>
             </widget>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="save">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="text">
+             <string>Guardar Modelo</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>25</width>
+              <height>25</height>
+             </size>
+            </property>
            </widget>
           </item>
          </layout>
@@ -355,16 +750,16 @@ QTabBar::tab:hover {
               <number>0</number>
              </property>
              <property name="leftMargin">
-              <number>6</number>
+              <number>0</number>
              </property>
              <property name="topMargin">
-              <number>6</number>
+              <number>0</number>
              </property>
              <property name="rightMargin">
-              <number>6</number>
+              <number>0</number>
              </property>
              <property name="bottomMargin">
-              <number>6</number>
+              <number>0</number>
              </property>
              <item>
               <widget class="QFrame" name="viewerFrame">
@@ -442,13 +837,13 @@ QTabBar::tab:hover {
         <widget class="QFrame" name="frame_3">
          <property name="minimumSize">
           <size>
-           <width>270</width>
+           <width>280</width>
            <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>270</width>
+           <width>280</width>
            <height>16777215</height>
           </size>
          </property>
@@ -478,13 +873,13 @@ QTabBar::tab:hover {
            <widget class="QTabWidget" name="tabWidget">
             <property name="minimumSize">
              <size>
-              <width>270</width>
+              <width>0</width>
               <height>0</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>270</width>
+              <width>16777215</width>
               <height>16777215</height>
              </size>
             </property>
@@ -538,15 +933,1021 @@ QFrame{
 
 #creditsFrame{
 	background-color: rgba(255, 255, 255, 0);
+}
+
+* QCheckBox, * QRadioButton {
+    background: transparent;
+}
+* QCheckBox::indicator, * QRadioButton::indicator {
+    width: 25px;
+    height: 25px;
+}
+* QCheckBox::indicator:unchecked {
+	image: url(./Icons/checkbox-svgrepo-com.svg);
+}
+* QCheckBox::indicator:checked {
+	image: url(./Icons/checked-checkbox-svgrepo-com.svg);
+}
+* QRadioButton::indicator:unchecked {
+	image: url(./Icons/circle-svgrepo-com.svg);
+}
+* QRadioButton::indicator:checked {
+	border-image: url(./Icons/checked-radio-svgrepo-com.svg);
 }</string>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>30</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="usesScrollButtons">
+             <bool>false</bool>
             </property>
             <property name="documentMode">
              <bool>true</bool>
             </property>
+            <widget class="QWidget" name="tab">
+             <attribute name="icon">
+              <iconset>
+               <normaloff>../Icons/mobile-setting-ui-svgrepo-com.svg</normaloff>../Icons/mobile-setting-ui-svgrepo-com.svg</iconset>
+             </attribute>
+             <attribute name="title">
+              <string>Settings</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_11">
+              <property name="spacing">
+               <number>6</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>6</number>
+              </property>
+              <property name="rightMargin">
+               <number>6</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QToolBox" name="toolBox_3">
+                <property name="styleSheet">
+                 <string notr="true">QWidget{
+                    background: #b8cdee;
+                }
+
+                QToolBox::tab {
+                    background: #009deb;
+                    border-radius: 5px;
+                    text-align: center;
+                    color: black;
+                }
+
+                /* 
+                QToolBox::tab:first {
+                    background: #4ade00;
+                    border-radius: 5px;
+                    color: black;
+                }
+
+                QToolBox::tab:last {
+                    background: #f95300;
+                    border-radius: 5px;
+                    color: black;
+                }
+                */
+
+                QToolBox::tab:selected { /* italicize selected tabs */
+                    font: italic;
+                    font-weight: bold;
+                    background: pink;
+                    text-align: center;
+                    color: black;   
+                }
+
+                @QScrollBar:vertical
+                {
+                    background-color: white;
+                    width: 3px;
+                    margin: 0px 0px 0px 0px;
+                    border: 0px transparent white;
+                    border-radius: 5px;
+                }
+
+                QScrollBar::handle:vertical
+                {
+                    background-color: white;
+                    min-height: 5px;
+                    border-radius: 5px;
+                }
+
+                QScrollBar::sub-line:vertical
+                {
+                    margin: 0px 0px 0px 0px;
+                    border-image: url(:/qss_icons/rc/up_arrow_disabled.png);
+                    height: 0px;
+                    width: 0px;
+                    subcontrol-position: top;
+                    subcontrol-origin: margin;
+                }
+
+                QScrollBar::add-line:vertical
+                {
+                    margin: 3px 0px 3px 0px;
+                    border-image: url(:/qss_icons/rc/down_arrow_disabled.png);
+                    height: 0px;
+                    width: 0px;
+                    subcontrol-position: bottom;
+                    subcontrol-origin: margin;
+                }
+
+                QScrollBar::sub-line:vertical:hover,QScrollBar::sub-line:vertical:on
+                {
+                    border-image: url(:/qss_icons/rc/up_arrow.png);
+                    height: 0px;
+                    width: 0px;
+                    subcontrol-position: top;
+                    subcontrol-origin: margin;
+                }
+
+                QScrollBar::add-line:vertical:hover, QScrollBar::add-line:vertical:on
+                {
+                    border-image: url(:/qss_icons/rc/down_arrow.png);
+                    height: 0px;
+                    width: 0px;
+                    subcontrol-position: bottom;
+                    subcontrol-origin: margin;
+                }
+
+                QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical
+                {
+                    background: none;
+                }
+
+                QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
+                {
+                    background: none;
+                }@</string>
+                </property>
+                <widget class="QWidget" name="toolBox_3Page1" native="true">
+                 <attribute name="label">
+                  <string>General</string>
+                 </attribute>
+                 <layout class="QVBoxLayout" name="verticalLayout_19">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QScrollArea" name="scrollArea_3">
+                    <property name="styleSheet">
+                     <string notr="true">QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}
+
+#creditsFrame{
+	background-color: rgba(255, 255, 255, 0);
+}
+
+* QCheckBox, * QRadioButton {
+    background: transparent;
+}
+* QCheckBox::indicator, * QRadioButton::indicator {
+    width: 25px;
+    height: 25px;
+}
+* QCheckBox::indicator:unchecked {
+	image: url(./Icons/checkbox-svgrepo-com.svg);
+}
+* QCheckBox::indicator:checked {
+	image: url(./Icons/checked-checkbox-svgrepo-com.svg);
+}
+* QRadioButton::indicator:unchecked {
+	image: url(./Icons/circle-svgrepo-com.svg);
+}
+* QRadioButton::indicator:checked {
+	border-image: url(./Icons/checked-radio-svgrepo-com.svg);
+}
+
+* QToolTip {
+	background-color: pink;
+}</string>
+                    </property>
+                    <property name="verticalScrollBarPolicy">
+                     <enum>Qt::ScrollBarAlwaysOff</enum>
+                    </property>
+                    <property name="horizontalScrollBarPolicy">
+                     <enum>Qt::ScrollBarAlwaysOff</enum>
+                    </property>
+                    <property name="widgetResizable">
+                     <bool>true</bool>
+                    </property>
+                    <widget class="QWidget" name="scrollAreaWidgetContents_3">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>0</y>
+                       <width>268</width>
+                       <height>592</height>
+                      </rect>
+                     </property>
+                     <layout class="QVBoxLayout" name="verticalLayout_20">
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QGroupBox" name="groupBox_7">
+                        <property name="title">
+                         <string>Audio</string>
+                        </property>
+                        <layout class="QVBoxLayout" name="verticalLayout_14">
+                         <property name="leftMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="topMargin">
+                          <number>23</number>
+                         </property>
+                         <property name="rightMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="bottomMargin">
+                          <number>0</number>
+                         </property>
+                         <item>
+                          <widget class="QFrame" name="audioFrame">
+                           <property name="styleSheet">
+                            <string notr="true"/>
+                           </property>
+                           <property name="frameShape">
+                            <enum>QFrame::StyledPanel</enum>
+                           </property>
+                           <property name="frameShadow">
+                            <enum>QFrame::Raised</enum>
+                           </property>
+                           <layout class="QGridLayout" name="gridLayout"/>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QGroupBox" name="groupBox_6">
+                        <property name="title">
+                         <string>Canvas</string>
+                        </property>
+                        <layout class="QVBoxLayout" name="verticalLayout_13">
+                         <property name="leftMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="topMargin">
+                          <number>23</number>
+                         </property>
+                         <property name="rightMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="bottomMargin">
+                          <number>0</number>
+                         </property>
+                         <item>
+                          <widget class="QFrame" name="frame_6">
+                           <property name="styleSheet">
+                            <string notr="true"/>
+                           </property>
+                           <property name="frameShape">
+                            <enum>QFrame::StyledPanel</enum>
+                           </property>
+                           <property name="frameShadow">
+                            <enum>QFrame::Raised</enum>
+                           </property>
+                           <layout class="QVBoxLayout" name="verticalLayout_12">
+                            <item>
+                             <widget class="QComboBox" name="comboBox">
+                              <property name="sizePolicy">
+                               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                               </sizepolicy>
+                              </property>
+                              <property name="cursor">
+                               <cursorShape>PointingHandCursor</cursorShape>
+                              </property>
+                              <property name="sizeAdjustPolicy">
+                               <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+                              </property>
+                              <property name="frame">
+                               <bool>true</bool>
+                              </property>
+                              <item>
+                               <property name="text">
+                                <string>Green</string>
+                               </property>
+                              </item>
+                              <item>
+                               <property name="text">
+                                <string>Magenta</string>
+                               </property>
+                              </item>
+                              <item>
+                               <property name="text">
+                                <string>Cyan</string>
+                               </property>
+                              </item>
+                              <item>
+                               <property name="text">
+                                <string>Blue</string>
+                               </property>
+                              </item>
+                              <item>
+                               <property name="text">
+                                <string>Yellow</string>
+                               </property>
+                              </item>
+                              <item>
+                               <property name="text">
+                                <string>White</string>
+                               </property>
+                              </item>
+                              <item>
+                               <property name="text">
+                                <string>None</string>
+                               </property>
+                              </item>
+                             </widget>
+                            </item>
+                            <item>
+                             <widget class="QCheckBox" name="HideUI">
+                              <property name="sizePolicy">
+                               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                               </sizepolicy>
+                              </property>
+                              <property name="cursor">
+                               <cursorShape>PointingHandCursor</cursorShape>
+                              </property>
+                              <property name="layoutDirection">
+                               <enum>Qt::RightToLeft</enum>
+                              </property>
+                              <property name="styleSheet">
+                               <string notr="true"/>
+                              </property>
+                              <property name="text">
+                               <string>Hide UI </string>
+                              </property>
+                              <property name="checked">
+                               <bool>false</bool>
+                              </property>
+                              <property name="tristate">
+                               <bool>false</bool>
+                              </property>
+                             </widget>
+                            </item>
+                           </layout>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QGroupBox" name="groupBox_8">
+                        <property name="title">
+                         <string>Export PNG</string>
+                        </property>
+                        <layout class="QVBoxLayout" name="verticalLayout_35">
+                         <property name="leftMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="topMargin">
+                          <number>23</number>
+                         </property>
+                         <property name="rightMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="bottomMargin">
+                          <number>0</number>
+                         </property>
+                         <item>
+                          <widget class="QFrame" name="audioFrame_2">
+                           <property name="styleSheet">
+                            <string notr="true"/>
+                           </property>
+                           <property name="frameShape">
+                            <enum>QFrame::StyledPanel</enum>
+                           </property>
+                           <property name="frameShadow">
+                            <enum>QFrame::Raised</enum>
+                           </property>
+                           <layout class="QHBoxLayout" name="horizontalLayout">
+                            <item>
+                             <widget class="QPushButton" name="PNG1">
+                              <property name="cursor">
+                               <cursorShape>PointingHandCursor</cursorShape>
+                              </property>
+                              <property name="toolTip">
+                               <string>Better for assets with some transparency, better image results except if you have different size images</string>
+                              </property>
+                              <property name="statusTip">
+                               <string/>
+                              </property>
+                              <property name="whatsThis">
+                               <string/>
+                              </property>
+                              <property name="text">
+                               <string>Method 1</string>
+                              </property>
+                              <property name="icon">
+                               <iconset>
+                                <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
+                              </property>
+                              <property name="iconSize">
+                               <size>
+                                <width>25</width>
+                                <height>25</height>
+                               </size>
+                              </property>
+                             </widget>
+                            </item>
+                            <item>
+                             <widget class="QPushButton" name="PNG2">
+                              <property name="cursor">
+                               <cursorShape>PointingHandCursor</cursorShape>
+                              </property>
+                              <property name="toolTip">
+                               <string>Better when you have diferent sized assets, as the other one requires them all to have the same size and position</string>
+                              </property>
+                              <property name="statusTip">
+                               <string/>
+                              </property>
+                              <property name="whatsThis">
+                               <string/>
+                              </property>
+                              <property name="text">
+                               <string>Method 2</string>
+                              </property>
+                              <property name="icon">
+                               <iconset>
+                                <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
+                              </property>
+                              <property name="iconSize">
+                               <size>
+                                <width>25</width>
+                                <height>25</height>
+                               </size>
+                              </property>
+                             </widget>
+                            </item>
+                           </layout>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                      <item>
+                       <spacer name="verticalSpacer">
+                        <property name="orientation">
+                         <enum>Qt::Vertical</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>20</width>
+                          <height>40</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                     </layout>
+                    </widget>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QWidget" name="toolBox_3Page2" native="true">
+                 <attribute name="label">
+                  <string>Advanced</string>
+                 </attribute>
+                 <layout class="QVBoxLayout" name="verticalLayout_28">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QGroupBox" name="groupBox_12">
+                    <property name="styleSheet">
+                     <string notr="true">*{
+	color: black;
+}
+
+QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}
+</string>
+                    </property>
+                    <property name="title">
+                     <string>Expressions</string>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_22">
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>23</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QFrame" name="frame_13">
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Raised</enum>
+                       </property>
+                       <layout class="QVBoxLayout" name="verticalLayout_16">
+                        <item>
+                         <widget class="QLabel" name="label_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="styleSheet">
+                           <string notr="true">font-size: 8px</string>
+                          </property>
+                          <property name="text">
+                           <string>Select the asset categories that count as expressions:</string>
+                          </property>
+                          <property name="wordWrap">
+                           <bool>true</bool>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QScrollArea" name="scrollArea_5">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="minimumSize">
+                           <size>
+                            <width>0</width>
+                            <height>136</height>
+                           </size>
+                          </property>
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>136</height>
+                           </size>
+                          </property>
+                          <property name="styleSheet">
+                           <string notr="true">background-color: rgb(255, 255, 255);</string>
+                          </property>
+                          <property name="widgetResizable">
+                           <bool>true</bool>
+                          </property>
+                          <widget class="QWidget" name="scrollAreaWidgetContents_5">
+                           <property name="geometry">
+                            <rect>
+                             <x>0</x>
+                             <y>0</y>
+                             <width>256</width>
+                             <height>136</height>
+                            </rect>
+                           </property>
+                          </widget>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QScrollArea" name="scrollArea_7">
+                    <property name="styleSheet">
+                     <string notr="true">QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}
+
+#creditsFrame{
+	background-color: rgba(255, 255, 255, 0);
+}
+
+* QCheckBox, * QRadioButton {
+    background: transparent;
+}
+* QCheckBox::indicator, * QRadioButton::indicator {
+    width: 25px;
+    height: 25px;
+}
+* QCheckBox::indicator:unchecked {
+	image: url(./Icons/checkbox-svgrepo-com.svg);
+}
+* QCheckBox::indicator:checked {
+	image: url(./Icons/checked-checkbox-svgrepo-com.svg);
+}
+* QRadioButton::indicator:unchecked {
+	image: url(./Icons/circle-svgrepo-com.svg);
+}
+* QRadioButton::indicator:checked {
+	border-image: url(./Icons/checked-radio-svgrepo-com.svg);
+}</string>
+                    </property>
+                    <property name="widgetResizable">
+                     <bool>true</bool>
+                    </property>
+                    <widget class="QWidget" name="scrollAreaWidgetContents_7">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>0</y>
+                       <width>268</width>
+                       <height>397</height>
+                      </rect>
+                     </property>
+                     <layout class="QVBoxLayout" name="verticalLayout_34">
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QGroupBox" name="groupBox_11">
+                        <property name="styleSheet">
+                         <string notr="true">*{
+	color: black;
+}
+
+QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}
+</string>
+                        </property>
+                        <property name="title">
+                         <string>Edit Canvas Files</string>
+                        </property>
+                        <layout class="QVBoxLayout" name="verticalLayout_21">
+                         <property name="leftMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="topMargin">
+                          <number>23</number>
+                         </property>
+                         <property name="rightMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="bottomMargin">
+                          <number>0</number>
+                         </property>
+                         <item>
+                          <widget class="QFrame" name="frame_12">
+                           <property name="frameShape">
+                            <enum>QFrame::StyledPanel</enum>
+                           </property>
+                           <property name="frameShadow">
+                            <enum>QFrame::Raised</enum>
+                           </property>
+                           <layout class="QGridLayout" name="gridLayout_2">
+                            <item row="0" column="0">
+                             <widget class="QPushButton" name="pushButton_6">
+                              <property name="sizePolicy">
+                               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                               </sizepolicy>
+                              </property>
+                              <property name="cursor">
+                               <cursorShape>PointingHandCursor</cursorShape>
+                              </property>
+                              <property name="text">
+                               <string>&lt;/HTML&gt;</string>
+                              </property>
+                              <property name="iconSize">
+                               <size>
+                                <width>16</width>
+                                <height>16</height>
+                               </size>
+                              </property>
+                             </widget>
+                            </item>
+                            <item row="0" column="1">
+                             <widget class="QPushButton" name="pushButton_7">
+                              <property name="sizePolicy">
+                               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                               </sizepolicy>
+                              </property>
+                              <property name="maximumSize">
+                               <size>
+                                <width>16777215</width>
+                                <height>16777215</height>
+                               </size>
+                              </property>
+                              <property name="cursor">
+                               <cursorShape>PointingHandCursor</cursorShape>
+                              </property>
+                              <property name="text">
+                               <string>var JS;</string>
+                              </property>
+                              <property name="iconSize">
+                               <size>
+                                <width>16</width>
+                                <height>16</height>
+                               </size>
+                              </property>
+                             </widget>
+                            </item>
+                            <item row="1" column="1">
+                             <widget class="QPushButton" name="pushButton">
+                              <property name="sizePolicy">
+                               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                               </sizepolicy>
+                              </property>
+                              <property name="maximumSize">
+                               <size>
+                                <width>16777215</width>
+                                <height>16777215</height>
+                               </size>
+                              </property>
+                              <property name="cursor">
+                               <cursorShape>PointingHandCursor</cursorShape>
+                              </property>
+                              <property name="text">
+                               <string>.CSS {Styles}</string>
+                              </property>
+                              <property name="iconSize">
+                               <size>
+                                <width>16</width>
+                                <height>16</height>
+                               </size>
+                              </property>
+                             </widget>
+                            </item>
+                            <item row="1" column="0">
+                             <widget class="QPushButton" name="pushButton_3">
+                              <property name="sizePolicy">
+                               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                               </sizepolicy>
+                              </property>
+                              <property name="maximumSize">
+                               <size>
+                                <width>16777215</width>
+                                <height>16777215</height>
+                               </size>
+                              </property>
+                              <property name="cursor">
+                               <cursorShape>PointingHandCursor</cursorShape>
+                              </property>
+                              <property name="text">
+                               <string>.CSS {Animations}</string>
+                              </property>
+                              <property name="iconSize">
+                               <size>
+                                <width>16</width>
+                                <height>16</height>
+                               </size>
+                              </property>
+                             </widget>
+                            </item>
+                           </layout>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                      <item>
+                       <spacer name="verticalSpacer_3">
+                        <property name="orientation">
+                         <enum>Qt::Vertical</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>20</width>
+                          <height>40</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                     </layout>
+                    </widget>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_2">
+             <attribute name="icon">
+              <iconset>
+               <normaloff>../Icons/duplicate-mobile-ui-svgrepo-com.svg</normaloff>../Icons/duplicate-mobile-ui-svgrepo-com.svg</iconset>
+             </attribute>
+             <attribute name="title">
+              <string>Layers</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_10">
+              <property name="spacing">
+               <number>6</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>6</number>
+              </property>
+              <property name="rightMargin">
+               <number>6</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QScrollArea" name="scrollArea_2">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>270</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>270</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
+                </property>
+                <property name="verticalScrollBarPolicy">
+                 <enum>Qt::ScrollBarAlwaysOff</enum>
+                </property>
+                <property name="horizontalScrollBarPolicy">
+                 <enum>Qt::ScrollBarAlwaysOff</enum>
+                </property>
+                <property name="widgetResizable">
+                 <bool>true</bool>
+                </property>
+                <widget class="QWidget" name="scrollAreaWidgetContents_2">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>270</width>
+                   <height>664</height>
+                  </rect>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_4">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>6</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                 </layout>
+                </widget>
+               </widget>
+              </item>
+             </layout>
+            </widget>
             <widget class="QWidget" name="tab_3">
+             <attribute name="icon">
+              <iconset>
+               <normaloff>../Icons/love-mobile-ui-svgrepo-com.svg</normaloff>../Icons/love-mobile-ui-svgrepo-com.svg</iconset>
+             </attribute>
              <attribute name="title">
               <string>About</string>
              </attribute>
@@ -653,7 +2054,7 @@ QFrame{
                           <string notr="true"/>
                          </property>
                          <property name="text">
-                          <string>&lt;a href=&quot;https://gemmstone.carrd.co/&quot;&gt;Gemmstone&lt;/a&gt;</string>
+                          <string>App by: &lt;a href=&quot;https://gemmstone.carrd.co/&quot;&gt;Gemmstone&lt;/a&gt;</string>
                          </property>
                          <property name="alignment">
                           <set>Qt::AlignCenter</set>
@@ -663,46 +2064,10 @@ QFrame{
                          </property>
                         </widget>
                        </item>
-                      </layout>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QGroupBox" name="groupBox_12">
-                   <property name="styleSheet">
-                    <string notr="true"/>
-                   </property>
-                   <property name="title">
-                    <string>Art by</string>
-                   </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_19">
-                    <property name="leftMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>23</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>0</number>
-                    </property>
-                    <item>
-                     <widget class="QFrame" name="frame_2">
-                      <property name="frameShape">
-                       <enum>QFrame::StyledPanel</enum>
-                      </property>
-                      <property name="frameShadow">
-                       <enum>QFrame::Raised</enum>
-                      </property>
-                      <layout class="QVBoxLayout" name="verticalLayout_28">
                        <item>
                         <widget class="QLabel" name="label_6">
                          <property name="text">
-                          <string>&lt;a href=&quot;https://chereverie.art/&quot;&gt;Chereverie&lt;/a&gt;</string>
+                          <string>Art by: &lt;a href=&quot;https://chereverie.art/&quot;&gt;Chereverie&lt;/a&gt;</string>
                          </property>
                          <property name="alignment">
                           <set>Qt::AlignCenter</set>
@@ -724,7 +2089,7 @@ QFrame{
                     <string notr="true"/>
                    </property>
                    <property name="title">
-                    <string>Ver.</string>
+                    <string>Version</string>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_23">
                     <property name="leftMargin">
@@ -778,556 +2143,35 @@ QFrame{
                 <property name="sizeHint" stdset="0">
                  <size>
                   <width>20</width>
-                  <height>506</height>
+                  <height>472</height>
                  </size>
                 </property>
                </spacer>
               </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="tab_2">
-             <attribute name="title">
-              <string>Layers</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_10">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>6</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
               <item>
-               <widget class="QScrollArea" name="scrollArea_2">
+               <widget class="QPushButton" name="pushButton_8">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
-                <property name="minimumSize">
+                <property name="cursor">
+                 <cursorShape>PointingHandCursor</cursorShape>
+                </property>
+                <property name="text">
+                 <string>Report an Issue</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>../Icons/flag-mobile-ui-svgrepo-com.svg</normaloff>../Icons/flag-mobile-ui-svgrepo-com.svg</iconset>
+                </property>
+                <property name="iconSize">
                  <size>
-                  <width>270</width>
-                  <height>0</height>
+                  <width>25</width>
+                  <height>25</height>
                  </size>
                 </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>270</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
-                </property>
-                <property name="verticalScrollBarPolicy">
-                 <enum>Qt::ScrollBarAlwaysOff</enum>
-                </property>
-                <property name="horizontalScrollBarPolicy">
-                 <enum>Qt::ScrollBarAlwaysOff</enum>
-                </property>
-                <property name="widgetResizable">
-                 <bool>true</bool>
-                </property>
-                <widget class="QWidget" name="scrollAreaWidgetContents_2">
-                 <property name="geometry">
-                  <rect>
-                   <x>0</x>
-                   <y>0</y>
-                   <width>270</width>
-                   <height>698</height>
-                  </rect>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_4">
-                  <property name="spacing">
-                   <number>0</number>
-                  </property>
-                  <property name="leftMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>0</number>
-                  </property>
-                 </layout>
-                </widget>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="tab">
-             <attribute name="title">
-              <string>Settings</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_11">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>6</number>
-              </property>
-              <property name="rightMargin">
-               <number>6</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QScrollArea" name="scrollArea_3">
-                <property name="verticalScrollBarPolicy">
-                 <enum>Qt::ScrollBarAlwaysOff</enum>
-                </property>
-                <property name="horizontalScrollBarPolicy">
-                 <enum>Qt::ScrollBarAlwaysOff</enum>
-                </property>
-                <property name="widgetResizable">
-                 <bool>true</bool>
-                </property>
-                <widget class="QWidget" name="scrollAreaWidgetContents_3">
-                 <property name="geometry">
-                  <rect>
-                   <x>0</x>
-                   <y>0</y>
-                   <width>264</width>
-                   <height>698</height>
-                  </rect>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_20">
-                  <property name="leftMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>0</number>
-                  </property>
-                  <item>
-                   <widget class="QGroupBox" name="groupBox_7">
-                    <property name="title">
-                     <string>Audio</string>
-                    </property>
-                    <layout class="QVBoxLayout" name="verticalLayout_14">
-                     <property name="leftMargin">
-                      <number>0</number>
-                     </property>
-                     <property name="topMargin">
-                      <number>23</number>
-                     </property>
-                     <property name="rightMargin">
-                      <number>0</number>
-                     </property>
-                     <property name="bottomMargin">
-                      <number>0</number>
-                     </property>
-                     <item>
-                      <widget class="QFrame" name="frame_7">
-                       <property name="frameShape">
-                        <enum>QFrame::StyledPanel</enum>
-                       </property>
-                       <property name="frameShadow">
-                        <enum>QFrame::Raised</enum>
-                       </property>
-                       <layout class="QGridLayout" name="gridLayout">
-                        <item row="4" column="0">
-                         <widget class="QLabel" name="label_4">
-                          <property name="text">
-                           <string>Delay:</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item row="6" column="0">
-                         <widget class="QSlider" name="horizontalSlider_2">
-                          <property name="cursor">
-                           <cursorShape>SizeHorCursor</cursorShape>
-                          </property>
-                          <property name="styleSheet">
-                           <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                          </property>
-                          <property name="maximum">
-                           <number>100</number>
-                          </property>
-                          <property name="value">
-                           <number>80</number>
-                          </property>
-                          <property name="orientation">
-                           <enum>Qt::Horizontal</enum>
-                          </property>
-                         </widget>
-                        </item>
-                        <item row="1" column="0">
-                         <widget class="QLabel" name="label_3">
-                          <property name="text">
-                           <string>Threshold:</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item row="2" column="0">
-                         <widget class="QProgressBar" name="progressBar">
-                          <property name="maximumSize">
-                           <size>
-                            <width>16777215</width>
-                            <height>7</height>
-                           </size>
-                          </property>
-                          <property name="value">
-                           <number>24</number>
-                          </property>
-                          <property name="textVisible">
-                           <bool>false</bool>
-                          </property>
-                         </widget>
-                        </item>
-                        <item row="5" column="0">
-                         <widget class="QProgressBar" name="progressBar_2">
-                          <property name="maximumSize">
-                           <size>
-                            <width>16777215</width>
-                            <height>7</height>
-                           </size>
-                          </property>
-                          <property name="value">
-                           <number>24</number>
-                          </property>
-                          <property name="textVisible">
-                           <bool>false</bool>
-                          </property>
-                         </widget>
-                        </item>
-                        <item row="0" column="0">
-                         <widget class="QComboBox" name="microphones">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="maximumSize">
-                           <size>
-                            <width>252</width>
-                            <height>16777215</height>
-                           </size>
-                          </property>
-                          <property name="cursor">
-                           <cursorShape>PointingHandCursor</cursorShape>
-                          </property>
-                          <property name="toolTip">
-                           <string>Microphone selection</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item row="3" column="0">
-                         <widget class="QSlider" name="horizontalSlider">
-                          <property name="cursor">
-                           <cursorShape>SizeHorCursor</cursorShape>
-                          </property>
-                          <property name="styleSheet">
-                           <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                          </property>
-                          <property name="maximum">
-                           <number>100</number>
-                          </property>
-                          <property name="value">
-                           <number>20</number>
-                          </property>
-                          <property name="orientation">
-                           <enum>Qt::Horizontal</enum>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </widget>
-                     </item>
-                    </layout>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QGroupBox" name="groupBox_8">
-                    <property name="title">
-                     <string>Archive</string>
-                    </property>
-                    <layout class="QVBoxLayout" name="verticalLayout_16">
-                     <property name="leftMargin">
-                      <number>0</number>
-                     </property>
-                     <property name="topMargin">
-                      <number>23</number>
-                     </property>
-                     <property name="rightMargin">
-                      <number>0</number>
-                     </property>
-                     <property name="bottomMargin">
-                      <number>0</number>
-                     </property>
-                     <item>
-                      <widget class="QFrame" name="frame_9">
-                       <property name="frameShape">
-                        <enum>QFrame::StyledPanel</enum>
-                       </property>
-                       <property name="frameShadow">
-                        <enum>QFrame::Raised</enum>
-                       </property>
-                       <layout class="QVBoxLayout" name="verticalLayout_15">
-                        <item>
-                         <widget class="QPushButton" name="pushButton_2">
-                          <property name="cursor">
-                           <cursorShape>PointingHandCursor</cursorShape>
-                          </property>
-                          <property name="text">
-                           <string>Open Assets Folder</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QPushButton" name="pushButton_5">
-                          <property name="cursor">
-                           <cursorShape>PointingHandCursor</cursorShape>
-                          </property>
-                          <property name="text">
-                           <string>Export As PNG File</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QPushButton" name="pushButton_3">
-                          <property name="cursor">
-                           <cursorShape>PointingHandCursor</cursorShape>
-                          </property>
-                          <property name="text">
-                           <string>Export Avatars as Zip</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QPushButton" name="pushButton_4">
-                          <property name="cursor">
-                           <cursorShape>PointingHandCursor</cursorShape>
-                          </property>
-                          <property name="text">
-                           <string>Import Avatars</string>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </widget>
-                     </item>
-                    </layout>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QGroupBox" name="groupBox_6">
-                    <property name="title">
-                     <string>Canvas</string>
-                    </property>
-                    <layout class="QVBoxLayout" name="verticalLayout_13">
-                     <property name="leftMargin">
-                      <number>0</number>
-                     </property>
-                     <property name="topMargin">
-                      <number>23</number>
-                     </property>
-                     <property name="rightMargin">
-                      <number>0</number>
-                     </property>
-                     <property name="bottomMargin">
-                      <number>0</number>
-                     </property>
-                     <item>
-                      <widget class="QFrame" name="frame_6">
-                       <property name="frameShape">
-                        <enum>QFrame::StyledPanel</enum>
-                       </property>
-                       <property name="frameShadow">
-                        <enum>QFrame::Raised</enum>
-                       </property>
-                       <layout class="QVBoxLayout" name="verticalLayout_12">
-                        <item>
-                         <widget class="QComboBox" name="comboBox">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="cursor">
-                           <cursorShape>PointingHandCursor</cursorShape>
-                          </property>
-                          <item>
-                           <property name="text">
-                            <string>Green</string>
-                           </property>
-                          </item>
-                          <item>
-                           <property name="text">
-                            <string>Magenta</string>
-                           </property>
-                          </item>
-                          <item>
-                           <property name="text">
-                            <string>Cyan</string>
-                           </property>
-                          </item>
-                          <item>
-                           <property name="text">
-                            <string>Blue</string>
-                           </property>
-                          </item>
-                          <item>
-                           <property name="text">
-                            <string>Yellow</string>
-                           </property>
-                          </item>
-                          <item>
-                           <property name="text">
-                            <string>White</string>
-                           </property>
-                          </item>
-                          <item>
-                           <property name="text">
-                            <string>None</string>
-                           </property>
-                          </item>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QCheckBox" name="HideUI">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="cursor">
-                           <cursorShape>PointingHandCursor</cursorShape>
-                          </property>
-                          <property name="layoutDirection">
-                           <enum>Qt::RightToLeft</enum>
-                          </property>
-                          <property name="styleSheet">
-                           <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                          </property>
-                          <property name="text">
-                           <string>Hide UI </string>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </widget>
-                     </item>
-                    </layout>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QGroupBox" name="groupBox_11">
-                    <property name="styleSheet">
-                     <string notr="true">*{
-	color: black;
-}
-
-QGroupBox {
-border-color: #FF17365D;
-font-size: 14px;
-border-radius: 15px;
-}
-
-QGroupBox::title {
-border-top-left-radius: 9px;
-border-top-right-radius: 9px;
-padding: 2px 20px;
-background-color: #FF17365D;
-color: rgb(255, 255, 255);
-}
-
-QFrame{
-	border-top-right-radius: 9px;
-	border-bottom-right-radius: 9px;
-	border-bottom-left-radius: 9px;
-	background-color: rgb(255, 255, 255);
-}
-</string>
-                    </property>
-                    <property name="title">
-                     <string>Advanced</string>
-                    </property>
-                    <layout class="QVBoxLayout" name="verticalLayout_21">
-                     <property name="leftMargin">
-                      <number>0</number>
-                     </property>
-                     <property name="topMargin">
-                      <number>23</number>
-                     </property>
-                     <property name="rightMargin">
-                      <number>0</number>
-                     </property>
-                     <property name="bottomMargin">
-                      <number>0</number>
-                     </property>
-                     <item>
-                      <widget class="QFrame" name="frame_12">
-                       <property name="frameShape">
-                        <enum>QFrame::StyledPanel</enum>
-                       </property>
-                       <property name="frameShadow">
-                        <enum>QFrame::Raised</enum>
-                       </property>
-                       <layout class="QVBoxLayout" name="verticalLayout_22">
-                        <item>
-                         <widget class="QPushButton" name="pushButton_6">
-                          <property name="cursor">
-                           <cursorShape>PointingHandCursor</cursorShape>
-                          </property>
-                          <property name="text">
-                           <string>Edit HTML File</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QPushButton" name="pushButton">
-                          <property name="cursor">
-                           <cursorShape>PointingHandCursor</cursorShape>
-                          </property>
-                          <property name="text">
-                           <string>Edit CSS File</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QPushButton" name="pushButton_7">
-                          <property name="cursor">
-                           <cursorShape>PointingHandCursor</cursorShape>
-                          </property>
-                          <property name="text">
-                           <string>Edit JS File</string>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </widget>
-                     </item>
-                    </layout>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
                </widget>
               </item>
              </layout>
@@ -1341,6 +2185,45 @@ QFrame{
      </widget>
     </item>
    </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1273</width>
+     <height>34</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuArchive">
+    <property name="title">
+     <string>Archive</string>
+    </property>
+    <widget class="QMenu" name="menuExport_as">
+     <property name="title">
+      <string>Export as...</string>
+     </property>
+     <widget class="QMenu" name="menuPNG_File">
+      <property name="title">
+       <string>PNG File</string>
+      </property>
+      <addaction name="actionMethod_1"/>
+      <addaction name="actionMethod_2"/>
+     </widget>
+     <addaction name="menuPNG_File"/>
+    </widget>
+    <addaction name="actionOpen_Assets_Folder"/>
+    <addaction name="menuExport_as"/>
+   </widget>
+   <widget class="QMenu" name="menuBackup">
+    <property name="title">
+     <string>Backup</string>
+    </property>
+    <addaction name="actionImport_Backup"/>
+    <addaction name="actionExport_Backup"/>
+   </widget>
+   <addaction name="menuArchive"/>
+   <addaction name="menuBackup"/>
   </widget>
   <action name="actionLoad_Avatar">
    <property name="text">
@@ -1413,7 +2296,34 @@ QFrame{
     <string>Save Current Avatar As..</string>
    </property>
   </action>
+  <action name="actionOpen_Assets_Folder">
+   <property name="text">
+    <string>Open Assets Folder</string>
+   </property>
+  </action>
+  <action name="actionImport_Backup">
+   <property name="text">
+    <string>Import Backup</string>
+   </property>
+  </action>
+  <action name="actionExport_Backup">
+   <property name="text">
+    <string>Export Backup</string>
+   </property>
+  </action>
+  <action name="actionMethod_1">
+   <property name="text">
+    <string>Method 1</string>
+   </property>
+  </action>
+  <action name="actionMethod_2">
+   <property name="text">
+    <string>Method 2</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

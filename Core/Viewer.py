@@ -2,7 +2,6 @@ from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtCore import QUrl, QTimer
 from bs4 import BeautifulSoup
 import os
-import cssutils
 
 
 class LayeredImageViewer(QWebEngineView):
@@ -56,6 +55,8 @@ class LayeredImageViewer(QWebEngineView):
                         transform: translate(-50%, -50%) scale({scale_factor}) rotate({layer['rotation']}deg);
                         width: {layer['sizeX']}px; 
                         height: {layer['sizeY']}px;
+                        {"opacity: 0:" if layer['sizeY'] else ""}; 
+                        {layer['css']}
                     """)
                 img_tag['class'] = [layer['blinking'], layer['talking']]
                 # Append the img tag to the div
