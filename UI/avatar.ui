@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GroupBox</class>
+ <widget class="QGroupBox" name="GroupBox">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>169</width>
+    <height>112</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>GroupBox</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QTabBar{  
+    background-color: rgba(255, 255, 255, 0);
+}
+QTabBar::tab {  
+    background-color: rgba(255, 255, 255, 40);
+	background-color: rgb(0, 157, 235);
+    min-width: 70px; 
+    min-height:22px;
+    padding: 0px  2px; 
+    color: white;
+	border-radius: 10px;
+    margin-left:2px;
+    margin-right:2px;
+}
+QTabBar::tab:selected {  
+    color: white;
+	background-color: black;;
+}
+QTabBar::tab:hover {  
+    color: black;
+    background-color: rgba(255, 0, 0, 100);
+}
+*{
+	color: black;
+}
+
+QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}
+QPushButton { 
+	background-color: white;
+}
+#creditsFrame{
+	background-color: rgba(255, 255, 255, 0);
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>23</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="frame">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="avatar">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="toolTip">
+         <string>Load Model</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {  
+	border-bottom-left-radius: 9px;
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+}
+QPushButton:hover {  
+    background-color: rgba(100, 100, 100, 50);
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>../Icons/mobile-ui-user-svgrepo-com.svg</normaloff>../Icons/mobile-ui-user-svgrepo-com.svg</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>80</width>
+          <height>80</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="frame_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="delete_2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="toolTip">
+            <string>Delete Model</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {  
+	border-bottom-right-radius: 0px;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 9px;
+	border-top-right-radius: 9px;
+}
+QPushButton:hover {  
+    background-color: rgba(255, 0, 0, 100);
+}</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>20</width>
+             <height>20</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="rename">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="toolTip">
+            <string>Rename</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {  
+	border-bottom-right-radius: 0px;
+	border-top-left-radius: 9px;
+	border-bottom-left-radius: 9px;
+	border-top-right-radius: 0px;
+}
+QPushButton:hover {  
+    background-color: rgba(0, 255, 0, 100);
+}</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../Icons/mobile-rename-ui-svgrepo-com.svg</normaloff>../Icons/mobile-rename-ui-svgrepo-com.svg</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>25</width>
+             <height>25</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="hotkey">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="toolTip">
+            <string>ShortCut</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {  
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 9px;
+	border-bottom-left-radius: 0px;
+	border-top-right-radius: 0px;
+}
+QPushButton:hover {  
+    background-color: rgba(0, 0, 255, 100);
+}</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../Icons/import-mobile-ui-svgrepo-com.svg</normaloff>../Icons/import-mobile-ui-svgrepo-com.svg</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>25</width>
+             <height>25</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
