@@ -242,6 +242,7 @@ class ExpressionSelector(QWidget):
         self.selected_folders = []
 
         layout = QGridLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
 
         folders = [folder for folder in os.listdir(folder_path) if "." not in folder]
         self.checkboxes = {}

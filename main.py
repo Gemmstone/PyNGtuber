@@ -1,16 +1,18 @@
 from Core.ShortcutsManager import MidiListener, KeyboardListener
 from Core.imageGallery import ImageGallery, ExpressionSelector
 from Core.audioManager import MicrophoneVolumeWidget
+from PyQt6.QtCore import QTimer, QCoreApplication
 from PIL import Image, ImageSequence, ImageOps
 from Core.Viewer import LayeredImageViewer
 from Core.Settings import SettingsToolBox
 from PyQt6 import QtWidgets, uic, QtCore
-from PyQt6.QtCore import QTimer
+from PyQt6.QtGui import QAction, QIcon
 from collections import Counter
 from pathlib import Path
 import json
 import copy
 import sys
+import os
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -70,21 +72,62 @@ class MainWindow(QtWidgets.QMainWindow):
         self.showUI()
         self.update_viewer(self.current_files, opening=True)
 
-        self.PNG1.clicked.connect(lambda: self.export_png(1))
-        self.PNG2.clicked.connect(lambda: self.export_png(2))
+        self.PNG.clicked.connect(lambda: self.export_png(1))
 
         self.save.clicked.connect(self.save_avatar)
+
+        menu = QtWidgets.QMenu()
+
+        CreateCategoryButton = QAction(self.tr("Create new category"), menu)
+        OpenAssetsFolderButton = QAction(self.tr("Open assets folder"), menu)
+        menu.addAction(CreateCategoryButton)
+        menu.addAction(OpenAssetsFolderButton)
+
+        self.toolButton.setMenu(menu)
+
+        CreateCategoryButton.triggered.connect(self.CreateCategory)
+        OpenAssetsFolderButton.triggered.connect(self.OpenAssetsFolder)
+
+        self.selectCategory.addItems(self.get_folders_in_assets())
+
+    def CreateCategory(self):
+        text, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter new category name:')
+
+        if ok:
+            print(str(text))
+
+    def OpenAssetsFolder(self):
+        # Your code for Item 2
+        pass
+
+    def get_folders_in_assets(self):
+        folder_path = "./Assets"
+        if os.path.exists(folder_path) and os.path.isdir(folder_path):
+            folders = [self.tr(f) for f in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, f))]
+            return [self.tr("Select Category...")] + folders
+        else:
+            return [self.tr("Select Category...")]
 
     def save_avatar(self):
         print(self.current_files)
         print(self.file_parameters)
 
-    def export_png(self, method):
+        output_name = "saving.png"
+        self.image_generator(output_name=output_name, method=2)
+        self.ImageGallery.create_thumbnail(output_name, )
+
+    def export_png(self):
+        method = self.PNGmethod.currentIndex()
+
+        if method == 0:
+            return
+
         fileName, _ = QtWidgets.QFileDialog.getSaveFileName(
             parent=self,
             caption=self.tr("Save File"),
             directory=str(Path.home()),
-            filter=self.tr("Images (*.png)"))
+            filter=self.tr("Images (*.png)")
+        )
 
         if fileName:
             if not fileName.lower().endswith(".png"):
@@ -369,7 +412,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
+    QCoreApplication.setApplicationName("PyNG")
+
     window = MainWindow()
+    window.setWindowIcon(QIcon('icon.ico'))
     window.show()
     app.aboutToQuit.connect(window.stop_all_workers)
     app.exec()

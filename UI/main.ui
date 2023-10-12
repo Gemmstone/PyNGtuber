@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="whatsThis">
+   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+  </property>
   <property name="styleSheet">
    <string notr="true"/>
   </property>
@@ -129,7 +132,7 @@ QTabBar::tab:hover {
 }</string>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <property name="iconSize">
              <size>
@@ -150,6 +153,9 @@ QTabBar::tab:hover {
              </attribute>
              <attribute name="title">
               <string>Avatars</string>
+             </attribute>
+             <attribute name="toolTip">
+              <string>Avatar List</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_29">
               <property name="leftMargin">
@@ -273,7 +279,7 @@ QTabBar::tab:hover {
                    <x>0</x>
                    <y>0</y>
                    <width>208</width>
-                   <height>545</height>
+                   <height>579</height>
                   </rect>
                  </property>
                  <attribute name="icon">
@@ -316,7 +322,7 @@ QTabBar::tab:hover {
                        <x>0</x>
                        <y>0</y>
                        <width>208</width>
-                       <height>545</height>
+                       <height>579</height>
                       </rect>
                      </property>
                      <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -371,7 +377,7 @@ QTabBar::tab:hover {
                         <property name="sizeHint" stdset="0">
                          <size>
                           <width>20</width>
-                          <height>514</height>
+                          <height>548</height>
                          </size>
                         </property>
                        </spacer>
@@ -388,7 +394,7 @@ QTabBar::tab:hover {
                    <x>0</x>
                    <y>0</y>
                    <width>208</width>
-                   <height>545</height>
+                   <height>579</height>
                   </rect>
                  </property>
                  <attribute name="icon">
@@ -431,7 +437,7 @@ QTabBar::tab:hover {
                        <x>0</x>
                        <y>0</y>
                        <width>208</width>
-                       <height>545</height>
+                       <height>579</height>
                       </rect>
                      </property>
                      <layout class="QVBoxLayout" name="verticalLayout_33">
@@ -486,7 +492,7 @@ QTabBar::tab:hover {
                         <property name="sizeHint" stdset="0">
                          <size>
                           <width>20</width>
-                          <height>514</height>
+                          <height>548</height>
                          </size>
                         </property>
                        </spacer>
@@ -504,10 +510,13 @@ QTabBar::tab:hover {
             <widget class="QWidget" name="tab_4">
              <attribute name="icon">
               <iconset>
-               <normaloff>../Icons/image-mobile-ui-svgrepo-com.svg</normaloff>../Icons/image-mobile-ui-svgrepo-com.svg</iconset>
+               <normaloff>../Icons/duplicate-mobile-ui-svgrepo-com.svg</normaloff>../Icons/duplicate-mobile-ui-svgrepo-com.svg</iconset>
              </attribute>
              <attribute name="title">
               <string>Assets</string>
+             </attribute>
+             <attribute name="toolTip">
+              <string>Assets List</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_17">
               <property name="spacing">
@@ -615,7 +624,7 @@ QFrame{
                    <x>0</x>
                    <y>0</y>
                    <width>208</width>
-                   <height>617</height>
+                   <height>651</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout">
@@ -648,7 +657,7 @@ QFrame{
              <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="text">
-             <string>Guardar Modelo</string>
+             <string>Save Model</string>
             </property>
             <property name="icon">
              <iconset>
@@ -978,6 +987,9 @@ QFrame{
              <attribute name="title">
               <string>Settings</string>
              </attribute>
+             <attribute name="toolTip">
+              <string>General Settings</string>
+             </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_11">
               <property name="spacing">
                <number>6</number>
@@ -1094,7 +1106,19 @@ QFrame{
                     background: none;
                 }@</string>
                 </property>
-                <widget class="QWidget" name="toolBox_3Page1" native="true">
+                <widget class="QWidget" name="toolBox_3Page1">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>268</width>
+                   <height>626</height>
+                  </rect>
+                 </property>
+                 <attribute name="icon">
+                  <iconset>
+                   <normaloff>../Icons/mobile-monitor-ui-svgrepo-com.svg</normaloff>../Icons/mobile-monitor-ui-svgrepo-com.svg</iconset>
+                 </attribute>
                  <attribute name="label">
                   <string>General</string>
                  </attribute>
@@ -1178,7 +1202,7 @@ QFrame{
                        <x>0</x>
                        <y>0</y>
                        <width>268</width>
-                       <height>592</height>
+                       <height>651</height>
                       </rect>
                      </property>
                      <layout class="QVBoxLayout" name="verticalLayout_20">
@@ -1258,7 +1282,7 @@ QFrame{
                            <property name="frameShadow">
                             <enum>QFrame::Raised</enum>
                            </property>
-                           <layout class="QVBoxLayout" name="verticalLayout_12">
+                           <layout class="QHBoxLayout" name="horizontalLayout_7">
                             <item>
                              <widget class="QComboBox" name="comboBox">
                               <property name="sizePolicy">
@@ -1325,7 +1349,7 @@ QFrame{
                                <cursorShape>PointingHandCursor</cursorShape>
                               </property>
                               <property name="layoutDirection">
-                               <enum>Qt::RightToLeft</enum>
+                               <enum>Qt::LeftToRight</enum>
                               </property>
                               <property name="styleSheet">
                                <string notr="true"/>
@@ -1340,6 +1364,104 @@ QFrame{
                                <bool>false</bool>
                               </property>
                              </widget>
+                            </item>
+                           </layout>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QGroupBox" name="groupBox_10">
+                        <property name="title">
+                         <string>Add Assets</string>
+                        </property>
+                        <layout class="QVBoxLayout" name="verticalLayout_36">
+                         <property name="leftMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="topMargin">
+                          <number>23</number>
+                         </property>
+                         <property name="rightMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="bottomMargin">
+                          <number>0</number>
+                         </property>
+                         <item>
+                          <widget class="QFrame" name="audioFrame_3">
+                           <property name="styleSheet">
+                            <string notr="true"/>
+                           </property>
+                           <property name="frameShape">
+                            <enum>QFrame::StyledPanel</enum>
+                           </property>
+                           <property name="frameShadow">
+                            <enum>QFrame::Raised</enum>
+                           </property>
+                           <layout class="QGridLayout" name="gridLayout_3">
+                            <item row="3" column="0">
+                             <widget class="QPushButton" name="createAsset">
+                              <property name="cursor">
+                               <cursorShape>PointingHandCursor</cursorShape>
+                              </property>
+                              <property name="toolTip">
+                               <string>Will ask you for file path</string>
+                              </property>
+                              <property name="statusTip">
+                               <string/>
+                              </property>
+                              <property name="whatsThis">
+                               <string/>
+                              </property>
+                              <property name="text">
+                               <string>Select Asset</string>
+                              </property>
+                              <property name="icon">
+                               <iconset>
+                                <normaloff>../Icons/magnifiction-mobile-ui-svgrepo-com.svg</normaloff>../Icons/magnifiction-mobile-ui-svgrepo-com.svg</iconset>
+                              </property>
+                              <property name="iconSize">
+                               <size>
+                                <width>25</width>
+                                <height>25</height>
+                               </size>
+                              </property>
+                             </widget>
+                            </item>
+                            <item row="1" column="0">
+                             <layout class="QHBoxLayout" name="horizontalLayout_2">
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <item>
+                               <widget class="QComboBox" name="selectCategory">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="maxVisibleItems">
+                                 <number>5</number>
+                                </property>
+                                <property name="sizeAdjustPolicy">
+                                 <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QToolButton" name="toolButton">
+                                <property name="text">
+                                 <string>...</string>
+                                </property>
+                                <property name="popupMode">
+                                 <enum>QToolButton::InstantPopup</enum>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
                             </item>
                            </layout>
                           </widget>
@@ -1376,14 +1498,72 @@ QFrame{
                            <property name="frameShadow">
                             <enum>QFrame::Raised</enum>
                            </property>
-                           <layout class="QHBoxLayout" name="horizontalLayout">
-                            <item>
-                             <widget class="QPushButton" name="PNG1">
+                           <layout class="QGridLayout" name="gridLayout_4">
+                            <item row="0" column="0">
+                             <widget class="QComboBox" name="PNGmethod">
+                              <property name="sizePolicy">
+                               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                               </sizepolicy>
+                              </property>
+                              <property name="toolTip">
+                               <string/>
+                              </property>
+                              <property name="whatsThis">
+                               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                              </property>
+                              <property name="maxVisibleItems">
+                               <number>10</number>
+                              </property>
+                              <property name="sizeAdjustPolicy">
+                               <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+                              </property>
+                              <item>
+                               <property name="text">
+                                <string>Select Method...</string>
+                               </property>
+                              </item>
+                              <item>
+                               <property name="text">
+                                <string>Alpha Composite</string>
+                               </property>
+                              </item>
+                              <item>
+                               <property name="text">
+                                <string>Pillow Paste</string>
+                               </property>
+                              </item>
+                              <item>
+                               <property name="text">
+                                <string>AlphaCom + PILPaste</string>
+                               </property>
+                              </item>
+                              <item>
+                               <property name="text">
+                                <string>Screenshot</string>
+                               </property>
+                              </item>
+                              <item>
+                               <property name="text">
+                                <string>Screenshot + Chroma Key</string>
+                               </property>
+                              </item>
+                             </widget>
+                            </item>
+                            <item row="0" column="1">
+                             <widget class="QPushButton" name="PNG">
+                              <property name="sizePolicy">
+                               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                               </sizepolicy>
+                              </property>
                               <property name="cursor">
                                <cursorShape>PointingHandCursor</cursorShape>
                               </property>
                               <property name="toolTip">
-                               <string>Better for assets with some transparency, better image results except if you have different size images</string>
+                               <string>Save PNG Image</string>
                               </property>
                               <property name="statusTip">
                                <string/>
@@ -1392,11 +1572,11 @@ QFrame{
                                <string/>
                               </property>
                               <property name="text">
-                               <string>Method 1</string>
+                               <string/>
                               </property>
                               <property name="icon">
                                <iconset>
-                                <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
+                                <normaloff>../Icons/image-mobile-ui-svgrepo-com.svg</normaloff>../Icons/image-mobile-ui-svgrepo-com.svg</iconset>
                               </property>
                               <property name="iconSize">
                                <size>
@@ -1406,32 +1586,32 @@ QFrame{
                               </property>
                              </widget>
                             </item>
-                            <item>
-                             <widget class="QPushButton" name="PNG2">
-                              <property name="cursor">
-                               <cursorShape>PointingHandCursor</cursorShape>
+                            <item row="1" column="0" colspan="2">
+                             <widget class="QLabel" name="label_5">
+                              <property name="sizePolicy">
+                               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                               </sizepolicy>
                               </property>
                               <property name="toolTip">
-                               <string>Better when you have diferent sized assets, as the other one requires them all to have the same size and position</string>
-                              </property>
-                              <property name="statusTip">
-                               <string/>
+                               <string>Alpha Composite: Best for images with some transparency but it can't do different size images.
+Pillow Paste: Best for images with different sizes and positions, but it struggles with transparency.
+Alpha Composite + Pillow Paste: Tries to combine the two for a better image, won't make promises.
+Screenshot: Just takes a screenshot of the model.
+Screenshot + Chroma Key: Just takes a screenshot of the model and tries to remove the background.</string>
                               </property>
                               <property name="whatsThis">
-                               <string/>
+                               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                              </property>
+                              <property name="styleSheet">
+                               <string notr="true">font-size: 12px</string>
                               </property>
                               <property name="text">
-                               <string>Method 2</string>
+                               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                               </property>
-                              <property name="icon">
-                               <iconset>
-                                <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
-                              </property>
-                              <property name="iconSize">
-                               <size>
-                                <width>25</width>
-                                <height>25</height>
-                               </size>
+                              <property name="wordWrap">
+                               <bool>true</bool>
                               </property>
                              </widget>
                             </item>
@@ -1460,7 +1640,19 @@ QFrame{
                   </item>
                  </layout>
                 </widget>
-                <widget class="QWidget" name="toolBox_3Page2" native="true">
+                <widget class="QWidget" name="toolBox_3Page2">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>268</width>
+                   <height>626</height>
+                  </rect>
+                 </property>
+                 <attribute name="icon">
+                  <iconset>
+                   <normaloff>../Icons/mobile-setting-ui-svgrepo-com.svg</normaloff>../Icons/mobile-setting-ui-svgrepo-com.svg</iconset>
+                 </attribute>
                  <attribute name="label">
                   <string>Advanced</string>
                  </attribute>
@@ -1478,7 +1670,7 @@ QFrame{
                    <number>0</number>
                   </property>
                   <item>
-                   <widget class="QGroupBox" name="groupBox_12">
+                   <widget class="QGroupBox" name="groupBox_14">
                     <property name="styleSheet">
                      <string notr="true">*{
 	color: black;
@@ -1503,13 +1695,12 @@ QFrame{
 	border-bottom-right-radius: 9px;
 	border-bottom-left-radius: 9px;
 	background-color: rgb(255, 255, 255);
-}
-</string>
+}</string>
                     </property>
                     <property name="title">
-                     <string>Expressions</string>
+                     <string>Backup</string>
                     </property>
-                    <layout class="QVBoxLayout" name="verticalLayout_22">
+                    <layout class="QVBoxLayout" name="verticalLayout_37">
                      <property name="leftMargin">
                       <number>0</number>
                      </property>
@@ -1523,69 +1714,73 @@ QFrame{
                       <number>0</number>
                      </property>
                      <item>
-                      <widget class="QFrame" name="frame_13">
+                      <widget class="QFrame" name="audioFrame_4">
+                       <property name="styleSheet">
+                        <string notr="true"/>
+                       </property>
                        <property name="frameShape">
                         <enum>QFrame::StyledPanel</enum>
                        </property>
                        <property name="frameShadow">
                         <enum>QFrame::Raised</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="verticalLayout_16">
+                       <layout class="QHBoxLayout" name="horizontalLayout_8">
                         <item>
-                         <widget class="QLabel" name="label_4">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
+                         <widget class="QPushButton" name="PNG1_2">
+                          <property name="cursor">
+                           <cursorShape>PointingHandCursor</cursorShape>
                           </property>
-                          <property name="styleSheet">
-                           <string notr="true">font-size: 8px</string>
+                          <property name="toolTip">
+                           <string>Better for assets with some transparency, better image results except if you have different size images</string>
+                          </property>
+                          <property name="statusTip">
+                           <string/>
+                          </property>
+                          <property name="whatsThis">
+                           <string/>
                           </property>
                           <property name="text">
-                           <string>Select the asset categories that count as expressions:</string>
+                           <string>Import</string>
                           </property>
-                          <property name="wordWrap">
-                           <bool>true</bool>
+                          <property name="icon">
+                           <iconset>
+                            <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
+                          </property>
+                          <property name="iconSize">
+                           <size>
+                            <width>25</width>
+                            <height>25</height>
+                           </size>
                           </property>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QScrollArea" name="scrollArea_5">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
+                         <widget class="QPushButton" name="PNG2_2">
+                          <property name="cursor">
+                           <cursorShape>PointingHandCursor</cursorShape>
                           </property>
-                          <property name="minimumSize">
+                          <property name="toolTip">
+                           <string>Better when you have diferent sized assets, as the other one requires them all to have the same size and position</string>
+                          </property>
+                          <property name="statusTip">
+                           <string/>
+                          </property>
+                          <property name="whatsThis">
+                           <string/>
+                          </property>
+                          <property name="text">
+                           <string>Export</string>
+                          </property>
+                          <property name="icon">
+                           <iconset>
+                            <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
+                          </property>
+                          <property name="iconSize">
                            <size>
-                            <width>0</width>
-                            <height>136</height>
+                            <width>25</width>
+                            <height>25</height>
                            </size>
                           </property>
-                          <property name="maximumSize">
-                           <size>
-                            <width>16777215</width>
-                            <height>136</height>
-                           </size>
-                          </property>
-                          <property name="styleSheet">
-                           <string notr="true">background-color: rgb(255, 255, 255);</string>
-                          </property>
-                          <property name="widgetResizable">
-                           <bool>true</bool>
-                          </property>
-                          <widget class="QWidget" name="scrollAreaWidgetContents_5">
-                           <property name="geometry">
-                            <rect>
-                             <x>0</x>
-                             <y>0</y>
-                             <width>256</width>
-                             <height>136</height>
-                            </rect>
-                           </property>
-                          </widget>
                          </widget>
                         </item>
                        </layout>
@@ -1651,7 +1846,7 @@ QFrame{
                        <x>0</x>
                        <y>0</y>
                        <width>268</width>
-                       <height>397</height>
+                       <height>544</height>
                       </rect>
                      </property>
                      <layout class="QVBoxLayout" name="verticalLayout_34">
@@ -1834,6 +2029,123 @@ QFrame{
                        </widget>
                       </item>
                       <item>
+                       <widget class="QGroupBox" name="groupBox_12">
+                        <property name="styleSheet">
+                         <string notr="true">*{
+	color: black;
+}
+
+QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}
+</string>
+                        </property>
+                        <property name="title">
+                         <string>Expressions</string>
+                        </property>
+                        <layout class="QVBoxLayout" name="verticalLayout_22">
+                         <property name="leftMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="topMargin">
+                          <number>23</number>
+                         </property>
+                         <property name="rightMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="bottomMargin">
+                          <number>0</number>
+                         </property>
+                         <item>
+                          <widget class="QFrame" name="frame_13">
+                           <property name="frameShape">
+                            <enum>QFrame::StyledPanel</enum>
+                           </property>
+                           <property name="frameShadow">
+                            <enum>QFrame::Raised</enum>
+                           </property>
+                           <layout class="QVBoxLayout" name="verticalLayout_16">
+                            <item>
+                             <widget class="QLabel" name="label_4">
+                              <property name="sizePolicy">
+                               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                               </sizepolicy>
+                              </property>
+                              <property name="styleSheet">
+                               <string notr="true">font-size: 8px</string>
+                              </property>
+                              <property name="text">
+                               <string>Select the asset categories that count as expressions:</string>
+                              </property>
+                              <property name="wordWrap">
+                               <bool>true</bool>
+                              </property>
+                             </widget>
+                            </item>
+                            <item>
+                             <widget class="QScrollArea" name="scrollArea_5">
+                              <property name="sizePolicy">
+                               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                               </sizepolicy>
+                              </property>
+                              <property name="minimumSize">
+                               <size>
+                                <width>0</width>
+                                <height>136</height>
+                               </size>
+                              </property>
+                              <property name="maximumSize">
+                               <size>
+                                <width>16777215</width>
+                                <height>136</height>
+                               </size>
+                              </property>
+                              <property name="styleSheet">
+                               <string notr="true">background-color: rgb(255, 255, 255);</string>
+                              </property>
+                              <property name="widgetResizable">
+                               <bool>true</bool>
+                              </property>
+                              <widget class="QWidget" name="scrollAreaWidgetContents_5">
+                               <property name="geometry">
+                                <rect>
+                                 <x>0</x>
+                                 <y>0</y>
+                                 <width>256</width>
+                                 <height>136</height>
+                                </rect>
+                               </property>
+                              </widget>
+                             </widget>
+                            </item>
+                           </layout>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                      <item>
                        <spacer name="verticalSpacer_3">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
@@ -1859,10 +2171,13 @@ QFrame{
             <widget class="QWidget" name="tab_2">
              <attribute name="icon">
               <iconset>
-               <normaloff>../Icons/duplicate-mobile-ui-svgrepo-com.svg</normaloff>../Icons/duplicate-mobile-ui-svgrepo-com.svg</iconset>
+               <normaloff>../Icons/full-mobile-screen-svgrepo-com.svg</normaloff>../Icons/full-mobile-screen-svgrepo-com.svg</iconset>
              </attribute>
              <attribute name="title">
               <string>Layers</string>
+             </attribute>
+             <attribute name="toolTip">
+              <string>Layer Settings</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_10">
               <property name="spacing">
@@ -1918,7 +2233,7 @@ QFrame{
                    <x>0</x>
                    <y>0</y>
                    <width>270</width>
-                   <height>664</height>
+                   <height>698</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -1950,6 +2265,9 @@ QFrame{
              </attribute>
              <attribute name="title">
               <string>About</string>
+             </attribute>
+             <attribute name="toolTip">
+              <string>About PyNGtuber</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_24">
               <property name="leftMargin">
@@ -2084,6 +2402,71 @@ QFrame{
                   </widget>
                  </item>
                  <item>
+                  <widget class="QGroupBox" name="groupBox_15">
+                   <property name="styleSheet">
+                    <string notr="true"/>
+                   </property>
+                   <property name="title">
+                    <string>App by</string>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_40">
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>23</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QFrame" name="frame_15">
+                      <property name="frameShape">
+                       <enum>QFrame::StyledPanel</enum>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Raised</enum>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_41">
+                       <item>
+                        <widget class="QLabel" name="label_9">
+                         <property name="styleSheet">
+                          <string notr="true"/>
+                         </property>
+                         <property name="text">
+                          <string>App by: &lt;a href=&quot;https://gemmstone.carrd.co/&quot;&gt;Gemmstone&lt;/a&gt;</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                         <property name="openExternalLinks">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="label_10">
+                         <property name="text">
+                          <string>Art by: &lt;a href=&quot;https://chereverie.art/&quot;&gt;Chereverie&lt;/a&gt;</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                         <property name="openExternalLinks">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
                   <widget class="QGroupBox" name="groupBox_13">
                    <property name="styleSheet">
                     <string notr="true"/>
@@ -2149,28 +2532,18 @@ QFrame{
                </spacer>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_8">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="cursor">
-                 <cursorShape>PointingHandCursor</cursorShape>
+               <widget class="QLabel" name="label_11">
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
                 </property>
                 <property name="text">
-                 <string>Report an Issue</string>
+                 <string>&lt;a href=&quot;https://github.com/Gemmstone/PyNGtuber/issues&quot;&gt;🪲 Report an Issue&lt;/a&gt;</string>
                 </property>
-                <property name="icon">
-                 <iconset>
-                  <normaloff>../Icons/flag-mobile-ui-svgrepo-com.svg</normaloff>../Icons/flag-mobile-ui-svgrepo-com.svg</iconset>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
                 </property>
-                <property name="iconSize">
-                 <size>
-                  <width>25</width>
-                  <height>25</height>
-                 </size>
+                <property name="openExternalLinks">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -2185,45 +2558,6 @@ QFrame{
      </widget>
     </item>
    </layout>
-  </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1273</width>
-     <height>34</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuArchive">
-    <property name="title">
-     <string>Archive</string>
-    </property>
-    <widget class="QMenu" name="menuExport_as">
-     <property name="title">
-      <string>Export as...</string>
-     </property>
-     <widget class="QMenu" name="menuPNG_File">
-      <property name="title">
-       <string>PNG File</string>
-      </property>
-      <addaction name="actionMethod_1"/>
-      <addaction name="actionMethod_2"/>
-     </widget>
-     <addaction name="menuPNG_File"/>
-    </widget>
-    <addaction name="actionOpen_Assets_Folder"/>
-    <addaction name="menuExport_as"/>
-   </widget>
-   <widget class="QMenu" name="menuBackup">
-    <property name="title">
-     <string>Backup</string>
-    </property>
-    <addaction name="actionImport_Backup"/>
-    <addaction name="actionExport_Backup"/>
-   </widget>
-   <addaction name="menuArchive"/>
-   <addaction name="menuBackup"/>
   </widget>
   <action name="actionLoad_Avatar">
    <property name="text">
