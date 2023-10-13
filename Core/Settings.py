@@ -7,6 +7,7 @@ from PyQt6 import uic
 
 class Settings(QWidget):
     settings_changed = pyqtSignal(dict)
+    settings_changed_default = pyqtSignal(dict)
 
     def __init__(self, parameters):
         super().__init__()
@@ -20,12 +21,12 @@ class Settings(QWidget):
         self.rotation.setValue(parameters["rotation"])
 
         # Connect numeric field changes to the save method
-        self.sizeX.valueChanged.connect(self.save)
-        self.sizeY.valueChanged.connect(self.save)
-        self.posX.valueChanged.connect(self.save)
-        self.posY.valueChanged.connect(self.save)
-        self.posZ.valueChanged.connect(self.save)
-        self.rotation.valueChanged.connect(self.save)
+        self.sizeX.valueChanged.connect(self.save_current)
+        self.sizeY.valueChanged.connect(self.save_current)
+        self.posX.valueChanged.connect(self.save_current)
+        self.posY.valueChanged.connect(self.save_current)
+        self.posZ.valueChanged.connect(self.save_current)
+        self.rotation.valueChanged.connect(self.save_current)
 
         self.blinkingGroup.setChecked(self.parameters["blinking"] != "ignore")
         self.talkingGroup.setChecked(self.parameters["talking"] != "ignore")
@@ -44,14 +45,16 @@ class Settings(QWidget):
         self.talkClosed.setChecked(self.parameters["talking"] == "talking_closed")
         self.talkScreaming.setChecked(self.parameters["talking"] == "talking_screaming")
 
-        self.blinkOpen.toggled.connect(self.save)
-        self.blinkClosed.toggled.connect(self.save)
-        self.talkOpen.toggled.connect(self.save)
-        self.talkClosed.toggled.connect(self.save)
-        self.talkScreaming.toggled.connect(self.save)
+        self.blinkOpen.toggled.connect(self.save_current)
+        self.blinkClosed.toggled.connect(self.save_current)
+        self.talkOpen.toggled.connect(self.save_current)
+        self.talkClosed.toggled.connect(self.save_current)
+        self.talkScreaming.toggled.connect(self.save_current)
 
         # Connect CSS field finishedit signal to the save method
         self.css.textChanged.connect(self.css_finished_edit)
+
+        self.saveDefault.clicked.connect(self.save_default)
 
         self.hide_blinking()
         self.hide_talking()
@@ -64,7 +67,7 @@ class Settings(QWidget):
         else:
             self.frame_3.hide()
             self.blinkingGroup.setStyleSheet("QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
-        self.save()
+        self.save_current()
 
     def hide_talking(self):
         if self.talkingGroup.isChecked():
@@ -73,7 +76,7 @@ class Settings(QWidget):
         else:
             self.frame_4.hide()
             self.talkingGroup.setStyleSheet("QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
-        self.save()
+        self.save_current()
 
     def hide_css(self):
         if self.cssGroup.isChecked():
@@ -82,7 +85,7 @@ class Settings(QWidget):
         else:
             self.frame_5.hide()
             self.cssGroup.setStyleSheet("QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
-        self.save()
+        self.save_current()
 
     def save(self):
         self.parameters["sizeX"] = self.sizeX.value()
@@ -96,7 +99,13 @@ class Settings(QWidget):
         self.parameters["blinking"] = self.getBlinking() if self.blinkingGroup.isChecked() else "ignore"
         self.parameters["talking"] = self.getTalking() if self.talkingGroup.isChecked() else "ignore"
 
+    def save_current(self):
+        self.save()
         self.settings_changed.emit(self.parameters)
+
+    def save_default(self):
+        self.save()
+        self.settings_changed_default.emit(self.parameters)
 
     def getBlinking(self):
         if self.blinkOpen.isChecked():
@@ -114,7 +123,8 @@ class Settings(QWidget):
     def css_finished_edit(self):
         # When CSS field editing is finished, save it
         self.parameters["css"] = self.css.toPlainText()
-        self.save()  # Call save to save all parameters
+        self.save_current()  # Call save to save all parameters
+
 
 class SettingsToolBox(QToolBox):
     settings_changed = pyqtSignal(dict)
@@ -244,6 +254,7 @@ class SettingsToolBox(QToolBox):
             # Create a custom widget using your "Settings" class
             settings_widget = Settings(item)
             settings_widget.settings_changed.connect(self.save)
+            settings_widget.settings_changed_default.connect(self.save_as_default)
             # Create a page for the QToolBox
             page = QWidget()
             layout = QVBoxLayout()
@@ -265,4 +276,7 @@ class SettingsToolBox(QToolBox):
             self.setItemText(index, title)
 
     def save(self, value):
-        self.settings_changed.emit(value)
+        self.settings_changed.emit({"value": value, "default": False})
+
+    def save_as_default(self, value):
+        self.settings_changed.emit({"value": value, "default": True})

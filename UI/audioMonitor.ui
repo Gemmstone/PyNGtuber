@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>267</width>
-    <height>173</height>
+    <height>195</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -101,6 +101,16 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255, 0, 4);</string>
+     </property>
+     <property name="text">
+      <string>Este Micrófono tiene problemas</string>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QLabel" name="label_5">

@@ -1,5 +1,5 @@
+from Core.imageGallery import ImageGallery, ExpressionSelector, ModelGallery
 from Core.ShortcutsManager import MidiListener, KeyboardListener
-from Core.imageGallery import ImageGallery, ExpressionSelector
 from Core.audioManager import MicrophoneVolumeWidget
 from PyQt6.QtCore import QTimer, QCoreApplication
 from PIL import Image, ImageSequence, ImageOps
@@ -19,15 +19,18 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi("UI/main.ui", self)
+        self.label_5.hide()
+
+        self.setWindowTitle("PyNGTuber")
 
         self.color = (184, 205, 238)  # Default to a light blue color
-        self.file_parameters = {}
+        self.file_parameters_current = {}
         self.current_files = []
         self.json_file = "Data/parameters.json"
         self.current_json_file = "Data/current.json"
 
-        self.midi_listener = MidiListener()
-        self.keyboard_listener = KeyboardListener()
+        self.midi_listener = MidiListener([])
+        self.keyboard_listener = KeyboardListener([])
 
         self.midi_listener.update_shortcuts_signal.connect(self.shortcut_received)
         self.keyboard_listener.update_shortcuts_signal.connect(self.shortcut_received)
@@ -37,7 +40,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
         try:
             with open(self.json_file, "r") as f:
-                self.file_parameters = json.load(f)
+                self.file_parameters_default = json.load(f)
+        except FileNotFoundError:
+            pass
+
+        try:
+            with open(self.json_file, "r") as f:
+                self.file_parameters_current = json.load(f)
         except FileNotFoundError:
             pass
 
@@ -68,13 +77,28 @@ class MainWindow(QtWidgets.QMainWindow):
         self.expressionSelector = ExpressionSelector("Assets")
         self.scrollArea_5.setWidget(self.expressionSelector)
 
+        self.savedAvatars = [folder for folder in os.listdir("Models/Avatars") if "." not in folder]
+        self.modelGallery = ModelGallery(models_list=self.savedAvatars, models_type="Avatars")
+        self.modelGallery.saving.connect(self.save_avatar)
+        self.modelGallery.selected.connect(self.load_model)
+        self.modelGallery.shortcut.connect(self.model_shortcut)
+        self.frameModels.layout().addWidget(self.modelGallery)
+
+        self.savedExpressions = [folder for folder in os.listdir("Models/Expressions") if "." not in folder]
+        self.expressionGallery = ModelGallery(models_list=self.savedExpressions, models_type="Expressions")
+        self.expressionGallery.saving.connect(self.save_expression)
+        self.expressionGallery.selected.connect(self.load_model)
+        self.expressionGallery.shortcut.connect(self.model_shortcut)
+        self.frameExpressions.layout().addWidget(self.expressionGallery)
+
         self.setBGColor()
         self.showUI()
         self.update_viewer(self.current_files, opening=True)
 
-        self.PNG.clicked.connect(lambda: self.export_png(1))
+        self.PNG.clicked.connect(lambda: self.export_png())
 
-        self.save.clicked.connect(self.save_avatar)
+        self.saveAvatar.clicked.connect(self.save_avatar)
+        self.saveExpression.clicked.connect(self.save_expression)
 
         menu = QtWidgets.QMenu()
 
@@ -89,6 +113,36 @@ class MainWindow(QtWidgets.QMainWindow):
         OpenAssetsFolderButton.triggered.connect(self.OpenAssetsFolder)
 
         self.selectCategory.addItems(self.get_folders_in_assets())
+
+    def model_shortcut(self, data):
+        print(data)
+
+    def load_model(self, data):
+        current_files = []
+        with open(f"Models/{data['type']}/{data['name']}/model.json", "r") as load_file:
+            files = json.load(load_file)
+            for file in files:
+                self.file_parameters_current[file["route"]] = {key: value for key, value in file.items() if key != "route"}
+
+            if data["type"] == "Avatars":
+                for file in self.current_files:
+                    if self.check_if_expression(file):
+                        current_files.append(file)
+            elif data["type"] == "Expressions":
+                for file in self.current_files:
+                    if not self.check_if_expression(file):
+                        current_files.append(file)
+            for file in files:
+                current_files.append(file["route"])
+
+        self.update_viewer(current_files)
+
+    def check_if_expression(self, file):
+        with open("Data/expressionFolders.json", "r") as expressions_list:
+            for expression in json.load(expressions_list):
+                if expression in file:
+                    return True
+        return False
 
     def CreateCategory(self):
         text, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter new category name:')
@@ -108,13 +162,103 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             return [self.tr("Select Category...")]
 
-    def save_avatar(self):
-        print(self.current_files)
-        print(self.file_parameters)
+    def save_avatar(self, model=None):
+        if model is not None and model is not False:
+            confirmation = QtWidgets.QMessageBox()
+            confirmation.setIcon(QtWidgets.QMessageBox.Icon.Question)
+            confirmation.setText("Are you sure you want to update this model?")
+            confirmation.setWindowTitle("Confirmation")
+            confirmation.setStandardButtons(
+                QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
 
-        output_name = "saving.png"
-        self.image_generator(output_name=output_name, method=2)
-        self.ImageGallery.create_thumbnail(output_name, )
+            result = confirmation.exec()
+
+            if result != QtWidgets.QMessageBox.StandardButton.Yes:
+                return
+
+            modelName, ok = model, True
+        else:
+            modelName, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter new avatar name:')
+
+        if ok:
+            directory = f"Models/Avatars/{modelName}"
+            if model is None or model is False:
+                if os.path.exists(directory):
+                    msg = QtWidgets.QMessageBox()
+                    msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
+                    msg.setText("This Model name already exists.")
+                    msg.setInformativeText("Please choose a different model name.")
+                    msg.setWindowTitle("Model Exists")
+                    msg.exec()
+                    return
+                else:
+                    os.mkdir(directory)
+            temp = "savingAvatar.png"
+            files = [
+                file for file in self.getFiles(self.current_files)
+                if not any(route in file["route"] for route in self.expressionSelector.selected_folders)
+            ]
+            self.image_generator(output_name=temp, method=2, savingModel=1, custom_file_list=files)
+            self.save_model(directory, modelName, temp, files)
+            if model is None or model is False:
+                self.modelGallery.add_model(modelName)
+            else:
+                self.modelGallery.reload_models([folder for folder in os.listdir("Models/Avatars") if "." not in folder])
+
+    def save_expression(self, model=None):
+        if model is not None and model is not False:
+            confirmation = QtWidgets.QMessageBox()
+            confirmation.setIcon(QtWidgets.QMessageBox.Icon.Question)
+            confirmation.setText("Are you sure you want to update this model?")
+            confirmation.setWindowTitle("Confirmation")
+            confirmation.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
+
+            result = confirmation.exec()
+
+            if result != QtWidgets.QMessageBox.StandardButton.Yes:
+                return
+
+            modelName, ok = model, True
+        else:
+            modelName, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter new expression name:')
+
+        if ok:
+            directory = f"Models/Expressions/{modelName}"
+            if model is None or model is False:
+                if os.path.exists(directory):
+                    msg = QtWidgets.QMessageBox()
+                    msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
+                    msg.setText("This Model name already exists.")
+                    msg.setInformativeText("Please choose a different model name.")
+                    msg.setWindowTitle("Model Exists")
+                    msg.exec()
+                    return
+                else:
+                    os.mkdir(directory)
+            temp = "savingExpression.png"
+            files = [
+                file for file in self.getFiles(self.current_files)
+                if any(route in file["route"] for route in self.expressionSelector.selected_folders)
+            ]
+            self.image_generator(output_name=temp, method=2, savingModel=2, custom_file_list=files)
+            self.save_model(directory, modelName, temp, files)
+            if model is None or model is False:
+                self.expressionGallery.add_model(modelName)
+            else:
+                self.expressionGallery.reload_models([folder for folder in os.listdir("Models/Expressions") if "." not in folder])
+
+    def save_model(self, directory, modelName, temp, files):
+        self.ImageGallery.create_thumbnail(temp, custom_name=f"{directory}/thumb.png")
+        os.remove(temp)
+
+        with open(f"{directory}/model.json", "w") as file:
+            json.dump(files, file, indent=4)
+
+        with open(f"{directory}/data.json", "w") as file:
+            data = {
+                "shortcuts": []
+            }
+            json.dump(data, file, indent=4)
 
     def export_png(self):
         method = self.PNGmethod.currentIndex()
@@ -138,9 +282,6 @@ class MainWindow(QtWidgets.QMainWindow):
         print(f"Received: {shortcuts}")
 
     def audioStatus(self, status):
-        if status == -1:
-            self.audio.active_audio_signal = -1
-            status = 0
         self.viewer.page().runJavaScript(
             '''
             var elementsOpen = document.getElementsByClassName("talking_open");
@@ -149,7 +290,7 @@ class MainWindow(QtWidgets.QMainWindow):
             var imageWrapper = document.getElementById("image-wrapper");
 
             var opacityOpen = ''' + str(1 if status == 1 else 0) + ''';
-            var opacityClosed = ''' + str(1 if status == 0 else 0) + ''';
+            var opacityClosed = ''' + str(1 if status <= 0 else 0) + ''';
             var opacityScreaming = ''' + str(1 if status == 2 else 0) + ''';
 
             // Apply CSS transitions for a smooth animation to text elements
@@ -178,27 +319,30 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
     def saveSettings(self, settings):
-        self.file_parameters[settings['route']] = copy.deepcopy(settings)
-        self.file_parameters[settings['route']].pop("route")
+        if settings['default']:
+            self.file_parameters_default[settings['value']['route']] = copy.deepcopy(settings["value"])
+            self.file_parameters_default[settings['value']['route']].pop("route")
+        self.file_parameters_current[settings['value']['route']] = copy.deepcopy(settings["value"])
+        self.file_parameters_current[settings['value']['route']].pop("route")
         self.update_viewer(self.current_files)
 
-    def save_parameters_to_json(self, save_default):
+    def save_parameters_to_json(self):
         # Save the file parameters to the JSON file
-        if save_default:
-            pass
-        else:
-            with open(self.json_file, "w") as f:
-                json.dump(self.file_parameters, f, indent=4)
+
+        with open(self.json_file, "w") as f:
+            json.dump(self.file_parameters_default, f, indent=4)
 
         with open(self.current_json_file, "w") as f:
             json.dump(self.current_files, f, indent=4)
 
-    def image_generator(self, output_name, method=1):
+    def image_generator(self, output_name, method=1, savingModel=0, custom_file_list=None):
+        files = self.getFiles(self.current_files) if custom_file_list is None else custom_file_list
         files = [
-            i for i in self.getFiles(self.current_files)
+            i for i in files
             if i["blinking"] in ["ignore", "blinking_open"] and
                i["talking"] in ["ignore", "talking_closed"]
         ]
+
         images = []
 
         if method == 1:
@@ -280,13 +424,14 @@ class MainWindow(QtWidgets.QMainWindow):
                         middle_frame_index = num_frames // 2
                         image = frames[middle_frame_index]
 
+                # Resize the image if necessary
+                if sizeX != image.width or sizeY != image.height:
+                    image = image.resize((sizeX, sizeY))
+
                 # Apply rotation
                 if rotation != 0:
                     image = image.rotate(rotation * -1, expand=True)
 
-                # Resize the image if necessary
-                if sizeX != image.width or sizeY != image.height:
-                    image = image.resize((sizeX, sizeY))
 
                 # Calculate the center of the Qt window
                 center_x = self.width() // 2
@@ -315,8 +460,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def getFiles(self, files):
         images_list = []
         for file in files:
-            if file in self.file_parameters:
-                parameters = self.file_parameters[file]
+            if file in self.file_parameters_current:
+                parameters = self.file_parameters_current[file]
             else:
                 image = Image.open(file)
                 width, height = image.size
@@ -336,7 +481,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     "rotation": 0,
                 }
 
-                self.file_parameters[file] = parameters  # Store default parameters
+                self.file_parameters_current[file] = parameters  # Store default parameters
 
             images_list.append({
                 "route": file,
@@ -344,16 +489,15 @@ class MainWindow(QtWidgets.QMainWindow):
             })
         return images_list
 
-    def update_viewer(self, files=None, opening=False, save_default=True):
+    def update_viewer(self, files=None, opening=False):
         images_list = self.getFiles(files)
 
         self.viewer.updateImages(images_list, self.color)
         if self.current_files != files or opening:
             self.SettingsGallery.set_items(images_list)
         self.current_files = files
-        self.save_parameters_to_json(save_default=save_default)
+        self.save_parameters_to_json()
         QTimer.singleShot(500, lambda: self.audioStatus(-1))
-
 
     def event(self, event):
         try:
@@ -391,10 +535,8 @@ class MainWindow(QtWidgets.QMainWindow):
             case 3:
                 self.color = "blue"
             case 4:
-                self.color = "hotpink"
-            case 5:
                 self.color = "yellow"
-            case 6:
+            case 5:
                 self.color = "white"
             case _:
                 self.color = "#b8cdee"
@@ -412,7 +554,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    QCoreApplication.setApplicationName("PyNG")
+    QCoreApplication.setApplicationName("PyNGtuber")
 
     window = MainWindow()
     window.setWindowIcon(QIcon('icon.ico'))

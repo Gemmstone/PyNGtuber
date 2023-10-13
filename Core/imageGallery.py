@@ -1,8 +1,10 @@
 
-from PyQt6.QtWidgets import QWidget, QToolBox, QVBoxLayout, QPushButton, QFrame, QHBoxLayout, QSizePolicy, QGridLayout, QCheckBox
+from PyQt6.QtWidgets import QWidget, QToolBox, QVBoxLayout, QPushButton, QFrame, QHBoxLayout, QSizePolicy, QGridLayout, QCheckBox, QGroupBox, QMessageBox, QInputDialog
 from PyQt6.QtGui import QIcon, QPixmap, QImage
-from PyQt6.QtCore import pyqtSignal, QSize
+from PyQt6.QtCore import pyqtSignal, QSize, QEvent
+from PyQt6 import uic
 from PIL import Image
+import shutil
 import json
 import os
 
@@ -171,11 +173,10 @@ class ImageGallery(QToolBox):
             img_copy = img_copy.resize((new_width, new_height), Image.LANCZOS)
 
         # Convert the cropped and resized image to a QPixmap
-        pixmap = QPixmap.fromImage(
-            QImage(img_copy.tobytes("raw", "RGBA"), img_copy.size[0], img_copy.size[1], QImage.Format.Format_RGBA8888))
+        pixmap = QPixmap.fromImage(QImage(img_copy.tobytes("raw", "RGBA"), img_copy.size[0], img_copy.size[1], QImage.Format.Format_RGBA8888))
 
         # Save the QPixmap as the thumbnail with compression
-        pixmap.save(thumbnail_path, quality=quality)
+        pixmap.save(thumbnail_path if custom_name is None else custom_name, quality=quality)
         print(f"Created thumbnail: {thumbnail_path}")
 
         # Return the created QIcon
@@ -234,6 +235,118 @@ class ImageGallery(QToolBox):
         # Emit the selectionChanged signal with the list of selected images
         self.selectionChanged.emit(selected_images)
 
+
+class ModelItem(QGroupBox):
+    selected = pyqtSignal(dict)
+    shortcut = pyqtSignal(dict)
+    deleted = pyqtSignal()
+    saving = pyqtSignal(str)
+
+    def __init__(self, modelName, modelType):
+        super().__init__()
+        uic.loadUi("UI/avatar.ui", self)
+        self.modelName = modelName
+        self.modelType = modelType
+
+        self.avatarButton.clicked.connect(self.selectedModel)
+        self.avatarButton.setToolTip(f"Load {self.modelType}")
+
+        self.deleteButton.clicked.connect(self.delete_model)
+        self.renameButton.clicked.connect(self.rename_model)
+        self.hotkeyButton.clicked.connect(self.shortcutChange)
+        self.save.clicked.connect(self.saveChanges)
+
+        self.setup()
+        self.frame_3.hide()
+        self.frame_2.hide()
+
+    def saveChanges(self):
+        self.saving.emit(self.modelName)
+
+    def selectedModel(self):
+        self.selected.emit({"name": self.modelName, "type": self.modelType})
+
+    def shortcutChange(self):
+        self.shortcut.emit({"name": self.modelName, "type": self.modelType})
+
+    def enterEvent(self, event):
+        self.frame_3.show()
+        self.frame_2.show()
+
+    def leaveEvent(self, event):
+        self.frame_3.hide()
+        self.frame_2.hide()
+
+    def setup(self):
+        self.setTitle(self.modelName)
+        self.avatarButton.setIcon(QIcon(f"Models/{self.modelType}/{self.modelName}/thumb.png"))
+
+    def delete_model(self):
+        confirmation = QMessageBox()
+        confirmation.setIcon(QMessageBox.Icon.Question)
+        confirmation.setText("Are you sure you want to delete this model?")
+        confirmation.setWindowTitle("Confirmation")
+        confirmation.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+
+        result = confirmation.exec()
+
+        if result == QMessageBox.StandardButton.Yes:
+            # Perform the deletion here
+            shutil.rmtree(f"Models/{self.modelType}/{self.modelName}")
+            self.deleted.emit()
+
+    def rename_model(self):
+        modelName, ok = QInputDialog.getText(self, 'Input Dialog', 'Enter new model name:')
+
+        if ok:
+            os.rename(
+                os.path.join("Models", self.modelType, self.modelName),
+                os.path.join("Models", self.modelType, modelName)
+            )
+            self.setTitle(modelName)
+            self.modelName = modelName
+
+
+class ModelGallery(QWidget):
+    selected = pyqtSignal(dict)
+    shortcut = pyqtSignal(dict)
+    saving = pyqtSignal(str)
+
+    def __init__(self, models_list, models_type):
+        super().__init__()
+        self.models_list = models_list
+        self.models_type = models_type
+        layout = QVBoxLayout()
+
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(6)
+
+        self.setLayout(layout)
+
+        self.load_models()
+
+    def reload_models(self, new_list):
+        self.models_list = new_list
+        for _ in reversed(range(self.layout().count())):
+            self.layout().itemAt(_).widget().setParent(None)
+        self.load_models()
+
+    def load_models(self):
+        for model in self.models_list:
+            self.add_model(model)
+
+    def add_model(self, model):
+        model_item = ModelItem(model, self.models_type)
+
+        model_item.selected.connect(self.selected.emit)
+        model_item.deleted.connect(self.model_deleted)
+        model_item.shortcut.connect(self.shortcut.emit)
+        model_item.saving.connect(self.saving.emit)
+
+        self.layout().addWidget(model_item)
+
+    def model_deleted(self):
+        self.sender().setParent(None)
 
 class ExpressionSelector(QWidget):
     def __init__(self, folder_path):
