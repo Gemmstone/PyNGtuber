@@ -20,7 +20,6 @@ class Settings(QWidget):
         self.posZ.setValue(parameters["posZ"])
         self.rotation.setValue(parameters["rotation"])
 
-        # Connect numeric field changes to the save method
         self.sizeX.valueChanged.connect(self.save_current)
         self.sizeY.valueChanged.connect(self.save_current)
         self.posX.valueChanged.connect(self.save_current)
@@ -51,7 +50,6 @@ class Settings(QWidget):
         self.talkClosed.toggled.connect(self.save_current)
         self.talkScreaming.toggled.connect(self.save_current)
 
-        # Connect CSS field finishedit signal to the save method
         self.css.textChanged.connect(self.css_finished_edit)
 
         self.saveDefault.clicked.connect(self.save_default)
@@ -66,7 +64,8 @@ class Settings(QWidget):
             self.blinkingGroup.setStyleSheet("")
         else:
             self.frame_3.hide()
-            self.blinkingGroup.setStyleSheet("QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
+            self.blinkingGroup.setStyleSheet(
+                "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
         self.save_current()
 
     def hide_talking(self):
@@ -75,7 +74,8 @@ class Settings(QWidget):
             self.talkingGroup.setStyleSheet("")
         else:
             self.frame_4.hide()
-            self.talkingGroup.setStyleSheet("QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
+            self.talkingGroup.setStyleSheet(
+                "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
         self.save_current()
 
     def hide_css(self):
@@ -84,7 +84,8 @@ class Settings(QWidget):
             self.cssGroup.setStyleSheet("")
         else:
             self.frame_5.hide()
-            self.cssGroup.setStyleSheet("QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
+            self.cssGroup.setStyleSheet(
+                "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
         self.save_current()
 
     def save(self):
@@ -121,9 +122,9 @@ class Settings(QWidget):
             return "talking_closed"
 
     def css_finished_edit(self):
-        # When CSS field editing is finished, save it
+
         self.parameters["css"] = self.css.toPlainText()
-        self.save_current()  # Call save to save all parameters
+        self.save_current()
 
 
 class SettingsToolBox(QToolBox):
@@ -236,27 +237,26 @@ class SettingsToolBox(QToolBox):
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
 
     def set_items(self, items):
-        # Clear all existing items
+
         while self.count() > 0:
             index = 0
-            widget = self.widget(index)  # Get the associated widget
+            widget = self.widget(index)
             if widget:
-                # Iterate through and remove all child widgets
+
                 for i in range(widget.layout().count()):
                     child_widget = widget.layout().itemAt(i).widget()
                     if child_widget:
-                        child_widget.setParent(None)  # Set the child widget's parent to None
+                        child_widget.setParent(None)
 
-                widget.setParent(None)  # Set the main widget's parent to None
+                widget.setParent(None)
             self.removeItem(index)
-        # Loop through your items
+
         for item in items:
             route = item["route"]
 
             filename = os.path.basename(route)
             parent_folder = os.path.basename(os.path.dirname(route))
 
-            # Now, add the parent folder to the title
             title = f"{filename} {parent_folder}"
 
             thumbnail_path = os.path.join(
@@ -265,28 +265,24 @@ class SettingsToolBox(QToolBox):
                 )
             )
 
-            # Create a custom widget using your "Settings" class
             settings_widget = Settings(item)
             settings_widget.settings_changed.connect(self.save)
             settings_widget.settings_changed_default.connect(self.save_as_default)
-            # Create a page for the QToolBox
+
             page = QWidget()
             layout = QVBoxLayout()
             layout.setContentsMargins(0, 0, 0, 0)
 
-            # Add the "Settings" widget
             layout.addWidget(settings_widget)
             page.setLayout(layout)
 
-            # Add the page to the QToolBox
-            self.addItem(page, "")  # Leave the title blank for now
+            self.addItem(page, "")
             index = self.count() - 1
 
-            # Add the page to the QToolBox with the thumbnail icon as the title
             thumbnail_label = QLabel()
             thumbnail_pixmap = QPixmap(thumbnail_path)
-            thumbnail_label.setPixmap(thumbnail_pixmap.scaledToWidth(15))  # Assuming 64 is a reasonable width
-            self.setItemIcon(index, QIcon(thumbnail_pixmap))  # Set the icon for the item
+            thumbnail_label.setPixmap(thumbnail_pixmap.scaledToWidth(15))
+            self.setItemIcon(index, QIcon(thumbnail_pixmap))
             self.setItemText(index, title)
 
     def save(self, value):

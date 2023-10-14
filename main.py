@@ -9,6 +9,7 @@ from PyQt6 import QtWidgets, uic, QtCore
 from PyQt6.QtGui import QAction, QIcon
 from collections import Counter
 from pathlib import Path
+import subprocess
 import json
 import copy
 import sys
@@ -23,7 +24,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.setWindowTitle("PyNGTuber")
 
-        self.color = (184, 205, 238)  # Default to a light blue color
+        self.color = (184, 205, 238)
         self.file_parameters_current = {}
         self.current_files = []
         self.json_file = "Data/parameters.json"
@@ -94,7 +95,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.setBGColor()
         self.showUI()
-        self.update_viewer(self.current_files, opening=True)
 
         self.PNG.clicked.connect(lambda: self.export_png())
 
@@ -118,6 +118,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.tabWidget_2.currentChanged.connect(self.changePage)
 
+        self.update_viewer(self.current_files, opening=True)
+
     def changePage(self, index):
         self.stackedWidget.setCurrentIndex(index)
         self.tabWidget.setCurrentIndex(index)
@@ -130,7 +132,8 @@ class MainWindow(QtWidgets.QMainWindow):
         with open(f"Models/{data['type']}/{data['name']}/model.json", "r") as load_file:
             files = json.load(load_file)
             for file in files:
-                self.file_parameters_current[file["route"]] = {key: value for key, value in file.items() if key != "route"}
+                self.file_parameters_current[file["route"]] = {key: value for key, value in file.items() if
+                                                               key != "route"}
 
             if data["type"] == "Avatars":
                 for file in self.current_files:
@@ -160,8 +163,13 @@ class MainWindow(QtWidgets.QMainWindow):
             print(str(text))
 
     def OpenAssetsFolder(self):
-        # Your code for Item 2
-        pass
+        path = "Assets/"
+        if os.name == "posix":
+            subprocess.run(["xdg-open", path])
+        elif os.name == "nt":
+            subprocess.run(["explorer", path])
+        else:
+            print("Unsupported operating system")
 
     def get_folders_in_assets(self):
         folder_path = "./Assets"
@@ -212,7 +220,8 @@ class MainWindow(QtWidgets.QMainWindow):
             if model is None or model is False:
                 self.modelGallery.add_model(modelName)
             else:
-                self.modelGallery.reload_models([folder for folder in os.listdir("Models/Avatars") if "." not in folder])
+                self.modelGallery.reload_models(
+                    [folder for folder in os.listdir("Models/Avatars") if "." not in folder])
 
     def save_expression(self, model=None):
         if model is not None and model is not False:
@@ -220,7 +229,8 @@ class MainWindow(QtWidgets.QMainWindow):
             confirmation.setIcon(QtWidgets.QMessageBox.Icon.Question)
             confirmation.setText("Are you sure you want to update this model?")
             confirmation.setWindowTitle("Confirmation")
-            confirmation.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
+            confirmation.setStandardButtons(
+                QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
 
             result = confirmation.exec()
 
@@ -254,7 +264,8 @@ class MainWindow(QtWidgets.QMainWindow):
             if model is None or model is False:
                 self.expressionGallery.add_model(modelName)
             else:
-                self.expressionGallery.reload_models([folder for folder in os.listdir("Models/Expressions") if "." not in folder])
+                self.expressionGallery.reload_models(
+                    [folder for folder in os.listdir("Models/Expressions") if "." not in folder])
 
     def save_model(self, directory, modelName, temp, files):
         self.ImageGallery.create_thumbnail(temp, custom_name=f"{directory}/thumb.png")
@@ -289,6 +300,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def shortcut_received(self, shortcuts):
         print(f"Received: {shortcuts}")
+
+    def create_shortcuts(self):
+        pass
 
     def reboot_audio(self):
         self.audio.active_audio_signal = -1
@@ -338,7 +352,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.update_viewer(self.current_files)
 
     def save_parameters_to_json(self):
-        # Save the file parameters to the JSON file
 
         with open(self.json_file, "w") as f:
             json.dump(self.file_parameters_default, f, indent=4)
@@ -373,38 +386,30 @@ class MainWindow(QtWidgets.QMainWindow):
                 elif file_route.lower().endswith((".gif", ".webp")):
                     image = Image.open(file_route)
 
-                    # Handle GIF and WebP animations by extracting the middle frame
                     if isinstance(image, Image.Image):
                         frames = [frame.copy() for frame in ImageSequence.Iterator(image)]
                         num_frames = len(frames)
                         middle_frame_index = num_frames // 2
                         image = frames[middle_frame_index]
 
-                # Apply rotation
                 if rotation != 0:
                     image = image.rotate(rotation * -1, expand=True)
 
-                # Resize the image if necessary
                 if sizeX != image.width or sizeY != image.height:
                     image = image.resize((sizeX, sizeY))
 
-                # Count the size occurrence
                 size_counter[(sizeX, sizeY)] += 1
 
-                # Calculate adjusted position
                 images.append((image, posZ, posX, posY))
 
-                # Find the most used size
             most_used_size = size_counter.most_common(1)[0][0]
 
             if images:
-                images.sort(key=lambda x: x[1])  # Sort by posZ
+                images.sort(key=lambda x: x[1])
 
-                # Create a blank canvas with a transparent background
                 canvas = Image.new("RGBA", (most_used_size[0], most_used_size[1]), (0, 0, 0, 0))
 
                 for image, _, posX, posY in images:
-                    # Use alpha compositing to blend images with transparency
                     canvas = Image.alpha_composite(
                         canvas, ImageOps.fit(
                             image, (most_used_size[0], most_used_size[1]), method=0, bleed=0.0, centering=(0.5, 0.5)
@@ -428,44 +433,32 @@ class MainWindow(QtWidgets.QMainWindow):
                 elif file_route.lower().endswith((".gif", ".webp")):
                     image = Image.open(file_route)
 
-                    # Handle GIF and WebP animations by extracting the middle frame
                     if isinstance(image, Image.Image):
                         frames = [frame.copy() for frame in ImageSequence.Iterator(image)]
                         num_frames = len(frames)
                         middle_frame_index = num_frames // 2
                         image = frames[middle_frame_index]
 
-                # Resize the image if necessary
                 if sizeX != image.width or sizeY != image.height:
                     image = image.resize((sizeX, sizeY))
 
-                # Apply rotation
                 if rotation != 0:
                     image = image.rotate(rotation * -1, expand=True)
 
-
-                # Calculate the center of the Qt window
                 center_x = self.width() // 2
                 center_y = self.height() // 2
 
-                # Adjust the position to account for the center
                 adjusted_posX = center_x + posX - (image.width / 2)
                 adjusted_posY = center_y + posY - (image.height / 2)
 
                 images.append((image, posZ, adjusted_posX, adjusted_posY))
 
             if images:
-                images.sort(key=lambda x: x[1])  # Sort by posZ
-
-                # Calculate the size of the canvas based on the Qt window size
+                images.sort(key=lambda x: x[1])
                 max_width, max_height = self.width(), self.height()
-
-                # Create a blank canvas to paste images on
                 canvas = Image.new("RGBA", (max_width, max_height))
-
                 for image, _, posX, posY in images:
                     canvas.paste(image, (int(posX), int(posY)), image)
-
                 canvas.save(output_name, "PNG")
 
     def getFiles(self, files):
@@ -478,25 +471,25 @@ class MainWindow(QtWidgets.QMainWindow):
                 width, height = image.size
 
                 parameters = {
-                    "sizeX": width,  # Default value for sizeX
-                    "sizeY": height,  # Default value for sizeY
-                    "posX": 0,  # Default value for posX
-                    "posY": 0,  # Default value for posY
-                    "posZ": 40,  # Default value for posZ
+                    "sizeX": width,
+                    "sizeY": height,
+                    "posX": 0,
+                    "posY": 0,
+                    "posZ": 40,
                     "blinking": "ignore",
                     "talking": "ignore",
                     "css": "",
                     "use_css": False,
                     "hotkeys": [],
-                    "animation": [],  # Default value for animation
+                    "animation": [],
                     "rotation": 0,
                 }
 
-                self.file_parameters_current[file] = parameters  # Store default parameters
+                self.file_parameters_current[file] = parameters
 
             images_list.append({
                 "route": file,
-                **parameters  # Include the parameters in the dictionary
+                **parameters
             })
         return images_list
 
@@ -553,13 +546,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.viewer.setColor(self.color)
 
-    def stop_all_workers(self):
-        # Call the stop_thread method for each worker
+    def closeEvent(self, event):
         self.audio.audio_thread.stop_stream()
-        self.midi_listener.quit()
-        self.midi_listener.wait()
-        self.keyboard_listener.quit()
-        self.keyboard_listener.wait()
+        self.midi_listener.terminate()
+        self.keyboard_listener.terminate()
+        event.accept()
 
 
 if __name__ == "__main__":
@@ -567,7 +558,8 @@ if __name__ == "__main__":
     QCoreApplication.setApplicationName("PyNGtuber")
 
     window = MainWindow()
+
     window.setWindowIcon(QIcon('icon.ico'))
     window.show()
-    app.aboutToQuit.connect(window.stop_all_workers)
+
     app.exec()

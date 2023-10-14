@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1018</width>
-    <height>648</height>
+    <width>966</width>
+    <height>618</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -279,7 +279,7 @@ QTabBar::tab:hover {
                    <x>0</x>
                    <y>0</y>
                    <width>208</width>
-                   <height>533</height>
+                   <height>503</height>
                   </rect>
                  </property>
                  <attribute name="icon">
@@ -342,7 +342,7 @@ QTabBar::tab:hover {
                        <x>0</x>
                        <y>0</y>
                        <width>208</width>
-                       <height>486</height>
+                       <height>456</height>
                       </rect>
                      </property>
                      <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -1137,7 +1137,7 @@ QFrame{
                        <x>0</x>
                        <y>0</y>
                        <width>274</width>
-                       <height>533</height>
+                       <height>503</height>
                       </rect>
                      </property>
                      <attribute name="icon">
@@ -1227,7 +1227,7 @@ QFrame{
                            <x>0</x>
                            <y>0</y>
                            <width>274</width>
-                           <height>533</height>
+                           <height>523</height>
                           </rect>
                          </property>
                          <layout class="QVBoxLayout" name="verticalLayout_20">
@@ -2206,7 +2206,7 @@ QFrame{
                            <item>
                             <widget class="QLabel" name="label_12">
                              <property name="text">
-                              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/Gemmstone/PyNGtuber&quot;&gt;&lt;span style=&quot; font-size:18pt; font-weight:600; text-decoration: underline; color:#e93a9a;&quot;&gt;PyNGtuber&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                              <string>&lt;span style=&quot; font-size:18pt; font-weight:600;&quot;&gt;PyNGtuber&lt;/span&gt;</string>
                              </property>
                              <property name="alignment">
                               <set>Qt::AlignCenter</set>
@@ -2300,11 +2300,36 @@ QFrame{
                           <property name="frameShadow">
                            <enum>QFrame::Raised</enum>
                           </property>
-                          <layout class="QVBoxLayout" name="verticalLayout_26">
+                          <layout class="QHBoxLayout" name="horizontalLayout_11">
                            <item>
                             <widget class="QLabel" name="label_7">
+                             <property name="toolTip">
+                              <string>Go to GitHub</string>
+                             </property>
                              <property name="text">
-                              <string>&lt;a href=&quot;https://github.com/Gemmstone/PyNGtuber&quot;&gt;1.0.0&lt;/a&gt;</string>
+                              <string>&lt;a href=&quot;https://github.com/Gemmstone/PyNGtuber&quot;&gt;v1.0.0&lt;/a&gt;</string>
+                             </property>
+                             <property name="alignment">
+                              <set>Qt::AlignCenter</set>
+                             </property>
+                             <property name="openExternalLinks">
+                              <bool>true</bool>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLabel" name="label_8">
+                             <property name="sizePolicy">
+                              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                               <horstretch>0</horstretch>
+                               <verstretch>0</verstretch>
+                              </sizepolicy>
+                             </property>
+                             <property name="styleSheet">
+                              <string notr="true">color: rgb(176, 176, 176);</string>
+                             </property>
+                             <property name="text">
+                              <string>13/10/2023</string>
                              </property>
                              <property name="alignment">
                               <set>Qt::AlignCenter</set>
@@ -2359,8 +2384,26 @@ QFrame{
                               <enum>QFrame::Raised</enum>
                              </property>
                              <layout class="QHBoxLayout" name="horizontalLayout_3">
+                              <property name="spacing">
+                               <number>0</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
                               <item>
                                <widget class="QLabel" name="label_2">
+                                <property name="toolTip">
+                                 <string>Support her!</string>
+                                </property>
                                 <property name="styleSheet">
                                  <string notr="true"/>
                                 </property>
@@ -2445,8 +2488,26 @@ QFrame{
                               <enum>QFrame::Raised</enum>
                              </property>
                              <layout class="QHBoxLayout" name="horizontalLayout_10">
+                              <property name="spacing">
+                               <number>0</number>
+                              </property>
+                              <property name="leftMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>0</number>
+                              </property>
                               <item>
                                <widget class="QLabel" name="label_10">
+                                <property name="toolTip">
+                                 <string>Support her!</string>
+                                </property>
                                 <property name="text">
                                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://chereverie.art/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#e93a9a;&quot;&gt;Chereverie&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                                 </property>
@@ -2518,9 +2579,12 @@ QFrame{
                           <property name="frameShadow">
                            <enum>QFrame::Raised</enum>
                           </property>
-                          <layout class="QVBoxLayout" name="verticalLayout_47">
+                          <layout class="QHBoxLayout" name="horizontalLayout_12">
                            <item>
                             <widget class="QLabel" name="label_11">
+                             <property name="toolTip">
+                              <string>Go to issues page</string>
+                             </property>
                              <property name="styleSheet">
                               <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
                              </property>

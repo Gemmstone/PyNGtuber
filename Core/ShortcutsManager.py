@@ -31,7 +31,7 @@ class MidiListener(QThread):
 class KeyboardListener(QThread):
     update_shortcuts_signal = pyqtSignal(list)
     new_shortcuts_signal = pyqtSignal(list)
-    modifier_keys = set()  # Store the currently pressed keys
+    modifier_keys = set()
 
     def __init__(self, commands):
         super().__init__()
@@ -43,7 +43,6 @@ class KeyboardListener(QThread):
             listener.join()
 
     def on_key_press(self, key):
-        # Store the currently pressed keys, excluding modifiers
         if not hasattr(key, 'char'):
             self.modifier_keys.add(key)
 

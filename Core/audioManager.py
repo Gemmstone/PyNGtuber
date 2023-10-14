@@ -23,7 +23,7 @@ class AudioThread(QThread):
             if supported_sample_rate == 44100:
                 sample_rate = 44100
             else:
-                # Use a fallback sample rate that is supported
+
                 sample_rate = 48000
 
             try:
@@ -58,20 +58,17 @@ class AudioThread(QThread):
 
     def callback(self, in_data, frame_count, time_info, status):
         if status:
-            # self.stop_stream()
             self.audio_stream.close()
             self.audio_stream = None
             self.audio_stream_error.emit(f"{status}")
 
         audio_data = np.frombuffer(in_data, dtype=np.int16)
         rms_volume = abs(np.max(audio_data))
-        # Normalize the volume to fit in the range [0, 100]
+
         volume = int((rms_volume / 32768) * 100)
 
-        # Emit the volume signal
         self.audio_stream_signal.emit(volume)
 
-        # Return None and pyaudio.paContinue to keep the stream running
         return None, pyaudio.paContinue
 
 
@@ -121,12 +118,12 @@ class MicrophoneVolumeWidget(QWidget):
                 max_input_channels = info.get('maxInputChannels')
                 if 24 > max_input_channels > 0 or name == "default":
                     if name not in excluded:
-                        # print(i, name, max_input_channels)
+
                         self.device_dict[name] = i
                         self.microphones.addItem(name)
                         if name == "default":
                             self.microphones.setCurrentText(name)
-                            # Your code for adding microphones and setting the current text goes here
+
             except OSError as e:
                 if e.errno != -9996:
                     print(f"Error when accessing device {i}: {str(e)}")

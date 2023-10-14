@@ -42,7 +42,6 @@ class LayeredImageViewer(QWebEngineView):
         image_div = soup.find('div', id='image-wrapper')
         image_div.clear()
 
-        # Move the runtime_page and soup_runtime here
         self.page().toHtml(lambda html: self.handle_runtime_html(html, soup, image_div, image_list))
 
     def handle_runtime_html(self, runtime_page, soup, image_div, image_list):
@@ -61,16 +60,16 @@ class LayeredImageViewer(QWebEngineView):
             for layer in sorted(image_list, key=lambda x: x['posZ']):
                 img_tag = soup.new_tag('img', src=f"../{layer['route']}", style=f"""
                         position: absolute !important;
-                        left: calc(50% + {layer['posX']}px) !important;
-                        top: calc(50% + {layer['posY']}px) !important;
-                        transform: translate(-50%, -50%) scale({scale_factor}) rotate({layer['rotation']}deg) !important;
-                        width: {layer['sizeX']}px !important; 
-                        height: {layer['sizeY']}px !important;
+                        left: calc(50% + {layer['posX']}px);
+                        top: calc(50% + {layer['posY']}px);
+                        transform: translate(-50%, -50%) scale({scale_factor}) rotate({layer['rotation']}deg);
+                        width: {layer['sizeX']}px; 
+                        height: {layer['sizeY']}px;
                         {"opacity: 0" if layer['talking'] not in ['ignore', 'talking_closed'] else ""}; 
                         {layer['css']}
                     """)
                 img_tag['class'] = [layer['blinking'], layer['talking']]
-                # Append the img tag to the div
+
                 image_div.append(img_tag)
 
         beautiful_html = soup.prettify()
