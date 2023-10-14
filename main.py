@@ -71,6 +71,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.comboBox.currentIndexChanged.connect(self.setBGColor)
 
         self.viewer = LayeredImageViewer()
+        self.viewer.loadFinishedSignal.connect(self.reboot_audio)
         self.viewerFrame.layout().addWidget(self.viewer)
         self.viewer.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
 
@@ -113,6 +114,13 @@ class MainWindow(QtWidgets.QMainWindow):
         OpenAssetsFolderButton.triggered.connect(self.OpenAssetsFolder)
 
         self.selectCategory.addItems(self.get_folders_in_assets())
+        self.selectCategory.setMaxVisibleItems(5)
+
+        self.tabWidget_2.currentChanged.connect(self.changePage)
+
+    def changePage(self, index):
+        self.stackedWidget.setCurrentIndex(index)
+        self.tabWidget.setCurrentIndex(index)
 
     def model_shortcut(self, data):
         print(data)
@@ -136,6 +144,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 current_files.append(file["route"])
 
         self.update_viewer(current_files)
+        self.ImageGallery.load_images(current_files)
 
     def check_if_expression(self, file):
         with open("Data/expressionFolders.json", "r") as expressions_list:
@@ -281,42 +290,44 @@ class MainWindow(QtWidgets.QMainWindow):
     def shortcut_received(self, shortcuts):
         print(f"Received: {shortcuts}")
 
+    def reboot_audio(self):
+        self.audio.active_audio_signal = -1
+
     def audioStatus(self, status):
-        self.viewer.page().runJavaScript(
-            '''
-            var elementsOpen = document.getElementsByClassName("talking_open");
-            var elementsClosed = document.getElementsByClassName("talking_closed");
-            var elementsScreaming = document.getElementsByClassName("talking_screaming");
-            var imageWrapper = document.getElementById("image-wrapper");
-
-            var opacityOpen = ''' + str(1 if status == 1 else 0) + ''';
-            var opacityClosed = ''' + str(1 if status <= 0 else 0) + ''';
-            var opacityScreaming = ''' + str(1 if status == 2 else 0) + ''';
-
-            // Apply CSS transitions for a smooth animation to text elements
-            for (var i = 0; i < elementsOpen.length; i++) {
-                elementsOpen[i].style.transition = "opacity 0.3s"; // Adjust the duration as needed
-                elementsOpen[i].style.opacity = opacityOpen;
-            }
-
-            for (var i = 0; i < elementsClosed.length; i++) {
-                elementsClosed[i].style.transition = "opacity 0.3s"; // Adjust the duration as needed
-                elementsClosed[i].style.opacity = opacityClosed;
-            }
-
-            for (var i = 0; i < elementsScreaming.length; i++) {
-                elementsScreaming[i].style.transition = "opacity 0.3s"; // Adjust the duration as needed
-                elementsScreaming[i].style.opacity = opacityScreaming;
-            }
-
-            // Add a CSS animation for jumping the image-wrapper
-            if (''' + str(status) + ''' == 1 || ''' + str(status) + ''' == 2) {
-                imageWrapper.style.animation = "floaty 0.5s ease-in-out infinite"; 
-            } else {
-                imageWrapper.style.animation = "floaty 6s ease-in-out infinite";
-            }
-            '''
-        )
+        if self.viewer.is_loaded:
+            self.viewer.page().runJavaScript('''
+                var elementsOpen = document.getElementsByClassName("talking_open");
+                var elementsClosed = document.getElementsByClassName("talking_closed");
+                var elementsScreaming = document.getElementsByClassName("talking_screaming");
+                var imageWrapper = document.getElementById("image-wrapper");
+        
+                var opacityOpen = ''' + str(1 if status == 1 else 0) + ''';
+                var opacityClosed = ''' + str(1 if status <= 0 else 0) + ''';
+                var opacityScreaming = ''' + str(1 if status == 2 else 0) + ''';
+        
+                // Apply CSS transitions for a smooth animation to text elements
+                for (var i = 0; i < elementsOpen.length; i++) {
+                    elementsOpen[i].style.transition = "opacity 0.3s";
+                    elementsOpen[i].style.opacity = opacityOpen;
+                }
+        
+                for (var i = 0; i < elementsClosed.length; i++) {
+                    elementsClosed[i].style.transition = "opacity 0.3s";
+                    elementsClosed[i].style.opacity = opacityClosed;
+                }
+        
+                for (var i = 0; i < elementsScreaming.length; i++) {
+                    elementsScreaming[i].style.transition = "opacity 0.3s";
+                    elementsScreaming[i].style.opacity = opacityScreaming;
+                }
+        
+                // Add a CSS animation for jumping the image-wrapper
+                if (''' + str(status) + ''' == 1 || ''' + str(status) + ''' == 2) {
+                    imageWrapper.style.animation = "floaty 0.5s ease-in-out infinite"; 
+                } else {
+                    imageWrapper.style.animation = "floaty 6s ease-in-out infinite";
+                }
+            ''')
 
     def saveSettings(self, settings):
         if settings['default']:
@@ -497,7 +508,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.SettingsGallery.set_items(images_list)
         self.current_files = files
         self.save_parameters_to_json()
-        QTimer.singleShot(500, lambda: self.audioStatus(-1))
 
     def event(self, event):
         try:

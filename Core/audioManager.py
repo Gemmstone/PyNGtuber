@@ -85,7 +85,9 @@ class MicrophoneVolumeWidget(QWidget):
         self.previous_state = False
         self.active_audio_signal = -1
         self.label.hide()
+        self.loadStart()
 
+    def loadStart(self):
         self.list_microphones()
         self.last_microphone = None
 

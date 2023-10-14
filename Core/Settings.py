@@ -238,7 +238,17 @@ class SettingsToolBox(QToolBox):
     def set_items(self, items):
         # Clear all existing items
         while self.count() > 0:
-            self.removeItem(0)
+            index = 0
+            widget = self.widget(index)  # Get the associated widget
+            if widget:
+                # Iterate through and remove all child widgets
+                for i in range(widget.layout().count()):
+                    child_widget = widget.layout().itemAt(i).widget()
+                    if child_widget:
+                        child_widget.setParent(None)  # Set the child widget's parent to None
+
+                widget.setParent(None)  # Set the main widget's parent to None
+            self.removeItem(index)
         # Loop through your items
         for item in items:
             route = item["route"]
@@ -249,7 +259,11 @@ class SettingsToolBox(QToolBox):
             # Now, add the parent folder to the title
             title = f"{filename} {parent_folder}"
 
-            thumbnail_path = os.path.join(os.path.dirname(route), "thumbs", os.path.basename(route))
+            thumbnail_path = os.path.join(
+                os.path.dirname(route), "thumbs", os.path.basename(
+                    route.replace(".gif", ".png").replace(".webp", ".png")
+                )
+            )
 
             # Create a custom widget using your "Settings" class
             settings_widget = Settings(item)

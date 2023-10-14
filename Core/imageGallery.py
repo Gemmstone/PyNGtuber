@@ -1,7 +1,7 @@
 
-from PyQt6.QtWidgets import QWidget, QToolBox, QVBoxLayout, QPushButton, QFrame, QHBoxLayout, QSizePolicy, QGridLayout, QCheckBox, QGroupBox, QMessageBox, QInputDialog
+from PyQt6.QtWidgets import QWidget, QToolBox, QVBoxLayout, QPushButton, QFrame, QHBoxLayout, QSizePolicy, QGridLayout, QCheckBox, QGroupBox, QMessageBox, QInputDialog, QLabel
 from PyQt6.QtGui import QIcon, QPixmap, QImage
-from PyQt6.QtCore import pyqtSignal, QSize, QEvent
+from PyQt6.QtCore import pyqtSignal, QSize
 from PyQt6 import uic
 from PIL import Image
 import shutil
@@ -12,7 +12,7 @@ import os
 class ImageGallery(QToolBox):
     selectionChanged = pyqtSignal(list)
 
-    def __init__(self, load_model=None):
+    def __init__(self, load_model):
         super().__init__()
         
         StyleSheet = """
@@ -116,15 +116,12 @@ class ImageGallery(QToolBox):
         """
         self.setStyleSheet(StyleSheet)
 
-        self.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
+        self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
         # self.setVerticalPolicy(QSizePolicy.verticalPolicy.MinimumExpanding)
         script_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the current script
-        folder_path = os.path.join(script_dir, "../Assets")
+        self.folder_path = os.path.join(script_dir, "../Assets")
 
-        if os.path.exists(folder_path) and os.path.isdir(folder_path):
-            self.load_images(folder_path, load_model)
-        else:
-            self.addItem(QWidget(), "Assets Folder Not Found")  # Add a placeholder page if the folder doesn't exist
+        self.load_images()
 
     def create_thumbnail(self, input_path, max_size=(50, 50), quality=90, custom_name=None):
         # Extract the file name and directory from the input path
@@ -182,11 +179,34 @@ class ImageGallery(QToolBox):
         # Return the created QIcon
         return QIcon(pixmap)
 
-    def load_images(self, folder_path, load_model):
-        for subdir, dirs, files in os.walk(folder_path):
+    def load_images(self, load_model=None):
+        while self.count() > 0:
+            index = 0
+            widget = self.widget(index)  # Get the associated widget
+            if widget:
+                # Iterate through and remove all child widgets
+                for i in range(widget.layout().count()):
+                    child_widget = widget.layout().itemAt(i).widget()
+                    if child_widget:
+                        child_widget.setParent(None)  # Set the child widget's parent to None
+
+                widget.setParent(None)  # Set the main widget's parent to None
+            self.removeItem(index)
+
+        if not os.path.exists(self.folder_path) and os.path.isdir(self.folder_path):
+            page_widget = QFrame()
+            page_layout = QVBoxLayout(page_widget)
+            page_layout.setContentsMargins(0, 0, 6, 0)
+            page_layout.addWidget(QLabel("Assets Folder Not Found"))
+            folder_name = os.path.basename("Assets Folder Not Found")
+            self.addItem(page_widget, folder_name.title())
+            return
+
+        for subdir, dirs, files in os.walk(self.folder_path):
             if "thumb" not in subdir.lower():
                 # Create a widget for each subfolder
                 page_widget = QFrame()
+                # page_widget.setMaximumHeight(400)
                 # page_widget.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
                 page_layout = QVBoxLayout(page_widget)
                 page_layout.setContentsMargins(0, 0, 6, 0)
@@ -203,7 +223,7 @@ class ImageGallery(QToolBox):
                         button_name = str(os.path.join(subdir, file)).split("/../")[-1]
                         item = QPushButton()
                         item.setIcon(self.create_thumbnail(os.path.join(subdir, file)))
-                        item.setIconSize(QSize(50, 50))
+                        item.setIconSize(QSize(30, 30))
                         item.setAccessibleName(button_name)
                         item.setCheckable(True)
                         if load_model is not None:
@@ -214,7 +234,7 @@ class ImageGallery(QToolBox):
                         fileCount += 1
 
                         # Start a new row after 3 columns
-                        if column_count == 2:
+                        if column_count == 4:
                             row_layout = QHBoxLayout()
                             page_layout.addLayout(row_layout)
                             column_count = 0
@@ -347,6 +367,7 @@ class ModelGallery(QWidget):
 
     def model_deleted(self):
         self.sender().setParent(None)
+
 
 class ExpressionSelector(QWidget):
     def __init__(self, folder_path):
