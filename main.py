@@ -69,7 +69,7 @@ class ShortcutsDialog(QtWidgets.QDialog):
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi("UI/main.ui", self)
+        uic.loadUi(os.path.normpath("UI/main.ui"), self)
         self.label_5.hide()
 
         self.setWindowTitle("PyNGTuber")
@@ -77,8 +77,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.color = (184, 205, 238)
         self.file_parameters_current = {}
         self.current_files = []
-        self.json_file = "Data/parameters.json"
-        self.current_json_file = "Data/current.json"
+        self.json_file = os.path.normpath("Data/parameters.json")
+        self.current_json_file = os.path.normpath("Data/current.json")
 
         self.keyboard_listener = KeyboardListener()
         self.keyboard_listener.update_shortcuts_signal.connect(self.shortcut_received)
@@ -102,11 +102,18 @@ class MainWindow(QtWidgets.QMainWindow):
         except FileNotFoundError:
             pass
 
+        self.file_parameters_default = {os.path.normpath(key): value for key, value in self.file_parameters_default.items()}
+
+        # Normalize the paths in self.file_parameters_current
+        self.file_parameters_current = {os.path.normpath(key): value for key, value in self.file_parameters_current.items()}
+
         try:
             with open(self.current_json_file, "r") as f:
                 self.current_files = json.load(f)
         except FileNotFoundError:
             pass
+
+        self.current_files = [os.path.normpath(i) for i in self.current_files]
 
         self.audio = MicrophoneVolumeWidget()
         self.audio.activeAudio.connect(self.audioStatus)
@@ -130,14 +137,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.expressionSelector = ExpressionSelector("Assets")
         self.scrollArea_5.setWidget(self.expressionSelector)
 
-        self.savedAvatars = [folder for folder in os.listdir("Models/Avatars") if "." not in folder]
+        self.savedAvatars = [folder for folder in os.listdir(os.path.normpath("Models/Avatars")) if "." not in folder]
         self.modelGallery = ModelGallery(models_list=self.savedAvatars, models_type="Avatars")
         self.modelGallery.saving.connect(self.save_avatar)
         self.modelGallery.selected.connect(self.load_model)
         self.modelGallery.shortcut.connect(self.dialog_shortcut)
         self.frameModels.layout().addWidget(self.modelGallery)
 
-        self.savedExpressions = [folder for folder in os.listdir("Models/Expressions") if "." not in folder]
+        self.savedExpressions = [folder for folder in os.listdir(os.path.normpath("Models/Expressions")) if "." not in folder]
         self.expressionGallery = ModelGallery(models_list=self.savedExpressions, models_type="Expressions")
         self.expressionGallery.saving.connect(self.save_expression)
         self.expressionGallery.selected.connect(self.load_model)
@@ -191,7 +198,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def shortcut_received(self, shortcuts):
         if shortcuts["type"] == "Model":
-            parts = shortcuts["path"].split('/')
+            parts = shortcuts["path"].split(os.path.pathsep)
             self.load_model({"name": parts[2], "type": parts[1]})
         else:
             print(f"Received: {shortcuts}")
@@ -204,7 +211,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def create_shortcuts(self, data):
         print(data)
         if data["data"]["type"] in ["Avatars", "Expressions"]:
-            mainFolder = f"Models/{data['data']['type']}"
+            mainFolder = os.path.normpath(f"Models/{data['data']['type']}")
 
             used = self.find_shortcut_usages(mainFolder, data['data']['name'], data['shortcut'])
             if used:
@@ -212,18 +219,25 @@ class MainWindow(QtWidgets.QMainWindow):
                 msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
                 msg.setText(f"This shortcut already exists for another {data['data']['type'][:-1].lower()}:")
                 msg.setInformativeText(
-                    ",".join(
-                        [i.replace(f"Models/{data['data']['type']}/", "").replace(f"/data.json", "") for i in used]
-                    )
+                    ",".join([
+                        i.replace(
+                            f"Models{os.path.sep}{data['data']['type']}{os.path.sep}", ""
+                        ).replace(
+                            f"{os.path.sep}data.json", "") for i in used
+                    ])
                 )
                 msg.setWindowTitle("Model Shortcut Exists")
                 msg.exec()
                 return
             else:
-                with open(f"{mainFolder}/{data['data']['name']}/data.json", 'r') as json_file:
+                with open(
+                        os.path.normpath(f"{mainFolder}{os.path.sep}{data['data']['name']}{os.path.sep}data.json"), 'r'
+                ) as json_file:
                     old_data = json.load(json_file)
                 old_data["shortcuts"] = data['shortcut']
-                with open(f"{mainFolder}/{data['data']['name']}/data.json", 'w') as json_file:
+                with open(
+                        os.path.normpath(f"{mainFolder}{os.path.sep}{data['data']['name']}{os.path.sep}data.json"), 'w'
+                ) as json_file:
                     json.dump(old_data, json_file, indent=4)
         if data["data"]["type"] in ["Assets"]:
             pass
@@ -246,11 +260,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def load_model(self, data):
         current_files = []
-        with open(f"Models/{data['type']}/{data['name']}/model.json", "r") as load_file:
+        with open(os.path.normpath(f"Models/{data['type']}/{data['name']}/model.json"), "r") as load_file:
             files = json.load(load_file)
             for file in files:
-                self.file_parameters_current[file["route"]] = {key: value for key, value in file.items() if
-                                                               key != "route"}
+                self.file_parameters_current[os.path.normpath(file["route"])] = {key: value for key, value in file.items() if key != "route"}
 
             if data["type"] == "Avatars":
                 for file in self.current_files:
@@ -261,13 +274,13 @@ class MainWindow(QtWidgets.QMainWindow):
                     if not self.check_if_expression(file):
                         current_files.append(file)
             for file in files:
-                current_files.append(file["route"])
+                current_files.append(os.path.normpath(file["route"]))
 
         self.update_viewer(current_files)
         # self.ImageGallery.load_images(current_files)
 
     def check_if_expression(self, file):
-        with open("Data/expressionFolders.json", "r") as expressions_list:
+        with open(os.path.normpath("Data/expressionFolders.json"), "r") as expressions_list:
             for expression in json.load(expressions_list):
                 if expression in file:
                     return True
@@ -280,7 +293,7 @@ class MainWindow(QtWidgets.QMainWindow):
             print(str(text))
 
     def OpenAssetsFolder(self):
-        path = "Assets/"
+        path = os.path.normpath("Assets/")
         if os.name == "posix":
             subprocess.run(["xdg-open", path])
         elif os.name == "nt":
@@ -289,7 +302,7 @@ class MainWindow(QtWidgets.QMainWindow):
             print("Unsupported operating system")
 
     def get_folders_in_assets(self):
-        folder_path = "./Assets"
+        folder_path = os.path.normpath("./Assets")
         if os.path.exists(folder_path) and os.path.isdir(folder_path):
             folders = [self.tr(f) for f in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, f))]
             return [self.tr("Select Category...")] + folders
@@ -315,7 +328,7 @@ class MainWindow(QtWidgets.QMainWindow):
             modelName, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter new avatar name:')
 
         if ok:
-            directory = f"Models/Avatars/{modelName}"
+            directory = os.path.normpath(f"Models/Avatars/{modelName}")
             if model is None or model is False:
                 if os.path.exists(directory):
                     msg = QtWidgets.QMessageBox()
@@ -338,7 +351,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.modelGallery.add_model(modelName)
             else:
                 self.modelGallery.reload_models(
-                    [folder for folder in os.listdir("Models/Avatars") if "." not in folder])
+                    [folder for folder in os.listdir(f"Models{os.path.sep}Avatars") if "." not in folder])
 
     def save_expression(self, model=None):
         if model is not None and model is not False:
@@ -359,7 +372,7 @@ class MainWindow(QtWidgets.QMainWindow):
             modelName, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter new expression name:')
 
         if ok:
-            directory = f"Models/Expressions/{modelName}"
+            directory = os.path.normpath(f"Models{os.path.sep}Expressions{os.path.sep}{modelName}")
             if model is None or model is False:
                 if os.path.exists(directory):
                     msg = QtWidgets.QMessageBox()
@@ -382,16 +395,16 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.expressionGallery.add_model(modelName)
             else:
                 self.expressionGallery.reload_models(
-                    [folder for folder in os.listdir("Models/Expressions") if "." not in folder])
+                    [folder for folder in os.listdir(f"Models{os.path.sep}Expressions") if "." not in folder])
 
     def save_model(self, directory, modelName, temp, files):
-        self.ImageGallery.create_thumbnail(temp, custom_name=f"{directory}/thumb.png")
+        self.ImageGallery.create_thumbnail(temp, custom_name=f"{directory}{os.path.sep}thumb.png")
         os.remove(temp)
 
-        with open(f"{directory}/model.json", "w") as file:
+        with open(os.path.normpath(f"{directory}{os.path.sep}model.json"), "w") as file:
             json.dump(files, file, indent=4)
 
-        with open(f"{directory}/data.json", "w") as file:
+        with open(os.path.normpath(f"{directory}{os.path.sep}data.json"), "w") as file:
             data = {
                 "shortcuts": []
             }
@@ -599,7 +612,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.file_parameters_current[file] = parameters
 
             images_list.append({
-                "route": file,
+                "route": os.path.normpath(file),
                 **parameters
             })
         return images_list

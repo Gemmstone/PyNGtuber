@@ -121,7 +121,7 @@ class ImageGallery(QToolBox):
 
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        self.folder_path = os.path.join(script_dir, "../Assets")
+        self.folder_path = os.path.join(script_dir, f"..{os.path.sep}Assets")
 
     def create_thumbnail(self, input_path, max_size=(50, 50), quality=90, custom_name=None):
         file_name = os.path.basename(input_path)
@@ -221,10 +221,11 @@ class ImageGallery(QToolBox):
 
                     for file in files:
                         if file.lower().endswith((".png", ".jpg", ".jpeg", ".gif")):
-                            button_name = str(os.path.join(subdir, file)).split("/../")[-1]
+                            button_name = str(os.path.join(subdir, file)).split(f"{os.path.sep}..{os.path.sep}")[-1]
                             item = QPushButton()
+                            item.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
                             item.setIcon(self.create_thumbnail(os.path.join(subdir, file)))
-                            item.setIconSize(QSize(30, 30))
+                            item.setIconSize(QSize(20, 30) if os.name == 'nt' else QSize(30, 40))
                             item.setAccessibleName(button_name)
                             item.setToolTip(str(os.path.join(subdir, file)))
                             item.setCheckable(True)
@@ -272,8 +273,8 @@ class ImageGallery(QToolBox):
             page_widget = self.widget(index)
             for button in page_widget.findChildren(QPushButton):
                 if button.isChecked():
-                    selected_images.append(button.accessibleName())
-                    file_paths.append(button.toolTip())
+                    selected_images.append(os.path.normpath(button.accessibleName()))
+                    file_paths.append(os.path.normpath(button.toolTip()))
 
         self.selectionChanged.emit(selected_images)
         return file_paths
