@@ -84,10 +84,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.keyboard_listener.update_shortcuts_signal.connect(self.shortcut_received)
         self.keyboard_listener.start()
 
-        if os.name == 'nt':
-            self.midi_listener = MidiListener()
-            self.midi_listener.update_shortcuts_signal.connect(self.shortcut_received)
-            self.midi_listener.start()
+        self.midi_listener = MidiListener()
+        self.midi_listener.update_shortcuts_signal.connect(self.shortcut_received)
+        self.midi_listener.start()
 
         self.get_shortcuts()
 
@@ -181,8 +180,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                     "path": data_json_path.replace("data", "model"), "type": "Model",
                                     "command": mido.Message.from_dict(shortcut["command"])
                                 })
-        if os.name == 'nt':
-            self.midi_listener.update_shortcuts(midi)
+        self.midi_listener.update_shortcuts(midi)
         self.keyboard_listener.update_shortcuts(keyboard)
 
     def changePage(self, index):

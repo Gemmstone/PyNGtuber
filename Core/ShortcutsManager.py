@@ -1,6 +1,7 @@
 from PyQt6.QtCore import QThread, pyqtSignal
 from pynput.keyboard import Listener
 import mido
+import os
 
 
 class MidiListener(QThread):
@@ -11,17 +12,23 @@ class MidiListener(QThread):
         super().__init__()
         self.commands = {}
         self.ignore_commands = False
+        self.warning = True
 
     def run(self):
         while True:
-            with mido.open_input() as midi_port:
-                for message in midi_port:
-                    if self.ignore_commands:
-                        self.new_shortcuts_signal.emit({"command": message.dict(), "type": "Midi"})
-                    elif message.type == 'note_on':
-                        for command in self.commands:
-                            if message == command["command"]:
-                                self.update_shortcuts_signal.emit(command)
+            if os.name != 'nt':
+                with mido.open_input() as midi_port:
+                    for message in midi_port:
+                        if self.ignore_commands:
+                            self.new_shortcuts_signal.emit({"command": message.dict(), "type": "Midi"})
+                        elif message.type == 'note_on':
+                            for command in self.commands:
+                                if message == command["command"]:
+                                    self.update_shortcuts_signal.emit(command)
+            else:
+                if self.warning:
+                    print("Midi not supported on Windows")
+                    self.warning = False
 
     def update_shortcuts(self, commands):
         self.commands = commands
