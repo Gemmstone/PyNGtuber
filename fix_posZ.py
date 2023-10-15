@@ -22,8 +22,6 @@ with open('Data/parameters.json', 'w') as json_file:
 print(f"posZ values updated successfully for items within /Assets/{folder_to_update}/ folder.")
 """
 
-
-"""
 # Read the JSON file
 with open('Data/parameters.json', 'r') as file:
     data = json.load(file)
@@ -151,3 +149,4 @@ if __name__ == "__main__":
     window = ShortcutManagerApp()
     window.show()
     sys.exit(app.exec())
+"""

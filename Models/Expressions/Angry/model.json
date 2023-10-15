@@ -120,6 +120,21 @@
         "use_css": false
     },
     {
+        "route": "Assets/mouth/[mouth]_009.PNG",
+        "sizeX": 600,
+        "sizeY": 600,
+        "posX": 0,
+        "posY": 160,
+        "posZ": 20,
+        "animation": [],
+        "css": "",
+        "blinking": "ignore",
+        "talking": "talking_screaming",
+        "hotkeys": [],
+        "rotation": 180,
+        "use_css": false
+    },
+    {
         "route": "Assets/blush/blush_029.png",
         "sizeX": 600,
         "sizeY": 600,

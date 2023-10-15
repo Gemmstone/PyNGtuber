@@ -1,19 +1,69 @@
 from Core.imageGallery import ImageGallery, ExpressionSelector, ModelGallery
 from Core.ShortcutsManager import MidiListener, KeyboardListener
 from Core.audioManager import MicrophoneVolumeWidget
-from PyQt6.QtCore import QTimer, QCoreApplication
+from PyQt6.QtCore import pyqtSlot, QCoreApplication, pyqtSignal
 from PIL import Image, ImageSequence, ImageOps
 from Core.Viewer import LayeredImageViewer
 from Core.Settings import SettingsToolBox
 from PyQt6 import QtWidgets, uic, QtCore
-from PyQt6.QtGui import QAction, QIcon
 from collections import Counter
+from PyQt6.QtGui import QIcon
 from pathlib import Path
 import subprocess
 import json
 import copy
+import mido
 import sys
 import os
+
+
+class ShortcutsDialog(QtWidgets.QDialog):
+    new_command = pyqtSignal(dict)
+
+    def __init__(self, midi_listener, keyboard_listener, data, parent=None):
+        super().__init__(parent)
+
+        self.midi_listener = midi_listener
+        self.keyboard_listener = keyboard_listener
+        self.data = data
+
+        self.midi_listener.request_new_signal()
+        self.keyboard_listener.request_new_signal()
+
+        self.midi_listener.new_shortcuts_signal.connect(self.handle_shortcuts)
+        self.keyboard_listener.new_shortcuts_signal.connect(self.handle_shortcuts)
+
+        self.setWindowTitle(self.tr("Update Shortcuts"))
+        self.setFixedSize(300, 200)  # Adjust the size as needed
+
+        layout = QtWidgets.QVBoxLayout()
+
+        # Add instructions as a QLabel
+        instructions_label = QtWidgets.QLabel(self.tr("Press a shortcut key to update."))
+        layout.addWidget(instructions_label)
+
+        # Connect the signals from both listeners to a slot
+        self.midi_listener.update_shortcuts_signal.connect(self.handle_shortcuts)
+        self.keyboard_listener.update_shortcuts_signal.connect(self.handle_shortcuts)
+
+        # Create a cancel button
+        cancel_button = QtWidgets.QPushButton(self.tr("Cancel"))
+        cancel_button.clicked.connect(self.close)
+        layout.addWidget(cancel_button, QtCore.Qt.AlignmentFlag.AlignRight)
+
+        self.setLayout(layout)
+
+    @pyqtSlot(dict)
+    def handle_shortcuts(self, shortcut):
+        self.new_command.emit({"shortcut": shortcut, "data": self.data})
+        self.accept()
+
+    def closeEvent(self, event):
+        self.midi_listener.new_shortcuts_signal.disconnect(self.handle_shortcuts)
+        self.keyboard_listener.new_shortcuts_signal.disconnect(self.handle_shortcuts)
+        self.midi_listener.resume_normal_operation()
+        self.keyboard_listener.resume_normal_operation()
+        super().closeEvent(event)
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -30,14 +80,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.json_file = "Data/parameters.json"
         self.current_json_file = "Data/current.json"
 
-        self.midi_listener = MidiListener([])
-        self.keyboard_listener = KeyboardListener([])
+        self.midi_listener = MidiListener()
+        self.keyboard_listener = KeyboardListener()
 
         self.midi_listener.update_shortcuts_signal.connect(self.shortcut_received)
         self.keyboard_listener.update_shortcuts_signal.connect(self.shortcut_received)
 
         self.midi_listener.start()
         self.keyboard_listener.start()
+
+        self.get_shortcuts()
 
         try:
             with open(self.json_file, "r") as f:
@@ -83,14 +135,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.modelGallery = ModelGallery(models_list=self.savedAvatars, models_type="Avatars")
         self.modelGallery.saving.connect(self.save_avatar)
         self.modelGallery.selected.connect(self.load_model)
-        self.modelGallery.shortcut.connect(self.model_shortcut)
+        self.modelGallery.shortcut.connect(self.dialog_shortcut)
         self.frameModels.layout().addWidget(self.modelGallery)
 
         self.savedExpressions = [folder for folder in os.listdir("Models/Expressions") if "." not in folder]
         self.expressionGallery = ModelGallery(models_list=self.savedExpressions, models_type="Expressions")
         self.expressionGallery.saving.connect(self.save_expression)
         self.expressionGallery.selected.connect(self.load_model)
-        self.expressionGallery.shortcut.connect(self.model_shortcut)
+        self.expressionGallery.shortcut.connect(self.dialog_shortcut)
         self.frameExpressions.layout().addWidget(self.expressionGallery)
 
         self.setBGColor()
@@ -101,31 +153,98 @@ class MainWindow(QtWidgets.QMainWindow):
         self.saveAvatar.clicked.connect(self.save_avatar)
         self.saveExpression.clicked.connect(self.save_expression)
 
-        menu = QtWidgets.QMenu()
-
-        CreateCategoryButton = QAction(self.tr("Create new category"), menu)
-        OpenAssetsFolderButton = QAction(self.tr("Open assets folder"), menu)
-        menu.addAction(CreateCategoryButton)
-        menu.addAction(OpenAssetsFolderButton)
-
-        self.toolButton.setMenu(menu)
-
-        CreateCategoryButton.triggered.connect(self.CreateCategory)
-        OpenAssetsFolderButton.triggered.connect(self.OpenAssetsFolder)
-
-        self.selectCategory.addItems(self.get_folders_in_assets())
-        self.selectCategory.setMaxVisibleItems(5)
+        self.createCategory.clicked.connect(self.CreateCategory)
+        self.openFolder.clicked.connect(self.OpenAssetsFolder)
 
         self.tabWidget_2.currentChanged.connect(self.changePage)
-
         self.update_viewer(self.current_files, opening=True)
+
+    def get_shortcuts(self):
+        midi = []
+        keyboard = []
+
+        for root, dirs, files in os.walk("Models"):
+            for filename in files:
+                if filename == "data.json":
+                    data_json_path = os.path.join(root, filename)
+                    with open(data_json_path, 'r') as json_file:
+                        data = json.load(json_file)
+                        shortcut = data.get("shortcuts", None)
+                        if not type(shortcut) is list:
+                            if shortcut["type"] == "Keyboard":
+                                keyboard.append({
+                                    "path": data_json_path.replace("data", "model"),
+                                    "type": "Model", "command": shortcut["command"]
+                                })
+                            else:
+                                midi.append({
+                                    "path": data_json_path.replace("data", "model"), "type": "Model",
+                                    "command": mido.Message.from_dict(shortcut["command"])
+                                })
+
+        self.midi_listener.update_shortcuts(midi)
+        self.keyboard_listener.update_shortcuts(keyboard)
 
     def changePage(self, index):
         self.stackedWidget.setCurrentIndex(index)
         self.tabWidget.setCurrentIndex(index)
+        if self.tabWidget_2.currentIndex() == 1:
+            self.update_viewer(self.current_files, changing_page=True)
 
-    def model_shortcut(self, data):
+    def shortcut_received(self, shortcuts):
+        if shortcuts["type"] == "Model":
+            parts = shortcuts["path"].split('/')
+            self.load_model({"name": parts[2], "type": parts[1]})
+        else:
+            print(f"Received: {shortcuts}")
+
+    def dialog_shortcut(self, data):
+        dialog = ShortcutsDialog(midi_listener=self.midi_listener, keyboard_listener=self.keyboard_listener, data=data)
+        dialog.new_command.connect(self.create_shortcuts)
+        dialog.exec()
+
+    def create_shortcuts(self, data):
         print(data)
+        if data["data"]["type"] in ["Avatars", "Expressions"]:
+            mainFolder = f"Models/{data['data']['type']}"
+
+            used = self.find_shortcut_usages(mainFolder, data['data']['name'], data['shortcut'])
+            if used:
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
+                msg.setText(f"This shortcut already exists for another {data['data']['type'][:-1].lower()}:")
+                msg.setInformativeText(
+                    ",".join(
+                        [i.replace(f"Models/{data['data']['type']}/", "").replace(f"/data.json", "") for i in used]
+                    )
+                )
+                msg.setWindowTitle("Model Shortcut Exists")
+                msg.exec()
+                return
+            else:
+                with open(f"{mainFolder}/{data['data']['name']}/data.json", 'r') as json_file:
+                    old_data = json.load(json_file)
+                old_data["shortcuts"] = data['shortcut']
+                with open(f"{mainFolder}/{data['data']['name']}/data.json", 'w') as json_file:
+                    json.dump(old_data, json_file, indent=4)
+        if data["data"]["type"] in ["Assets"]:
+            pass
+
+        QtCore.QTimer.singleShot(500, self.get_shortcuts)
+
+    def find_shortcut_usages(self, main_folder, current_folder, new_shortcut):
+        usages = []
+        for root, dirs, files in os.walk(main_folder):
+            if root != current_folder:
+                for filename in files:
+                    if filename == "data.json":
+                        data_json_path = os.path.join(root, filename)
+                        with open(data_json_path, 'r') as json_file:
+                            data = json.load(json_file)
+                            shortcut = data.get("shortcuts", None)
+                            if shortcut == new_shortcut:
+                                usages.append(data_json_path)
+        return usages
 
     def load_model(self, data):
         current_files = []
@@ -147,7 +266,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 current_files.append(file["route"])
 
         self.update_viewer(current_files)
-        self.ImageGallery.load_images(current_files)
+        # self.ImageGallery.load_images(current_files)
 
     def check_if_expression(self, file):
         with open("Data/expressionFolders.json", "r") as expressions_list:
@@ -297,12 +416,6 @@ class MainWindow(QtWidgets.QMainWindow):
             if not fileName.lower().endswith(".png"):
                 fileName += ".png"
             self.image_generator(output_name=fileName, method=method)
-
-    def shortcut_received(self, shortcuts):
-        print(f"Received: {shortcuts}")
-
-    def create_shortcuts(self):
-        pass
 
     def reboot_audio(self):
         self.audio.active_audio_signal = -1
@@ -493,12 +606,17 @@ class MainWindow(QtWidgets.QMainWindow):
             })
         return images_list
 
-    def update_viewer(self, files=None, opening=False):
+    def update_viewer(self, files=None, opening=False, changing_page=False):
         images_list = self.getFiles(files)
 
         self.viewer.updateImages(images_list, self.color)
-        if self.current_files != files or opening:
-            self.SettingsGallery.set_items(images_list)
+        if self.tabWidget_2.currentIndex() == 1:
+            if self.current_files != files or changing_page:
+                self.SettingsGallery.set_items(images_list)
+        if opening:
+            self.ImageGallery.load_images(files)
+        else:
+            self.ImageGallery.set_buttons_checked(files)
         self.current_files = files
         self.save_parameters_to_json()
 

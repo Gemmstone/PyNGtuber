@@ -1,3 +1,12 @@
 {
-    "shortcuts": []
+    "shortcuts": {
+        "command": {
+            "type": "note_on",
+            "time": 0,
+            "note": 73,
+            "velocity": 64,
+            "channel": 0
+        },
+        "type": "Midi"
+    }
 }
