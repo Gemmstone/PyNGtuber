@@ -15,8 +15,8 @@ class MidiListener(QThread):
         self.warning = True
 
     def run(self):
-        while True:
-            if os.name != 'nt':
+        if os.name != 'nt':
+            while True:
                 with mido.open_input() as midi_port:
                     for message in midi_port:
                         if self.ignore_commands:
@@ -25,10 +25,6 @@ class MidiListener(QThread):
                             for command in self.commands:
                                 if message == command["command"]:
                                     self.update_shortcuts_signal.emit(command)
-            else:
-                if self.warning:
-                    print("Midi not supported on Windows")
-                    self.warning = False
 
     def update_shortcuts(self, commands):
         self.commands = commands

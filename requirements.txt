@@ -1,0 +1,9 @@
+beautifulsoup4==4.12.2
+mido==1.3.0
+numpy==1.26.0
+Pillow==10.0.1
+PyAudio==0.2.13
+pynput==1.7.6
+PyQt6-WebEngine==6.5.0
+PyQt6==6.5.2
+python-rtmidi==1.5.6
