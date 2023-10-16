@@ -138,7 +138,7 @@ QTabBar::tab:hover {
 }</string>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
             </property>
             <property name="iconSize">
              <size>
@@ -412,8 +412,8 @@ QTabBar::tab:hover {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>158</width>
-                   <height>115</height>
+                   <width>208</width>
+                   <height>503</height>
                   </rect>
                  </property>
                  <attribute name="icon">
@@ -656,7 +656,7 @@ QFrame{
                    <x>0</x>
                    <y>0</y>
                    <width>208</width>
-                   <height>526</height>
+                   <height>546</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout">
@@ -692,6 +692,12 @@ QFrame{
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>21</height>
+                   </size>
+                  </property>
                   <property name="cursor">
                    <cursorShape>PointingHandCursor</cursorShape>
                   </property>
@@ -704,6 +710,9 @@ QFrame{
                   <property name="whatsThis">
                    <string/>
                   </property>
+                  <property name="styleSheet">
+                   <string notr="true">background-color: rgb(77, 77, 77);</string>
+                  </property>
                   <property name="text">
                    <string/>
                   </property>
@@ -714,7 +723,7 @@ QFrame{
                   <property name="iconSize">
                    <size>
                     <width>25</width>
-                    <height>25</height>
+                    <height>20</height>
                    </size>
                   </property>
                  </widget>
@@ -727,6 +736,12 @@ QFrame{
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>21</height>
+                   </size>
+                  </property>
                   <property name="cursor">
                    <cursorShape>PointingHandCursor</cursorShape>
                   </property>
@@ -739,6 +754,9 @@ QFrame{
                   <property name="whatsThis">
                    <string/>
                   </property>
+                  <property name="styleSheet">
+                   <string notr="true">background-color: rgb(77, 77, 77);</string>
+                  </property>
                   <property name="text">
                    <string/>
                   </property>
@@ -749,7 +767,7 @@ QFrame{
                   <property name="iconSize">
                    <size>
                     <width>25</width>
-                    <height>25</height>
+                    <height>20</height>
                    </size>
                   </property>
                  </widget>
