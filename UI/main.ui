@@ -715,7 +715,8 @@ QFrame{
                   </property>
                   <property name="styleSheet">
                    <string notr="true">*{
-background-color: rgb(77, 77, 77);
+	background-color: rgb(77, 77, 77);
+	color: rgb(0, 0, 0);
 }
 * QToolTip {
 	background-color: pink;
@@ -764,7 +765,8 @@ background-color: rgb(77, 77, 77);
                   </property>
                   <property name="styleSheet">
                    <string notr="true">*{
-background-color: rgb(77, 77, 77);
+	background-color: rgb(77, 77, 77);
+	color: rgb(0, 0, 0);
 }
 * QToolTip {
 	background-color: pink;
@@ -786,7 +788,7 @@ background-color: rgb(77, 77, 77);
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="createCategory_2">
+                 <widget class="QPushButton" name="clear">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -813,7 +815,8 @@ background-color: rgb(77, 77, 77);
                   </property>
                   <property name="styleSheet">
                    <string notr="true">*{
-background-color: rgb(77, 77, 77);
+	background-color: rgb(77, 77, 77);
+	color: rgb(0, 0, 0);
 }
 * QToolTip {
 	background-color: pink;

@@ -6,5 +6,5 @@
     "microphone mute": false,
     "background color": 0,
     "export mode": 0,
-    "hide UI": true
+    "hide UI": false
 }

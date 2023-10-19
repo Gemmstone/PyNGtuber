@@ -37542,7 +37542,7 @@
         "animation": [],
         "css": "",
         "blinking": "ignore",
-        "talking": "talking_closed",
+        "talking": "talking_open",
         "hotkeys": [],
         "rotation": 0,
         "use_css": false

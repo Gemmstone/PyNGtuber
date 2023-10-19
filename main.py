@@ -174,9 +174,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.createCategory.clicked.connect(self.CreateCategory)
         self.openFolder.clicked.connect(self.OpenAssetsFolder)
+        self.clear.clicked.connect(self.clearSelection)
 
         self.tabWidget_2.currentChanged.connect(self.changePage)
         self.update_viewer(self.current_files, update_gallery=True)
+
+    def clearSelection(self):
+        self.current_files = []
+        self.update_viewer(self.current_files, update_gallery=True, update_settings=True)
 
     def load_settings(self):
         self.comboBox.setCurrentIndex(self.settings["background color"])
@@ -354,7 +359,15 @@ class MainWindow(QtWidgets.QMainWindow):
         text, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter new category name:')
 
         if ok:
-            print(str(text))
+            if os.path.exists(os.path.join("Assets", text)):
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
+                msg.setText("Asset category with this name already exists.")
+                msg.setWindowTitle("Warning")
+                msg.exec()
+            else:
+                os.mkdir(os.path.join("Assets", text))
+        self.update_viewer(self.current_files, update_gallery=True)
 
     def OpenAssetsFolder(self):
         path = os.path.normpath("Assets/")

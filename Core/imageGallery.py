@@ -257,6 +257,18 @@ class ImageGallery(QToolBox):
                     if fileCount > 0:
                         self.addItem(page_widget, folder_name.title())
 
+    def get_unique_filename(self, folder_path, folder_name, extension):
+        base_filename = f"{folder_name}.{extension}"
+        full_path = os.path.join(folder_path, base_filename)
+        counter = 1
+
+        while os.path.exists(full_path):
+            base_filename = f"{folder_name}_{counter:03d}.{extension}"
+            full_path = os.path.join(folder_path, base_filename)
+            counter += 1
+
+        return full_path
+
     def add_asset(self):
         sender = self.sender()
         folder = sender.accessibleName()
@@ -269,7 +281,10 @@ class ImageGallery(QToolBox):
 
         if files:
             for file in files:
-                print(file)
+                extension = os.path.splitext(file)[1].lstrip('.').lower()
+                unique_filename = self.get_unique_filename(self.folder_path, folder, extension)
+                shutil.copy(file, unique_filename)
+                shutil.copy(file, f"{self.folder_path}{os.path.sep}{folder}")
 
             self.load_images(self.last_model)
 
