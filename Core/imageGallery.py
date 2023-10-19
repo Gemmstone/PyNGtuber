@@ -259,12 +259,12 @@ class ImageGallery(QToolBox):
 
     def get_unique_filename(self, folder_path, folder_name, extension):
         base_filename = f"{folder_name}.{extension}"
-        full_path = os.path.join(folder_path, base_filename)
+        full_path = os.path.join(folder_path, folder_name, base_filename)
         counter = 1
 
         while os.path.exists(full_path):
             base_filename = f"{folder_name}_{counter:03d}.{extension}"
-            full_path = os.path.join(folder_path, base_filename)
+            full_path = os.path.join(folder_path, folder_name, base_filename)
             counter += 1
 
         return full_path
@@ -278,14 +278,11 @@ class ImageGallery(QToolBox):
         file_dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
         file_dialog.setNameFilter("Images (*.png *.jpg *.jpeg *.gif *.webp)")
         files, _ = file_dialog.getOpenFileNames(None, "Select Images", "", "Images (*.png *.jpg *.jpeg *.gif *.webp)")
-
         if files:
             for file in files:
                 extension = os.path.splitext(file)[1].lstrip('.').lower()
                 unique_filename = self.get_unique_filename(self.folder_path, folder, extension)
                 shutil.copy(file, unique_filename)
-                shutil.copy(file, f"{self.folder_path}{os.path.sep}{folder}")
-
             self.load_images(self.last_model)
 
     def get_selected_files(self):
