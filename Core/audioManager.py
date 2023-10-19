@@ -74,6 +74,7 @@ class AudioThread(QThread):
 
 class MicrophoneVolumeWidget(QWidget):
     activeAudio = pyqtSignal(int)
+    settingsChanged = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -81,8 +82,23 @@ class MicrophoneVolumeWidget(QWidget):
         self.device_dict = {}
         self.previous_state = False
         self.active_audio_signal = -1
+
+        self.volume.valueChanged.connect(self.settingsChanged.emit)
+        self.volume_scream.valueChanged.connect(self.settingsChanged.emit)
+        self.delay.valueChanged.connect(self.settingsChanged.emit)
+        self.microphones.currentIndexChanged.connect(self.settingsChanged.emit)
+        self.mute.clicked.connect(self.settingsChanged.emit)
+
         self.label.hide()
         self.loadStart()
+
+    def load_settings(self, settings):
+        self.volume.setValue(settings["volume threshold"])
+        self.volume_scream.setValue(settings["scream threshold"])
+        self.delay.setValue(settings["delay threshold"])
+        self.microphones.setCurrentIndex(settings["microphone selection"])
+        self.mute.setChecked(settings["microphone mute"])
+
 
     def loadStart(self):
         self.list_microphones()

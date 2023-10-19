@@ -122,6 +122,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.audio = MicrophoneVolumeWidget()
         self.audio.activeAudio.connect(self.audioStatus)
         self.audioFrame.layout().addWidget(self.audio)
+        self.audio.load_settings(settings=self.settings)
+        self.audio.settingsChanged.connect(self.update_settings)
+
+        self.load_settings()
+        self.comboBox.currentIndexChanged.connect(self.update_settings)
+        self.PNGmethod.currentIndexChanged.connect(self.update_settings)
+        self.HideUI.toggled.connect(self.update_settings)
 
         self.ImageGallery = ImageGallery(self.current_files)
         self.ImageGallery.selectionChanged.connect(self.update_viewer)
@@ -171,13 +178,21 @@ class MainWindow(QtWidgets.QMainWindow):
         self.tabWidget_2.currentChanged.connect(self.changePage)
         self.update_viewer(self.current_files, update_gallery=True)
 
+    def load_settings(self):
+        self.comboBox.setCurrentIndex(self.settings["background color"])
+        self.PNGmethod.setCurrentIndex(self.settings["export mode"])
+        self.HideUI.setChecked(self.settings["hide UI"])
+
     def update_settings(self):
         self.settings = {
-            "volume threshold": 0,
-            "scream threshold": 0,
-            "delay threshold": 0,
-            "background color": 0,
-            "": 0
+            "volume threshold": self.audio.volume.value(),
+            "scream threshold": self.audio.volume_scream.value(),
+            "delay threshold": self.audio.delay.value(),
+            "microphone selection": self.audio.microphones.currentIndex(),
+            "microphone mute": self.audio.mute.isChecked(),
+            "background color": self.comboBox.currentIndex(),
+            "export mode": self.PNGmethod.currentIndex(),
+            "hide UI": self.HideUI.isChecked()
         }
         self.save_parameters_to_json()
 
@@ -725,6 +740,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.color = "#b8cdee"
 
         self.viewer.setColor(self.color)
+        self.update_settings()
 
     def closeEvent(self, event):
         self.audio.audio_thread.stop_stream()
