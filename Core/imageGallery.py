@@ -5,7 +5,7 @@ from PyQt6.QtGui import QIcon, QPixmap, QImage
 from PyQt6.QtCore import pyqtSignal, QSize, Qt
 from PyQt6.QtGui import QAction
 from PyQt6 import uic
-from PIL import Image
+from PIL import Image, ImageSequence
 import shutil
 import json
 import os
@@ -133,9 +133,17 @@ class ImageGallery(QToolBox):
         thumbnail_path = os.path.join(thumbnail_folder, file_name.replace("gif", "png").replace("webp", "png"))
         if os.path.exists(thumbnail_path):
             return QIcon(thumbnail_path)
-
         try:
-            img = Image.open(input_path).convert("RGBA")
+            if input_path.lower().endswith((".png", ".jpg", ".jpeg")):
+                img = Image.open(input_path).convert("RGBA")
+            elif input_path.lower().endswith((".gif", ".webp")):
+                img = Image.open(input_path)
+
+                if isinstance(img, Image.Image):
+                    frames = [frame.copy() for frame in ImageSequence.Iterator(img)]
+                    num_frames = len(frames)
+                    middle_frame_index = num_frames // 2
+                    img = frames[middle_frame_index]
         except Exception as e:
             print(f"Error opening image: {e}")
             return None
@@ -320,6 +328,7 @@ class ModelItem(QGroupBox):
         self.setup()
         self.frame_3.hide()
         self.frame_2.hide()
+        self.shortcutText.hide()
 
     def saveChanges(self):
         self.saving.emit(self.modelName)
@@ -333,14 +342,32 @@ class ModelItem(QGroupBox):
     def enterEvent(self, event):
         self.frame_3.show()
         self.frame_2.show()
+        if self.shortcutText.text():
+            self.shortcutText.show()
 
     def leaveEvent(self, event):
         self.frame_3.hide()
         self.frame_2.hide()
+        self.shortcutText.hide()
 
     def setup(self):
         self.setTitle(self.modelName)
-        self.avatarButton.setIcon(QIcon(f"Models/{self.modelType}/{self.modelName}/thumb.png"))
+        self.avatarButton.setIcon(QIcon(f"Models{os.path.sep}{self.modelType}{os.path.sep}{self.modelName}{os.path.sep}thumb.png"))
+        self.show_shortcut()
+
+    def show_shortcut(self):
+        with open(f"Models{os.path.sep}{self.modelType}{os.path.sep}{self.modelName}{os.path.sep}data.json", "r") as data_file:
+            shortcut = json.load(data_file)["shortcuts"]
+            if shortcut:
+                if shortcut["type"] == "Midi":
+                    shortcut = f"Midi: {shortcut['command']['note']}"
+                else:
+                    shortcut = f"Keyboard {shortcut['command']}"
+
+                self.shortcutText.setText(shortcut)
+            else:
+                self.shortcutText.setText("")
+                self.shortcutText.hide()
 
     def delete_model(self):
         confirmation = QMessageBox()
@@ -454,6 +481,8 @@ class ExpressionSelector(QWidget):
                 self.selected_folders = json.load(json_file)
                 for folder, checkbox in self.checkboxes.items():
                     if folder in self.selected_folders:
+                        checkbox.blockSignals(True)
                         checkbox.setChecked(True)
+                        checkbox.blockSignals(False)
         except BaseException as e:
             print(e)

@@ -1,5 +1,20 @@
 [
     {
+        "route": "Assets/ahoge/ahoge_008.png",
+        "sizeX": 600,
+        "sizeY": 600,
+        "posX": 0,
+        "posY": 0,
+        "posZ": 27,
+        "animation": [],
+        "css": "",
+        "blinking": "ignore",
+        "talking": "ignore",
+        "hotkeys": [],
+        "rotation": 0,
+        "use_css": false
+    },
+    {
         "route": "Assets/ahoge/ahoge_026.png",
         "sizeX": 600,
         "sizeY": 600,

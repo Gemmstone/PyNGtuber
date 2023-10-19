@@ -9,7 +9,7 @@
         "css": "",
         "blinking": "blinking_closed",
         "talking": "ignore",
-        "hotkeys": [],
+        "hotkeys": null,
         "rotation": 0,
         "use_css": false
     },
@@ -43899,7 +43899,13 @@
         "css": "",
         "blinking": "ignore",
         "talking": "ignore",
-        "hotkeys": [],
+        "hotkeys": {
+            "command": [
+                "Key.shift",
+                "D"
+            ],
+            "type": "Keyboard"
+        },
         "rotation": 0,
         "use_css": false
     },
@@ -43969,7 +43975,13 @@
         "css": "",
         "blinking": "ignore",
         "talking": "ignore",
-        "hotkeys": [],
+        "hotkeys": {
+            "command": [
+                "Key.shift",
+                "A"
+            ],
+            "type": "Keyboard"
+        },
         "rotation": 0,
         "use_css": false
     },
@@ -43983,7 +43995,13 @@
         "css": "",
         "blinking": "ignore",
         "talking": "ignore",
-        "hotkeys": [],
+        "hotkeys": {
+            "command": [
+                "Key.shift",
+                "A"
+            ],
+            "type": "Keyboard"
+        },
         "rotation": 0,
         "use_css": false
     },
@@ -44053,7 +44071,13 @@
         "css": "",
         "blinking": "ignore",
         "talking": "ignore",
-        "hotkeys": [],
+        "hotkeys": {
+            "command": [
+                "Key.shift",
+                "D"
+            ],
+            "type": "Keyboard"
+        },
         "rotation": 0,
         "use_css": false
     },
@@ -52139,7 +52163,7 @@
         "sizeX": 128,
         "sizeY": 128,
         "posX": 0,
-        "posY": 0,
+        "posY": -240,
         "posZ": 40,
         "blinking": "ignore",
         "talking": "ignore",
@@ -52166,16 +52190,22 @@
     "Assets/Memes/825043586517172284.gif": {
         "sizeX": 72,
         "sizeY": 68,
-        "posX": 0,
-        "posY": 0,
+        "posX": -80,
+        "posY": -263,
         "posZ": 40,
         "blinking": "ignore",
         "talking": "ignore",
         "css": "",
         "use_css": false,
-        "hotkeys": [],
+        "hotkeys": {
+            "command": [
+                "Key.shift",
+                "H"
+            ],
+            "type": "Keyboard"
+        },
         "animation": [],
-        "rotation": 0
+        "rotation": -25
     },
     "Assets/Memes/786284064742965283.png": {
         "sizeX": 95,
@@ -52215,7 +52245,7 @@
         "talking": "ignore",
         "css": "",
         "use_css": false,
-        "hotkeys": [],
+        "hotkeys": null,
         "animation": [],
         "rotation": 0
     },
@@ -52223,13 +52253,19 @@
         "sizeX": 128,
         "sizeY": 64,
         "posX": 0,
-        "posY": 0,
+        "posY": -270,
         "posZ": 40,
         "blinking": "ignore",
         "talking": "ignore",
         "css": "",
         "use_css": false,
-        "hotkeys": [],
+        "hotkeys": {
+            "command": [
+                "Key.shift",
+                "B"
+            ],
+            "type": "Keyboard"
+        },
         "animation": [],
         "rotation": 0
     },
@@ -52267,6 +52303,102 @@
         "posX": 0,
         "posY": 0,
         "posZ": 9,
+        "blinking": "ignore",
+        "talking": "ignore",
+        "css": "",
+        "use_css": false,
+        "hotkeys": [],
+        "animation": [],
+        "rotation": 0
+    },
+    "Assets/Memes/750250400694927451.gif": {
+        "sizeX": 112,
+        "sizeY": 112,
+        "posX": 80,
+        "posY": -275,
+        "posZ": 1,
+        "blinking": "ignore",
+        "talking": "ignore",
+        "css": "",
+        "use_css": false,
+        "hotkeys": [],
+        "animation": [],
+        "rotation": 15
+    },
+    "Assets/Memes/825043590186663988.gif": {
+        "sizeX": 72,
+        "sizeY": 68,
+        "posX": 80,
+        "posY": -263,
+        "posZ": 40,
+        "blinking": "ignore",
+        "talking": "ignore",
+        "css": "",
+        "use_css": false,
+        "hotkeys": {
+            "command": [
+                "Key.shift",
+                "H"
+            ],
+            "type": "Keyboard"
+        },
+        "animation": [],
+        "rotation": 25
+    },
+    "Assets/Memes/825043586181627935.gif": {
+        "sizeX": 72,
+        "sizeY": 68,
+        "posX": 0,
+        "posY": -275,
+        "posZ": 40,
+        "blinking": "ignore",
+        "talking": "ignore",
+        "css": "",
+        "use_css": false,
+        "hotkeys": {
+            "command": [
+                "Key.shift",
+                "H"
+            ],
+            "type": "Keyboard"
+        },
+        "animation": [],
+        "rotation": 0
+    },
+    "Assets/Memes/742588706346500123.gif": {
+        "sizeX": 125,
+        "sizeY": 128,
+        "posX": 130,
+        "posY": 130,
+        "posZ": 21,
+        "blinking": "ignore",
+        "talking": "ignore",
+        "css": "",
+        "use_css": false,
+        "hotkeys": [],
+        "animation": [],
+        "rotation": 15
+    },
+    "Assets/Memes/742589672240185497.png": {
+        "sizeX": 91,
+        "sizeY": 91,
+        "posX": 0,
+        "posY": -200,
+        "posZ": 40,
+        "blinking": "ignore",
+        "talking": "ignore",
+        "css": "",
+        "use_css": false,
+        "hotkeys": [],
+        "animation": [],
+        "rotation": 0
+    },
+    "Assets/Memes/755873936675438642.png": {
+        "sizeX": 84,
+        "sizeY": 32,
+        "posX": -50,
+        "posY": 270,
+        "posZ": 23,
         "blinking": "ignore",
         "talking": "ignore",
         "css": "",

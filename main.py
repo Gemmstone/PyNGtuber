@@ -30,8 +30,8 @@ class ShortcutsDialog(QtWidgets.QDialog):
         self.midi_listener.request_new_signal()
         self.keyboard_listener.request_new_signal()
 
-        self.midi_listener.new_shortcuts_signal.connect(self.handle_shortcuts)
-        self.keyboard_listener.new_shortcuts_signal.connect(self.handle_shortcuts)
+        self.midi_listener.new_shortcut.connect(self.handle_shortcuts)
+        self.keyboard_listener.new_shortcut.connect(self.handle_shortcuts)
 
         self.setWindowTitle(self.tr("Update Shortcuts"))
         self.setFixedSize(300, 200)  # Adjust the size as needed
@@ -43,8 +43,8 @@ class ShortcutsDialog(QtWidgets.QDialog):
         layout.addWidget(instructions_label)
 
         # Connect the signals from both listeners to a slot
-        self.midi_listener.update_shortcuts_signal.connect(self.handle_shortcuts)
-        self.keyboard_listener.update_shortcuts_signal.connect(self.handle_shortcuts)
+        self.midi_listener.shortcut.connect(self.handle_shortcuts)
+        self.keyboard_listener.shortcut.connect(self.handle_shortcuts)
 
         # Create a cancel button
         cancel_button = QtWidgets.QPushButton(self.tr("Cancel"))
@@ -56,11 +56,13 @@ class ShortcutsDialog(QtWidgets.QDialog):
     @pyqtSlot(dict)
     def handle_shortcuts(self, shortcut):
         self.new_command.emit({"shortcut": shortcut, "data": self.data})
+        self.midi_listener.resume_normal_operation()
+        self.keyboard_listener.resume_normal_operation()
         self.accept()
 
     def closeEvent(self, event):
-        self.midi_listener.new_shortcuts_signal.disconnect(self.handle_shortcuts)
-        self.keyboard_listener.new_shortcuts_signal.disconnect(self.handle_shortcuts)
+        self.midi_listener.new_shortcut.disconnect(self.handle_shortcuts)
+        self.keyboard_listener.new_shortcut.disconnect(self.handle_shortcuts)
         self.midi_listener.resume_normal_operation()
         self.keyboard_listener.resume_normal_operation()
         super().closeEvent(event)
@@ -69,26 +71,23 @@ class ShortcutsDialog(QtWidgets.QDialog):
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi(os.path.normpath("UI/main.ui"), self)
-        self.label_5.hide()
+        uic.loadUi(os.path.normpath(f"UI{os.path.sep}main.ui"), self)
 
         self.setWindowTitle("PyNGTuber")
 
         self.color = (184, 205, 238)
         self.file_parameters_current = {}
         self.current_files = []
-        self.json_file = os.path.normpath("Data/parameters.json")
-        self.current_json_file = os.path.normpath("Data/current.json")
+        self.json_file = os.path.normpath(f"Data{os.path.sep}parameters.json")
+        self.current_json_file = os.path.normpath(f"Data{os.path.sep}current.json")
+        self.settings_json_file = os.path.normpath(f"Data{os.path.sep}settings.json")
 
         self.keyboard_listener = KeyboardListener()
-        self.keyboard_listener.update_shortcuts_signal.connect(self.shortcut_received)
+        self.keyboard_listener.shortcut.connect(self.shortcut_received)
         self.keyboard_listener.start()
-
         self.midi_listener = MidiListener()
-        self.midi_listener.update_shortcuts_signal.connect(self.shortcut_received)
+        self.midi_listener.shortcut.connect(self.shortcut_received)
         self.midi_listener.start()
-
-        self.get_shortcuts()
 
         try:
             with open(self.json_file, "r") as f:
@@ -102,18 +101,23 @@ class MainWindow(QtWidgets.QMainWindow):
         except FileNotFoundError:
             pass
 
-        self.file_parameters_default = {os.path.normpath(key): value for key, value in self.file_parameters_default.items()}
-
-        # Normalize the paths in self.file_parameters_current
-        self.file_parameters_current = {os.path.normpath(key): value for key, value in self.file_parameters_current.items()}
-
         try:
             with open(self.current_json_file, "r") as f:
                 self.current_files = json.load(f)
         except FileNotFoundError:
             pass
 
+        try:
+            with open(self.settings_json_file, "r") as f:
+                self.settings = json.load(f)
+        except FileNotFoundError:
+            pass
+
+        self.file_parameters_default = {os.path.normpath(key): value for key, value in self.file_parameters_default.items()}
+        self.file_parameters_current = {os.path.normpath(key): value for key, value in self.file_parameters_current.items()}
         self.current_files = [os.path.normpath(i) for i in self.current_files]
+
+        self.get_shortcuts()
 
         self.audio = MicrophoneVolumeWidget()
         self.audio.activeAudio.connect(self.audioStatus)
@@ -125,6 +129,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.SettingsGallery = SettingsToolBox()
         self.SettingsGallery.settings_changed.connect(self.saveSettings)
+        self.SettingsGallery.shortcut.connect(self.dialog_shortcut)
+        self.SettingsGallery.delete_shortcut.connect(self.delete_shortcut)
         self.scrollArea_2.setWidget(self.SettingsGallery)
 
         self.comboBox.currentIndexChanged.connect(self.setBGColor)
@@ -163,7 +169,23 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openFolder.clicked.connect(self.OpenAssetsFolder)
 
         self.tabWidget_2.currentChanged.connect(self.changePage)
-        self.update_viewer(self.current_files, opening=True)
+        self.update_viewer(self.current_files, update_gallery=True)
+
+    def update_settings(self):
+        self.settings = {
+            "volume threshold": 0,
+            "scream threshold": 0,
+            "delay threshold": 0,
+            "background color": 0,
+            "": 0
+        }
+        self.save_parameters_to_json()
+
+    def delete_shortcut(self, value):
+        self.file_parameters_default[value['route']]["hotkeys"] = copy.deepcopy(value["hotkeys"])
+        self.file_parameters_current[value['route']]["hotkeys"] = copy.deepcopy(value["hotkeys"])
+        self.save_parameters_to_json()
+        self.get_shortcuts()
 
     def get_shortcuts(self):
         midi = []
@@ -187,6 +209,20 @@ class MainWindow(QtWidgets.QMainWindow):
                                     "path": data_json_path.replace("data", "model"), "type": "Model",
                                     "command": mido.Message.from_dict(shortcut["command"])
                                 })
+
+        for route in self.file_parameters_current:
+            if self.file_parameters_current[route]["hotkeys"]:
+                if self.file_parameters_current[route]["hotkeys"]["type"] == "Keyboard":
+                    keyboard.append({
+                        "path": route, "type": "Asset",
+                        "command": self.file_parameters_current[route]["hotkeys"]["command"]
+                    })
+                else:
+                    midi.append(
+                        {"path": route, "type": "Asset",
+                         "command": mido.Message.from_dict(self.file_parameters_current[route]["hotkeys"]["command"])}
+                    )
+
         self.midi_listener.update_shortcuts(midi)
         self.keyboard_listener.update_shortcuts(keyboard)
 
@@ -194,14 +230,25 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stackedWidget.setCurrentIndex(index)
         self.tabWidget.setCurrentIndex(index)
         if self.tabWidget_2.currentIndex() == 1:
-            self.update_viewer(self.current_files, changing_page=True)
+            self.update_viewer(self.current_files, update_settings=True)
+
+    def deselect_every_asset(self):
+        self.current_files = []
+        self.update_viewer(self.current_files, update_settings=self.tabWidget_2.currentIndex() == 1)
 
     def shortcut_received(self, shortcuts):
         if shortcuts["type"] == "Model":
-            parts = shortcuts["path"].split(os.path.pathsep)
+            parts = shortcuts["path"].split(os.path.sep)
+            print(parts)
             self.load_model({"name": parts[2], "type": parts[1]})
+        elif shortcuts["type"] == "Asset":
+            if shortcuts["path"] in self.current_files:
+                self.current_files.remove(shortcuts["path"])
+            else:
+                self.current_files.append(shortcuts["path"])
+            self.update_viewer(self.current_files, update_settings=self.tabWidget_2.currentIndex() == 1)
         else:
-            print(f"Received: {shortcuts}")
+            print(f"Received: {shortcuts} System")
 
     def dialog_shortcut(self, data):
         dialog = ShortcutsDialog(midi_listener=self.midi_listener, keyboard_listener=self.keyboard_listener, data=data)
@@ -209,7 +256,6 @@ class MainWindow(QtWidgets.QMainWindow):
         dialog.exec()
 
     def create_shortcuts(self, data):
-        print(data)
         if data["data"]["type"] in ["Avatars", "Expressions"]:
             mainFolder = os.path.normpath(f"Models/{data['data']['type']}")
 
@@ -240,9 +286,12 @@ class MainWindow(QtWidgets.QMainWindow):
                 ) as json_file:
                     json.dump(old_data, json_file, indent=4)
         if data["data"]["type"] in ["Assets"]:
-            pass
+            self.file_parameters_default[data['data']['value']['route']]["hotkeys"] = copy.deepcopy(data["shortcut"])
+            self.file_parameters_current[data['data']['value']['route']]["hotkeys"] = copy.deepcopy(data["shortcut"])
+            self.save_parameters_to_json()
+            self.update_viewer(self.current_files, update_settings=True)
 
-        QtCore.QTimer.singleShot(500, self.get_shortcuts)
+        self.get_shortcuts()
 
     def find_shortcut_usages(self, main_folder, current_folder, new_shortcut):
         usages = []
@@ -476,12 +525,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.update_viewer(self.current_files)
 
     def save_parameters_to_json(self):
-
         with open(self.json_file, "w") as f:
             json.dump(self.file_parameters_default, f, indent=4)
 
         with open(self.current_json_file, "w") as f:
             json.dump(self.current_files, f, indent=4)
+
+        with open(self.settings_json_file, "w") as f:
+            json.dump(self.settings, f, indent=4)
 
     def image_generator(self, output_name, method=1, savingModel=0, custom_file_list=None):
         files = self.getFiles(self.current_files) if custom_file_list is None else custom_file_list
@@ -617,14 +668,14 @@ class MainWindow(QtWidgets.QMainWindow):
             })
         return images_list
 
-    def update_viewer(self, files=None, opening=False, changing_page=False):
+    def update_viewer(self, files=None, update_gallery=False, update_settings=False):
         images_list = self.getFiles(files)
 
         self.viewer.updateImages(images_list, self.color)
         if self.tabWidget_2.currentIndex() == 1:
-            if self.current_files != files or changing_page:
+            if self.current_files != files or update_settings:
                 self.SettingsGallery.set_items(images_list)
-        if opening:
+        if update_gallery:
             self.ImageGallery.load_images(files)
         else:
             self.ImageGallery.set_buttons_checked(files)

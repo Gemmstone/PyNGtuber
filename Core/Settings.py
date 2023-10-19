@@ -8,17 +8,20 @@ from PyQt6 import uic
 class Settings(QWidget):
     settings_changed = pyqtSignal(dict)
     settings_changed_default = pyqtSignal(dict)
+    shortcut = pyqtSignal(dict)
+    delete_shortcut = pyqtSignal(dict)
 
     def __init__(self, parameters):
         super().__init__()
         uic.loadUi("UI/settingsWidget.ui", self)
         self.parameters = parameters
-        self.sizeX.setValue(parameters["sizeX"])
-        self.sizeY.setValue(parameters["sizeY"])
-        self.posX.setValue(parameters["posX"])
-        self.posY.setValue(parameters["posY"])
-        self.posZ.setValue(parameters["posZ"])
-        self.rotation.setValue(parameters["rotation"])
+        self.sizeX.setValue(self.parameters["sizeX"])
+        self.sizeY.setValue(self.parameters["sizeY"])
+        self.posX.setValue(self.parameters["posX"])
+        self.posY.setValue(self.parameters["posY"])
+        self.posZ.setValue(self.parameters["posZ"])
+        self.rotation.setValue(self.parameters["rotation"])
+        self.check_hotkeys()
 
         self.sizeX.valueChanged.connect(self.save_current)
         self.sizeY.valueChanged.connect(self.save_current)
@@ -26,6 +29,8 @@ class Settings(QWidget):
         self.posY.valueChanged.connect(self.save_current)
         self.posZ.valueChanged.connect(self.save_current)
         self.rotation.valueChanged.connect(self.save_current)
+        self.setShortcut.clicked.connect(self.request_shortcut)
+        self.deleteShortcut.clicked.connect(self.delete_shortcut_)
 
         self.blinkingGroup.setChecked(self.parameters["blinking"] != "ignore")
         self.talkingGroup.setChecked(self.parameters["talking"] != "ignore")
@@ -57,6 +62,20 @@ class Settings(QWidget):
         self.hide_blinking()
         self.hide_talking()
         self.hide_css()
+
+    def check_hotkeys(self):
+        if self.parameters["hotkeys"]:
+            if self.parameters["hotkeys"]["type"] == "Midi":
+                shortcut = f"Midi: {self.parameters['hotkeys']['command']['note']}"
+            else:
+                shortcut = f"Keyboard {self.parameters['hotkeys']['command']}"
+            self.deleteShortcut.setText(shortcut)
+            self.deleteShortcut.show()
+        else:
+            self.deleteShortcut.hide()
+
+    def request_shortcut(self):
+        self.shortcut.emit(self.parameters)
 
     def hide_blinking(self):
         if self.blinkingGroup.isChecked():
@@ -100,6 +119,11 @@ class Settings(QWidget):
         self.parameters["blinking"] = self.getBlinking() if self.blinkingGroup.isChecked() else "ignore"
         self.parameters["talking"] = self.getTalking() if self.talkingGroup.isChecked() else "ignore"
 
+    def delete_shortcut_(self):
+        self.parameters["hotkeys"] = None
+        self.check_hotkeys()
+        self.delete_shortcut.emit(self.parameters)
+
     def save_current(self):
         self.save()
         self.settings_changed.emit(self.parameters)
@@ -122,13 +146,14 @@ class Settings(QWidget):
             return "talking_closed"
 
     def css_finished_edit(self):
-
         self.parameters["css"] = self.css.toPlainText()
         self.save_current()
 
 
 class SettingsToolBox(QToolBox):
     settings_changed = pyqtSignal(dict)
+    shortcut = pyqtSignal(dict)
+    delete_shortcut = pyqtSignal(dict)
 
     def __init__(self):
         super().__init__()
@@ -268,6 +293,8 @@ class SettingsToolBox(QToolBox):
             settings_widget = Settings(item)
             settings_widget.settings_changed.connect(self.save)
             settings_widget.settings_changed_default.connect(self.save_as_default)
+            settings_widget.delete_shortcut.connect(self.delete_shortcut_)
+            settings_widget.shortcut.connect(self.request_shortcut)
 
             page = QWidget()
             layout = QVBoxLayout()
@@ -290,3 +317,9 @@ class SettingsToolBox(QToolBox):
 
     def save_as_default(self, value):
         self.settings_changed.emit({"value": value, "default": True})
+
+    def request_shortcut(self, value):
+        self.shortcut.emit({"value": value, "type": "Assets"})
+
+    def delete_shortcut_(self, value):
+        self.delete_shortcut.emit(value)

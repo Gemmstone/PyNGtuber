@@ -2,41 +2,6 @@
 const imageContainer = document.getElementById("image-wrapper");
 const moveContainer = document.getElementById("move-wrapper");
 const container = document.getElementById("container");
-const minimumScaleFactor = 0.3; // Adjust this value as needed
-
-// Get the hidden input field for storing the scale factor
-const scaleFactorInput = document.getElementById("scaleFactorInput");
-
-// Function to apply the scale factor to all images
-function applyScaleToImages() {
-  const images = imageContainer.querySelectorAll("img");
-  images.forEach((img) => {
-    img.style.transform = `translate(-50%, -50%) scale(${scaleFactorInput.value})`;
-  });
-}
-
-// Check if there is a saved scale factor in local storage
-let scaleFactor = parseFloat(localStorage.getItem("zoomScale")) || 1.0;
-scaleFactorInput.value = scaleFactor; // Set the initial value of the hidden input
-
-// Add an event listener for the mousewheel event on the container
-imageContainer.addEventListener("wheel", (event) => {
-  // Calculate the new scale factor based on scroll direction
-  if (event.deltaY > 0) {
-    scaleFactor = Math.max(scaleFactor - 0.1, minimumScaleFactor); // Decrease scale on scroll down
-  } else {
-    scaleFactor += 0.1; // Increase scale on scroll up
-  }
-
-  // Update the hidden input field with the new scale factor
-  scaleFactorInput.value = scaleFactor;
-
-  // Apply the scale factor to all images
-  applyScaleToImages();
-
-  // Save the current scale factor to local storage
-  localStorage.setItem("zoomScale", scaleFactor.toString());
-});
 
 // Variables to track the mouse position and dragging state
 let isDragging = false;

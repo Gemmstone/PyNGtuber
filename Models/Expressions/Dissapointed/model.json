@@ -129,7 +129,7 @@
         "animation": [],
         "css": "",
         "blinking": "ignore",
-        "talking": "talking_screaming",
+        "talking": "talking_open",
         "hotkeys": [],
         "rotation": 0,
         "use_css": false
@@ -161,6 +161,27 @@
         "blinking": "ignore",
         "talking": "ignore",
         "hotkeys": [],
+        "rotation": 0,
+        "use_css": false
+    },
+    {
+        "route": "Assets/right eye/right eye_001.png",
+        "sizeX": 600,
+        "sizeY": 600,
+        "posX": 0,
+        "posY": 0,
+        "posZ": 12,
+        "animation": [],
+        "css": "",
+        "blinking": "blinking_closed",
+        "talking": "ignore",
+        "hotkeys": {
+            "command": [
+                "Key.shift",
+                "H"
+            ],
+            "type": "Keyboard"
+        },
         "rotation": 0,
         "use_css": false
     }

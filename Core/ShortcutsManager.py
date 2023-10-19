@@ -1,12 +1,12 @@
-from PyQt6.QtCore import QThread, pyqtSignal
+from PyQt6.QtCore import QThread, pyqtSignal, QTimer
 from pynput.keyboard import Listener
 import mido
 import os
 
 
 class MidiListener(QThread):
-    update_shortcuts_signal = pyqtSignal(dict)
-    new_shortcuts_signal = pyqtSignal(dict)
+    shortcut = pyqtSignal(dict)
+    new_shortcut = pyqtSignal(dict)
 
     def __init__(self):
         super().__init__()
@@ -15,16 +15,19 @@ class MidiListener(QThread):
         self.warning = True
 
     def run(self):
-        if os.name != 'nt':
+        try:
             while True:
                 with mido.open_input() as midi_port:
                     for message in midi_port:
                         if self.ignore_commands:
-                            self.new_shortcuts_signal.emit({"command": message.dict(), "type": "Midi"})
+                            self.new_shortcut.emit({"command": message.dict(), "type": "Midi"})
                         elif message.type == 'note_on':
                             for command in self.commands:
                                 if message == command["command"]:
-                                    self.update_shortcuts_signal.emit(command)
+                                    self.shortcut.emit(command)
+        except BaseException as err:
+            print(f"Midi is not supported on this platform:\n{err}")
+            self.warning = False
 
     def update_shortcuts(self, commands):
         self.commands = commands
@@ -37,8 +40,8 @@ class MidiListener(QThread):
 
 
 class KeyboardListener(QThread):
-    update_shortcuts_signal = pyqtSignal(dict)
-    new_shortcuts_signal = pyqtSignal(dict)
+    shortcut = pyqtSignal(dict)
+    new_shortcut = pyqtSignal(dict)
     modifier_keys = set()
 
     def __init__(self):
@@ -62,13 +65,13 @@ class KeyboardListener(QThread):
             shortcut = tuple(self.modifier_keys) + (key,)
             if len(shortcut) > 1:
                 if self.ignore_commands:
-                    self.new_shortcuts_signal.emit(
+                    self.new_shortcut.emit(
                         {"command": [str(i).replace("'", "") for i in shortcut], "type": "Keyboard"}
                     )
                 else:
                     for command in self.commands:
                         if [str(i).replace("'", "") for i in shortcut] == command["command"]:
-                            self.update_shortcuts_signal.emit(command)
+                            self.shortcut.emit(command)
                     self.modifier_keys = set()
         else:
             self.modifier_keys.discard(key)

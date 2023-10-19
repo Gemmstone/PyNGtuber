@@ -268,35 +268,5 @@
         "hotkeys": [],
         "rotation": 0,
         "use_css": false
-    },
-    {
-        "route": "Assets/Memes/742591944605040712.png",
-        "sizeX": 50,
-        "sizeY": 50,
-        "posX": 160,
-        "posY": 70,
-        "posZ": 40,
-        "blinking": "ignore",
-        "talking": "ignore",
-        "css": "animation: diamond 10s infinite;",
-        "use_css": true,
-        "hotkeys": [],
-        "animation": [],
-        "rotation": 0
-    },
-    {
-        "route": "Assets/Memes/825043585761935382.gif",
-        "sizeX": 100,
-        "sizeY": 100,
-        "posX": -70,
-        "posY": -250,
-        "posZ": 40,
-        "blinking": "ignore",
-        "talking": "ignore",
-        "css": "",
-        "use_css": false,
-        "hotkeys": [],
-        "animation": [],
-        "rotation": -20
     }
 ]

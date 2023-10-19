@@ -672,35 +672,116 @@ QCheckBox::indicator:unchecked {
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="pushButton_3">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="toolTip">
-      <string>ShortCut</string>
-     </property>
+    <widget class="QFrame" name="frame_2">
      <property name="styleSheet">
-      <string notr="true"/>
+      <string notr="true">QFrame {
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	border-top-left-radius: 9px;
+}
+QPushButton{
+    background-color: rgba(255, 255, 255, 255);
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	border-top-left-radius: 9px;
+}
+QPushButton:hover {  
+    background-color: rgba(100, 100, 100, 50);
+}
+* QToolTip {
+	background-color: pink;
+}</string>
      </property>
-     <property name="text">
-      <string>Set Shortcut</string>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
      </property>
-     <property name="icon">
-      <iconset>
-       <normaloff>../Icons/import-mobile-ui-svgrepo-com.svg</normaloff>../Icons/import-mobile-ui-svgrepo-com.svg</iconset>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
      </property>
-     <property name="iconSize">
-      <size>
-       <width>25</width>
-       <height>25</height>
-      </size>
-     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_5">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="setShortcut">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="toolTip">
+         <string>ShortCut</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Set Shortcut</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>../Icons/import-mobile-ui-svgrepo-com.svg</normaloff>../Icons/import-mobile-ui-svgrepo-com.svg</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>25</width>
+          <height>25</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="deleteShortcut">
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="toolTip">
+         <string>Delete Shortcut</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">*{
+	font-size: 8pt;
+    background-color: rgba(255, 0, 0, 0);
+}
+QPushButton:hover {  
+    background-color: rgba(255, 0, 0, 100);
+	border-top-right-radius: 8px;
+	border-bottom-right-radius: 8px;
+	border-bottom-left-radius: 8px;
+	border-top-left-radius: 8px;
+}
+* QToolTip {
+	background-color: pink;
+}</string>
+        </property>
+        <property name="text">
+         <string>Midi: 60</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>
@@ -713,6 +794,10 @@ QCheckBox::indicator:unchecked {
      </property>
      <property name="cursor">
       <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(77, 77, 77);
+color: rgb(255, 255, 255);</string>
      </property>
      <property name="text">
       <string>Save as default</string>
