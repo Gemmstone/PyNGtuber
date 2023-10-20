@@ -1,6 +1,6 @@
 [
     {
-        "route": "Assets/hairbows/hairbows_143.png",
+        "route": "Assets/hairbows/hairbows_108.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -90,7 +90,7 @@
         "use_css": false
     },
     {
-        "route": "Assets/ponytails/ponytails_249.png",
+        "route": "Assets/ponytails/ponytails_141.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -105,7 +105,7 @@
         "use_css": false
     },
     {
-        "route": "Assets/ponytails/ponytails_250.png",
+        "route": "Assets/ponytails/ponytails_142.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -180,7 +180,7 @@
         "use_css": false
     },
     {
-        "route": "Assets/overshirts/overshirts_026.png",
+        "route": "Assets/overshirts/overshirts_098.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -195,7 +195,7 @@
         "use_css": false
     },
     {
-        "route": "Assets/undershirts/undershirts_072.png",
+        "route": "Assets/undershirts/undershirts_100.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
