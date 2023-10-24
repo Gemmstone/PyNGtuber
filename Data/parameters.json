@@ -43892,11 +43892,11 @@
     "Assets/wings/wings_001.png": {
         "sizeX": 600,
         "sizeY": 600,
-        "posX": 0,
-        "posY": 0,
+        "posX": -300,
+        "posY": -300,
         "posZ": 4,
         "animation": [],
-        "css": "",
+        "css": "animation: wing 10s infinite; ",
         "blinking": "ignore",
         "talking": "ignore",
         "hotkeys": {
@@ -43907,72 +43907,72 @@
             "type": "Keyboard"
         },
         "rotation": 0,
-        "use_css": false
+        "use_css": true
     },
     "Assets/wings/wings_003.png": {
         "sizeX": 600,
         "sizeY": 600,
-        "posX": 0,
-        "posY": 0,
+        "posX": -300,
+        "posY": -300,
         "posZ": 4,
         "animation": [],
-        "css": "",
+        "css": "animation: wing 10s infinite; ",
         "blinking": "ignore",
         "talking": "ignore",
         "hotkeys": [],
         "rotation": 0,
-        "use_css": false
+        "use_css": true
     },
     "Assets/wings/wings_005.png": {
         "sizeX": 600,
         "sizeY": 600,
-        "posX": 0,
-        "posY": 0,
+        "posX": -300,
+        "posY": -300,
         "posZ": 4,
         "animation": [],
-        "css": "",
+        "css": "animation: wing 10s infinite; ",
         "blinking": "ignore",
         "talking": "ignore",
         "hotkeys": [],
         "rotation": 0,
-        "use_css": false
+        "use_css": true
     },
     "Assets/wings/wings_007.png": {
         "sizeX": 600,
         "sizeY": 600,
-        "posX": 0,
-        "posY": 0,
+        "posX": -300,
+        "posY": -300,
         "posZ": 4,
         "animation": [],
-        "css": "",
+        "css": "animation: wing 10s infinite; ",
         "blinking": "ignore",
         "talking": "ignore",
         "hotkeys": [],
         "rotation": 0,
-        "use_css": false
+        "use_css": true
     },
     "Assets/wings/wings_009.png": {
         "sizeX": 600,
         "sizeY": 600,
-        "posX": 0,
-        "posY": 0,
+        "posX": -300,
+        "posY": -300,
         "posZ": 4,
         "animation": [],
-        "css": "",
+        "css": "animation: wing 10s infinite; ",
         "blinking": "ignore",
         "talking": "ignore",
         "hotkeys": [],
         "rotation": 0,
-        "use_css": false
+        "use_css": true
     },
     "Assets/wings/wings_011.png": {
         "sizeX": 600,
         "sizeY": 600,
-        "posX": 0,
-        "posY": 0,
+        "posX": -300,
+        "posY": -300,
         "posZ": 4,
         "animation": [],
-        "css": "",
+        "css": "animation: wing 10s infinite; ",
         "blinking": "ignore",
         "talking": "ignore",
         "hotkeys": {
@@ -43983,16 +43983,16 @@
             "type": "Keyboard"
         },
         "rotation": 0,
-        "use_css": false
+        "use_css": true
     },
     "Assets/wings/wings_012.png": {
         "sizeX": 600,
         "sizeY": 600,
-        "posX": 0,
-        "posY": 0,
+        "posX": -300,
+        "posY": -300,
         "posZ": 4,
         "animation": [],
-        "css": "",
+        "css": "animation: wing 10s infinite; ",
         "blinking": "ignore",
         "talking": "ignore",
         "hotkeys": {
@@ -44003,72 +44003,72 @@
             "type": "Keyboard"
         },
         "rotation": 0,
-        "use_css": false
+        "use_css": true
     },
     "Assets/wings/wings_010.png": {
         "sizeX": 600,
         "sizeY": 600,
-        "posX": 0,
-        "posY": 0,
+        "posX": -300,
+        "posY": -300,
         "posZ": 4,
         "animation": [],
-        "css": "",
+        "css": "animation: wing 10s infinite; ",
         "blinking": "ignore",
         "talking": "ignore",
         "hotkeys": [],
         "rotation": 0,
-        "use_css": false
+        "use_css": true
     },
     "Assets/wings/wings_008.png": {
         "sizeX": 600,
         "sizeY": 600,
-        "posX": 0,
-        "posY": 0,
+        "posX": -300,
+        "posY": -300,
         "posZ": 4,
         "animation": [],
-        "css": "",
+        "css": "animation: wing 10s infinite; ",
         "blinking": "ignore",
         "talking": "ignore",
         "hotkeys": [],
         "rotation": 0,
-        "use_css": false
+        "use_css": true
     },
     "Assets/wings/wings_006.png": {
         "sizeX": 600,
         "sizeY": 600,
-        "posX": 0,
-        "posY": 0,
+        "posX": -300,
+        "posY": -300,
         "posZ": 4,
         "animation": [],
-        "css": "",
+        "css": "animation: wing 10s infinite; ",
         "blinking": "ignore",
         "talking": "ignore",
         "hotkeys": [],
         "rotation": 0,
-        "use_css": false
+        "use_css": true
     },
     "Assets/wings/wings_004.png": {
         "sizeX": 600,
         "sizeY": 600,
-        "posX": 0,
-        "posY": 0,
+        "posX": -300,
+        "posY": -300,
         "posZ": 4,
         "animation": [],
-        "css": "",
+        "css": "animation: wing 10s infinite; ",
         "blinking": "ignore",
         "talking": "ignore",
         "hotkeys": [],
         "rotation": 0,
-        "use_css": false
+        "use_css": true
     },
     "Assets/wings/wings_002.png": {
         "sizeX": 600,
         "sizeY": 600,
-        "posX": 0,
-        "posY": 0,
+        "posX": -300,
+        "posY": -300,
         "posZ": 4,
         "animation": [],
-        "css": "",
+        "css": "animation: wing 10s infinite; ",
         "blinking": "ignore",
         "talking": "ignore",
         "hotkeys": {
@@ -44079,7 +44079,7 @@
             "type": "Keyboard"
         },
         "rotation": 0,
-        "use_css": false
+        "use_css": true
     },
     "Assets/tails/tails_001.png": {
         "sizeX": 600,

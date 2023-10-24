@@ -1923,7 +1923,7 @@ QFrame{
                            <x>0</x>
                            <y>0</y>
                            <width>253</width>
-                           <height>676</height>
+                           <height>692</height>
                           </rect>
                          </property>
                          <layout class="QVBoxLayout" name="verticalLayout_34">
@@ -2986,7 +2986,7 @@ background-color: rgba(0, 0, 0, 40);
                    <x>0</x>
                    <y>0</y>
                    <width>270</width>
-                   <height>30</height>
+                   <height>606</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -3008,6 +3008,13 @@ background-color: rgba(0, 0, 0, 40);
                  </layout>
                 </widget>
                </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="page_5">
+             <layout class="QVBoxLayout" name="verticalLayout_36">
+              <item>
+               <widget class="QPlainTextEdit" name="plainTextEdit"/>
               </item>
              </layout>
             </widget>

@@ -332,7 +332,8 @@ class MainWindow(QtWidgets.QMainWindow):
         with open(os.path.normpath(f"Models/{data['type']}/{data['name']}/model.json"), "r") as load_file:
             files = json.load(load_file)
             for file in files:
-                self.file_parameters_current[os.path.normpath(file["route"])] = {key: value for key, value in file.items() if key != "route"}
+                self.file_parameters_current[os.path.normpath(file["route"])] = \
+                    {key: value for key, value in file.items() if key != "route"}
 
             if data["type"] == "Avatars":
                 for file in self.current_files:

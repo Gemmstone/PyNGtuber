@@ -387,3 +387,15 @@
     transform: translateX(100%) rotate(120deg);
   }
 }
+
+@keyframes wing {
+  0% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(0.7);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
