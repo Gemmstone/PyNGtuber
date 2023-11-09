@@ -259,7 +259,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def shortcut_received(self, shortcuts):
         if shortcuts["type"] == "Model":
             parts = shortcuts["path"].split(os.path.sep)
-            print(parts)
             self.load_model({"name": parts[2], "type": parts[1]})
         elif shortcuts["type"] == "Asset":
             if shortcuts["path"] in self.current_files:

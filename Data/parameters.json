@@ -8941,7 +8941,13 @@
         "css": "",
         "blinking": "ignore",
         "talking": "ignore",
-        "hotkeys": [],
+        "hotkeys": {
+            "command": [
+                "Key.shift",
+                "A"
+            ],
+            "type": "Keyboard"
+        },
         "rotation": 0,
         "use_css": false
     },
@@ -9151,7 +9157,13 @@
         "css": "",
         "blinking": "ignore",
         "talking": "ignore",
-        "hotkeys": [],
+        "hotkeys": {
+            "command": [
+                "Key.shift",
+                "D"
+            ],
+            "type": "Keyboard"
+        },
         "rotation": 0,
         "use_css": false
     },
@@ -9165,7 +9177,13 @@
         "css": "",
         "blinking": "ignore",
         "talking": "ignore",
-        "hotkeys": [],
+        "hotkeys": {
+            "command": [
+                "Key.shift",
+                "D"
+            ],
+            "type": "Keyboard"
+        },
         "rotation": 0,
         "use_css": false
     },
