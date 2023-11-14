@@ -9,7 +9,7 @@ I've just started developing my own PNGtubing software, and I'm excited to make 
 
 https://github.com/Gemmstone/PyNGtuber/assets/31828821/fc5b1aa5-169c-4a53-8cef-9f7ddb45287b
 
-## Python Dependancies
+## Python (3.11) Dependancies
 - PyQt6
 - pyaudio
 - pillow
