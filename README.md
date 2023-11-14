@@ -9,6 +9,18 @@ I've just started developing my own PNGtubing software, and I'm excited to make 
 
 https://github.com/Gemmstone/PyNGtuber/assets/31828821/fc5b1aa5-169c-4a53-8cef-9f7ddb45287b
 
+## Python Dependancies
+- PyQt6
+- pyaudio
+- pillow
+- PyQt6-WebEngine
+- beautifulsoup4
+- mido
+- numpy
+- pynput
+- dateutils
+- twitchapi
+  `pip install pyqt6 pyqt6-webengine pillow pyaudio beautifulsoup4 mido numpy pynput dateutils twitchapi`
 
 ## Future Plans
 
