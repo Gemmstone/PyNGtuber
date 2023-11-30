@@ -1,6 +1,6 @@
 {
-    "volume threshold": 10,
-    "scream threshold": 93,
+    "volume threshold": 22,
+    "scream threshold": 100,
     "delay threshold": 3,
     "microphone selection": 1,
     "microphone mute": false,

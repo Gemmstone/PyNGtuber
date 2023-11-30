@@ -81,6 +81,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.json_file = os.path.normpath(f"Data{os.path.sep}parameters.json")
         self.current_json_file = os.path.normpath(f"Data{os.path.sep}current.json")
         self.settings_json_file = os.path.normpath(f"Data{os.path.sep}settings.json")
+        self.apiKeys = os.path.normpath(f"Data{os.path.sep}keys.json")
 
         self.keyboard_listener = KeyboardListener()
         self.keyboard_listener.shortcut.connect(self.shortcut_received)
@@ -110,6 +111,13 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             with open(self.settings_json_file, "r") as f:
                 self.settings = json.load(f)
+        except FileNotFoundError:
+            pass
+            pass
+
+        try:
+            with open(self.apiKeys, "r") as f:
+                self.twitch_api_Key = json.load(f)["twitch"]  # "client", "secret"
         except FileNotFoundError:
             pass
 
