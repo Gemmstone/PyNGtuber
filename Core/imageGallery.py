@@ -368,15 +368,19 @@ class ModelItem(QGroupBox):
         self.show_shortcut()
 
     def show_shortcut(self):
-        with open(f"Models{os.path.sep}{self.modelType}{os.path.sep}{self.modelName}{os.path.sep}data.json", "r") as data_file:
-            shortcut = json.load(data_file)["shortcuts"]
-            if shortcut:
-                if shortcut["type"] == "Midi":
-                    shortcut = f"Midi: {shortcut['command']['note']}"
-                else:
-                    shortcut = f"Keyboard {shortcut['command']}"
-
-                self.shortcutText.setText(shortcut)
+        with open(
+                f"Models{os.path.sep}{self.modelType}{os.path.sep}{self.modelName}{os.path.sep}data.json", "r") as data_file:
+            shortcuts = json.load(data_file)["shortcuts"]
+            if shortcuts:
+                shortcuts_text = []
+                for shortcut in shortcuts:
+                    if shortcut["type"] == "Midi":
+                        shortcuts_text.append(f"Midi: {shortcut['command']['note']}")
+                    elif shortcut["type"] == "Keyboard":
+                        shortcuts_text.append(f"Keyboard {shortcut['command']}")
+                    else:
+                        shortcuts_text.append(f"{shortcut['type']} {shortcut['command']}")
+                self.shortcutText.setText("\n".join(shortcuts_text))
             else:
                 self.shortcutText.setText("")
                 self.shortcutText.hide()

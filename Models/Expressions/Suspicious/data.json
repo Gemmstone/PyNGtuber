@@ -1,5 +1,5 @@
 {
-    "shortcuts": {
+    "shortcuts": [{
         "command": {
             "type": "note_on",
             "time": 0,
@@ -7,6 +7,7 @@
             "velocity": 64,
             "channel": 0
         },
-        "type": "Midi"
-    }
+        "type": "Midi",
+        "mode": "toggle"
+    }]
 }

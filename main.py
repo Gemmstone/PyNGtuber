@@ -1,5 +1,5 @@
 from Core.imageGallery import ImageGallery, ExpressionSelector, ModelGallery
-from Core.ShortcutsManager import MidiListener, KeyboardListener
+from Core.ShortcutsManager import MidiListener, KeyboardListener, TwitchAPI
 from Core.audioManager import MicrophoneVolumeWidget
 from PyQt6.QtCore import pyqtSlot, QCoreApplication, pyqtSignal
 from PIL import Image, ImageSequence, ImageOps
@@ -20,18 +20,21 @@ import os
 class ShortcutsDialog(QtWidgets.QDialog):
     new_command = pyqtSignal(dict)
 
-    def __init__(self, midi_listener, keyboard_listener, data, parent=None):
+    def __init__(self, midi_listener, keyboard_listener, twitch_listener, data, parent=None):
         super().__init__(parent)
 
         self.midi_listener = midi_listener
         self.keyboard_listener = keyboard_listener
+        self.twitch_listener = twitch_listener
         self.data = data
 
         self.midi_listener.request_new_signal()
         self.keyboard_listener.request_new_signal()
+        self.twitch_listener.request_new_signal()
 
         self.midi_listener.new_shortcut.connect(self.handle_shortcuts)
         self.keyboard_listener.new_shortcut.connect(self.handle_shortcuts)
+        self.twitch_listener.new_event_signal.connect(self.handle_shortcuts)
 
         self.setWindowTitle(self.tr("Update Shortcuts"))
         self.setFixedSize(300, 200)  # Adjust the size as needed
@@ -39,12 +42,15 @@ class ShortcutsDialog(QtWidgets.QDialog):
         layout = QtWidgets.QVBoxLayout()
 
         # Add instructions as a QLabel
-        instructions_label = QtWidgets.QLabel(self.tr("Press a shortcut key to update."))
+        instructions_label = QtWidgets.QLabel(
+            self.tr("Press a shortcut key to update.")
+        )
         layout.addWidget(instructions_label)
 
         # Connect the signals from both listeners to a slot
         self.midi_listener.shortcut.connect(self.handle_shortcuts)
         self.keyboard_listener.shortcut.connect(self.handle_shortcuts)
+        self.twitch_listener.event_signal.connect(self.handle_shortcuts)
 
         # Create a cancel button
         cancel_button = QtWidgets.QPushButton(self.tr("Cancel"))
@@ -58,6 +64,7 @@ class ShortcutsDialog(QtWidgets.QDialog):
         self.new_command.emit({"shortcut": shortcut, "data": self.data})
         self.midi_listener.resume_normal_operation()
         self.keyboard_listener.resume_normal_operation()
+        self.twitch_listener.resume_normal_operation()
         self.accept()
 
     def closeEvent(self, event):
@@ -113,13 +120,19 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.settings = json.load(f)
         except FileNotFoundError:
             pass
-            pass
 
         try:
             with open(self.apiKeys, "r") as f:
-                self.twitch_api_Key = json.load(f)["twitch"]  # "client", "secret"
+                keys = json.load(f)
+                self.twitch_api_client = keys["twitch"]["client"]
+                self.twitch_api_secret = keys["twitch"]["secret"]
         except FileNotFoundError:
-            pass
+            self.twitch_api_client = None
+            self.twitch_api_secret = None
+
+        self.TwitchAPI = TwitchAPI(APP_ID=self.twitch_api_client, APP_SECRET=self.twitch_api_secret)
+        self.TwitchAPI.event_signal.connect(self.shortcut_received)
+        self.TwitchAPI.start()
 
         self.file_parameters_default = {os.path.normpath(key): value for key, value in self.file_parameters_default.items()}
         self.file_parameters_current = {os.path.normpath(key): value for key, value in self.file_parameters_current.items()}
@@ -218,6 +231,14 @@ class MainWindow(QtWidgets.QMainWindow):
     def get_shortcuts(self):
         midi = []
         keyboard = []
+        twitch = {
+            "TwitchReward": [],
+            "TwitchFollow": [],
+            "TwitchCheer": [],
+            "TwitchRaid": [],
+            "TwitchSub": [],
+            "TwitchGiftedSub": []
+        }
 
         for root, dirs, files in os.walk("Models"):
             for filename in files:
@@ -225,34 +246,42 @@ class MainWindow(QtWidgets.QMainWindow):
                     data_json_path = os.path.join(root, filename)
                     with open(data_json_path, 'r') as json_file:
                         data = json.load(json_file)
-                        shortcut = data.get("shortcuts", None)
-                        if not type(shortcut) is list:
+                        shortcuts = data.get("shortcuts", None)
+                        for shortcut in shortcuts:
                             if shortcut["type"] == "Keyboard":
                                 keyboard.append({
                                     "path": data_json_path.replace("data", "model"),
                                     "type": "Model", "command": shortcut["command"]
                                 })
-                            else:
+                            elif shortcut["type"] == "Midi":
                                 midi.append({
                                     "path": data_json_path.replace("data", "model"), "type": "Model",
                                     "command": mido.Message.from_dict(shortcut["command"])
                                 })
+                            else:
+                                twitch[shortcut["type"]].append(shortcut["command"])
 
         for route in self.file_parameters_current:
             if self.file_parameters_current[route]["hotkeys"]:
-                if self.file_parameters_current[route]["hotkeys"]["type"] == "Keyboard":
-                    keyboard.append({
-                        "path": route, "type": "Asset",
-                        "command": self.file_parameters_current[route]["hotkeys"]["command"]
-                    })
-                else:
-                    midi.append(
-                        {"path": route, "type": "Asset",
-                         "command": mido.Message.from_dict(self.file_parameters_current[route]["hotkeys"]["command"])}
-                    )
-
+                for shortcut in self.file_parameters_current[route]["hotkeys"]:
+                    if shortcut["type"] == "Keyboard":
+                        keyboard.append({
+                            "path": route, "type": "Asset", "mode": shortcut["mode"],
+                            "command": shortcut["command"]
+                        })
+                    elif shortcut["type"] == "Midi":
+                        midi.append(
+                            {"path": route, "type": "Asset", "mode": shortcut["mode"],
+                             "command": mido.Message.from_dict(shortcut["command"])}
+                        )
+                    else:
+                        twitch[shortcut["type"]].append({
+                            "path": route, "type": "Asset", "mode": shortcut["mode"],
+                            "command": shortcut
+                        })
         self.midi_listener.update_shortcuts(midi)
         self.keyboard_listener.update_shortcuts(keyboard)
+        self.TwitchAPI.update_shortcuts(twitch)
 
     def changePage(self, index):
         self.stackedWidget.setCurrentIndex(index)
@@ -270,15 +299,33 @@ class MainWindow(QtWidgets.QMainWindow):
             self.load_model({"name": parts[2], "type": parts[1]})
         elif shortcuts["type"] == "Asset":
             if shortcuts["path"] in self.current_files:
-                self.current_files.remove(shortcuts["path"])
+                if self.file_parameters_default[shortcuts["path"]]:
+                    for command in self.file_parameters_default[shortcuts["path"]]["hotkeys"]:
+                        if command["command"] == shortcuts["command"]["command"] and \
+                                command["type"] == shortcuts["command"]["type"]:
+                            if command["mode"] in ["toggle", "disable"]:
+                                self.current_files.remove(shortcuts["path"])
             else:
-                self.current_files.append(shortcuts["path"])
+                if self.file_parameters_default[shortcuts["path"]]:
+                    for command in self.file_parameters_default[shortcuts["path"]]["hotkeys"]:
+                        if command["command"] == shortcuts["command"]["command"] and \
+                                command["type"] == shortcuts["command"]["type"]:
+                            if command["mode"] in ["toggle", "enable"]:
+                                self.current_files.append(shortcuts["path"])
+            # else:
+                # add support by time, ie: 10m enabled and then disabled
+            #     pass
             self.update_viewer(self.current_files, update_settings=self.tabWidget_2.currentIndex() == 1)
         else:
             print(f"Received: {shortcuts} System")
 
     def dialog_shortcut(self, data):
-        dialog = ShortcutsDialog(midi_listener=self.midi_listener, keyboard_listener=self.keyboard_listener, data=data)
+        dialog = ShortcutsDialog(
+            midi_listener=self.midi_listener,
+            keyboard_listener=self.keyboard_listener,
+            twitch_listener=self.TwitchAPI,
+            data=data
+        )
         dialog.new_command.connect(self.create_shortcuts)
         dialog.exec()
 
@@ -307,14 +354,18 @@ class MainWindow(QtWidgets.QMainWindow):
                         os.path.normpath(f"{mainFolder}{os.path.sep}{data['data']['name']}{os.path.sep}data.json"), 'r'
                 ) as json_file:
                     old_data = json.load(json_file)
-                old_data["shortcuts"] = data['shortcut']
+                old_data["shortcuts"].append(data['shortcut'])
                 with open(
                         os.path.normpath(f"{mainFolder}{os.path.sep}{data['data']['name']}{os.path.sep}data.json"), 'w'
                 ) as json_file:
                     json.dump(old_data, json_file, indent=4)
         if data["data"]["type"] in ["Assets"]:
-            self.file_parameters_default[data['data']['value']['route']]["hotkeys"] = copy.deepcopy(data["shortcut"])
-            self.file_parameters_current[data['data']['value']['route']]["hotkeys"] = copy.deepcopy(data["shortcut"])
+            self.file_parameters_default[data['data']['value']['route']]["hotkeys"].append(
+                copy.deepcopy(data["shortcut"])
+            )
+            self.file_parameters_current[data['data']['value']['route']]["hotkeys"].append(
+                copy.deepcopy(data["shortcut"])
+            )
             self.save_parameters_to_json()
             self.update_viewer(self.current_files, update_settings=True)
 
@@ -329,9 +380,10 @@ class MainWindow(QtWidgets.QMainWindow):
                         data_json_path = os.path.join(root, filename)
                         with open(data_json_path, 'r') as json_file:
                             data = json.load(json_file)
-                            shortcut = data.get("shortcuts", None)
-                            if shortcut == new_shortcut:
-                                usages.append(data_json_path)
+                            shortcuts = data.get("shortcuts", None)
+                            for shortcut in shortcuts:
+                                if shortcut == new_shortcut:
+                                    usages.append(data_json_path)
         return usages
 
     def load_model(self, data):
@@ -767,6 +819,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.audio.audio_thread.stop_stream()
         self.midi_listener.terminate()
         self.keyboard_listener.terminate()
+        self.TwitchAPI.terminate()
         event.accept()
 
 

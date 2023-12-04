@@ -27,7 +27,10 @@ with open('Data/parameters.json', 'r') as file:
     data = json.load(file)
 
 for key in data:
-    data[key]["use_css"] = False
+    if data[key]["hotkeys"]:
+        for i, hotkey in enumerate(data[key]["hotkeys"]):
+            if "mode" not in hotkey:
+                data[key]["hotkeys"][i]["mode"] = "toggle"
 
 # Save the modified data back to the JSON file
 with open('Data/parameters.json', 'w') as file:

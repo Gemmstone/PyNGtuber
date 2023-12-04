@@ -6,3 +6,4 @@ resources.qrc
 /Builds/
 /.idea/
 /Data/keys.json
+/Data/user_token.json

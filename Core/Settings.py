@@ -65,11 +65,15 @@ class Settings(QWidget):
 
     def check_hotkeys(self):
         if self.parameters["hotkeys"]:
-            if self.parameters["hotkeys"]["type"] == "Midi":
-                shortcut = f"Midi: {self.parameters['hotkeys']['command']['note']}"
-            else:
-                shortcut = f"Keyboard {self.parameters['hotkeys']['command']}"
-            self.deleteShortcut.setText(shortcut)
+            shortcuts = []
+            for hotkey in self.parameters["hotkeys"]:
+                if hotkey["type"] == "Midi":
+                    shortcuts.append(f"Midi: {hotkey['command']['note']}")
+                elif hotkey["type"] == "Keyboard":
+                    shortcuts.append(f"Keyboard {hotkey['command']}")
+                else:
+                    shortcuts.append(f"{hotkey['type']} {hotkey['command']}")
+            self.deleteShortcut.setText("\n".join(shortcuts))
             self.deleteShortcut.show()
         else:
             self.deleteShortcut.hide()
@@ -258,11 +262,9 @@ class SettingsToolBox(QToolBox):
                 }@
                 """
         self.setStyleSheet(StyleSheet)
-
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
 
     def set_items(self, items):
-
         while self.count() > 0:
             index = 0
             widget = self.widget(index)
