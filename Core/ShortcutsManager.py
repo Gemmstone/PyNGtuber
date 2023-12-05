@@ -51,6 +51,7 @@ class TwitchAPI(QThread):
                 for command in self.commands[key]:
                     if data["command"] == command["command"]["command"] and\
                             data["type"] == command["command"]["type"]:
+                        command["source"] = data["type"]
                         self.event_signal.emit(command)
 
     async def on_redeem(self, data: ChannelPointsCustomRewardRedemptionAddEvent):
@@ -137,6 +138,7 @@ class MidiListener(QThread):
                         elif message.type == 'note_on':
                             for command in self.commands:
                                 if message == command["command"]:
+                                    command["source"] = "Midi"
                                     self.shortcut.emit(command)
         except BaseException as err:
             print(f"Midi is not supported on this platform:\n{err}")
@@ -188,6 +190,7 @@ class KeyboardListener(QThread):
                 else:
                     for command in self.commands:
                         if [str(i).replace("'", "") for i in shortcut] == command["command"]:
+                            command["source"] = "Keyboard"
                             self.shortcut.emit(command)
                     self.modifier_keys = set()
         else:

@@ -301,15 +301,29 @@ class MainWindow(QtWidgets.QMainWindow):
             if shortcuts["path"] in self.current_files:
                 if self.file_parameters_default[shortcuts["path"]]:
                     for command in self.file_parameters_default[shortcuts["path"]]["hotkeys"]:
-                        if command["command"] == shortcuts["command"]["command"] and \
-                                command["type"] == shortcuts["command"]["type"]:
+                        if (
+                                "command" in shortcuts["command"]
+                                and command["command"] == shortcuts["command"]["command"]
+                                and command["type"] == shortcuts["source"]
+                        ) or (
+                                (isinstance(shortcuts["command"], str) or isinstance(shortcuts["command"], list))
+                                and command["command"] == shortcuts["command"]
+                                and command["type"] == shortcuts["source"]
+                        ):
                             if command["mode"] in ["toggle", "disable"]:
                                 self.current_files.remove(shortcuts["path"])
             else:
                 if self.file_parameters_default[shortcuts["path"]]:
                     for command in self.file_parameters_default[shortcuts["path"]]["hotkeys"]:
-                        if command["command"] == shortcuts["command"]["command"] and \
-                                command["type"] == shortcuts["command"]["type"]:
+                        if (
+                                "command" in shortcuts["command"]
+                                and command["command"] == shortcuts["command"]["command"]
+                                and command["type"] == shortcuts["source"]
+                        ) or (
+                                (isinstance(shortcuts["command"], str) or isinstance(shortcuts["command"], list))
+                                and command["command"] == shortcuts["command"]
+                                and command["type"] == shortcuts["source"]
+                        ):
                             if command["mode"] in ["toggle", "enable"]:
                                 self.current_files.append(shortcuts["path"])
             # else:
@@ -775,7 +789,8 @@ class MainWindow(QtWidgets.QMainWindow):
             if event.type() == QtCore.QEvent.Type.HoverEnter:
                 self.showUI()
             elif event.type() == QtCore.QEvent.Type.HoverLeave:
-                self.hideUI()
+                # self.hideUI()
+                QtCore.QTimer.singleShot(400, self.hideUI)
         except AttributeError:
             pass
         return super().event(event)
