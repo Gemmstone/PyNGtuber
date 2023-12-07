@@ -324,7 +324,10 @@ class MainWindow(QtWidgets.QMainWindow):
                                     "command": mido.Message.from_dict(shortcut["command"])
                                 })
                             else:
-                                twitch[shortcut["type"]].append(shortcut["command"])
+                                twitch[shortcut["type"]].append({
+                                    "path": data_json_path.replace("data", "model"), "type": "Model",
+                                    "command": shortcut
+                                })
 
         for route in self.file_parameters_current:
             if self.file_parameters_current[route]["hotkeys"]:
