@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>966</width>
-    <height>618</height>
+    <height>620</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -285,7 +285,7 @@ QTabBar::tab:hover {
                    <x>0</x>
                    <y>0</y>
                    <width>208</width>
-                   <height>503</height>
+                   <height>505</height>
                   </rect>
                  </property>
                  <attribute name="icon">
@@ -348,7 +348,7 @@ QTabBar::tab:hover {
                        <x>0</x>
                        <y>0</y>
                        <width>208</width>
-                       <height>456</height>
+                       <height>458</height>
                       </rect>
                      </property>
                      <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -413,7 +413,7 @@ QTabBar::tab:hover {
                    <x>0</x>
                    <y>0</y>
                    <width>208</width>
-                   <height>503</height>
+                   <height>505</height>
                   </rect>
                  </property>
                  <attribute name="icon">
@@ -476,7 +476,7 @@ QTabBar::tab:hover {
                        <x>0</x>
                        <y>0</y>
                        <width>208</width>
-                       <height>456</height>
+                       <height>458</height>
                       </rect>
                      </property>
                      <layout class="QVBoxLayout" name="verticalLayout_33">
@@ -656,7 +656,7 @@ QFrame{
                    <x>0</x>
                    <y>0</y>
                    <width>208</width>
-                   <height>546</height>
+                   <height>548</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout">
@@ -1316,7 +1316,7 @@ QFrame{
                        <x>0</x>
                        <y>0</y>
                        <width>274</width>
-                       <height>503</height>
+                       <height>505</height>
                       </rect>
                      </property>
                      <attribute name="icon">
@@ -1406,7 +1406,7 @@ QFrame{
                            <x>0</x>
                            <y>0</y>
                            <width>274</width>
-                           <height>503</height>
+                           <height>505</height>
                           </rect>
                          </property>
                          <layout class="QVBoxLayout" name="verticalLayout_20">
@@ -1576,11 +1576,37 @@ QFrame{
                            </widget>
                           </item>
                           <item>
-                           <widget class="QGroupBox" name="groupBox_8">
-                            <property name="title">
-                             <string>Export PNG</string>
+                           <widget class="QGroupBox" name="groupBox_20">
+                            <property name="styleSheet">
+                             <string notr="true">*{
+	color: black;
+}
+
+QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}</string>
                             </property>
-                            <layout class="QVBoxLayout" name="verticalLayout_35">
+                            <property name="title">
+                             <string>Integration</string>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_40">
                              <property name="leftMargin">
                               <number>0</number>
                              </property>
@@ -1594,7 +1620,7 @@ QFrame{
                               <number>0</number>
                              </property>
                              <item>
-                              <widget class="QFrame" name="audioFrame_2">
+                              <widget class="QFrame" name="audioFrame_7">
                                <property name="styleSheet">
                                 <string notr="true"/>
                                </property>
@@ -1604,72 +1630,14 @@ QFrame{
                                <property name="frameShadow">
                                 <enum>QFrame::Raised</enum>
                                </property>
-                               <layout class="QGridLayout" name="gridLayout_4">
-                                <item row="0" column="0">
-                                 <widget class="QComboBox" name="PNGmethod">
-                                  <property name="sizePolicy">
-                                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                   </sizepolicy>
-                                  </property>
-                                  <property name="toolTip">
-                                   <string/>
-                                  </property>
-                                  <property name="whatsThis">
-                                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                                  </property>
-                                  <property name="maxVisibleItems">
-                                   <number>10</number>
-                                  </property>
-                                  <property name="sizeAdjustPolicy">
-                                   <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
-                                  </property>
-                                  <item>
-                                   <property name="text">
-                                    <string>Select Method...</string>
-                                   </property>
-                                  </item>
-                                  <item>
-                                   <property name="text">
-                                    <string>Alpha Composite</string>
-                                   </property>
-                                  </item>
-                                  <item>
-                                   <property name="text">
-                                    <string>Pillow Paste</string>
-                                   </property>
-                                  </item>
-                                  <item>
-                                   <property name="text">
-                                    <string>AlphaCom + PILPaste</string>
-                                   </property>
-                                  </item>
-                                  <item>
-                                   <property name="text">
-                                    <string>Screenshot</string>
-                                   </property>
-                                  </item>
-                                  <item>
-                                   <property name="text">
-                                    <string>Screenshot + Chroma Key</string>
-                                   </property>
-                                  </item>
-                                 </widget>
-                                </item>
-                                <item row="0" column="1">
-                                 <widget class="QPushButton" name="PNG">
-                                  <property name="sizePolicy">
-                                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                   </sizepolicy>
-                                  </property>
+                               <layout class="QVBoxLayout" name="verticalLayout_38">
+                                <item>
+                                 <widget class="QPushButton" name="twitchApiBtn">
                                   <property name="cursor">
                                    <cursorShape>PointingHandCursor</cursorShape>
                                   </property>
                                   <property name="toolTip">
-                                   <string>Save PNG Image</string>
+                                   <string>Better for assets with some transparency, better image results except if you have different size images</string>
                                   </property>
                                   <property name="statusTip">
                                    <string/>
@@ -1678,11 +1646,11 @@ QFrame{
                                    <string/>
                                   </property>
                                   <property name="text">
-                                   <string/>
+                                   <string>Set Twitch API keys</string>
                                   </property>
                                   <property name="icon">
                                    <iconset>
-                                    <normaloff>../Icons/image-mobile-ui-svgrepo-com.svg</normaloff>../Icons/image-mobile-ui-svgrepo-com.svg</iconset>
+                                    <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
                                   </property>
                                   <property name="iconSize">
                                    <size>
@@ -1692,12 +1660,190 @@ QFrame{
                                   </property>
                                  </widget>
                                 </item>
+                                <item>
+                                 <widget class="QPushButton" name="TwitchOAuthBtn">
+                                  <property name="cursor">
+                                   <cursorShape>PointingHandCursor</cursorShape>
+                                  </property>
+                                  <property name="toolTip">
+                                   <string>Better for assets with some transparency, better image results except if you have different size images</string>
+                                  </property>
+                                  <property name="statusTip">
+                                   <string/>
+                                  </property>
+                                  <property name="whatsThis">
+                                   <string/>
+                                  </property>
+                                  <property name="text">
+                                   <string>Start Twitch Integration</string>
+                                  </property>
+                                  <property name="icon">
+                                   <iconset>
+                                    <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
+                                  </property>
+                                  <property name="iconSize">
+                                   <size>
+                                    <width>25</width>
+                                    <height>25</height>
+                                   </size>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item alignment="Qt::AlignRight">
+                                 <widget class="QCheckBox" name="autostart">
+                                  <property name="sizePolicy">
+                                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                   </sizepolicy>
+                                  </property>
+                                  <property name="cursor">
+                                   <cursorShape>PointingHandCursor</cursorShape>
+                                  </property>
+                                  <property name="layoutDirection">
+                                   <enum>Qt::LeftToRight</enum>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true"/>
+                                  </property>
+                                  <property name="text">
+                                   <string>Autostart integration</string>
+                                  </property>
+                                  <property name="checked">
+                                   <bool>true</bool>
+                                  </property>
+                                  <property name="tristate">
+                                   <bool>false</bool>
+                                  </property>
+                                 </widget>
+                                </item>
                                </layout>
                               </widget>
                              </item>
                             </layout>
                            </widget>
                           </item>
+                          <item>
+                           <spacer name="verticalSpacer">
+                            <property name="orientation">
+                             <enum>Qt::Vertical</enum>
+                            </property>
+                            <property name="sizeHint" stdset="0">
+                             <size>
+                              <width>20</width>
+                              <height>40</height>
+                             </size>
+                            </property>
+                           </spacer>
+                          </item>
+                         </layout>
+                        </widget>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
+                    <widget class="QWidget" name="toolBox_3Page2">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>0</y>
+                       <width>274</width>
+                       <height>505</height>
+                      </rect>
+                     </property>
+                     <attribute name="icon">
+                      <iconset>
+                       <normaloff>../Icons/mobile-setting-ui-svgrepo-com.svg</normaloff>../Icons/mobile-setting-ui-svgrepo-com.svg</iconset>
+                     </attribute>
+                     <attribute name="label">
+                      <string>Advanced</string>
+                     </attribute>
+                     <layout class="QVBoxLayout" name="verticalLayout_28">
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QScrollArea" name="scrollArea_7">
+                        <property name="styleSheet">
+                         <string notr="true">QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}
+
+#creditsFrame{
+	background-color: rgba(255, 255, 255, 0);
+}
+
+* QCheckBox, * QRadioButton {
+    background: transparent;
+}
+* QCheckBox::indicator, * QRadioButton::indicator {
+    width: 25px;
+    height: 25px;
+}
+* QCheckBox::indicator:unchecked {
+	image: url(./Icons/checkbox-svgrepo-com.svg);
+}
+* QCheckBox::indicator:checked {
+	image: url(./Icons/checked-checkbox-svgrepo-com.svg);
+}
+* QRadioButton::indicator:unchecked {
+	image: url(./Icons/circle-svgrepo-com.svg);
+}
+* QRadioButton::indicator:checked {
+	border-image: url(./Icons/checked-radio-svgrepo-com.svg);
+}</string>
+                        </property>
+                        <property name="widgetResizable">
+                         <bool>true</bool>
+                        </property>
+                        <widget class="QWidget" name="scrollAreaWidgetContents_7">
+                         <property name="geometry">
+                          <rect>
+                           <x>0</x>
+                           <y>0</y>
+                           <width>253</width>
+                           <height>869</height>
+                          </rect>
+                         </property>
+                         <layout class="QVBoxLayout" name="verticalLayout_34">
+                          <property name="leftMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
                           <item>
                            <widget class="QGroupBox" name="groupBox_14">
                             <property name="styleSheet">
@@ -1818,127 +1964,6 @@ QFrame{
                             </layout>
                            </widget>
                           </item>
-                          <item>
-                           <spacer name="verticalSpacer">
-                            <property name="orientation">
-                             <enum>Qt::Vertical</enum>
-                            </property>
-                            <property name="sizeHint" stdset="0">
-                             <size>
-                              <width>20</width>
-                              <height>40</height>
-                             </size>
-                            </property>
-                           </spacer>
-                          </item>
-                         </layout>
-                        </widget>
-                       </widget>
-                      </item>
-                     </layout>
-                    </widget>
-                    <widget class="QWidget" name="toolBox_3Page2">
-                     <property name="geometry">
-                      <rect>
-                       <x>0</x>
-                       <y>0</y>
-                       <width>274</width>
-                       <height>503</height>
-                      </rect>
-                     </property>
-                     <attribute name="icon">
-                      <iconset>
-                       <normaloff>../Icons/mobile-setting-ui-svgrepo-com.svg</normaloff>../Icons/mobile-setting-ui-svgrepo-com.svg</iconset>
-                     </attribute>
-                     <attribute name="label">
-                      <string>Advanced</string>
-                     </attribute>
-                     <layout class="QVBoxLayout" name="verticalLayout_28">
-                      <property name="leftMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="topMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="rightMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>0</number>
-                      </property>
-                      <item>
-                       <widget class="QScrollArea" name="scrollArea_7">
-                        <property name="styleSheet">
-                         <string notr="true">QGroupBox {
-border-color: #FF17365D;
-font-size: 14px;
-border-radius: 15px;
-}
-
-QGroupBox::title {
-border-top-left-radius: 9px;
-border-top-right-radius: 9px;
-padding: 2px 20px;
-background-color: #FF17365D;
-color: rgb(255, 255, 255);
-}
-
-QFrame{
-	border-top-right-radius: 9px;
-	border-bottom-right-radius: 9px;
-	border-bottom-left-radius: 9px;
-	background-color: rgb(255, 255, 255);
-}
-
-#creditsFrame{
-	background-color: rgba(255, 255, 255, 0);
-}
-
-* QCheckBox, * QRadioButton {
-    background: transparent;
-}
-* QCheckBox::indicator, * QRadioButton::indicator {
-    width: 25px;
-    height: 25px;
-}
-* QCheckBox::indicator:unchecked {
-	image: url(./Icons/checkbox-svgrepo-com.svg);
-}
-* QCheckBox::indicator:checked {
-	image: url(./Icons/checked-checkbox-svgrepo-com.svg);
-}
-* QRadioButton::indicator:unchecked {
-	image: url(./Icons/circle-svgrepo-com.svg);
-}
-* QRadioButton::indicator:checked {
-	border-image: url(./Icons/checked-radio-svgrepo-com.svg);
-}</string>
-                        </property>
-                        <property name="widgetResizable">
-                         <bool>true</bool>
-                        </property>
-                        <widget class="QWidget" name="scrollAreaWidgetContents_7">
-                         <property name="geometry">
-                          <rect>
-                           <x>0</x>
-                           <y>0</y>
-                           <width>253</width>
-                           <height>692</height>
-                          </rect>
-                         </property>
-                         <layout class="QVBoxLayout" name="verticalLayout_34">
-                          <property name="leftMargin">
-                           <number>0</number>
-                          </property>
-                          <property name="topMargin">
-                           <number>0</number>
-                          </property>
-                          <property name="rightMargin">
-                           <number>0</number>
-                          </property>
-                          <property name="bottomMargin">
-                           <number>0</number>
-                          </property>
                           <item>
                            <widget class="QGroupBox" name="groupBox_11">
                             <property name="styleSheet">
@@ -2142,6 +2167,158 @@ QFrame{
                            </widget>
                           </item>
                           <item>
+                           <widget class="QGroupBox" name="groupBox_8">
+                            <property name="title">
+                             <string>Export PNG</string>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_35">
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>23</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QFrame" name="audioFrame_2">
+                               <property name="styleSheet">
+                                <string notr="true"/>
+                               </property>
+                               <property name="frameShape">
+                                <enum>QFrame::StyledPanel</enum>
+                               </property>
+                               <property name="frameShadow">
+                                <enum>QFrame::Raised</enum>
+                               </property>
+                               <layout class="QGridLayout" name="gridLayout_4">
+                                <item row="0" column="0">
+                                 <widget class="QComboBox" name="PNGmethod">
+                                  <property name="sizePolicy">
+                                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                   </sizepolicy>
+                                  </property>
+                                  <property name="toolTip">
+                                   <string/>
+                                  </property>
+                                  <property name="whatsThis">
+                                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                  </property>
+                                  <property name="maxVisibleItems">
+                                   <number>10</number>
+                                  </property>
+                                  <property name="sizeAdjustPolicy">
+                                   <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+                                  </property>
+                                  <item>
+                                   <property name="text">
+                                    <string>Select Method...</string>
+                                   </property>
+                                  </item>
+                                  <item>
+                                   <property name="text">
+                                    <string>Alpha Composite</string>
+                                   </property>
+                                  </item>
+                                  <item>
+                                   <property name="text">
+                                    <string>Pillow Paste</string>
+                                   </property>
+                                  </item>
+                                  <item>
+                                   <property name="text">
+                                    <string>AlphaCom + PILPaste</string>
+                                   </property>
+                                  </item>
+                                  <item>
+                                   <property name="text">
+                                    <string>Screenshot</string>
+                                   </property>
+                                  </item>
+                                  <item>
+                                   <property name="text">
+                                    <string>Screenshot + Chroma Key</string>
+                                   </property>
+                                  </item>
+                                 </widget>
+                                </item>
+                                <item row="0" column="1">
+                                 <widget class="QPushButton" name="PNG">
+                                  <property name="sizePolicy">
+                                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                   </sizepolicy>
+                                  </property>
+                                  <property name="cursor">
+                                   <cursorShape>PointingHandCursor</cursorShape>
+                                  </property>
+                                  <property name="toolTip">
+                                   <string>Save PNG Image</string>
+                                  </property>
+                                  <property name="statusTip">
+                                   <string/>
+                                  </property>
+                                  <property name="whatsThis">
+                                   <string/>
+                                  </property>
+                                  <property name="text">
+                                   <string/>
+                                  </property>
+                                  <property name="icon">
+                                   <iconset>
+                                    <normaloff>../Icons/image-mobile-ui-svgrepo-com.svg</normaloff>../Icons/image-mobile-ui-svgrepo-com.svg</iconset>
+                                  </property>
+                                  <property name="iconSize">
+                                   <size>
+                                    <width>25</width>
+                                    <height>25</height>
+                                   </size>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item row="1" column="0">
+                                 <widget class="QLabel" name="label_5">
+                                  <property name="sizePolicy">
+                                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                   </sizepolicy>
+                                  </property>
+                                  <property name="toolTip">
+                                   <string>Alpha Composite: Best for images with some transparency but it can't do different size images.
+Pillow Paste: Best for images with different sizes and positions, but it struggles with transparency.
+Alpha Composite + Pillow Paste: Tries to combine the two for a better image, won't make promises.
+Screenshot: Just takes a screenshot of the model.
+Screenshot + Chroma Key: Just takes a screenshot of the model and tries to remove the background.</string>
+                                  </property>
+                                  <property name="whatsThis">
+                                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">font-size: 12px</string>
+                                  </property>
+                                  <property name="text">
+                                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size/position images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste: &lt;/span&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;(in development) &lt;/span&gt;Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot: &lt;/span&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;(in development) &lt;/span&gt;Just takes a screenshot of the model. &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key: &lt;/span&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;(in development) &lt;/span&gt;Takes a screenshot of the model and tries to remove the background keying the selected bacground color.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                  </property>
+                                  <property name="wordWrap">
+                                   <bool>true</bool>
+                                  </property>
+                                 </widget>
+                                </item>
+                               </layout>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
                            <widget class="QGroupBox" name="groupBox_12">
                             <property name="styleSheet">
                              <string notr="true">*{
@@ -2250,97 +2427,6 @@ QFrame{
                                     </rect>
                                    </property>
                                   </widget>
-                                 </widget>
-                                </item>
-                               </layout>
-                              </widget>
-                             </item>
-                            </layout>
-                           </widget>
-                          </item>
-                          <item>
-                           <widget class="QGroupBox" name="groupBox_15">
-                            <property name="styleSheet">
-                             <string notr="true">*{
-	color: black;
-}
-
-QGroupBox {
-border-color: #FF17365D;
-font-size: 14px;
-border-radius: 15px;
-}
-
-QGroupBox::title {
-border-top-left-radius: 9px;
-border-top-right-radius: 9px;
-padding: 2px 20px;
-background-color: #FF17365D;
-color: rgb(255, 255, 255);
-}
-
-QFrame{
-	border-top-right-radius: 9px;
-	border-bottom-right-radius: 9px;
-	border-bottom-left-radius: 9px;
-	background-color: rgb(255, 255, 255);
-}</string>
-                            </property>
-                            <property name="title">
-                             <string>Explanation of Export Methods</string>
-                            </property>
-                            <layout class="QVBoxLayout" name="verticalLayout_38">
-                             <property name="leftMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>23</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>0</number>
-                             </property>
-                             <item>
-                              <widget class="QFrame" name="audioFrame_5">
-                               <property name="styleSheet">
-                                <string notr="true"/>
-                               </property>
-                               <property name="frameShape">
-                                <enum>QFrame::StyledPanel</enum>
-                               </property>
-                               <property name="frameShadow">
-                                <enum>QFrame::Raised</enum>
-                               </property>
-                               <layout class="QHBoxLayout" name="horizontalLayout_9">
-                                <item>
-                                 <widget class="QLabel" name="label_5">
-                                  <property name="sizePolicy">
-                                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                   </sizepolicy>
-                                  </property>
-                                  <property name="toolTip">
-                                   <string>Alpha Composite: Best for images with some transparency but it can't do different size images.
-Pillow Paste: Best for images with different sizes and positions, but it struggles with transparency.
-Alpha Composite + Pillow Paste: Tries to combine the two for a better image, won't make promises.
-Screenshot: Just takes a screenshot of the model.
-Screenshot + Chroma Key: Just takes a screenshot of the model and tries to remove the background.</string>
-                                  </property>
-                                  <property name="whatsThis">
-                                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                                  </property>
-                                  <property name="styleSheet">
-                                   <string notr="true">font-size: 12px</string>
-                                  </property>
-                                  <property name="text">
-                                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size/position images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Takes a screenshot of the model and tries to remove the background keying the selected bacground color.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                                  </property>
-                                  <property name="wordWrap">
-                                   <bool>true</bool>
-                                  </property>
                                  </widget>
                                 </item>
                                </layout>
@@ -2986,7 +3072,7 @@ background-color: rgba(0, 0, 0, 40);
                    <x>0</x>
                    <y>0</y>
                    <width>270</width>
-                   <height>606</height>
+                   <height>30</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_4">

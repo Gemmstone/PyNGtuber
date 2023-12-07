@@ -3,11 +3,12 @@ from twitchAPI.object.eventsub import ChannelPointsCustomRewardRedemptionAddEven
     ChannelSubscriptionGiftEvent
 from twitchAPI.oauth import UserAuthenticationStorageHelper
 from twitchAPI.eventsub.websocket import EventSubWebsocket
-from PyQt6.QtCore import QThread, pyqtSignal, QTimer
-from twitchAPI.type import AuthScope
+from PyQt6.QtCore import QThread, pyqtSignal
 from pynput.keyboard import Listener
+from twitchAPI.type import AuthScope
 from twitchAPI.twitch import Twitch
 from twitchAPI.helper import first
+import os.path
 import asyncio
 import mido
 import os
@@ -21,6 +22,7 @@ class TwitchAPI(QThread):
         super().__init__()
         self.APP_ID = APP_ID
         self.APP_SECRET = APP_SECRET
+        self.PUBLIC_APP_ID = "v3pheb41eiqaal8e1pefkjrygpvjt8"
         self.TARGET_SCOPES = [
             AuthScope.CHANNEL_MANAGE_REDEMPTIONS,
             AuthScope.MODERATOR_READ_FOLLOWERS,
@@ -85,17 +87,19 @@ class TwitchAPI(QThread):
         )
 
     async def _run(self):
+        await self.authorize()
+        user = await first(self.twitch.get_users())
+        await self.listen(user)
+
+    async def authorize(self):
         self.twitch = await Twitch(self.APP_ID, self.APP_SECRET)
         helper = UserAuthenticationStorageHelper(
             self.twitch, self.TARGET_SCOPES,
-            storage_path=os.path.normpath(
-                f"Data{os.path.sep}user_token.json",
-            )
+            storage_path=os.path.normpath(f"Data{os.path.sep}user_token.json")
         )
         await helper.bind()
 
-        user = await first(self.twitch.get_users())
-
+    async def listen(self, user):
         self.eventsub = EventSubWebsocket(self.twitch)
         self.eventsub.start()
 

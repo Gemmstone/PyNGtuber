@@ -1,7 +1,9 @@
 from Core.imageGallery import ImageGallery, ExpressionSelector, ModelGallery
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from Core.ShortcutsManager import MidiListener, KeyboardListener, TwitchAPI
-from Core.audioManager import MicrophoneVolumeWidget
 from PyQt6.QtCore import pyqtSlot, QCoreApplication, pyqtSignal
+from cryptography.hazmat.backends import default_backend
+from Core.audioManager import MicrophoneVolumeWidget
 from PIL import Image, ImageSequence, ImageOps
 from Core.Viewer import LayeredImageViewer
 from Core.Settings import SettingsToolBox
@@ -10,6 +12,7 @@ from collections import Counter
 from PyQt6.QtGui import QIcon
 from pathlib import Path
 import subprocess
+import os
 import json
 import copy
 import mido
@@ -75,6 +78,46 @@ class ShortcutsDialog(QtWidgets.QDialog):
         super().closeEvent(event)
 
 
+class FileEncryptor:
+    def __init__(self, key_path):
+        self.key_path = key_path
+
+    def generate_key(self):
+        return os.urandom(32)
+
+    def encrypt_file(self, file_path, key):
+        with open(file_path, 'rb') as file:
+            data = file.read()
+
+        cipher = Cipher(algorithms.AES(key), modes.CFB(), backend=default_backend())
+        encryptor = cipher.encryptor()
+        encrypted_data = encryptor.update(data) + encryptor.finalize()
+
+        with open(file_path, 'wb') as file:
+            file.write(encrypted_data)
+
+    def decrypt_file(self, file_path, key):
+        with open(file_path, 'rb') as file:
+            encrypted_data = file.read()
+
+        cipher = Cipher(algorithms.AES(key), modes.CFB(), backend=default_backend())
+        decryptor = cipher.decryptor()
+        decrypted_data = decryptor.update(encrypted_data) + decryptor.finalize()
+
+        return decrypted_data
+
+    def encrypt_and_store_keys(self, json_path):
+        # Generate a random 256-bit key
+        key = self.generate_key()
+
+        # Encrypt the original JSON file
+        self.encrypt_file(json_path, key)
+
+        # Store the key in a separate file
+        with open(self.key_path, 'wb') as key_file:
+            key_file.write(key)
+
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -89,6 +132,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.current_json_file = os.path.normpath(f"Data{os.path.sep}current.json")
         self.settings_json_file = os.path.normpath(f"Data{os.path.sep}settings.json")
         self.apiKeys = os.path.normpath(f"Data{os.path.sep}keys.json")
+        self.keyPath = os.path.normpath(f"Data{os.path.sep}secret.key")
 
         self.keyboard_listener = KeyboardListener()
         self.keyboard_listener.shortcut.connect(self.shortcut_received)
@@ -121,6 +165,22 @@ class MainWindow(QtWidgets.QMainWindow):
         except FileNotFoundError:
             pass
 
+        self.file_encryptor = FileEncryptor(self.keyPath)
+
+        """
+        try:
+            # Decrypt the keys using the stored key
+            key = self.file_encryptor.generate_key()
+            decrypted_data = self.file_encryptor.decrypt_file(self.apiKeys, key)
+            keys = json.loads(decrypted_data)
+
+            self.twitch_api_client = keys["twitch"]["client"]
+            self.twitch_api_secret = keys["twitch"]["secret"]
+        except (FileNotFoundError, json.JSONDecodeError):
+            self.twitch_api_client = None
+            self.twitch_api_secret = None
+        """
+
         try:
             with open(self.apiKeys, "r") as f:
                 keys = json.load(f)
@@ -132,7 +192,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.TwitchAPI = TwitchAPI(APP_ID=self.twitch_api_client, APP_SECRET=self.twitch_api_secret)
         self.TwitchAPI.event_signal.connect(self.shortcut_received)
-        self.TwitchAPI.start()
+        if self.twitch_api_client is not None and self.twitch_api_secret is not None:
+            self.twitchApiBtn.setText("Change Twitch API keys")
+            if self.autostart.isChecked():
+                self.TwitchAPI.start()
+        self.TwitchOAuthBtn.clicked.connect(self.TwitchAPI.start)
+
 
         self.file_parameters_default = {os.path.normpath(key): value for key, value in self.file_parameters_default.items()}
         self.file_parameters_current = {os.path.normpath(key): value for key, value in self.file_parameters_current.items()}
@@ -787,6 +852,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def event(self, event):
         try:
             if event.type() == QtCore.QEvent.Type.HoverEnter:
+                self.showUI()
+            elif event.type() == QtCore.QEvent.Type.HoverMove and self.frame_4.isHidden():
                 self.showUI()
             elif event.type() == QtCore.QEvent.Type.HoverLeave:
                 # self.hideUI()
