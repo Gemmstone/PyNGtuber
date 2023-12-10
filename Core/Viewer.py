@@ -62,10 +62,11 @@ class LayeredImageViewer(QWebEngineView):
                         position: absolute !important;
                         left: calc(50% + {layer['posX']}px);
                         top: calc(50% + {layer['posY']}px);
+                        z-index: {layer['posZ']};
                         transform: translate(-50%, -50%) scale({scale_factor}) rotate({layer['rotation']}deg);
                         width: {layer['sizeX']}px; 
                         height: {layer['sizeY']}px;
-                        {"opacity: 0" if layer['talking'] not in ['ignore', 'talking_closed'] else ""}; 
+                        {"opacity: 0" if layer['talking'] not in ['ignore', 'talking_closed'] else ""};
                         {layer['css']}
                     """)
                 img_tag['class'] = [layer['blinking'], layer['talking']]

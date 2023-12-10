@@ -1,9 +1,9 @@
-from PyQt6.QtCore import QTimer, QThread, pyqtSignal, pyqtSlot
+from PyQt6.QtCore import QThread, pyqtSignal, QTimer
 from PyQt6.QtWidgets import QWidget
 from PyQt6 import uic
 import numpy as np
+import traceback
 import pyaudio
-
 
 class AudioThread(QThread):
     audio_stream_signal = pyqtSignal(int)
@@ -17,8 +17,11 @@ class AudioThread(QThread):
 
     def run(self):
         if self.selected_microphone_index is not None:
-            device_info = self.p.get_device_info_by_index(self.selected_microphone_index)
-            supported_sample_rate = device_info['defaultSampleRate']
+            try:
+                device_info = self.p.get_device_info_by_index(self.selected_microphone_index)
+                supported_sample_rate = device_info['defaultSampleRate']
+            except BaseException as e:
+                self.handle_error(e)
 
             if supported_sample_rate == 44100:
                 sample_rate = 44100
@@ -99,7 +102,6 @@ class MicrophoneVolumeWidget(QWidget):
         self.microphones.setCurrentIndex(settings["microphone selection"])
         self.mute.setChecked(settings["microphone mute"])
 
-
     def loadStart(self):
         self.list_microphones()
         self.last_microphone = None
@@ -117,9 +119,13 @@ class MicrophoneVolumeWidget(QWidget):
         self.update_audio_stream()
 
     def error_handler(self, error_message):
+        print(f"Exception Type: {type(error_message).__name__}")
         print(f"Error in audio stream: {error_message}")
-        self.label.setText(f"Este micrófono tiene problemas: {error_message}")
+        print(f"Exception Message: {str(error_message)}")
+        traceback.print_exc()
+        self.label.setText(f"Este micrófono tiene problemas: {type(error_message).__name__} {error_message}")
         self.label.show()
+        QTimer.singleShot(3000, self.update_audio_stream)
 
     def list_microphones(self):
         excluded = ["jack", "speex", "upmix", "vdownmix"]
