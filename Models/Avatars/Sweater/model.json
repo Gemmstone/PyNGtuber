@@ -268,5 +268,20 @@
         "hotkeys": [],
         "rotation": 0,
         "use_css": false
+    },
+    {
+        "route": "Assets/Hats/Christmas_001.png",
+        "sizeX": 600,
+        "sizeY": 600,
+        "posX": 0,
+        "posY": 0,
+        "posZ": 38,
+        "animation": [],
+        "css": "",
+        "blinking": "ignore",
+        "talking": "ignore",
+        "hotkeys": [],
+        "rotation": 0,
+        "use_css": false
     }
 ]

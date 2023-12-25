@@ -1,81 +1,22 @@
+from Core.ShortcutsManager import MidiListener, KeyboardListener, TwitchAPI, ShortcutsDialog
 from Core.imageGallery import ImageGallery, ExpressionSelector, ModelGallery
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from Core.ShortcutsManager import MidiListener, KeyboardListener, TwitchAPI
-from PyQt6.QtCore import pyqtSlot, QCoreApplication, pyqtSignal
 from cryptography.hazmat.backends import default_backend
 from Core.audioManager import MicrophoneVolumeWidget
 from PIL import Image, ImageSequence, ImageOps
 from Core.Viewer import LayeredImageViewer
 from Core.Settings import SettingsToolBox
+from PyQt6.QtCore import QCoreApplication
 from PyQt6 import QtWidgets, uic, QtCore
 from collections import Counter
 from PyQt6.QtGui import QIcon
 from pathlib import Path
 import subprocess
-import os
 import json
 import copy
 import mido
 import sys
 import os
-
-
-class ShortcutsDialog(QtWidgets.QDialog):
-    new_command = pyqtSignal(dict)
-
-    def __init__(self, midi_listener, keyboard_listener, twitch_listener, data, parent=None):
-        super().__init__(parent)
-
-        self.midi_listener = midi_listener
-        self.keyboard_listener = keyboard_listener
-        self.twitch_listener = twitch_listener
-        self.data = data
-
-        self.midi_listener.request_new_signal()
-        self.keyboard_listener.request_new_signal()
-        self.twitch_listener.request_new_signal()
-
-        self.midi_listener.new_shortcut.connect(self.handle_shortcuts)
-        self.keyboard_listener.new_shortcut.connect(self.handle_shortcuts)
-        self.twitch_listener.new_event_signal.connect(self.handle_shortcuts)
-
-        self.setWindowTitle(self.tr("Update Shortcuts"))
-        self.setFixedSize(300, 200)  # Adjust the size as needed
-
-        layout = QtWidgets.QVBoxLayout()
-
-        # Add instructions as a QLabel
-        instructions_label = QtWidgets.QLabel(
-            self.tr("Press a shortcut key to update.")
-        )
-        layout.addWidget(instructions_label)
-
-        # Connect the signals from both listeners to a slot
-        self.midi_listener.shortcut.connect(self.handle_shortcuts)
-        self.keyboard_listener.shortcut.connect(self.handle_shortcuts)
-        self.twitch_listener.event_signal.connect(self.handle_shortcuts)
-
-        # Create a cancel button
-        cancel_button = QtWidgets.QPushButton(self.tr("Cancel"))
-        cancel_button.clicked.connect(self.close)
-        layout.addWidget(cancel_button, QtCore.Qt.AlignmentFlag.AlignRight)
-
-        self.setLayout(layout)
-
-    @pyqtSlot(dict)
-    def handle_shortcuts(self, shortcut):
-        self.new_command.emit({"shortcut": shortcut, "data": self.data})
-        self.midi_listener.resume_normal_operation()
-        self.keyboard_listener.resume_normal_operation()
-        self.twitch_listener.resume_normal_operation()
-        self.accept()
-
-    def closeEvent(self, event):
-        self.midi_listener.new_shortcut.disconnect(self.handle_shortcuts)
-        self.keyboard_listener.new_shortcut.disconnect(self.handle_shortcuts)
-        self.midi_listener.resume_normal_operation()
-        self.keyboard_listener.resume_normal_operation()
-        super().closeEvent(event)
 
 
 class FileEncryptor:
@@ -130,6 +71,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.current_files = []
         self.json_file = os.path.normpath(f"Data{os.path.sep}parameters.json")
         self.current_json_file = os.path.normpath(f"Data{os.path.sep}current.json")
+        self.current_model_json_file = os.path.normpath(f"Data{os.path.sep}current_model.json")
         self.settings_json_file = os.path.normpath(f"Data{os.path.sep}settings.json")
         self.apiKeys = os.path.normpath(f"Data{os.path.sep}keys.json")
         self.keyPath = os.path.normpath(f"Data{os.path.sep}secret.key")
@@ -158,6 +100,14 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.current_files = json.load(f)
         except FileNotFoundError:
             pass
+
+        try:
+            with open(self.current_model_json_file, "r") as f:
+                self.current_model = json.load(f)
+                self.last_model = copy.deepcopy(self.current_model)
+        except FileNotFoundError:
+            pass
+
 
         try:
             with open(self.settings_json_file, "r") as f:
@@ -198,10 +148,13 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.TwitchAPI.start()
         self.TwitchOAuthBtn.clicked.connect(self.TwitchAPI.start)
 
-
         self.file_parameters_default = {os.path.normpath(key): value for key, value in self.file_parameters_default.items()}
         self.file_parameters_current = {os.path.normpath(key): value for key, value in self.file_parameters_current.items()}
+
         self.current_files = [os.path.normpath(i) for i in self.current_files]
+        # print(self.file_parameters_current["Assets\\hairback\\hairback_127.png"])
+        # print(self.file_parameters_current["Assets/hairback/hairback_127.png"])
+        # print(self.current_files)
 
         self.get_shortcuts()
 
@@ -263,6 +216,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.clear.clicked.connect(self.clearSelection)
 
         self.tabWidget_2.currentChanged.connect(self.changePage)
+
+        self.editor.hide()
         self.update_viewer(self.current_files, update_gallery=True)
 
     def clearSelection(self):
@@ -314,20 +269,29 @@ class MainWindow(QtWidgets.QMainWindow):
                         shortcuts = data.get("shortcuts", None)
                         for shortcut in shortcuts:
                             if shortcut["type"] == "Keyboard":
-                                keyboard.append({
+                                command = {
                                     "path": data_json_path.replace("data", "model"),
-                                    "type": "Model", "command": shortcut["command"]
-                                })
+                                    "type": "Model", "command": shortcut["command"], "mode": shortcut["mode"]
+                                }
+                                if "time" in shortcut:
+                                    command["time"] = shortcut["time"]
+                                keyboard.append(command)
                             elif shortcut["type"] == "Midi":
-                                midi.append({
+                                command = {
                                     "path": data_json_path.replace("data", "model"), "type": "Model",
-                                    "command": mido.Message.from_dict(shortcut["command"])
-                                })
+                                    "command": mido.Message.from_dict(shortcut["command"]), "mode": shortcut["mode"]
+                                }
+                                if "time" in shortcut:
+                                    command["time"] = shortcut["time"]
+                                midi.append(command)
                             else:
-                                twitch[shortcut["type"]].append({
+                                command = {
                                     "path": data_json_path.replace("data", "model"), "type": "Model",
-                                    "command": shortcut
-                                })
+                                    "command": shortcut, "mode": shortcut["mode"]
+                                }
+                                if "time" in shortcut:
+                                    command["time"] = shortcut["time"]
+                                twitch[shortcut["type"]].append(command)
 
         for route in self.file_parameters_current:
             if self.file_parameters_current[route]["hotkeys"]:
@@ -363,8 +327,17 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def shortcut_received(self, shortcuts):
         if shortcuts["type"] == "Model":
-            parts = shortcuts["path"].split(os.path.sep)
-            self.load_model({"name": parts[2], "type": parts[1]})
+            if shortcuts["mode"] == "timer":
+                enable_shortcuts = copy.deepcopy(shortcuts)
+                enable_shortcuts["mode"] = "enable"
+                self.shortcut_received(enable_shortcuts)
+                disable_shortcuts = copy.deepcopy(shortcuts)
+                disable_shortcuts["mode"] = "disable"
+                QtCore.QTimer.singleShot(int(shortcuts["time"]), lambda x=disable_shortcuts: self.shortcut_received(x))
+            else:
+                parts = shortcuts["path"].split(os.path.sep)
+                self.load_model({"name": parts[2], "type": parts[1]}, mode=shortcuts["mode"])
+
         elif shortcuts["type"] == "Asset":
             if shortcuts["path"] in self.current_files:
                 if self.file_parameters_default[shortcuts["path"]]:
@@ -380,6 +353,14 @@ class MainWindow(QtWidgets.QMainWindow):
                         ):
                             if command["mode"] in ["toggle", "disable"]:
                                 self.current_files.remove(shortcuts["path"])
+
+                            elif command["mode"] == "timer":
+                                disable_shortcuts = copy.deepcopy(command)
+                                disable_shortcuts["mode"] = "disable"
+                                self.shortcut_received(disable_shortcuts)
+                                enable_shortcuts = copy.deepcopy(command)
+                                enable_shortcuts["mode"] = "enable"
+                                QtCore.QTimer.singleShot(command["time"], lambda x=enable_shortcuts: self.shortcut_received(x))
             else:
                 if self.file_parameters_default[shortcuts["path"]]:
                     for command in self.file_parameters_default[shortcuts["path"]]["hotkeys"]:
@@ -394,9 +375,13 @@ class MainWindow(QtWidgets.QMainWindow):
                         ):
                             if command["mode"] in ["toggle", "enable"]:
                                 self.current_files.append(shortcuts["path"])
-            # else:
-                # add support by time, ie: 10m enabled and then disabled
-            #     pass
+                            elif command["mode"] == "timer":
+                                enable_shortcuts = copy.deepcopy(command)
+                                enable_shortcuts["mode"] = "enable"
+                                self.shortcut_received(enable_shortcuts)
+                                disable_shortcuts = copy.deepcopy(command)
+                                disable_shortcuts["mode"] = "disable"
+                                QtCore.QTimer.singleShot(command["time"], lambda x=disable_shortcuts: self.shortcut_received(x))
             self.update_viewer(self.current_files, update_settings=self.tabWidget_2.currentIndex() == 1)
         else:
             print(f"Received: {shortcuts} System")
@@ -412,83 +397,64 @@ class MainWindow(QtWidgets.QMainWindow):
         dialog.exec()
 
     def create_shortcuts(self, data):
-        if data["data"]["type"] in ["Avatars", "Expressions"]:
-            mainFolder = os.path.normpath(f"Models/{data['data']['type']}")
+        if data["type"] in ["Avatars", "Expressions"]:
+            mainFolder = os.path.normpath(f"Models/{data['type']}")
+            with open(
+                    os.path.normpath(f"{mainFolder}{os.path.sep}{data['name']}{os.path.sep}data.json"), 'r'
+            ) as json_file:
+                old_data = json.load(json_file)
+            old_data["shortcuts"] = copy.deepcopy(data['value']["hotkeys"])
+            with open(
+                    os.path.normpath(f"{mainFolder}{os.path.sep}{data['name']}{os.path.sep}data.json"), 'w'
+            ) as json_file:
+                json.dump(old_data, json_file, indent=4)
+            self.modelGallery.reload_models(self.savedAvatars)
+        elif data["type"] in ["Assets"]:
+            self.file_parameters_default[data['value']['route']]["hotkeys"] = copy.deepcopy(data['value']["hotkeys"])
+            self.file_parameters_current[data['value']['route']]["hotkeys"] = copy.deepcopy(data['value']["hotkeys"])
 
-            used = self.find_shortcut_usages(mainFolder, data['data']['name'], data['shortcut'])
-            if used:
-                msg = QtWidgets.QMessageBox()
-                msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
-                msg.setText(f"This shortcut already exists for another {data['data']['type'][:-1].lower()}:")
-                msg.setInformativeText(
-                    ",".join([
-                        i.replace(
-                            f"Models{os.path.sep}{data['data']['type']}{os.path.sep}", ""
-                        ).replace(
-                            f"{os.path.sep}data.json", "") for i in used
-                    ])
-                )
-                msg.setWindowTitle("Model Shortcut Exists")
-                msg.exec()
-                return
-            else:
-                with open(
-                        os.path.normpath(f"{mainFolder}{os.path.sep}{data['data']['name']}{os.path.sep}data.json"), 'r'
-                ) as json_file:
-                    old_data = json.load(json_file)
-                old_data["shortcuts"].append(data['shortcut'])
-                with open(
-                        os.path.normpath(f"{mainFolder}{os.path.sep}{data['data']['name']}{os.path.sep}data.json"), 'w'
-                ) as json_file:
-                    json.dump(old_data, json_file, indent=4)
-        if data["data"]["type"] in ["Assets"]:
-            self.file_parameters_default[data['data']['value']['route']]["hotkeys"].append(
-                copy.deepcopy(data["shortcut"])
-            )
-            self.file_parameters_current[data['data']['value']['route']]["hotkeys"].append(
-                copy.deepcopy(data["shortcut"])
-            )
             self.save_parameters_to_json()
             self.update_viewer(self.current_files, update_settings=True)
-
         self.get_shortcuts()
 
-    def find_shortcut_usages(self, main_folder, current_folder, new_shortcut):
-        usages = []
-        for root, dirs, files in os.walk(main_folder):
-            if root != current_folder:
-                for filename in files:
-                    if filename == "data.json":
-                        data_json_path = os.path.join(root, filename)
-                        with open(data_json_path, 'r') as json_file:
-                            data = json.load(json_file)
-                            shortcuts = data.get("shortcuts", None)
-                            for shortcut in shortcuts:
-                                if shortcut == new_shortcut:
-                                    usages.append(data_json_path)
-        return usages
+    def load_model(self, data, mode="enable"):
+        if mode == "toggle":
+            if self.last_model != data:
+                self.load_model(data, mode="disable")
+            else:
+                self.load_model(data, mode="enable")
+            return
 
-    def load_model(self, data):
+        if mode not in ["disable", "toggle"]:
+            self.last_model = copy.deepcopy(self.current_model)
         current_files = []
+
+        if mode == "disable":
+            data = copy.deepcopy(self.last_model)
+
         with open(os.path.normpath(f"Models/{data['type']}/{data['name']}/model.json"), "r") as load_file:
             files = json.load(load_file)
             for file in files:
                 self.file_parameters_current[os.path.normpath(file["route"])] = \
                     {key: value for key, value in file.items() if key != "route"}
 
-            if data["type"] == "Avatars":
-                for file in self.current_files:
-                    if self.check_if_expression(file):
-                        current_files.append(file)
-            elif data["type"] == "Expressions":
-                for file in self.current_files:
-                    if not self.check_if_expression(file):
-                        current_files.append(file)
-            for file in files:
-                current_files.append(os.path.normpath(file["route"]))
+        if data["type"] == "Avatars":
+            for file in self.current_files:
+                if self.check_if_expression(file):
+                    current_files.append(file)
+
+        elif data["type"] == "Expressions":
+            for file in self.current_files:
+                if not self.check_if_expression(file):
+                    current_files.append(file)
+
+        for file in files:
+            current_files.append(os.path.normpath(file["route"]))
 
         self.update_viewer(current_files)
-        # self.ImageGallery.load_images(current_files)
+
+        if mode not in ["disable", "toggle"]:
+            self.current_model = copy.deepcopy(data)
 
     def check_if_expression(self, file):
         with open(os.path.normpath("Data/expressionFolders.json"), "r") as expressions_list:
@@ -619,7 +585,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def save_model(self, directory, modelName, temp, files):
         self.ImageGallery.create_thumbnail(temp, custom_name=f"{directory}{os.path.sep}thumb.png")
         os.remove(temp)
-
         with open(os.path.normpath(f"{directory}{os.path.sep}model.json"), "w") as file:
             json.dump(files, file, indent=4)
 
@@ -631,17 +596,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def export_png(self):
         method = self.PNGmethod.currentIndex()
-
         if method == 0:
             return
-
         fileName, _ = QtWidgets.QFileDialog.getSaveFileName(
             parent=self,
             caption=self.tr("Save File"),
             directory=str(Path.home()),
             filter=self.tr("Images (*.png)")
         )
-
         if fileName:
             if not fileName.lower().endswith(".png"):
                 fileName += ".png"
@@ -697,6 +659,9 @@ class MainWindow(QtWidgets.QMainWindow):
     def save_parameters_to_json(self):
         with open(self.json_file, "w") as f:
             json.dump(self.file_parameters_default, f, indent=4)
+
+        with open(self.current_model_json_file, "w") as f:
+            json.dump(self.current_model, f, indent=4)
 
         with open(self.current_json_file, "w") as f:
             json.dump(self.current_files, f, indent=4)
@@ -814,7 +779,6 @@ class MainWindow(QtWidgets.QMainWindow):
             else:
                 image = Image.open(file)
                 width, height = image.size
-
                 parameters = {
                     "sizeX": width,
                     "sizeY": height,
@@ -831,7 +795,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 }
 
                 self.file_parameters_current[file] = parameters
-
             images_list.append({
                 "route": os.path.normpath(file),
                 **parameters
@@ -859,8 +822,8 @@ class MainWindow(QtWidgets.QMainWindow):
             elif event.type() == QtCore.QEvent.Type.HoverMove and self.frame_4.isHidden():
                 self.showUI()
             elif event.type() == QtCore.QEvent.Type.HoverLeave:
-                # self.hideUI()
-                QtCore.QTimer.singleShot(400, self.hideUI)
+                self.hideUI()
+                # QtCore.QTimer.singleShot(400, self.hideUI)
         except AttributeError:
             pass
         return super().event(event)

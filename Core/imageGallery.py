@@ -1,9 +1,8 @@
 
 from PyQt6.QtWidgets import QWidget, QToolBox, QVBoxLayout, QPushButton, QFrame, QHBoxLayout, QSizePolicy, \
-    QGridLayout, QCheckBox, QGroupBox, QMessageBox, QInputDialog, QLabel, QFileDialog, QMenu
+    QGridLayout, QCheckBox, QGroupBox, QMessageBox, QInputDialog, QLabel, QFileDialog
 from PyQt6.QtGui import QIcon, QPixmap, QImage
 from PyQt6.QtCore import pyqtSignal, QSize, Qt
-from PyQt6.QtGui import QAction
 from PyQt6 import uic
 from PIL import Image, ImageSequence
 import shutil
@@ -337,10 +336,13 @@ class ModelItem(QGroupBox):
         self.hotkeyButton.clicked.connect(self.shortcutChange)
         self.save.clicked.connect(self.saveChanges)
 
+        self.shortcuts = []
+
         self.setup()
         self.frame_3.hide()
         self.frame_2.hide()
         self.shortcutText.hide()
+
 
     def saveChanges(self):
         self.saving.emit(self.modelName)
@@ -349,7 +351,7 @@ class ModelItem(QGroupBox):
         self.selected.emit({"name": self.modelName, "type": self.modelType})
 
     def shortcutChange(self):
-        self.shortcut.emit({"name": self.modelName, "type": self.modelType})
+        self.shortcut.emit({"name": self.modelName, "type": self.modelType, "value": {"hotkeys": self.shortcuts}})
 
     def enterEvent(self, event):
         self.frame_3.show()
@@ -364,16 +366,18 @@ class ModelItem(QGroupBox):
 
     def setup(self):
         self.setTitle(self.modelName)
-        self.avatarButton.setIcon(QIcon(f"Models{os.path.sep}{self.modelType}{os.path.sep}{self.modelName}{os.path.sep}thumb.png"))
+        self.avatarButton.setIcon(
+            QIcon(f"Models{os.path.sep}{self.modelType}{os.path.sep}{self.modelName}{os.path.sep}thumb.png")
+        )
         self.show_shortcut()
 
     def show_shortcut(self):
-        with open(
-                f"Models{os.path.sep}{self.modelType}{os.path.sep}{self.modelName}{os.path.sep}data.json", "r") as data_file:
-            shortcuts = json.load(data_file)["shortcuts"]
-            if shortcuts:
+        with open(f"Models{os.path.sep}{self.modelType}{os.path.sep}{self.modelName}{os.path.sep}data.json",
+                  "r") as data_file:
+            self.shortcuts = json.load(data_file)["shortcuts"]
+            if self.shortcuts:
                 shortcuts_text = []
-                for shortcut in shortcuts:
+                for shortcut in self.shortcuts:
                     if shortcut["type"] == "Midi":
                         shortcuts_text.append(f"Midi: {shortcut['command']['note']}")
                     elif shortcut["type"] == "Keyboard":

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>270</width>
-    <height>521</height>
+    <height>527</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -734,7 +734,7 @@ QPushButton:hover {
          <string notr="true"/>
         </property>
         <property name="text">
-         <string>Set Shortcut</string>
+         <string>Edit Shortcuts</string>
         </property>
         <property name="icon">
          <iconset>
@@ -749,35 +749,12 @@ QPushButton:hover {
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="deleteShortcut">
-        <property name="cursor">
-         <cursorShape>PointingHandCursor</cursorShape>
-        </property>
-        <property name="toolTip">
-         <string>Delete Shortcut</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">*{
-	font-size: 8pt;
-    background-color: rgba(255, 0, 0, 0);
-}
-QPushButton:hover {  
-    background-color: rgba(255, 0, 0, 100);
-	border-top-right-radius: 8px;
-	border-bottom-right-radius: 8px;
-	border-bottom-left-radius: 8px;
-	border-top-left-radius: 8px;
-}
-* QToolTip {
-	background-color: pink;
-}</string>
-        </property>
+       <widget class="QLabel" name="shortcutList">
         <property name="text">
-         <string>Midi: 60</string>
+         <string>TextLabel</string>
         </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</iconset>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>

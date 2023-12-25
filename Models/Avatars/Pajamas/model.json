@@ -1,11 +1,11 @@
 [
     {
-        "route": "Assets/ahoge/ahoge_008.png",
+        "route": "Assets/hairbows/hairbows_119.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
         "posY": 0,
-        "posZ": 27,
+        "posZ": 36,
         "animation": [],
         "css": "",
         "blinking": "ignore",
@@ -105,21 +105,6 @@
         "use_css": false
     },
     {
-        "route": "Assets/ties/ties_108.png",
-        "sizeX": 600,
-        "sizeY": 600,
-        "posX": 0,
-        "posY": 0,
-        "posZ": 29,
-        "animation": [],
-        "css": "",
-        "blinking": "ignore",
-        "talking": "ignore",
-        "hotkeys": [],
-        "rotation": 0,
-        "use_css": false
-    },
-    {
         "route": "Assets/face assc/face assc_087.png",
         "sizeX": 600,
         "sizeY": 600,
@@ -165,7 +150,7 @@
         "use_css": false
     },
     {
-        "route": "Assets/undershirt style/undershirt style_016.png",
+        "route": "Assets/undershirt style/undershirt style_012.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -180,7 +165,7 @@
         "use_css": false
     },
     {
-        "route": "Assets/undershirts/undershirts_137.png",
+        "route": "Assets/undershirts/undershirts_065.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -216,6 +201,21 @@
         "posX": 0,
         "posY": 0,
         "posZ": 2,
+        "animation": [],
+        "css": "",
+        "blinking": "ignore",
+        "talking": "ignore",
+        "hotkeys": [],
+        "rotation": 0,
+        "use_css": false
+    },
+    {
+        "route": "Assets/Hats/Christmas_001.png",
+        "sizeX": 600,
+        "sizeY": 600,
+        "posX": 0,
+        "posY": 0,
+        "posZ": 38,
         "animation": [],
         "css": "",
         "blinking": "ignore",

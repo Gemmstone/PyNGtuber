@@ -1024,6 +1024,157 @@ QFrame{
             </layout>
            </widget>
           </item>
+          <item>
+           <widget class="QTabWidget" name="editor">
+            <property name="styleSheet">
+             <string notr="true">QTabBar{  
+    background-color: rgba(255, 255, 255, 0);
+}
+QTabBar::tab {  
+    background-color: rgba(255, 255, 255, 40);
+	background-color: rgb(0, 157, 235);
+    min-width: 70px; 
+    min-height:22px;
+    padding: 0px  2px; 
+    color: white;
+	border-radius: 10px;
+    margin-left:2px;
+    margin-right:2px;
+}
+QTabBar::tab:selected {  
+    color: white;
+	background-color: black;;
+}
+QTabBar::tab:hover {  
+    color: black;
+    background-color: rgba(255, 0, 0, 100);
+}</string>
+            </property>
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <widget class="QWidget" name="tab_7">
+             <attribute name="title">
+              <string>HTML</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_39">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QPlainTextEdit" name="plainTextEdit_2">
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_8">
+             <attribute name="title">
+              <string>JavaScript</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_41">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QPlainTextEdit" name="plainTextEdit_3">
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_9">
+             <attribute name="title">
+              <string>CSS style</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_47">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QPlainTextEdit" name="plainTextEdit_4">
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_10">
+             <attribute name="title">
+              <string>CSS animations</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_48">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QPlainTextEdit" name="plainTextEdit_5">
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -2017,113 +2168,8 @@ QFrame{
                                <property name="frameShadow">
                                 <enum>QFrame::Raised</enum>
                                </property>
-                               <layout class="QGridLayout" name="gridLayout_2">
-                                <item row="1" column="0">
-                                 <widget class="QPushButton" name="pushButton_6">
-                                  <property name="sizePolicy">
-                                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                   </sizepolicy>
-                                  </property>
-                                  <property name="cursor">
-                                   <cursorShape>PointingHandCursor</cursorShape>
-                                  </property>
-                                  <property name="text">
-                                   <string>&lt;/HTML&gt;</string>
-                                  </property>
-                                  <property name="iconSize">
-                                   <size>
-                                    <width>16</width>
-                                    <height>16</height>
-                                   </size>
-                                  </property>
-                                  <property name="checkable">
-                                   <bool>true</bool>
-                                  </property>
-                                  <property name="checked">
-                                   <bool>false</bool>
-                                  </property>
-                                  <property name="autoExclusive">
-                                   <bool>false</bool>
-                                  </property>
-                                 </widget>
-                                </item>
-                                <item row="0" column="0">
-                                 <widget class="QPushButton" name="pushButton_7">
-                                  <property name="sizePolicy">
-                                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                   </sizepolicy>
-                                  </property>
-                                  <property name="maximumSize">
-                                   <size>
-                                    <width>16777215</width>
-                                    <height>16777215</height>
-                                   </size>
-                                  </property>
-                                  <property name="cursor">
-                                   <cursorShape>PointingHandCursor</cursorShape>
-                                  </property>
-                                  <property name="text">
-                                   <string>var JS;</string>
-                                  </property>
-                                  <property name="iconSize">
-                                   <size>
-                                    <width>16</width>
-                                    <height>16</height>
-                                   </size>
-                                  </property>
-                                  <property name="checkable">
-                                   <bool>true</bool>
-                                  </property>
-                                  <property name="checked">
-                                   <bool>false</bool>
-                                  </property>
-                                  <property name="autoExclusive">
-                                   <bool>false</bool>
-                                  </property>
-                                 </widget>
-                                </item>
-                                <item row="0" column="1">
-                                 <widget class="QPushButton" name="pushButton_3">
-                                  <property name="sizePolicy">
-                                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                   </sizepolicy>
-                                  </property>
-                                  <property name="maximumSize">
-                                   <size>
-                                    <width>16777215</width>
-                                    <height>16777215</height>
-                                   </size>
-                                  </property>
-                                  <property name="cursor">
-                                   <cursorShape>PointingHandCursor</cursorShape>
-                                  </property>
-                                  <property name="text">
-                                   <string>.CSS {Animations}</string>
-                                  </property>
-                                  <property name="iconSize">
-                                   <size>
-                                    <width>16</width>
-                                    <height>16</height>
-                                   </size>
-                                  </property>
-                                  <property name="checkable">
-                                   <bool>true</bool>
-                                  </property>
-                                  <property name="checked">
-                                   <bool>false</bool>
-                                  </property>
-                                  <property name="autoExclusive">
-                                   <bool>false</bool>
-                                  </property>
-                                 </widget>
-                                </item>
-                                <item row="1" column="1">
+                               <layout class="QVBoxLayout" name="verticalLayout_49">
+                                <item>
                                  <widget class="QPushButton" name="pushButton">
                                   <property name="sizePolicy">
                                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -2141,7 +2187,7 @@ QFrame{
                                    <cursorShape>PointingHandCursor</cursorShape>
                                   </property>
                                   <property name="text">
-                                   <string>.CSS {Styles}</string>
+                                   <string>Toggle editor</string>
                                   </property>
                                   <property name="iconSize">
                                    <size>
@@ -2151,6 +2197,43 @@ QFrame{
                                   </property>
                                   <property name="checkable">
                                    <bool>true</bool>
+                                  </property>
+                                  <property name="checked">
+                                   <bool>false</bool>
+                                  </property>
+                                  <property name="autoExclusive">
+                                   <bool>false</bool>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <widget class="QPushButton" name="pushButton_2">
+                                  <property name="sizePolicy">
+                                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                   </sizepolicy>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>16777215</width>
+                                    <height>16777215</height>
+                                   </size>
+                                  </property>
+                                  <property name="cursor">
+                                   <cursorShape>PointingHandCursor</cursorShape>
+                                  </property>
+                                  <property name="text">
+                                   <string>Restore defaults</string>
+                                  </property>
+                                  <property name="iconSize">
+                                   <size>
+                                    <width>16</width>
+                                    <height>16</height>
+                                   </size>
+                                  </property>
+                                  <property name="checkable">
+                                   <bool>false</bool>
                                   </property>
                                   <property name="checked">
                                    <bool>false</bool>
@@ -3072,7 +3155,7 @@ background-color: rgba(0, 0, 0, 40);
                    <x>0</x>
                    <y>0</y>
                    <width>270</width>
-                   <height>30</height>
+                   <height>608</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_4">
