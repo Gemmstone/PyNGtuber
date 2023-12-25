@@ -30,7 +30,6 @@ class Settings(QWidget):
         self.posZ.valueChanged.connect(self.save_current)
         self.rotation.valueChanged.connect(self.save_current)
         self.setShortcut.clicked.connect(self.request_shortcut)
-        self.deleteShortcut.clicked.connect(self.delete_shortcut_)
 
         self.blinkingGroup.setChecked(self.parameters["blinking"] != "ignore")
         self.talkingGroup.setChecked(self.parameters["talking"] != "ignore")
@@ -73,10 +72,10 @@ class Settings(QWidget):
                     shortcuts.append(f"Keyboard {hotkey['command']}")
                 else:
                     shortcuts.append(f"{hotkey['type']} {hotkey['command']}")
-            self.deleteShortcut.setText("\n".join(shortcuts))
-            self.deleteShortcut.show()
+            self.shortcutList.setText("\n".join(shortcuts))
+            self.shortcutList.show()
         else:
-            self.deleteShortcut.hide()
+            self.shortcutList.hide()
 
     def request_shortcut(self):
         self.shortcut.emit(self.parameters)
@@ -122,11 +121,6 @@ class Settings(QWidget):
         self.parameters["rotation"] = self.rotation.value()
         self.parameters["blinking"] = self.getBlinking() if self.blinkingGroup.isChecked() else "ignore"
         self.parameters["talking"] = self.getTalking() if self.talkingGroup.isChecked() else "ignore"
-
-    def delete_shortcut_(self):
-        self.parameters["hotkeys"] = None
-        self.check_hotkeys()
-        self.delete_shortcut.emit(self.parameters)
 
     def save_current(self):
         self.save()
@@ -265,6 +259,8 @@ class SettingsToolBox(QToolBox):
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
 
     def set_items(self, items):
+        routes = [i["route"] for i in items]
+        used_routes = []
         while self.count() > 0:
             index = 0
             widget = self.widget(index)
@@ -273,12 +269,17 @@ class SettingsToolBox(QToolBox):
                 for i in range(widget.layout().count()):
                     child_widget = widget.layout().itemAt(i).widget()
                     if child_widget:
-                        child_widget.setParent(None)
+                        if child_widget.accessibleName() not in routes:
+                            child_widget.setParent(None)
+                        else:
+                            used_routes.append(child_widget.accessibleName())
 
                 widget.setParent(None)
             self.removeItem(index)
 
-        for item in items:
+        filtered_items = [i for i in items if i["route"] not in used_routes]
+
+        for item in filtered_items:
             route = item["route"]
 
             filename = os.path.basename(route)
@@ -299,6 +300,7 @@ class SettingsToolBox(QToolBox):
             settings_widget.shortcut.connect(self.request_shortcut)
 
             page = QWidget()
+            page.setAccessibleName(route)
             layout = QVBoxLayout()
             layout.setContentsMargins(0, 0, 0, 0)
 
