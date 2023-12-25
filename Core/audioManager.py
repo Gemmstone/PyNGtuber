@@ -5,6 +5,7 @@ import numpy as np
 import traceback
 import pyaudio
 
+
 class AudioThread(QThread):
     audio_stream_signal = pyqtSignal(int)
     audio_stream_error = pyqtSignal(str)
