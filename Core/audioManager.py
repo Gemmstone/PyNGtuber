@@ -23,18 +23,13 @@ class AudioThread(QThread):
                 supported_sample_rate = device_info['defaultSampleRate']
             except BaseException as e:
                 self.handle_error(e)
-
-            if supported_sample_rate == 44100:
-                sample_rate = 44100
-            else:
-
-                sample_rate = 48000
+                return
 
             try:
                 self.audio_stream = self.p.open(
                     format=pyaudio.paInt16,
                     channels=1,
-                    rate=sample_rate,
+                    rate=int(supported_sample_rate),
                     input=True,
                     input_device_index=self.selected_microphone_index,
                     frames_per_buffer=1024,
@@ -72,6 +67,7 @@ class AudioThread(QThread):
         volume = int((rms_volume / 32768) * 100)
 
         self.audio_stream_signal.emit(volume)
+        # print(volume, frame_count, time_info, status)
 
         return None, pyaudio.paContinue
 
@@ -86,6 +82,10 @@ class MicrophoneVolumeWidget(QWidget):
         self.device_dict = {}
         self.previous_state = False
         self.active_audio_signal = -1
+        
+        self.inactivity_timer = QTimer(self)
+        self.inactivity_timer.timeout.connect(self.check_inactivity)
+        self.inactivity_timer.setInterval(500)
 
         self.volume.valueChanged.connect(self.settingsChanged.emit)
         self.volume_scream.valueChanged.connect(self.settingsChanged.emit)
@@ -158,21 +158,23 @@ class MicrophoneVolumeWidget(QWidget):
         selected_microphone_name = self.microphones.currentText()
         selected_microphone_index = self.device_dict.get(selected_microphone_name)
         if selected_microphone_index is not None:
-            if self.last_microphone != selected_microphone_index:
+            if self.mute.isChecked():
+                if self.audio_thread.isRunning():
+                    self.audio_thread.stop_stream()
+            elif self.last_microphone != selected_microphone_index:
                 if self.audio_thread.isRunning():
                     self.audio_thread.stop_stream()
                 self.audio_thread.set_microphone_index(selected_microphone_index)
                 self.audio_thread.start()
                 self.last_microphone = selected_microphone_index
-            elif self.mute.isChecked():
-                if self.audio_thread.isRunning():
-                    self.audio_thread.stop_stream()
 
     def updateDelayView(self):
         self.progressBar_2.setMaximum(self.volume.value())
         self.delay.setMaximum(self.volume.value())
 
     def update_volume(self, volume):
+        self.inactivity_timer.start()
+
         volume = volume if not self.mute.isChecked() else 0
 
         self.progressbar.setValue(volume)
@@ -190,3 +192,7 @@ class MicrophoneVolumeWidget(QWidget):
             if not self.active_audio_signal == 0:
                 self.active_audio_signal = 0
                 self.activeAudio.emit(self.active_audio_signal)
+
+    def check_inactivity(self):
+        print("No audio data received for a while. Restarting the stream.")
+        self.update_audio_stream()
