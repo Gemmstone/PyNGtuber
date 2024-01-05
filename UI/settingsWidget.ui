@@ -576,7 +576,7 @@ QCheckBox::indicator:unchecked {
             <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
            </property>
            <property name="text">
-            <string>Screaming</string>
+            <string>Scream</string>
            </property>
            <property name="checked">
             <bool>false</bool>

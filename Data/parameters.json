@@ -31063,7 +31063,14 @@
         "css": "",
         "blinking": "ignore",
         "talking": "ignore",
-        "hotkeys": [],
+        "hotkeys": [
+            {
+                "command": "Sin lentes",
+                "type": "TwitchReward",
+                "mode": "timer",
+                "time": 3600000
+            }
+        ],
         "rotation": 0,
         "use_css": false
     },
