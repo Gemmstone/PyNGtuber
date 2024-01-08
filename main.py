@@ -72,6 +72,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.json_file = os.path.normpath(f"Data{os.path.sep}parameters.json")
         self.current_json_file = os.path.normpath(f"Data{os.path.sep}current.json")
         self.current_model_json_file = os.path.normpath(f"Data{os.path.sep}current_model.json")
+        self.current_expression_json_file = os.path.normpath(f"Data{os.path.sep}current_expression.json")
         self.settings_json_file = os.path.normpath(f"Data{os.path.sep}settings.json")
         self.apiKeys = os.path.normpath(f"Data{os.path.sep}keys.json")
         self.keyPath = os.path.normpath(f"Data{os.path.sep}secret.key")
@@ -105,6 +106,13 @@ class MainWindow(QtWidgets.QMainWindow):
             with open(self.current_model_json_file, "r") as f:
                 self.current_model = json.load(f)
                 self.last_model = copy.deepcopy(self.current_model)
+        except FileNotFoundError:
+            pass
+
+        try:
+            with open(self.current_expression_json_file, "r") as f:
+                self.current_expression = json.load(f)
+                self.last_expression = copy.deepcopy(self.current_expression)
         except FileNotFoundError:
             pass
 
@@ -430,7 +438,10 @@ class MainWindow(QtWidgets.QMainWindow):
             return
 
         if mode not in ["disable", "toggle"]:
-            self.last_model = copy.deepcopy(self.current_model)
+            if data["type"] == "Avatars":
+                self.last_model = copy.deepcopy(self.current_model)
+            elif data["type"] == "Expressions":
+                self.last_expression = copy.deepcopy(self.current_expression)
         current_files = []
 
         if mode == "disable":
@@ -458,7 +469,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.update_viewer(current_files)
 
         if mode not in ["disable", "toggle"]:
-            self.current_model = copy.deepcopy(data)
+            if data["type"] == "Avatars":
+                self.current_model = copy.deepcopy(data)
+            elif data["type"] == "Expressions":
+                self.current_expression = copy.deepcopy(data)
 
     def check_if_expression(self, file):
         with open(os.path.normpath("Data/expressionFolders.json"), "r") as expressions_list:
