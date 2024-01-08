@@ -298,7 +298,7 @@ class SettingsToolBox(QToolBox):
             parent_folder = os.path.basename(os.path.dirname(route))
 
             if parent_folder.lower() == self.page.lower():
-                title = f"{filename} {parent_folder}"
+                title = f"{filename}"
 
                 thumbnail_path = os.path.join(
                     os.path.dirname(route), "thumbs", os.path.basename(
