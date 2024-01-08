@@ -169,15 +169,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.PNGmethod.currentIndexChanged.connect(self.update_settings)
         self.HideUI.toggled.connect(self.update_settings)
 
-        self.ImageGallery = ImageGallery(self.current_files)
-        self.ImageGallery.selectionChanged.connect(self.update_viewer)
-        self.scrollArea.setWidget(self.ImageGallery)
-
         self.SettingsGallery = SettingsToolBox()
         self.SettingsGallery.settings_changed.connect(self.saveSettings)
         self.SettingsGallery.shortcut.connect(self.dialog_shortcut)
         self.SettingsGallery.delete_shortcut.connect(self.delete_shortcut)
         self.scrollArea_2.setWidget(self.SettingsGallery)
+
+        self.ImageGallery = ImageGallery(self.current_files)
+        self.ImageGallery.selectionChanged.connect(self.update_viewer)
+        self.ImageGallery.currentChanged.connect(self.change_settings_gallery)
+        self.scrollArea.setWidget(self.ImageGallery)
 
         self.comboBox.currentIndexChanged.connect(self.setBGColor)
 
@@ -219,6 +220,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.editor.hide()
         self.update_viewer(self.current_files, update_gallery=True)
+
+    def change_settings_gallery(self, index):
+        self.SettingsGallery.change_page(self.ImageGallery.itemText(index))
 
     def clearSelection(self):
         self.current_files = []
@@ -807,7 +811,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.viewer.updateImages(images_list, self.color)
         if self.tabWidget_2.currentIndex() == 1:
             if self.current_files != files or update_settings:
-                self.SettingsGallery.set_items(images_list)
+                self.SettingsGallery.set_items(
+                    images_list,
+                    self.ImageGallery.itemText(
+                        self.ImageGallery.currentIndex()
+                    )
+                )
         if update_gallery:
             self.ImageGallery.load_images(files)
         else:

@@ -156,6 +156,9 @@ class SettingsToolBox(QToolBox):
     def __init__(self):
         super().__init__()
 
+        self.items = []
+        self.page = None
+
         StyleSheet = """
 
                 QWidget{
@@ -258,8 +261,17 @@ class SettingsToolBox(QToolBox):
         self.setStyleSheet(StyleSheet)
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
 
-    def set_items(self, items):
-        routes = [i["route"] for i in items]
+    def set_items(self, items, page):
+        self.items = items
+        self.page = page
+        self.update()
+
+    def change_page(self, page):
+        self.page = page
+        self.update()
+
+    def update(self):
+        routes = [i["route"] for i in self.items]
         used_routes = []
         while self.count() > 0:
             index = 0
@@ -277,7 +289,7 @@ class SettingsToolBox(QToolBox):
                 widget.setParent(None)
             self.removeItem(index)
 
-        filtered_items = [i for i in items if i["route"] not in used_routes]
+        filtered_items = [i for i in self.items if i["route"] not in used_routes]
 
         for item in filtered_items:
             route = item["route"]
@@ -285,36 +297,37 @@ class SettingsToolBox(QToolBox):
             filename = os.path.basename(route)
             parent_folder = os.path.basename(os.path.dirname(route))
 
-            title = f"{filename} {parent_folder}"
+            if parent_folder.lower() == self.page.lower():
+                title = f"{filename} {parent_folder}"
 
-            thumbnail_path = os.path.join(
-                os.path.dirname(route), "thumbs", os.path.basename(
-                    route.replace(".gif", ".png").replace(".webp", ".png")
+                thumbnail_path = os.path.join(
+                    os.path.dirname(route), "thumbs", os.path.basename(
+                        route.replace(".gif", ".png").replace(".webp", ".png")
+                    )
                 )
-            )
 
-            settings_widget = Settings(item)
-            settings_widget.settings_changed.connect(self.save)
-            settings_widget.settings_changed_default.connect(self.save_as_default)
-            settings_widget.delete_shortcut.connect(self.delete_shortcut_)
-            settings_widget.shortcut.connect(self.request_shortcut)
+                settings_widget = Settings(item)
+                settings_widget.settings_changed.connect(self.save)
+                settings_widget.settings_changed_default.connect(self.save_as_default)
+                settings_widget.delete_shortcut.connect(self.delete_shortcut_)
+                settings_widget.shortcut.connect(self.request_shortcut)
 
-            page = QWidget()
-            page.setAccessibleName(route)
-            layout = QVBoxLayout()
-            layout.setContentsMargins(0, 0, 0, 0)
+                page = QWidget()
+                page.setAccessibleName(route)
+                layout = QVBoxLayout()
+                layout.setContentsMargins(0, 0, 0, 0)
 
-            layout.addWidget(settings_widget)
-            page.setLayout(layout)
+                layout.addWidget(settings_widget)
+                page.setLayout(layout)
 
-            self.addItem(page, "")
-            index = self.count() - 1
+                self.addItem(page, "")
+                index = self.count() - 1
 
-            thumbnail_label = QLabel()
-            thumbnail_pixmap = QPixmap(thumbnail_path)
-            thumbnail_label.setPixmap(thumbnail_pixmap.scaledToWidth(15))
-            self.setItemIcon(index, QIcon(thumbnail_pixmap))
-            self.setItemText(index, title)
+                thumbnail_label = QLabel()
+                thumbnail_pixmap = QPixmap(thumbnail_path)
+                thumbnail_label.setPixmap(thumbnail_pixmap.scaledToWidth(15))
+                self.setItemIcon(index, QIcon(thumbnail_pixmap))
+                self.setItemText(index, title)
 
     def save(self, value):
         self.settings_changed.emit({"value": value, "default": False})

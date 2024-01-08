@@ -1,7 +1,7 @@
 {
-    "volume threshold": 21,
+    "volume threshold": 13,
     "scream threshold": 97,
-    "delay threshold": 3,
+    "delay threshold": 5,
     "microphone selection": 1,
     "microphone mute": false,
     "background color": 0,
