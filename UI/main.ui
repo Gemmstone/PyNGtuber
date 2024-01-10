@@ -1008,7 +1008,7 @@ QFrame{
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <layout class="QHBoxLayout" name="horizontalLayout_14">
              <property name="leftMargin">
               <number>0</number>
              </property>
@@ -1025,9 +1025,36 @@ QFrame{
            </widget>
           </item>
           <item>
-           <widget class="QTabWidget" name="editor">
-            <property name="styleSheet">
-             <string notr="true">QTabBar{  
+           <widget class="QFrame" name="editor">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_54">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>6</number>
+             </property>
+             <item>
+              <widget class="QTabWidget" name="editorTabs">
+               <property name="styleSheet">
+                <string notr="true">QTabBar{  
     background-color: rgba(255, 255, 255, 0);
 }
 QTabBar::tab {  
@@ -1049,130 +1076,205 @@ QTabBar::tab:hover {
     color: black;
     background-color: rgba(255, 0, 0, 100);
 }</string>
-            </property>
-            <property name="currentIndex">
-             <number>0</number>
-            </property>
-            <widget class="QWidget" name="tab_7">
-             <attribute name="title">
-              <string>HTML</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_39">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QPlainTextEdit" name="plainTextEdit_2">
-                <property name="styleSheet">
-                 <string notr="true">background-color: rgb(255, 255, 255);
+               </property>
+               <property name="currentIndex">
+                <number>0</number>
+               </property>
+               <property name="documentMode">
+                <bool>true</bool>
+               </property>
+               <property name="tabBarAutoHide">
+                <bool>true</bool>
+               </property>
+               <widget class="QWidget" name="tab_7">
+                <attribute name="title">
+                 <string>HTML</string>
+                </attribute>
+                <layout class="QVBoxLayout" name="verticalLayout_39">
+                 <property name="spacing">
+                  <number>0</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QPlainTextEdit" name="htmlCode">
+                   <property name="styleSheet">
+                    <string notr="true">background-color: rgb(255, 255, 255);
 color: rgb(0, 0, 0);</string>
-                </property>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="tab_8">
-             <attribute name="title">
-              <string>JavaScript</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_41">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QPlainTextEdit" name="plainTextEdit_3">
-                <property name="styleSheet">
-                 <string notr="true">background-color: rgb(255, 255, 255);
+               <widget class="QWidget" name="tab_8">
+                <attribute name="title">
+                 <string>JavaScript</string>
+                </attribute>
+                <layout class="QVBoxLayout" name="verticalLayout_41">
+                 <property name="spacing">
+                  <number>0</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QPlainTextEdit" name="jsCode">
+                   <property name="styleSheet">
+                    <string notr="true">background-color: rgb(255, 255, 255);
 color: rgb(0, 0, 0);</string>
-                </property>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="tab_9">
-             <attribute name="title">
-              <string>CSS style</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_47">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QPlainTextEdit" name="plainTextEdit_4">
-                <property name="styleSheet">
-                 <string notr="true">background-color: rgb(255, 255, 255);
+               <widget class="QWidget" name="tab_9">
+                <attribute name="title">
+                 <string>CSS style</string>
+                </attribute>
+                <layout class="QVBoxLayout" name="verticalLayout_47">
+                 <property name="spacing">
+                  <number>0</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QPlainTextEdit" name="cssCode">
+                   <property name="styleSheet">
+                    <string notr="true">background-color: rgb(255, 255, 255);
 color: rgb(0, 0, 0);</string>
-                </property>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="tab_10">
-             <attribute name="title">
-              <string>CSS animations</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_48">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QPlainTextEdit" name="plainTextEdit_5">
-                <property name="styleSheet">
-                 <string notr="true">background-color: rgb(255, 255, 255);
+               <widget class="QWidget" name="tab_10">
+                <attribute name="title">
+                 <string>CSS animations</string>
+                </attribute>
+                <layout class="QVBoxLayout" name="verticalLayout_48">
+                 <property name="spacing">
+                  <number>0</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QPlainTextEdit" name="animCode">
+                   <property name="styleSheet">
+                    <string notr="true">background-color: rgb(255, 255, 255);
 color: rgb(0, 0, 0);</string>
-                </property>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
-              </item>
-             </layout>
-            </widget>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QPushButton" name="restoreDefaultsBTN">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="toolTip">
+                  <string>Save all changes</string>
+                 </property>
+                 <property name="text">
+                  <string>Restore Default</string>
+                 </property>
+                 <property name="icon">
+                  <iconset>
+                   <normaloff>../Icons/clock-mobile-ui-svgrepo-com.svg</normaloff>../Icons/clock-mobile-ui-svgrepo-com.svg</iconset>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="saveViewerBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="toolTip">
+                  <string>Save all changes</string>
+                 </property>
+                 <property name="text">
+                  <string>Save Changes</string>
+                 </property>
+                 <property name="icon">
+                  <iconset>
+                   <normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</iconset>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
@@ -1727,154 +1829,6 @@ QFrame{
                            </widget>
                           </item>
                           <item>
-                           <widget class="QGroupBox" name="groupBox_20">
-                            <property name="styleSheet">
-                             <string notr="true">*{
-	color: black;
-}
-
-QGroupBox {
-border-color: #FF17365D;
-font-size: 14px;
-border-radius: 15px;
-}
-
-QGroupBox::title {
-border-top-left-radius: 9px;
-border-top-right-radius: 9px;
-padding: 2px 20px;
-background-color: #FF17365D;
-color: rgb(255, 255, 255);
-}
-
-QFrame{
-	border-top-right-radius: 9px;
-	border-bottom-right-radius: 9px;
-	border-bottom-left-radius: 9px;
-	background-color: rgb(255, 255, 255);
-}</string>
-                            </property>
-                            <property name="title">
-                             <string>Integration</string>
-                            </property>
-                            <layout class="QVBoxLayout" name="verticalLayout_40">
-                             <property name="leftMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>23</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>0</number>
-                             </property>
-                             <item>
-                              <widget class="QFrame" name="audioFrame_7">
-                               <property name="styleSheet">
-                                <string notr="true"/>
-                               </property>
-                               <property name="frameShape">
-                                <enum>QFrame::StyledPanel</enum>
-                               </property>
-                               <property name="frameShadow">
-                                <enum>QFrame::Raised</enum>
-                               </property>
-                               <layout class="QVBoxLayout" name="verticalLayout_38">
-                                <item>
-                                 <widget class="QPushButton" name="twitchApiBtn">
-                                  <property name="cursor">
-                                   <cursorShape>PointingHandCursor</cursorShape>
-                                  </property>
-                                  <property name="toolTip">
-                                   <string>Better for assets with some transparency, better image results except if you have different size images</string>
-                                  </property>
-                                  <property name="statusTip">
-                                   <string/>
-                                  </property>
-                                  <property name="whatsThis">
-                                   <string/>
-                                  </property>
-                                  <property name="text">
-                                   <string>Set Twitch API keys</string>
-                                  </property>
-                                  <property name="icon">
-                                   <iconset>
-                                    <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
-                                  </property>
-                                  <property name="iconSize">
-                                   <size>
-                                    <width>25</width>
-                                    <height>25</height>
-                                   </size>
-                                  </property>
-                                 </widget>
-                                </item>
-                                <item>
-                                 <widget class="QPushButton" name="TwitchOAuthBtn">
-                                  <property name="cursor">
-                                   <cursorShape>PointingHandCursor</cursorShape>
-                                  </property>
-                                  <property name="toolTip">
-                                   <string>Better for assets with some transparency, better image results except if you have different size images</string>
-                                  </property>
-                                  <property name="statusTip">
-                                   <string/>
-                                  </property>
-                                  <property name="whatsThis">
-                                   <string/>
-                                  </property>
-                                  <property name="text">
-                                   <string>Start Twitch Integration</string>
-                                  </property>
-                                  <property name="icon">
-                                   <iconset>
-                                    <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
-                                  </property>
-                                  <property name="iconSize">
-                                   <size>
-                                    <width>25</width>
-                                    <height>25</height>
-                                   </size>
-                                  </property>
-                                 </widget>
-                                </item>
-                                <item alignment="Qt::AlignRight">
-                                 <widget class="QCheckBox" name="autostart">
-                                  <property name="sizePolicy">
-                                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                   </sizepolicy>
-                                  </property>
-                                  <property name="cursor">
-                                   <cursorShape>PointingHandCursor</cursorShape>
-                                  </property>
-                                  <property name="layoutDirection">
-                                   <enum>Qt::LeftToRight</enum>
-                                  </property>
-                                  <property name="styleSheet">
-                                   <string notr="true"/>
-                                  </property>
-                                  <property name="text">
-                                   <string>Autostart integration</string>
-                                  </property>
-                                  <property name="checked">
-                                   <bool>true</bool>
-                                  </property>
-                                  <property name="tristate">
-                                   <bool>false</bool>
-                                  </property>
-                                 </widget>
-                                </item>
-                               </layout>
-                              </widget>
-                             </item>
-                            </layout>
-                           </widget>
-                          </item>
-                          <item>
                            <spacer name="verticalSpacer">
                             <property name="orientation">
                              <enum>Qt::Vertical</enum>
@@ -1978,8 +1932,8 @@ QFrame{
                           <rect>
                            <x>0</x>
                            <y>0</y>
-                           <width>253</width>
-                           <height>869</height>
+                           <width>274</width>
+                           <height>505</height>
                           </rect>
                          </property>
                          <layout class="QVBoxLayout" name="verticalLayout_34">
@@ -1996,7 +1950,7 @@ QFrame{
                            <number>0</number>
                           </property>
                           <item>
-                           <widget class="QGroupBox" name="groupBox_14">
+                           <widget class="QGroupBox" name="groupBox_20">
                             <property name="styleSheet">
                              <string notr="true">*{
 	color: black;
@@ -2024,9 +1978,9 @@ QFrame{
 }</string>
                             </property>
                             <property name="title">
-                             <string>Backup</string>
+                             <string>Integration</string>
                             </property>
-                            <layout class="QVBoxLayout" name="verticalLayout_37">
+                            <layout class="QVBoxLayout" name="verticalLayout_40">
                              <property name="leftMargin">
                               <number>0</number>
                              </property>
@@ -2040,7 +1994,7 @@ QFrame{
                               <number>0</number>
                              </property>
                              <item>
-                              <widget class="QFrame" name="audioFrame_4">
+                              <widget class="QFrame" name="audioFrame_7">
                                <property name="styleSheet">
                                 <string notr="true"/>
                                </property>
@@ -2050,9 +2004,9 @@ QFrame{
                                <property name="frameShadow">
                                 <enum>QFrame::Raised</enum>
                                </property>
-                               <layout class="QHBoxLayout" name="horizontalLayout_8">
+                               <layout class="QVBoxLayout" name="verticalLayout_38">
                                 <item>
-                                 <widget class="QPushButton" name="PNG1_2">
+                                 <widget class="QPushButton" name="twitchApiBtn">
                                   <property name="cursor">
                                    <cursorShape>PointingHandCursor</cursorShape>
                                   </property>
@@ -2066,36 +2020,7 @@ QFrame{
                                    <string/>
                                   </property>
                                   <property name="text">
-                                   <string>Import</string>
-                                  </property>
-                                  <property name="icon">
-                                   <iconset>
-                                    <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
-                                  </property>
-                                  <property name="iconSize">
-                                   <size>
-                                    <width>25</width>
-                                    <height>25</height>
-                                   </size>
-                                  </property>
-                                 </widget>
-                                </item>
-                                <item>
-                                 <widget class="QPushButton" name="PNG2_2">
-                                  <property name="cursor">
-                                   <cursorShape>PointingHandCursor</cursorShape>
-                                  </property>
-                                  <property name="toolTip">
-                                   <string>Better when you have diferent sized assets, as the other one requires them all to have the same size and position</string>
-                                  </property>
-                                  <property name="statusTip">
-                                   <string/>
-                                  </property>
-                                  <property name="whatsThis">
-                                   <string/>
-                                  </property>
-                                  <property name="text">
-                                   <string>Export</string>
+                                   <string>Set Twitch API keys</string>
                                   </property>
                                   <property name="icon">
                                    <iconset>
@@ -2170,7 +2095,7 @@ QFrame{
                                </property>
                                <layout class="QVBoxLayout" name="verticalLayout_49">
                                 <item>
-                                 <widget class="QPushButton" name="pushButton">
+                                 <widget class="QPushButton" name="editorButton">
                                   <property name="sizePolicy">
                                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                                     <horstretch>0</horstretch>
@@ -2197,43 +2122,6 @@ QFrame{
                                   </property>
                                   <property name="checkable">
                                    <bool>true</bool>
-                                  </property>
-                                  <property name="checked">
-                                   <bool>false</bool>
-                                  </property>
-                                  <property name="autoExclusive">
-                                   <bool>false</bool>
-                                  </property>
-                                 </widget>
-                                </item>
-                                <item>
-                                 <widget class="QPushButton" name="pushButton_2">
-                                  <property name="sizePolicy">
-                                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                   </sizepolicy>
-                                  </property>
-                                  <property name="maximumSize">
-                                   <size>
-                                    <width>16777215</width>
-                                    <height>16777215</height>
-                                   </size>
-                                  </property>
-                                  <property name="cursor">
-                                   <cursorShape>PointingHandCursor</cursorShape>
-                                  </property>
-                                  <property name="text">
-                                   <string>Restore defaults</string>
-                                  </property>
-                                  <property name="iconSize">
-                                   <size>
-                                    <width>16</width>
-                                    <height>16</height>
-                                   </size>
-                                  </property>
-                                  <property name="checkable">
-                                   <bool>false</bool>
                                   </property>
                                   <property name="checked">
                                    <bool>false</bool>
@@ -2279,6 +2167,41 @@ QFrame{
                                 <enum>QFrame::Raised</enum>
                                </property>
                                <layout class="QGridLayout" name="gridLayout_4">
+                                <item row="0" column="1">
+                                 <widget class="QPushButton" name="PNG">
+                                  <property name="sizePolicy">
+                                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                   </sizepolicy>
+                                  </property>
+                                  <property name="cursor">
+                                   <cursorShape>PointingHandCursor</cursorShape>
+                                  </property>
+                                  <property name="toolTip">
+                                   <string>Save PNG Image</string>
+                                  </property>
+                                  <property name="statusTip">
+                                   <string/>
+                                  </property>
+                                  <property name="whatsThis">
+                                   <string/>
+                                  </property>
+                                  <property name="text">
+                                   <string/>
+                                  </property>
+                                  <property name="icon">
+                                   <iconset>
+                                    <normaloff>../Icons/image-mobile-ui-svgrepo-com.svg</normaloff>../Icons/image-mobile-ui-svgrepo-com.svg</iconset>
+                                  </property>
+                                  <property name="iconSize">
+                                   <size>
+                                    <width>25</width>
+                                    <height>25</height>
+                                   </size>
+                                  </property>
+                                 </widget>
+                                </item>
                                 <item row="0" column="0">
                                  <widget class="QComboBox" name="PNGmethod">
                                   <property name="sizePolicy">
@@ -2329,70 +2252,6 @@ QFrame{
                                     <string>Screenshot + Chroma Key</string>
                                    </property>
                                   </item>
-                                 </widget>
-                                </item>
-                                <item row="0" column="1">
-                                 <widget class="QPushButton" name="PNG">
-                                  <property name="sizePolicy">
-                                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                   </sizepolicy>
-                                  </property>
-                                  <property name="cursor">
-                                   <cursorShape>PointingHandCursor</cursorShape>
-                                  </property>
-                                  <property name="toolTip">
-                                   <string>Save PNG Image</string>
-                                  </property>
-                                  <property name="statusTip">
-                                   <string/>
-                                  </property>
-                                  <property name="whatsThis">
-                                   <string/>
-                                  </property>
-                                  <property name="text">
-                                   <string/>
-                                  </property>
-                                  <property name="icon">
-                                   <iconset>
-                                    <normaloff>../Icons/image-mobile-ui-svgrepo-com.svg</normaloff>../Icons/image-mobile-ui-svgrepo-com.svg</iconset>
-                                  </property>
-                                  <property name="iconSize">
-                                   <size>
-                                    <width>25</width>
-                                    <height>25</height>
-                                   </size>
-                                  </property>
-                                 </widget>
-                                </item>
-                                <item row="1" column="0">
-                                 <widget class="QLabel" name="label_5">
-                                  <property name="sizePolicy">
-                                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                   </sizepolicy>
-                                  </property>
-                                  <property name="toolTip">
-                                   <string>Alpha Composite: Best for images with some transparency but it can't do different size images.
-Pillow Paste: Best for images with different sizes and positions, but it struggles with transparency.
-Alpha Composite + Pillow Paste: Tries to combine the two for a better image, won't make promises.
-Screenshot: Just takes a screenshot of the model.
-Screenshot + Chroma Key: Just takes a screenshot of the model and tries to remove the background.</string>
-                                  </property>
-                                  <property name="whatsThis">
-                                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                                  </property>
-                                  <property name="styleSheet">
-                                   <string notr="true">font-size: 12px</string>
-                                  </property>
-                                  <property name="text">
-                                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size/position images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste: &lt;/span&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;(in development) &lt;/span&gt;Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot: &lt;/span&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;(in development) &lt;/span&gt;Just takes a screenshot of the model. &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key: &lt;/span&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;(in development) &lt;/span&gt;Takes a screenshot of the model and tries to remove the background keying the selected bacground color.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                                  </property>
-                                  <property name="wordWrap">
-                                   <bool>true</bool>
-                                  </property>
                                  </widget>
                                 </item>
                                </layout>
@@ -2505,7 +2364,7 @@ QFrame{
                                     <rect>
                                      <x>0</x>
                                      <y>0</y>
-                                     <width>241</width>
+                                     <width>262</width>
                                      <height>136</height>
                                     </rect>
                                    </property>

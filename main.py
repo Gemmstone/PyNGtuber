@@ -1,13 +1,12 @@
 from Core.ShortcutsManager import MidiListener, KeyboardListener, TwitchAPI, ShortcutsDialog
 from Core.imageGallery import ImageGallery, ExpressionSelector, ModelGallery
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.backends import default_backend
 from Core.audioManager import MicrophoneVolumeWidget
 from PIL import Image, ImageSequence, ImageOps
 from Core.Viewer import LayeredImageViewer
 from Core.Settings import SettingsToolBox
 from PyQt6.QtCore import QCoreApplication
 from PyQt6 import QtWidgets, uic, QtCore
+from shutil import copy as copy_file
 from collections import Counter
 from PyQt6.QtGui import QIcon
 from pathlib import Path
@@ -19,44 +18,29 @@ import sys
 import os
 
 
-class FileEncryptor:
-    def __init__(self, key_path):
-        self.key_path = key_path
+class twitchKeysDialog(QtWidgets.QDialog):
+    new_keys = QtCore.pyqtSignal(dict)
 
-    def generate_key(self):
-        return os.urandom(32)
+    def __init__(self, APP_ID, APP_SECRET, parent=None):
+        super().__init__(parent)
+        uic.loadUi(os.path.normpath(f"UI{os.path.sep}auth_twitch.ui"), self)
 
-    def encrypt_file(self, file_path, key):
-        with open(file_path, 'rb') as file:
-            data = file.read()
+        self.APP_ID = APP_ID
+        self.APP_SECRET = APP_SECRET
 
-        cipher = Cipher(algorithms.AES(key), modes.CFB(), backend=default_backend())
-        encryptor = cipher.encryptor()
-        encrypted_data = encryptor.update(data) + encryptor.finalize()
+        self.client.setText(self.APP_ID)
+        self.secret.setText(self.APP_SECRET)
 
-        with open(file_path, 'wb') as file:
-            file.write(encrypted_data)
+        self.saveKeysBtn.clicked.connect(self.save)
 
-    def decrypt_file(self, file_path, key):
-        with open(file_path, 'rb') as file:
-            encrypted_data = file.read()
+    def save(self):
+        self.APP_ID = self.client.text() if self.client.text() else None
+        self.APP_SECRET = self.secret.text() if self.secret.text() else None
 
-        cipher = Cipher(algorithms.AES(key), modes.CFB(), backend=default_backend())
-        decryptor = cipher.decryptor()
-        decrypted_data = decryptor.update(encrypted_data) + decryptor.finalize()
-
-        return decrypted_data
-
-    def encrypt_and_store_keys(self, json_path):
-        # Generate a random 256-bit key
-        key = self.generate_key()
-
-        # Encrypt the original JSON file
-        self.encrypt_file(json_path, key)
-
-        # Store the key in a separate file
-        with open(self.key_path, 'wb') as key_file:
-            key_file.write(key)
+        self.new_keys.emit({
+            "APP_ID": self.APP_ID,
+            "APP_SECRET": self.APP_SECRET
+        })
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -75,7 +59,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.current_expression_json_file = os.path.normpath(f"Data{os.path.sep}current_expression.json")
         self.settings_json_file = os.path.normpath(f"Data{os.path.sep}settings.json")
         self.apiKeys = os.path.normpath(f"Data{os.path.sep}keys.json")
-        self.keyPath = os.path.normpath(f"Data{os.path.sep}secret.key")
+
+        self.js_file = os.path.normpath(f"Viewer{os.path.sep}mouseControl.js")
+        self.css_file = os.path.normpath(f"Viewer{os.path.sep}styles.css")
+        self.anim_file = os.path.normpath(f"Viewer{os.path.sep}animations.css")
+        self.html_file = os.path.normpath(f"Viewer{os.path.sep}viewer.html")
+
+        self.js_file_default = os.path.normpath(f"Viewer{os.path.sep}default{os.path.sep}mouseControl.js")
+        self.css_file_default = os.path.normpath(f"Viewer{os.path.sep}default{os.path.sep}styles.css")
+        self.anim_file_default = os.path.normpath(f"Viewer{os.path.sep}default{os.path.sep}animations.css")
+        self.html_file_default = os.path.normpath(f"Viewer{os.path.sep}default{os.path.sep}viewer.html")
 
         self.keyboard_listener = KeyboardListener()
         self.keyboard_listener.shortcut.connect(self.shortcut_received)
@@ -123,21 +116,6 @@ class MainWindow(QtWidgets.QMainWindow):
         except FileNotFoundError:
             pass
 
-        self.file_encryptor = FileEncryptor(self.keyPath)
-
-        """
-        try:
-            # Decrypt the keys using the stored key
-            key = self.file_encryptor.generate_key()
-            decrypted_data = self.file_encryptor.decrypt_file(self.apiKeys, key)
-            keys = json.loads(decrypted_data)
-
-            self.twitch_api_client = keys["twitch"]["client"]
-            self.twitch_api_secret = keys["twitch"]["secret"]
-        except (FileNotFoundError, json.JSONDecodeError):
-            self.twitch_api_client = None
-            self.twitch_api_secret = None
-        """
 
         try:
             with open(self.apiKeys, "r") as f:
@@ -148,13 +126,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.twitch_api_client = None
             self.twitch_api_secret = None
 
-        self.TwitchAPI = TwitchAPI(APP_ID=self.twitch_api_client, APP_SECRET=self.twitch_api_secret)
-        self.TwitchAPI.event_signal.connect(self.shortcut_received)
-        if self.twitch_api_client is not None and self.twitch_api_secret is not None:
-            self.twitchApiBtn.setText("Change Twitch API keys")
-            if self.autostart.isChecked():
-                self.TwitchAPI.start()
-        self.TwitchOAuthBtn.clicked.connect(self.TwitchAPI.start)
+        self.start_twitch_connection({
+            "APP_ID": self.twitch_api_client,
+            "APP_SECRET": self.twitch_api_secret
+        }, True)
 
         self.file_parameters_default = {os.path.normpath(key): value for key, value in self.file_parameters_default.items()}
         self.file_parameters_current = {os.path.normpath(key): value for key, value in self.file_parameters_current.items()}
@@ -163,6 +138,24 @@ class MainWindow(QtWidgets.QMainWindow):
         # print(self.file_parameters_current["Assets\\hairback\\hairback_127.png"])
         # print(self.file_parameters_current["Assets/hairback/hairback_127.png"])
         # print(self.current_files)
+
+        try:
+            with open(self.js_file, "r") as f:
+                self.jsCode.setPlainText(f.read())
+        except FileNotFoundError:
+            pass
+
+        try:
+            with open(self.css_file, "r") as f:
+                self.cssCode.setPlainText(f.read())
+        except FileNotFoundError:
+            pass
+
+        try:
+            with open(self.anim_file, "r") as f:
+                self.animCode.setPlainText(f.read())
+        except FileNotFoundError:
+            pass
 
         self.get_shortcuts()
 
@@ -226,8 +219,105 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.tabWidget_2.currentChanged.connect(self.changePage)
 
-        self.editor.hide()
+        self.editorButton.clicked.connect(self.toggle_editor)
+
+        self.saveViewerBtn.clicked.connect(self.update_viewer_files)
+
+        self.restoreDefaultsBTN.clicked.connect(self.restore_defaults)
+
+        self.twitchApiBtn.clicked.connect(self.update_keys)
+
+        self.toggle_editor()
         self.update_viewer(self.current_files, update_gallery=True)
+
+    def update_keys(self):
+        twitch_dialog = twitchKeysDialog(APP_ID=self.twitch_api_client, APP_SECRET=self.twitch_api_secret)
+        twitch_dialog.new_keys.connect(self.start_twitch_connection)
+        twitch_dialog.exec()
+
+    def start_twitch_connection(self, values, starting=False):
+        self.twitchApiBtn.setText("Set Twitch API keys")
+
+        if not starting:
+            if values["APP_ID"] == self.twitch_api_client and values["APP_SECRET"] == self.twitch_api_secret:
+                return
+            else:
+                with open(self.apiKeys, "w") as f:
+                    json.dump({
+                      "twitch": {
+                        "client": values["APP_ID"],
+                        "secret": values["APP_SECRET"]
+                      }
+                    }, f, indent=4)
+                self.twitch_api_client = values["APP_ID"]
+                self.twitch_api_secret = values["APP_SECRET"]
+
+        if values["APP_ID"] is None or values["APP_SECRET"] is None:
+            return
+
+        self.TwitchAPI = TwitchAPI(APP_ID=values["APP_ID"], APP_SECRET=values["APP_SECRET"])
+        self.TwitchAPI.event_signal.connect(self.shortcut_received)
+        self.twitchApiBtn.setText("Change Twitch API keys")
+        self.TwitchAPI.start()
+
+    def update_viewer_files(self):
+        try:
+            with open(self.js_file, "w") as f:
+                f.write(self.jsCode.toPlainText())
+        except FileNotFoundError:
+            pass
+
+        try:
+            with open(self.css_file, "w") as f:
+                f.write(self.cssCode.toPlainText())
+        except FileNotFoundError:
+            pass
+
+        try:
+            with open(self.anim_file, "w") as f:
+                f.write(self.animCode.toPlainText())
+        except FileNotFoundError:
+            pass
+
+        try:
+            with open(self.html_file, "w") as f:
+                f.write(self.htmlCode.toPlainText())
+        except FileNotFoundError:
+            pass
+
+        self.update_viewer(self.current_files, update_gallery=True)
+
+    def restore_defaults(self):
+        copy_file(self.js_file_default, self.js_file)
+        copy_file(self.css_file_default, self.css_file)
+        copy_file(self.anim_file_default, self.anim_file)
+        copy_file(self.html_file_default, self.html_file)
+
+        try:
+            with open(self.js_file, "r") as f:
+                self.jsCode.setPlainText(f.read())
+        except FileNotFoundError:
+            pass
+
+        try:
+            with open(self.css_file, "r") as f:
+                self.cssCode.setPlainText(f.read())
+        except FileNotFoundError:
+            pass
+
+        try:
+            with open(self.anim_file, "r") as f:
+                self.animCode.setPlainText(f.read())
+        except FileNotFoundError:
+            pass
+
+        self.update_viewer(self.current_files, update_gallery=True)
+
+    def toggle_editor(self):
+        if self.editor.isHidden():
+            self.editor.show()
+        else:
+            self.editor.hide()
 
     def change_settings_gallery(self, index):
         self.SettingsGallery.change_page(self.ImageGallery.itemText(index))
@@ -836,6 +926,7 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             self.ImageGallery.set_buttons_checked(files)
         self.current_files = files
+        self.htmlCode.setPlainText(self.viewer.html_code)
         self.save_parameters_to_json()
 
     def event(self, event):

@@ -10,12 +10,17 @@ class LayeredImageViewer(QWebEngineView):
 
     def __init__(self, parent=None):
         super(LayeredImageViewer, self).__init__(parent)
+        self.html_code = ""
         self.setColor("#b8cdee")
         self.is_loaded = False
         self.loadFinished.connect(self.on_load_finished)
 
         settings = self.page().settings()
         settings.setAttribute(QWebEngineSettings.WebAttribute.LocalStorageEnabled, True)
+
+
+        self.file = 'Viewer/viewer.html'
+        self.file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), self.file)
 
         self.updateImages()
 
@@ -28,21 +33,22 @@ class LayeredImageViewer(QWebEngineView):
 
     def reload(self):
         self.is_loaded = False
-        file = 'Viewer/viewer.html'
-        file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), file)
-        self.load(QUrl.fromLocalFile(file))
+        self.load(QUrl.fromLocalFile(self.file))
 
     def updateImages(self, image_list=None, bg_color="#b8cdee"):
-        with open('Viewer/viewer.html', 'r') as html_file:
-            html_code = html_file.read()
+        with open(self.file, 'r') as html_file:
+            self.html_code = html_file.read()
 
-        soup = BeautifulSoup(html_code, 'html.parser')
-        body_tag = soup.body
-        body_tag['style'] = f'background-color: {bg_color};'
-        image_div = soup.find('div', id='image-wrapper')
-        image_div.clear()
+        try:
+            soup = BeautifulSoup(self.html_code, 'html.parser')
+            body_tag = soup.body
+            body_tag['style'] = f'background-color: {bg_color};'
+            image_div = soup.find('div', id='image-wrapper')
+            image_div.clear()
 
-        self.page().toHtml(lambda html: self.handle_runtime_html(html, soup, image_div, image_list))
+            self.page().toHtml(lambda html: self.handle_runtime_html(html, soup, image_div, image_list))
+        except BaseException as err:
+            print(f"HTML ERROR: {err}")
 
     def handle_runtime_html(self, runtime_page, soup, image_div, image_list):
         soup_runtime = BeautifulSoup(runtime_page, 'html.parser')
