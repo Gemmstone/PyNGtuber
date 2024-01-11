@@ -103,9 +103,11 @@ class Settings(QWidget):
     def hide_css(self):
         if self.cssGroup.isChecked():
             self.frame_5.show()
+            self.spacer.hide()
             self.cssGroup.setStyleSheet("")
         else:
             self.frame_5.hide()
+            self.spacer.show()
             self.cssGroup.setStyleSheet(
                 "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
         self.save_current()
