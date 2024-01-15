@@ -17,11 +17,18 @@ class Settings(QWidget):
         self.parameters = parameters
         self.sizeX.setValue(self.parameters["sizeX"])
         self.sizeY.setValue(self.parameters["sizeY"])
+
+        self.og_width = self.parameters["sizeX"]
+        self.og_height = self.parameters["sizeY"]
+
         self.posX.setValue(self.parameters["posX"])
         self.posY.setValue(self.parameters["posY"])
         self.posZ.setValue(self.parameters["posZ"])
         self.rotation.setValue(self.parameters["rotation"])
         self.check_hotkeys()
+
+        self.sizeX.valueChanged.connect(self.maintain_aspect_ratio_w)
+        self.sizeY.valueChanged.connect(self.maintain_aspect_ratio_h)
 
         self.sizeX.valueChanged.connect(self.save_current)
         self.sizeY.valueChanged.connect(self.save_current)
@@ -148,6 +155,24 @@ class Settings(QWidget):
     def css_finished_edit(self):
         self.parameters["css"] = self.css.toPlainText()
         self.save_current()
+
+    def maintain_aspect_ratio_w(self):
+        if self.aspectRatio.isChecked():
+            ratio = self.sizeX.value() / self.og_width
+            self.sizeY.blockSignals(True)
+            self.sizeY.setValue(int(self.sizeY.value() * ratio))
+            self.sizeY.blockSignals(False)
+            self.og_width = self.sizeX.value()
+            self.save_current()
+
+    def maintain_aspect_ratio_h(self):
+        if self.aspectRatio.isChecked():
+            ratio = self.sizeY.value() / self.og_height
+            self.sizeX.blockSignals(True)
+            self.sizeX.setValue(int(self.sizeX.value() * ratio))
+            self.sizeX.blockSignals(False)
+            self.og_height = self.sizeY.value()
+            self.save_current()
 
 
 class SettingsToolBox(QToolBox):
