@@ -521,27 +521,35 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def load_model(self, data, mode="enable"):
         if mode == "toggle":
-            if self.last_model != data:
-                self.load_model(data, mode="disable")
-            else:
-                self.load_model(data, mode="enable")
+            if data["type"] == "Avatars":
+                if self.current_model["name"] != data["name"]:
+                    self.load_model(data, mode="enable")
+                else:
+                    self.load_model(data, mode="disable")
+            elif data["type"] == "Expressions":
+                if self.current_expression["name"] != data["name"]:
+                    self.load_model(data, mode="enable")
+                else:
+                    self.load_model(data, mode="disable")
             return
 
-        if mode not in ["disable", "toggle"]:
-            if data["type"] == "Avatars":
-                self.last_model = copy.deepcopy(self.current_model)
-            elif data["type"] == "Expressions":
-                self.last_expression = copy.deepcopy(self.current_expression)
-        current_files = []
+        if mode == "enable":
+            self.last_model = copy.deepcopy(self.current_model)
+            self.last_expression = copy.deepcopy(self.current_expression)
 
         if mode == "disable":
-            data = copy.deepcopy(self.last_model)
+            if data["type"] == "Avatars":
+                data = copy.deepcopy(self.last_model)
+            elif data["type"] == "Expressions":
+                data = copy.deepcopy(self.last_expression)
 
         with open(os.path.normpath(f"Models/{data['type']}/{data['name']}/model.json"), "r") as load_file:
             files = json.load(load_file)
             for file in files:
                 self.file_parameters_current[os.path.normpath(file["route"])] = \
                     {key: value for key, value in file.items() if key != "route"}
+
+        current_files = []
 
         if data["type"] == "Avatars":
             for file in self.current_files:
@@ -558,11 +566,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.update_viewer(current_files)
 
-        if mode not in ["disable", "toggle"]:
-            if data["type"] == "Avatars":
-                self.current_model = copy.deepcopy(data)
-            elif data["type"] == "Expressions":
-                self.current_expression = copy.deepcopy(data)
+        if data["type"] == "Avatars":
+            self.current_model = copy.deepcopy(data)
+        elif data["type"] == "Expressions":
+            self.current_expression = copy.deepcopy(data)
 
     def check_if_expression(self, file):
         with open(os.path.normpath("Data/expressionFolders.json"), "r") as expressions_list:
@@ -696,10 +703,14 @@ class MainWindow(QtWidgets.QMainWindow):
         with open(os.path.normpath(f"{directory}{os.path.sep}model.json"), "w") as file:
             json.dump(files, file, indent=4)
 
-        with open(os.path.normpath(f"{directory}{os.path.sep}data.json"), "w") as file:
-            data = {
-                "shortcuts": []
-            }
+        data_file = os.path.normpath(f"{directory}{os.path.sep}data.json")
+        if os.path.exists(data_file):
+            with open(data_file, "r") as file:
+                data = json.load(file)
+        else:
+            data = None
+        with open(data_file, "w") as file:
+            data = {"shortcuts": []} if data is None else data
             json.dump(data, file, indent=4)
 
     def export_png(self):
@@ -947,6 +958,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.frame_5.show()
         self.frame_3.show()
         self.frame_8.show()
+        self.donationBtn.show()
         self.viewerFrame_2.setStyleSheet(f"border-radius: 20px; background-color: {self.color}")
 
     def hideUI(self):
@@ -955,6 +967,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.frame_5.hide()
             self.frame_3.hide()
             self.frame_8.hide()
+            self.donationBtn.hide()
             self.viewerFrame_2.setStyleSheet(f"background-color: {self.color}")
 
     def setBGColor(self):

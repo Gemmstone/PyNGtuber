@@ -956,6 +956,25 @@ QFrame{
               <number>0</number>
              </property>
              <item>
+              <widget class="QLabel" name="donationBtn">
+               <property name="toolTip">
+                <string>Go to issues page</string>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: transparent;</string>
+               </property>
+               <property name="text">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://streamlabs.com/agemmstone/tip&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#e93a9a;&quot;&gt;💖 Donate!&lt;/span&gt;&lt;/a&gt;&lt;a href=&quot;https://streamlabs.com/agemmstone/tip&quot;&gt;&lt;span style=&quot; color:#e93a9a;&quot;/&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+               <property name="openExternalLinks">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QFrame" name="viewerFrame">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -3014,7 +3033,7 @@ background-color: rgba(0, 0, 0, 40);
                    <x>0</x>
                    <y>0</y>
                    <width>270</width>
-                   <height>30</height>
+                   <height>580</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_4">
