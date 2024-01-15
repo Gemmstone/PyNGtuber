@@ -2355,7 +2355,7 @@ QFrame{
                                    </sizepolicy>
                                   </property>
                                   <property name="styleSheet">
-                                   <string notr="true">font-size: 8px</string>
+                                   <string notr="true"/>
                                   </property>
                                   <property name="text">
                                    <string>Select the asset categories that count as expressions:</string>
@@ -3046,7 +3046,7 @@ background-color: rgba(0, 0, 0, 40);
                    <x>0</x>
                    <y>0</y>
                    <width>270</width>
-                   <height>580</height>
+                   <height>30</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -3185,8 +3185,6 @@ background-color: rgba(0, 0, 0, 40);
    </property>
   </action>
  </widget>
- <resources>
-  <include location="../resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
