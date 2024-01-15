@@ -169,6 +169,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.comboBox.currentIndexChanged.connect(self.update_settings)
         self.PNGmethod.currentIndexChanged.connect(self.update_settings)
         self.HideUI.toggled.connect(self.update_settings)
+        self.flipCanvasToggle.toggled.connect(self.flipCanvas)
 
         self.SettingsGallery = SettingsToolBox()
         self.SettingsGallery.settings_changed.connect(self.saveSettings)
@@ -229,6 +230,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.toggle_editor()
         self.update_viewer(self.current_files, update_gallery=True)
+
+    def flipCanvas(self):
+        if self.flipCanvasToggle.isChecked():
+            self.viewer.page().runJavaScript("document.body.style.transform = 'scaleX(-1)';")
+        else:
+            self.viewer.page().runJavaScript("document.body.style.transform = 'scaleX(1)';")
 
     def update_keys(self):
         twitch_dialog = twitchKeysDialog(APP_ID=self.twitch_api_client, APP_SECRET=self.twitch_api_secret)
@@ -947,8 +954,7 @@ class MainWindow(QtWidgets.QMainWindow):
             elif event.type() == QtCore.QEvent.Type.HoverMove and self.frame_4.isHidden():
                 self.showUI()
             elif event.type() == QtCore.QEvent.Type.HoverLeave:
-                self.hideUI()
-                # QtCore.QTimer.singleShot(400, self.hideUI)
+                self.hideUI_()
         except AttributeError:
             pass
         return super().event(event)
@@ -961,7 +967,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.donationBtn.show()
         self.viewerFrame_2.setStyleSheet(f"border-radius: 20px; background-color: {self.color}")
 
-    def hideUI(self):
+    def hideUI_(self):
         if self.HideUI.isChecked():
             self.frame_4.hide()
             self.frame_5.hide()

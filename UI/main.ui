@@ -1758,7 +1758,7 @@ QFrame{
                                <property name="frameShadow">
                                 <enum>QFrame::Raised</enum>
                                </property>
-                               <layout class="QHBoxLayout" name="horizontalLayout_7">
+                               <layout class="QVBoxLayout" name="verticalLayout_37">
                                 <item>
                                  <widget class="QComboBox" name="comboBox">
                                   <property name="sizePolicy">
@@ -1814,6 +1814,34 @@ QFrame{
                                  </widget>
                                 </item>
                                 <item>
+                                 <widget class="QCheckBox" name="flipCanvasToggle">
+                                  <property name="sizePolicy">
+                                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                   </sizepolicy>
+                                  </property>
+                                  <property name="cursor">
+                                   <cursorShape>PointingHandCursor</cursorShape>
+                                  </property>
+                                  <property name="layoutDirection">
+                                   <enum>Qt::LeftToRight</enum>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true"/>
+                                  </property>
+                                  <property name="text">
+                                   <string>Flip canvas horizontaly</string>
+                                  </property>
+                                  <property name="checked">
+                                   <bool>false</bool>
+                                  </property>
+                                  <property name="tristate">
+                                   <bool>false</bool>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
                                  <widget class="QCheckBox" name="HideUI">
                                   <property name="sizePolicy">
                                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1839,6 +1867,114 @@ QFrame{
                                   <property name="tristate">
                                    <bool>false</bool>
                                   </property>
+                                 </widget>
+                                </item>
+                               </layout>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QGroupBox" name="groupBox_8">
+                            <property name="title">
+                             <string>Export PNG</string>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_35">
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>23</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QFrame" name="audioFrame_2">
+                               <property name="styleSheet">
+                                <string notr="true"/>
+                               </property>
+                               <property name="frameShape">
+                                <enum>QFrame::StyledPanel</enum>
+                               </property>
+                               <property name="frameShadow">
+                                <enum>QFrame::Raised</enum>
+                               </property>
+                               <layout class="QGridLayout" name="gridLayout_4">
+                                <item row="0" column="1">
+                                 <widget class="QPushButton" name="PNG">
+                                  <property name="sizePolicy">
+                                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                   </sizepolicy>
+                                  </property>
+                                  <property name="cursor">
+                                   <cursorShape>PointingHandCursor</cursorShape>
+                                  </property>
+                                  <property name="toolTip">
+                                   <string>Save PNG Image</string>
+                                  </property>
+                                  <property name="statusTip">
+                                   <string/>
+                                  </property>
+                                  <property name="whatsThis">
+                                   <string/>
+                                  </property>
+                                  <property name="text">
+                                   <string/>
+                                  </property>
+                                  <property name="icon">
+                                   <iconset>
+                                    <normaloff>../Icons/image-mobile-ui-svgrepo-com.svg</normaloff>../Icons/image-mobile-ui-svgrepo-com.svg</iconset>
+                                  </property>
+                                  <property name="iconSize">
+                                   <size>
+                                    <width>25</width>
+                                    <height>25</height>
+                                   </size>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item row="0" column="0">
+                                 <widget class="QComboBox" name="PNGmethod">
+                                  <property name="sizePolicy">
+                                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                   </sizepolicy>
+                                  </property>
+                                  <property name="toolTip">
+                                   <string/>
+                                  </property>
+                                  <property name="whatsThis">
+                                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                  </property>
+                                  <property name="maxVisibleItems">
+                                   <number>10</number>
+                                  </property>
+                                  <property name="sizeAdjustPolicy">
+                                   <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+                                  </property>
+                                  <item>
+                                   <property name="text">
+                                    <string>Select Method...</string>
+                                   </property>
+                                  </item>
+                                  <item>
+                                   <property name="text">
+                                    <string>Alpha Composite</string>
+                                   </property>
+                                  </item>
+                                  <item>
+                                   <property name="text">
+                                    <string>Pillow Paste</string>
+                                   </property>
+                                  </item>
                                  </widget>
                                 </item>
                                </layout>
@@ -2148,129 +2284,6 @@ QFrame{
                                   <property name="autoExclusive">
                                    <bool>false</bool>
                                   </property>
-                                 </widget>
-                                </item>
-                               </layout>
-                              </widget>
-                             </item>
-                            </layout>
-                           </widget>
-                          </item>
-                          <item>
-                           <widget class="QGroupBox" name="groupBox_8">
-                            <property name="title">
-                             <string>Export PNG</string>
-                            </property>
-                            <layout class="QVBoxLayout" name="verticalLayout_35">
-                             <property name="leftMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>23</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>0</number>
-                             </property>
-                             <item>
-                              <widget class="QFrame" name="audioFrame_2">
-                               <property name="styleSheet">
-                                <string notr="true"/>
-                               </property>
-                               <property name="frameShape">
-                                <enum>QFrame::StyledPanel</enum>
-                               </property>
-                               <property name="frameShadow">
-                                <enum>QFrame::Raised</enum>
-                               </property>
-                               <layout class="QGridLayout" name="gridLayout_4">
-                                <item row="0" column="1">
-                                 <widget class="QPushButton" name="PNG">
-                                  <property name="sizePolicy">
-                                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                   </sizepolicy>
-                                  </property>
-                                  <property name="cursor">
-                                   <cursorShape>PointingHandCursor</cursorShape>
-                                  </property>
-                                  <property name="toolTip">
-                                   <string>Save PNG Image</string>
-                                  </property>
-                                  <property name="statusTip">
-                                   <string/>
-                                  </property>
-                                  <property name="whatsThis">
-                                   <string/>
-                                  </property>
-                                  <property name="text">
-                                   <string/>
-                                  </property>
-                                  <property name="icon">
-                                   <iconset>
-                                    <normaloff>../Icons/image-mobile-ui-svgrepo-com.svg</normaloff>../Icons/image-mobile-ui-svgrepo-com.svg</iconset>
-                                  </property>
-                                  <property name="iconSize">
-                                   <size>
-                                    <width>25</width>
-                                    <height>25</height>
-                                   </size>
-                                  </property>
-                                 </widget>
-                                </item>
-                                <item row="0" column="0">
-                                 <widget class="QComboBox" name="PNGmethod">
-                                  <property name="sizePolicy">
-                                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                   </sizepolicy>
-                                  </property>
-                                  <property name="toolTip">
-                                   <string/>
-                                  </property>
-                                  <property name="whatsThis">
-                                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                                  </property>
-                                  <property name="maxVisibleItems">
-                                   <number>10</number>
-                                  </property>
-                                  <property name="sizeAdjustPolicy">
-                                   <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
-                                  </property>
-                                  <item>
-                                   <property name="text">
-                                    <string>Select Method...</string>
-                                   </property>
-                                  </item>
-                                  <item>
-                                   <property name="text">
-                                    <string>Alpha Composite</string>
-                                   </property>
-                                  </item>
-                                  <item>
-                                   <property name="text">
-                                    <string>Pillow Paste</string>
-                                   </property>
-                                  </item>
-                                  <item>
-                                   <property name="text">
-                                    <string>AlphaCom + PILPaste</string>
-                                   </property>
-                                  </item>
-                                  <item>
-                                   <property name="text">
-                                    <string>Screenshot</string>
-                                   </property>
-                                  </item>
-                                  <item>
-                                   <property name="text">
-                                    <string>Screenshot + Chroma Key</string>
-                                   </property>
-                                  </item>
                                  </widget>
                                 </item>
                                </layout>
