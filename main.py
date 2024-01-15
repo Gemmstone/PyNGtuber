@@ -1003,7 +1003,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.audio.audio_thread.stop_stream()
         self.midi_listener.terminate()
         self.keyboard_listener.terminate()
-        self.TwitchAPI.terminate()
+        if self.TwitchAPI is not None:
+            self.TwitchAPI.terminate()
         event.accept()
 
 
