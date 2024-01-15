@@ -8941,31 +8941,7 @@
         "css": "",
         "blinking": "ignore",
         "talking": "ignore",
-        "hotkeys": [
-            {
-                "command": [
-                    "Key.shift",
-                    "A"
-                ],
-                "type": "Keyboard",
-                "mode": "toggle"
-            },
-            {
-                "command": "Alas de \u00e1ngel",
-                "type": "TwitchReward",
-                "mode": "enable"
-            },
-            {
-                "command": "Alas de demonio",
-                "type": "TwitchReward",
-                "mode": "disable"
-            },
-            {
-                "command": "Quitar Alas",
-                "type": "TwitchReward",
-                "mode": "disable"
-            }
-        ],
+        "hotkeys": [],
         "rotation": 0,
         "use_css": false
     },
@@ -9175,31 +9151,7 @@
         "css": "",
         "blinking": "ignore",
         "talking": "ignore",
-        "hotkeys": [
-            {
-                "command": [
-                    "Key.shift",
-                    "D"
-                ],
-                "type": "Keyboard",
-                "mode": "toggle"
-            },
-            {
-                "command": "Alas de demonio",
-                "type": "TwitchReward",
-                "mode": "enable"
-            },
-            {
-                "command": "Alas de \u00e1ngel",
-                "type": "TwitchReward",
-                "mode": "disable"
-            },
-            {
-                "command": "Quitar Alas",
-                "type": "TwitchReward",
-                "mode": "disable"
-            }
-        ],
+        "hotkeys": [],
         "rotation": 0,
         "use_css": false
     },
@@ -9213,31 +9165,7 @@
         "css": "",
         "blinking": "ignore",
         "talking": "ignore",
-        "hotkeys": [
-            {
-                "command": [
-                    "Key.shift",
-                    "D"
-                ],
-                "type": "Keyboard",
-                "mode": "toggle"
-            },
-            {
-                "command": "Alas de demonio",
-                "type": "TwitchReward",
-                "mode": "enable"
-            },
-            {
-                "command": "Alas de \u00e1ngel",
-                "type": "TwitchReward",
-                "mode": "disable"
-            },
-            {
-                "command": "Quitar Alas",
-                "type": "TwitchReward",
-                "mode": "disable"
-            }
-        ],
+        "hotkeys": [],
         "rotation": 0,
         "use_css": false
     },
@@ -43978,31 +43906,7 @@
         "css": "animation: wing 10s infinite; ",
         "blinking": "ignore",
         "talking": "ignore",
-        "hotkeys": [
-            {
-                "command": [
-                    "Key.shift",
-                    "D"
-                ],
-                "type": "Keyboard",
-                "mode": "toggle"
-            },
-            {
-                "command": "Alas de demonio",
-                "type": "TwitchReward",
-                "mode": "enable"
-            },
-            {
-                "command": "Alas de \u00e1ngel",
-                "type": "TwitchReward",
-                "mode": "disable"
-            },
-            {
-                "command": "Quitar Alas",
-                "type": "TwitchReward",
-                "mode": "disable"
-            }
-        ],
+        "hotkeys": [],
         "rotation": 0,
         "use_css": true
     },
@@ -44072,31 +43976,7 @@
         "css": "animation: wing 10s infinite; ",
         "blinking": "ignore",
         "talking": "ignore",
-        "hotkeys": [
-            {
-                "command": [
-                    "Key.shift",
-                    "A"
-                ],
-                "type": "Keyboard",
-                "mode": "toggle"
-            },
-            {
-                "command": "Alas de \u00e1ngel",
-                "type": "TwitchReward",
-                "mode": "enable"
-            },
-            {
-                "command": "Alas de demonio",
-                "type": "TwitchReward",
-                "mode": "disable"
-            },
-            {
-                "command": "Quitar Alas",
-                "type": "TwitchReward",
-                "mode": "disable"
-            }
-        ],
+        "hotkeys": [],
         "rotation": 0,
         "use_css": true
     },
@@ -44110,31 +43990,7 @@
         "css": "animation: wing 10s infinite; ",
         "blinking": "ignore",
         "talking": "ignore",
-        "hotkeys": [
-            {
-                "command": [
-                    "Key.shift",
-                    "A"
-                ],
-                "type": "Keyboard",
-                "mode": "toggle"
-            },
-            {
-                "command": "Alas de \u00e1ngel",
-                "type": "TwitchReward",
-                "mode": "enable"
-            },
-            {
-                "command": "Alas de demonio",
-                "type": "TwitchReward",
-                "mode": "disable"
-            },
-            {
-                "command": "Quitar Alas",
-                "type": "TwitchReward",
-                "mode": "disable"
-            }
-        ],
+        "hotkeys": [],
         "rotation": 0,
         "use_css": true
     },
@@ -44204,31 +44060,7 @@
         "css": "animation: wing 10s infinite; ",
         "blinking": "ignore",
         "talking": "ignore",
-        "hotkeys": [
-            {
-                "command": [
-                    "Key.shift",
-                    "D"
-                ],
-                "type": "Keyboard",
-                "mode": "toggle"
-            },
-            {
-                "command": "Alas de demonio",
-                "type": "TwitchReward",
-                "mode": "enable"
-            },
-            {
-                "command": "Alas de \u00e1ngel",
-                "type": "TwitchReward",
-                "mode": "disable"
-            },
-            {
-                "command": "Quitar Alas",
-                "type": "TwitchReward",
-                "mode": "disable"
-            }
-        ],
+        "hotkeys": [],
         "rotation": 0,
         "use_css": true
     },
