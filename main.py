@@ -53,6 +53,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.color = (184, 205, 238)
         self.file_parameters_current = {}
         self.current_files = []
+        self.TwitchAPI = None
         self.json_file = os.path.normpath(f"Data{os.path.sep}parameters.json")
         self.current_json_file = os.path.normpath(f"Data{os.path.sep}current.json")
         self.current_model_json_file = os.path.normpath(f"Data{os.path.sep}current_model.json")
@@ -266,6 +267,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.TwitchAPI.event_signal.connect(self.shortcut_received)
         self.twitchApiBtn.setText("Change Twitch API keys")
         self.TwitchAPI.start()
+        self.get_shortcuts()
 
     def update_viewer_files(self):
         try:
@@ -422,7 +424,8 @@ class MainWindow(QtWidgets.QMainWindow):
                         })
         self.midi_listener.update_shortcuts(midi)
         self.keyboard_listener.update_shortcuts(keyboard)
-        self.TwitchAPI.update_shortcuts(twitch)
+        if self.TwitchAPI is not None:
+            self.TwitchAPI.update_shortcuts(twitch)
 
     def changePage(self, index):
         self.stackedWidget.setCurrentIndex(index)
