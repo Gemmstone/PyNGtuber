@@ -1,10 +1,11 @@
 {
-    "volume threshold": 27,
-    "scream threshold": 97,
-    "delay threshold": 17,
-    "microphone selection": 1,
+    "volume threshold": 7,
+    "scream threshold": 93,
+    "delay threshold": 2,
+    "microphone selection": 11,
     "microphone mute": false,
     "background color": 0,
     "export mode": 0,
-    "hide UI": true
+    "hide UI": true,
+    "max_reference_volume": 0.5
 }

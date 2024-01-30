@@ -1,5 +1,6 @@
 from PyQt6.QtCore import QThread, pyqtSignal, QTimer
 from PyQt6.QtWidgets import QWidget
+import sounddevice as sd
 from PyQt6 import uic
 import numpy as np
 import traceback
@@ -10,78 +11,61 @@ class AudioThread(QThread):
     audio_stream_signal = pyqtSignal(int)
     audio_stream_error = pyqtSignal(str)
 
-    def __init__(self, parent=None):
+    def __init__(self, max_reference_volume=0.5, parent=None):
         super().__init__(parent)
         self.audio_stream = None
         self.selected_microphone_index = None
-        self.p = pyaudio.PyAudio()
+        self.max_reference_volume = max_reference_volume
 
     def run(self):
         if self.selected_microphone_index is not None:
             try:
-                device_info = self.p.get_device_info_by_index(self.selected_microphone_index)
-                supported_sample_rate = device_info['defaultSampleRate']
+                device_info = sd.query_devices(self.selected_microphone_index)
+                # print(device_info)
+                supported_sample_rate = device_info['default_samplerate']
             except BaseException as e:
                 self.handle_error(e)
                 return
 
-            try:
-                self.audio_stream = self.p.open(
-                    format=pyaudio.paInt16,
-                    channels=1,
-                    rate=int(supported_sample_rate),
-                    input=True,
-                    input_device_index=self.selected_microphone_index,
-                    frames_per_buffer=1024,
-                    stream_callback=self.callback
-                )
-                self.audio_stream.start_stream()
-            except BaseException as e:
-                self.stop_stream()
-                self.handle_error(e)
+            with sd.InputStream(
+                    channels=1, device=self.selected_microphone_index, callback=self.callback,
+                    samplerate=supported_sample_rate
+            ):
+                self.exec()
 
     def stop_stream(self):
-        try:
-            if self.audio_stream is not None:
-                self.audio_stream.stop_stream()
-                self.audio_stream.close()
-                self.audio_stream = None
-        except OSError as e:
-            self.handle_error(e)
+        # print("stopped")
+        self.quit()
 
     def handle_error(self, error):
         print(f"An error occurred: {error}")
+        self.audio_stream_error.emit(str(error))
 
     def set_microphone_index(self, index):
         self.selected_microphone_index = index
 
-    def callback(self, in_data, frame_count, time_info, status):
-        if status:
-            self.audio_stream.close()
-            self.audio_stream = None
-            self.audio_stream_error.emit(f"{status}")
+    def change_max_reference_volume(self, new_value):
+        self.max_reference_volume = new_value
 
-        audio_data = np.frombuffer(in_data, dtype=np.int16)
-        rms_volume = abs(np.max(audio_data))
-
-        volume = int((rms_volume / 32768) * 100)
-
-        self.audio_stream_signal.emit(volume)
-        # print(volume, frame_count, time_info, status)
-
-        return None, pyaudio.paContinue
+    def callback(self, indata, outdata, frames, time):
+        volume = np.sqrt(np.mean(indata**2))
+        normalized_volume = int((volume / self.max_reference_volume) * 100)
+        normalized_volume = min(100, max(0, normalized_volume))
+        # print(volume, normalized_volume)
+        self.audio_stream_signal.emit(normalized_volume)
 
 
 class MicrophoneVolumeWidget(QWidget):
     activeAudio = pyqtSignal(int)
     settingsChanged = pyqtSignal()
 
-    def __init__(self):
+    def __init__(self, max_reference_volume=0.5):
         super().__init__()
         uic.loadUi("UI/audioMonitor.ui", self)
         self.device_dict = {}
         self.previous_state = False
         self.active_audio_signal = -1
+        self.max_reference_volume = max_reference_volume
         
         self.inactivity_timer = QTimer(self)
         self.inactivity_timer.timeout.connect(self.check_inactivity)
@@ -95,6 +79,10 @@ class MicrophoneVolumeWidget(QWidget):
 
         self.label.hide()
         self.loadStart()
+
+    def change_max_reference_volume(self, new_value):
+        self.max_reference_volume = new_value
+        self.audio_thread.change_max_reference_volume(new_value)
 
     def load_settings(self, settings):
         self.volume.setValue(settings["volume threshold"])
@@ -131,29 +119,30 @@ class MicrophoneVolumeWidget(QWidget):
     def list_microphones(self):
         excluded = ["jack", "speex", "upmix", "vdownmix"]
 
-        p = pyaudio.PyAudio()
-        num_devices = p.get_device_count()
+        devices = sd.query_devices()
 
-        for i in range(num_devices):
-            try:
-                info = p.get_device_info_by_host_api_device_index(0, i)
-                name = info.get('name')
-                max_input_channels = info.get('maxInputChannels')
-                if 24 > max_input_channels > 0 or name == "default":
-                    if name not in excluded:
+        # for device in devices:
+        #     print()
+        #     print(f"Device Name: {device['name']}")
+        #     print(f"Input Channels: {device['max_input_channels']}")
+        #     print(f"Output Channels: {device['max_output_channels']}")
+        #     print(f"Default Sample Rate: {device['default_samplerate']} Hz")
+        #     print(f"Default Input Latency: {device['default_low_input_latency']} seconds")
+        #     print(f"Default Output Latency: {device['default_low_output_latency']} seconds")
+        #     print(f"Supports Full Duplex: {device['default_full_duplex']}")
 
-                        self.device_dict[name] = i
-                        self.microphones.addItem(name)
-                        if name == "default":
-                            self.microphones.setCurrentText(name)
+        microphone_devices = [device for device in devices if device['max_input_channels'] > 0]
 
-            except OSError as e:
-                if e.errno != -9996:
-                    print(f"Error when accessing device {i}: {str(e)}")
+        for idx, mic in enumerate(microphone_devices):
+            name = mic['name']
+            index = mic['index']
+            if name not in excluded:
+                self.device_dict[name] = index
+                self.microphones.addItem(f"{name}")
+                if name == "default":
+                    self.microphones.setCurrentText(name)
 
-        p.terminate()
-
-    def update_audio_stream(self):
+    def update_audio_stream(self, force=False):
         self.label.hide()
         selected_microphone_name = self.microphones.currentText()
         selected_microphone_index = self.device_dict.get(selected_microphone_name)
@@ -161,7 +150,7 @@ class MicrophoneVolumeWidget(QWidget):
             if self.mute.isChecked():
                 if self.audio_thread.isRunning():
                     self.audio_thread.stop_stream()
-            elif self.last_microphone != selected_microphone_index:
+            elif self.last_microphone != selected_microphone_index or force:
                 if self.audio_thread.isRunning():
                     self.audio_thread.stop_stream()
                 self.audio_thread.set_microphone_index(selected_microphone_index)
@@ -195,4 +184,4 @@ class MicrophoneVolumeWidget(QWidget):
 
     def check_inactivity(self):
         print("No audio data received for a while. Restarting the stream.")
-        self.update_audio_stream()
+        self.update_audio_stream(force=True)

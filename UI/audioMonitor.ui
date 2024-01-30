@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>267</width>
-    <height>206</height>
+    <height>215</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -108,7 +108,8 @@
       <string notr="true">color: rgb(255, 0, 4);</string>
      </property>
      <property name="text">
-      <string>Este Micrófono tiene problemas</string>
+      <string>This mic has some
+unidentified problems</string>
      </property>
     </widget>
    </item>

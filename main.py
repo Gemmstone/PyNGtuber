@@ -229,6 +229,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.twitchApiBtn.clicked.connect(self.update_keys)
 
+        self.reference_volume.valueChanged.connect(self.change_max_reference_volume)
+
         self.toggle_editor()
         self.update_viewer(self.current_files, update_gallery=True)
 
@@ -237,6 +239,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.viewer.page().runJavaScript("document.body.style.transform = 'scaleX(-1)';")
         else:
             self.viewer.page().runJavaScript("document.body.style.transform = 'scaleX(1)';")
+
+    def change_max_reference_volume(self):
+        self.audio.change_max_reference_volume(new_value=self.reference_volume.value())
+        self.update_settings()
 
     def update_keys(self):
         twitch_dialog = twitchKeysDialog(APP_ID=self.twitch_api_client, APP_SECRET=self.twitch_api_secret)
@@ -339,6 +345,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.comboBox.setCurrentIndex(self.settings["background color"])
         self.PNGmethod.setCurrentIndex(self.settings["export mode"])
         self.HideUI.setChecked(self.settings["hide UI"])
+        # self.reference_volume.setChecked(self.settings["max_reference_volume"])
 
     def update_settings(self):
         self.settings = {
@@ -349,7 +356,8 @@ class MainWindow(QtWidgets.QMainWindow):
             "microphone mute": self.audio.mute.isChecked(),
             "background color": self.comboBox.currentIndex(),
             "export mode": self.PNGmethod.currentIndex(),
-            "hide UI": self.HideUI.isChecked()
+            "hide UI": self.HideUI.isChecked(),
+            "max_reference_volume": self.reference_volume.value()
         }
         self.save_parameters_to_json()
 

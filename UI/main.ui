@@ -2293,6 +2293,77 @@ QFrame{
                            </widget>
                           </item>
                           <item>
+                           <widget class="QGroupBox" name="groupBox_10">
+                            <property name="title">
+                             <string>Audio</string>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_50">
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>23</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QFrame" name="audioFrame_3">
+                               <property name="styleSheet">
+                                <string notr="true"/>
+                               </property>
+                               <property name="frameShape">
+                                <enum>QFrame::StyledPanel</enum>
+                               </property>
+                               <property name="frameShadow">
+                                <enum>QFrame::Raised</enum>
+                               </property>
+                               <layout class="QGridLayout" name="gridLayout_2">
+                                <item row="0" column="0">
+                                 <widget class="QLabel" name="label">
+                                  <property name="toolTip">
+                                   <string>Adjust if you feel that your microphone is too quiet or too loud</string>
+                                  </property>
+                                  <property name="text">
+                                   <string>max volume ref.:</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item row="0" column="1">
+                                 <widget class="QDoubleSpinBox" name="reference_volume">
+                                  <property name="toolTip">
+                                   <string>Adjust if you feel that your microphone is too quiet or too loud</string>
+                                  </property>
+                                  <property name="alignment">
+                                   <set>Qt::AlignCenter</set>
+                                  </property>
+                                  <property name="prefix">
+                                   <string/>
+                                  </property>
+                                  <property name="decimals">
+                                   <number>4</number>
+                                  </property>
+                                  <property name="minimum">
+                                   <double>0.000100000000000</double>
+                                  </property>
+                                  <property name="singleStep">
+                                   <double>0.100000000000000</double>
+                                  </property>
+                                  <property name="value">
+                                   <double>0.500000000000000</double>
+                                  </property>
+                                 </widget>
+                                </item>
+                               </layout>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
                            <widget class="QGroupBox" name="groupBox_12">
                             <property name="styleSheet">
                              <string notr="true">*{
