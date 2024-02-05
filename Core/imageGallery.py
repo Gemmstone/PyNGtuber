@@ -13,9 +13,10 @@ import os
 class ImageGallery(QToolBox):
     selectionChanged = pyqtSignal(list)
 
-    def __init__(self, load_model):
+    def __init__(self, load_model, exe_dir):
         super().__init__()
         self.last_model = None
+        self.exe_dir = exe_dir
 
         StyleSheet = """
 
@@ -120,7 +121,7 @@ class ImageGallery(QToolBox):
 
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        self.folder_path = os.path.join(script_dir, f"..{os.path.sep}Assets")
+        self.folder_path = os.path.join(self.exe_dir, f"Assets")
 
     def create_thumbnail(self, input_path, max_size=(50, 50), quality=90, custom_name=None):
         file_name = os.path.basename(input_path)
@@ -322,9 +323,9 @@ class ModelItem(QGroupBox):
     deleted = pyqtSignal()
     saving = pyqtSignal(str)
 
-    def __init__(self, modelName, modelType):
+    def __init__(self, modelName, modelType, exe_dir):
         super().__init__()
-        uic.loadUi("UI/avatar.ui", self)
+        uic.loadUi(os.path.join(exe_dir, f"UI", "avatar.ui"), self)
         self.modelName = modelName
         self.modelType = modelType
 
@@ -419,10 +420,11 @@ class ModelGallery(QWidget):
     shortcut = pyqtSignal(dict)
     saving = pyqtSignal(str)
 
-    def __init__(self, models_list, models_type):
+    def __init__(self, models_list, models_type, exe_dir):
         super().__init__()
         self.models_list = models_list
         self.models_type = models_type
+        self.exe_dir = exe_dir
         layout = QVBoxLayout()
 
         layout.setContentsMargins(0, 0, 0, 0)
@@ -443,7 +445,7 @@ class ModelGallery(QWidget):
             self.add_model(model)
 
     def add_model(self, model):
-        model_item = ModelItem(model, self.models_type)
+        model_item = ModelItem(model, self.models_type, self.exe_dir)
 
         model_item.selected.connect(self.selected.emit)
         model_item.deleted.connect(self.model_deleted)

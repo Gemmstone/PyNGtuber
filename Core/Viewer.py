@@ -8,7 +8,7 @@ import os
 class LayeredImageViewer(QWebEngineView):
     loadFinishedSignal = pyqtSignal(bool)
 
-    def __init__(self, parent=None):
+    def __init__(self, exe_dir, parent=None):
         super(LayeredImageViewer, self).__init__(parent)
         self.html_code = ""
         self.setColor("#b8cdee")
@@ -18,7 +18,7 @@ class LayeredImageViewer(QWebEngineView):
         settings = self.page().settings()
         settings.setAttribute(QWebEngineSettings.WebAttribute.LocalStorageEnabled, True)
 
-        self.file = f'Viewer{os.path.sep}viewer.html'
+        self.file = os.path.join(exe_dir, 'Viewer', 'viewer.html')
         self.file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), self.file)
 
         self.updateImages()

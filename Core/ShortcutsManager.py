@@ -240,10 +240,10 @@ class ShortcutsDialog(QtWidgets.QDialog):
             self, midi_listener: MidiListener,
             keyboard_listener: KeyboardListener,
             twitch_listener: TwitchAPI,
-            data, parent=None
+            data, exe_dir, parent=None
     ):
         super().__init__(parent)
-        uic.loadUi(os.path.normpath(f"UI{os.path.sep}shortcutsManager.ui"), self)
+        uic.loadUi(os.path.join(exe_dir, f"UI", "shortcutsManager.ui"), self)
 
         self.midi_shortcuts = []
         self.keyboard_shortcuts = []

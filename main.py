@@ -18,12 +18,15 @@ import sys
 import os
 
 
+exe_dir = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
+
+
 class twitchKeysDialog(QtWidgets.QDialog):
     new_keys = QtCore.pyqtSignal(dict)
 
     def __init__(self, APP_ID, APP_SECRET, parent=None):
         super().__init__(parent)
-        uic.loadUi(os.path.normpath(f"UI{os.path.sep}auth_twitch.ui"), self)
+        uic.loadUi(os.path.join(exe_dir, f"UI", "auth_twitch.ui"), self)
 
         self.APP_ID = APP_ID
         self.APP_SECRET = APP_SECRET
@@ -46,7 +49,7 @@ class twitchKeysDialog(QtWidgets.QDialog):
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi(os.path.normpath(f"UI{os.path.sep}main.ui"), self)
+        uic.loadUi(os.path.join(exe_dir, f"UI", "main.ui"), self)
 
         self.setWindowTitle("PyNGTuber")
 
@@ -54,22 +57,22 @@ class MainWindow(QtWidgets.QMainWindow):
         self.file_parameters_current = {}
         self.current_files = []
         self.TwitchAPI = None
-        self.json_file = os.path.normpath(f"Data{os.path.sep}parameters.json")
-        self.current_json_file = os.path.normpath(f"Data{os.path.sep}current.json")
-        self.current_model_json_file = os.path.normpath(f"Data{os.path.sep}current_model.json")
-        self.current_expression_json_file = os.path.normpath(f"Data{os.path.sep}current_expression.json")
-        self.settings_json_file = os.path.normpath(f"Data{os.path.sep}settings.json")
-        self.apiKeys = os.path.normpath(f"Data{os.path.sep}keys.json")
+        self.json_file = os.path.join(exe_dir, "Data", "parameters.json")
+        self.current_json_file = os.path.join(exe_dir, "Data", "current.json")
+        self.current_model_json_file = os.path.join(exe_dir, "Data", "current_model.json")
+        self.current_expression_json_file = os.path.join(exe_dir, "Data", "current_expression.json")
+        self.settings_json_file = os.path.join(exe_dir, "Data", "settings.json")
+        self.apiKeys = os.path.join(exe_dir, "Data", "keys.json")
 
-        self.js_file = os.path.normpath(f"Viewer{os.path.sep}mouseControl.js")
-        self.css_file = os.path.normpath(f"Viewer{os.path.sep}styles.css")
-        self.anim_file = os.path.normpath(f"Viewer{os.path.sep}animations.css")
-        self.html_file = os.path.normpath(f"Viewer{os.path.sep}viewer.html")
+        self.js_file = os.path.join(exe_dir, "Viewer", "mouseControl.js")
+        self.css_file = os.path.join(exe_dir, "Viewer", "styles.css")
+        self.anim_file = os.path.join(exe_dir, "Viewer", "animations.css")
+        self.html_file = os.path.join(exe_dir, "Viewer", "viewer.html")
 
-        self.js_file_default = os.path.normpath(f"Viewer{os.path.sep}default{os.path.sep}mouseControl.js")
-        self.css_file_default = os.path.normpath(f"Viewer{os.path.sep}default{os.path.sep}styles.css")
-        self.anim_file_default = os.path.normpath(f"Viewer{os.path.sep}default{os.path.sep}animations.css")
-        self.html_file_default = os.path.normpath(f"Viewer{os.path.sep}default{os.path.sep}viewer.html")
+        self.js_file_default = os.path.join(exe_dir, "Viewer", "default", "mouseControl.js")
+        self.css_file_default = os.path.join(exe_dir, "Viewer", "default", "styles.css")
+        self.anim_file_default = os.path.join(exe_dir, "Viewer", "default", "animations.css")
+        self.html_file_default = os.path.join(exe_dir, "Viewer", "default", "viewer.html")
 
         self.keyboard_listener = KeyboardListener()
         self.keyboard_listener.shortcut.connect(self.shortcut_received)
@@ -160,7 +163,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.get_shortcuts()
 
-        self.audio = MicrophoneVolumeWidget()
+        self.audio = MicrophoneVolumeWidget(exe_dir=exe_dir)
         self.audio.activeAudio.connect(self.audioStatus)
         self.audioFrame.layout().addWidget(self.audio)
         self.audio.load_settings(settings=self.settings)
@@ -172,20 +175,20 @@ class MainWindow(QtWidgets.QMainWindow):
         self.HideUI.toggled.connect(self.update_settings)
         self.flipCanvasToggle.toggled.connect(self.flipCanvas)
 
-        self.SettingsGallery = SettingsToolBox()
+        self.SettingsGallery = SettingsToolBox(exe_dir=exe_dir)
         self.SettingsGallery.settings_changed.connect(self.saveSettings)
         self.SettingsGallery.shortcut.connect(self.dialog_shortcut)
         self.SettingsGallery.delete_shortcut.connect(self.delete_shortcut)
         self.scrollArea_2.setWidget(self.SettingsGallery)
 
-        self.ImageGallery = ImageGallery(self.current_files)
+        self.ImageGallery = ImageGallery(self.current_files, exe_dir=exe_dir)
         self.ImageGallery.selectionChanged.connect(self.update_viewer)
         self.ImageGallery.currentChanged.connect(self.change_settings_gallery)
         self.scrollArea.setWidget(self.ImageGallery)
 
         self.comboBox.currentIndexChanged.connect(self.setBGColor)
 
-        self.viewer = LayeredImageViewer()
+        self.viewer = LayeredImageViewer(exe_dir=exe_dir)
         self.viewer.loadFinishedSignal.connect(self.reboot_audio)
         self.viewerFrame.layout().addWidget(self.viewer)
         self.viewer.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
@@ -194,14 +197,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.scrollArea_5.setWidget(self.expressionSelector)
 
         self.savedAvatars = [folder for folder in os.listdir(os.path.normpath("Models/Avatars")) if "." not in folder]
-        self.modelGallery = ModelGallery(models_list=self.savedAvatars, models_type="Avatars")
+        self.modelGallery = ModelGallery(models_list=self.savedAvatars, models_type="Avatars", exe_dir=exe_dir)
         self.modelGallery.saving.connect(self.save_avatar)
         self.modelGallery.selected.connect(self.load_model)
         self.modelGallery.shortcut.connect(self.dialog_shortcut)
         self.frameModels.layout().addWidget(self.modelGallery)
 
         self.savedExpressions = [folder for folder in os.listdir(os.path.normpath("Models/Expressions")) if "." not in folder]
-        self.expressionGallery = ModelGallery(models_list=self.savedExpressions, models_type="Expressions")
+        self.expressionGallery = ModelGallery(models_list=self.savedExpressions, models_type="Expressions", exe_dir=exe_dir)
         self.expressionGallery.saving.connect(self.save_expression)
         self.expressionGallery.selected.connect(self.load_model)
         self.expressionGallery.shortcut.connect(self.dialog_shortcut)
@@ -379,7 +382,7 @@ class MainWindow(QtWidgets.QMainWindow):
             "TwitchGiftedSub": []
         }
 
-        for root, dirs, files in os.walk("Models"):
+        for root, dirs, files in os.walk(os.path.join(exe_dir, "Models")):
             for filename in files:
                 if filename == "data.json":
                     data_json_path = os.path.join(root, filename)
@@ -511,21 +514,21 @@ class MainWindow(QtWidgets.QMainWindow):
             midi_listener=self.midi_listener,
             keyboard_listener=self.keyboard_listener,
             twitch_listener=self.TwitchAPI,
-            data=data
+            data=data, exe_dir=exe_dir
         )
         dialog.new_command.connect(self.create_shortcuts)
         dialog.exec()
 
     def create_shortcuts(self, data):
         if data["type"] in ["Avatars", "Expressions"]:
-            mainFolder = os.path.normpath(f"Models/{data['type']}")
+            mainFolder = str(os.path.join(exe_dir, "Models", data['type']))
             with open(
-                    os.path.normpath(f"{mainFolder}{os.path.sep}{data['name']}{os.path.sep}data.json"), 'r'
+                    os.path.join(mainFolder, data['name'], "data.json"), 'r'
             ) as json_file:
                 old_data = json.load(json_file)
             old_data["shortcuts"] = copy.deepcopy(data['value']["hotkeys"])
             with open(
-                    os.path.normpath(f"{mainFolder}{os.path.sep}{data['name']}{os.path.sep}data.json"), 'w'
+                    os.path.join(mainFolder, data['name'], "data.json"), 'w'
             ) as json_file:
                 json.dump(old_data, json_file, indent=4)
             self.modelGallery.reload_models(self.savedAvatars)
@@ -561,7 +564,7 @@ class MainWindow(QtWidgets.QMainWindow):
             elif data["type"] == "Expressions":
                 data = copy.deepcopy(self.last_expression)
 
-        with open(os.path.normpath(f"Models/{data['type']}/{data['name']}/model.json"), "r") as load_file:
+        with open(os.path.join(exe_dir, "Models", data['type'], data['name'], "model.json"), "r") as load_file:
             files = json.load(load_file)
             for file in files:
                 self.file_parameters_current[os.path.normpath(file["route"])] = \
@@ -590,7 +593,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.current_expression = copy.deepcopy(data)
 
     def check_if_expression(self, file):
-        with open(os.path.normpath("Data/expressionFolders.json"), "r") as expressions_list:
+        with open(os.path.join(exe_dir, "Data", "expressionFolders.json"), "r") as expressions_list:
             for expression in json.load(expressions_list):
                 if expression in file:
                     return True
@@ -600,18 +603,18 @@ class MainWindow(QtWidgets.QMainWindow):
         text, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter new category name:')
 
         if ok:
-            if os.path.exists(os.path.join("Assets", text)):
+            if os.path.exists(os.path.join(exe_dir, "Assets", text)):
                 msg = QtWidgets.QMessageBox()
                 msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
                 msg.setText("Asset category with this name already exists.")
                 msg.setWindowTitle("Warning")
                 msg.exec()
             else:
-                os.mkdir(os.path.join("Assets", text))
+                os.mkdir(os.path.join(exe_dir, "Assets", text))
         self.update_viewer(self.current_files, update_gallery=True)
 
     def OpenAssetsFolder(self):
-        path = os.path.normpath("Assets/")
+        path = os.path.join(exe_dir, "Assets")
         if os.name == "posix":
             subprocess.run(["xdg-open", path])
         elif os.name == "nt":
@@ -620,7 +623,7 @@ class MainWindow(QtWidgets.QMainWindow):
             print("Unsupported operating system")
 
     def get_folders_in_assets(self):
-        folder_path = os.path.normpath("./Assets")
+        folder_path = os.path.join(exe_dir, "Assets")
         if os.path.exists(folder_path) and os.path.isdir(folder_path):
             folders = [self.tr(f) for f in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, f))]
             return [self.tr("Select Category...")] + folders
@@ -646,7 +649,7 @@ class MainWindow(QtWidgets.QMainWindow):
             modelName, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter new avatar name:')
 
         if ok:
-            directory = os.path.normpath(f"Models/Avatars/{modelName}")
+            directory = os.path.join(exe_dir, "Models", "Avatars", modelName)
             if model is None or model is False:
                 if os.path.exists(directory):
                     msg = QtWidgets.QMessageBox()
@@ -669,7 +672,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.modelGallery.add_model(modelName)
             else:
                 self.modelGallery.reload_models(
-                    [folder for folder in os.listdir(f"Models{os.path.sep}Avatars") if "." not in folder])
+                    [folder for folder in os.listdir(os.path.join(exe_dir, "Models", "Avatars")) if "." not in folder])
 
     def save_expression(self, model=None):
         if model is not None and model is not False:
@@ -690,7 +693,7 @@ class MainWindow(QtWidgets.QMainWindow):
             modelName, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter new expression name:')
 
         if ok:
-            directory = os.path.normpath(f"Models{os.path.sep}Expressions{os.path.sep}{modelName}")
+            directory = os.path.join(exe_dir, "Models", "Expressions", modelName)
             if model is None or model is False:
                 if os.path.exists(directory):
                     msg = QtWidgets.QMessageBox()
@@ -708,20 +711,20 @@ class MainWindow(QtWidgets.QMainWindow):
                 if any(route in file["route"] for route in self.expressionSelector.selected_folders)
             ]
             self.image_generator(output_name=temp, method=2, savingModel=2, custom_file_list=files)
-            self.save_model(directory, modelName, temp, files)
+            self.save_model(str(directory), modelName, temp, files)
             if model is None or model is False:
                 self.expressionGallery.add_model(modelName)
             else:
                 self.expressionGallery.reload_models(
-                    [folder for folder in os.listdir(f"Models{os.path.sep}Expressions") if "." not in folder])
+                    [folder for folder in os.listdir(os.path.join(exe_dir, "Models", "Expressions")) if "." not in folder])
 
     def save_model(self, directory, modelName, temp, files):
-        self.ImageGallery.create_thumbnail(temp, custom_name=f"{directory}{os.path.sep}thumb.png")
+        self.ImageGallery.create_thumbnail(temp, custom_name=os.path.join(directory, "thumb.png"))
         os.remove(temp)
-        with open(os.path.normpath(f"{directory}{os.path.sep}model.json"), "w") as file:
+        with open(os.path.join(directory, "model.json"), "w") as file:
             json.dump(files, file, indent=4)
 
-        data_file = os.path.normpath(f"{directory}{os.path.sep}data.json")
+        data_file = os.path.normpath(os.path.join(directory, "data.json"))
         if os.path.exists(data_file):
             with open(data_file, "r") as file:
                 data = json.load(file)

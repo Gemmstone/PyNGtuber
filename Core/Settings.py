@@ -11,9 +11,9 @@ class Settings(QWidget):
     shortcut = pyqtSignal(dict)
     delete_shortcut = pyqtSignal(dict)
 
-    def __init__(self, parameters):
+    def __init__(self, parameters, exe_dir):
         super().__init__()
-        uic.loadUi("UI/settingsWidget.ui", self)
+        uic.loadUi(os.path.join(exe_dir, f"UI", "settingsWidget.ui"), self)
         self.parameters = parameters
         self.sizeX.setValue(self.parameters["sizeX"])
         self.sizeY.setValue(self.parameters["sizeY"])
@@ -180,11 +180,12 @@ class SettingsToolBox(QToolBox):
     shortcut = pyqtSignal(dict)
     delete_shortcut = pyqtSignal(dict)
 
-    def __init__(self):
+    def __init__(self, exe_dir):
         super().__init__()
 
         self.items = []
         self.page = None
+        self.exe_dir = exe_dir
 
         StyleSheet = """
 
@@ -333,7 +334,7 @@ class SettingsToolBox(QToolBox):
                     )
                 )
 
-                settings_widget = Settings(item)
+                settings_widget = Settings(item, exe_dir=self.exe_dir)
                 settings_widget.settings_changed.connect(self.save)
                 settings_widget.settings_changed_default.connect(self.save_as_default)
                 settings_widget.delete_shortcut.connect(self.delete_shortcut_)

@@ -4,7 +4,7 @@ import sounddevice as sd
 from PyQt6 import uic
 import numpy as np
 import traceback
-import pyaudio
+import os
 
 
 class AudioThread(QThread):
@@ -59,9 +59,9 @@ class MicrophoneVolumeWidget(QWidget):
     activeAudio = pyqtSignal(int)
     settingsChanged = pyqtSignal()
 
-    def __init__(self, max_reference_volume=0.5):
+    def __init__(self, exe_dir, max_reference_volume=0.5):
         super().__init__()
-        uic.loadUi("UI/audioMonitor.ui", self)
+        uic.loadUi(os.path.join(exe_dir, f"UI", "audioMonitor.ui"), self)
         self.device_dict = {}
         self.previous_state = False
         self.active_audio_signal = -1
