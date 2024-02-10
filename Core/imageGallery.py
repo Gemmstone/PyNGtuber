@@ -179,7 +179,17 @@ class ImageGallery(QToolBox):
                             child_widget = row_layout.itemAt(j).widget()
                             if child_widget and isinstance(child_widget, QPushButton):
                                 button_name = child_widget.accessibleName()
+
+                                if button_name.startswith("Assets"):
+                                    route = button_name
+                                else:
+                                    directory, filename = os.path.split(button_name)
+                                    assets_index = directory.split(os.sep).index('Assets')
+                                    route = os.path.join(*directory.split(os.sep)[assets_index:], filename)
+
                                 child_widget.setChecked(button_name in load_model)
+                                # print(button_name, load_model)
+                                # print(button_name in load_model)
 
     def load_images(self, load_model=None):
         self.last_model = load_model
@@ -230,12 +240,20 @@ class ImageGallery(QToolBox):
                     for file in files:
                         if file.lower().endswith((".png", ".jpg", ".jpeg", ".gif")):
                             button_name = str(os.path.join(subdir, file)).split(f"{os.path.sep}..{os.path.sep}")[-1]
+
+                            if button_name.startswith("Assets"):
+                                route = button_name
+                            else:
+                                directory, filename = os.path.split(button_name)
+                                assets_index = directory.split(os.sep).index('Assets')
+                                route = os.path.join(*directory.split(os.sep)[assets_index:], filename)
+
                             item = QPushButton()
                             item.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
                             item.setIcon(self.create_thumbnail(os.path.join(subdir, file)))
                             item.setIconSize(QSize(20, 30) if os.name == 'nt' else QSize(30, 40))
-                            item.setAccessibleName(button_name)
-                            item.setToolTip(str(os.path.join(subdir, file)))
+                            item.setAccessibleName(route)
+                            item.setToolTip(str(route))
                             item.setCheckable(True)
                             item.setStyleSheet("QPushButton:checked{background-color: red !important}")
                             if load_model is not None:
