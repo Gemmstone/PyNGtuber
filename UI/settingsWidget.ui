@@ -1413,7 +1413,7 @@ QTabBar::tab:hover {
                <number>9999</number>
               </property>
               <property name="singleStep">
-               <number>5</number>
+               <number>50</number>
               </property>
               <property name="value">
                <number>50</number>
@@ -1470,7 +1470,7 @@ QTabBar::tab:hover {
                <number>9999</number>
               </property>
               <property name="singleStep">
-               <number>5</number>
+               <number>50</number>
               </property>
               <property name="value">
                <number>50</number>
