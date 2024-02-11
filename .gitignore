@@ -2,7 +2,6 @@
 /venv/
 /Builds/
 /.idea/
-/Data/keys.json
 /Data/user_token.json
 build.sh
 build.bat

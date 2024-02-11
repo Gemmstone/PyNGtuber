@@ -10,6 +10,7 @@ from twitchAPI.type import AuthScope
 from twitchAPI.twitch import Twitch
 from twitchAPI.helper import first
 from PyQt6.QtGui import QIcon
+from aiohttp.client_exceptions import ClientConnectionError
 import os.path
 import asyncio
 import json
@@ -90,17 +91,22 @@ class TwitchAPI(QThread):
         )
 
     async def _run(self):
-        await self.authorize()
-        user = await first(self.twitch.get_users())
-        await self.listen(user)
+        auth = await self.authorize()
+        if auth:
+            user = await first(self.twitch.get_users())
+            await self.listen(user)
 
     async def authorize(self):
-        self.twitch = await Twitch(self.APP_ID, self.APP_SECRET)
-        helper = UserAuthenticationStorageHelper(
-            self.twitch, self.TARGET_SCOPES,
-            storage_path=os.path.normpath(f"Data{os.path.sep}user_token.json")
-        )
-        await helper.bind()
+        try:
+            self.twitch = await Twitch(self.APP_ID, self.APP_SECRET)
+            helper = UserAuthenticationStorageHelper(
+                self.twitch, self.TARGET_SCOPES,
+                storage_path=os.path.normpath(f"Data{os.path.sep}user_token.json")
+            )
+            await helper.bind()
+            return True
+        except ClientConnectionError:
+            return False
 
     async def listen(self, user):
         self.eventsub = EventSubWebsocket(self.twitch)

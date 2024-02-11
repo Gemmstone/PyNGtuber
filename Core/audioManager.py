@@ -183,5 +183,6 @@ class MicrophoneVolumeWidget(QWidget):
                 self.activeAudio.emit(self.active_audio_signal)
 
     def check_inactivity(self):
-        print("No audio data received for a while. Restarting the stream.")
-        self.update_audio_stream(force=True)
+        if not self.mute.isChecked():
+            print("No audio data received for a while. Restarting the stream.")
+            self.update_audio_stream(force=True)

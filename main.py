@@ -64,12 +64,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings_json_file = os.path.join(exe_dir, "Data", "settings.json")
         self.apiKeys = os.path.join(exe_dir, "Data", "keys.json")
 
-        self.js_file = os.path.join(exe_dir, "Viewer", "mouseControl.js")
+        self.js_file = os.path.join(exe_dir, "Viewer", "script.js")
         self.css_file = os.path.join(exe_dir, "Viewer", "styles.css")
         self.anim_file = os.path.join(exe_dir, "Viewer", "animations.css")
         self.html_file = os.path.join(exe_dir, "Viewer", "viewer.html")
 
-        self.js_file_default = os.path.join(exe_dir, "Viewer", "default", "mouseControl.js")
+        self.js_file_default = os.path.join(exe_dir, "Viewer", "default", "script.js")
         self.css_file_default = os.path.join(exe_dir, "Viewer", "default", "styles.css")
         self.anim_file_default = os.path.join(exe_dir, "Viewer", "default", "animations.css")
         self.html_file_default = os.path.join(exe_dir, "Viewer", "default", "viewer.html")

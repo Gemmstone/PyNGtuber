@@ -22,9 +22,27 @@ class Settings(QWidget):
         self.og_height = self.parameters["sizeY"]
 
         self.posX.setValue(self.parameters["posX"])
-        self.posY.setValue(self.parameters["posY"])
+        self.posY.setValue(self.parameters["posY"] * -1)
         self.posZ.setValue(self.parameters["posZ"])
         self.rotation.setValue(self.parameters["rotation"])
+
+        self.originX.setValue(self.parameters.get("originX", 0))
+        self.originY.setValue(self.parameters.get("originY", 0) * -1)
+        self.deg.setValue(self.parameters.get("deg", 90))
+        self.deadzone.setValue(self.parameters.get("deadzone", 0.0550))
+        self.player.setValue(self.parameters.get("player", 0))
+        self.buttonCombo.setCurrentIndex(self.parameters.get("buttons", 0))
+
+        self.posBothX.setValue(self.parameters.get("posBothX", 0))
+        self.posBothY.setValue(self.parameters.get("posBothY", 0) * -1)
+        self.rotationBoth.setValue(self.parameters.get("rotationBoth", 0))
+        self.posLeftX.setValue(self.parameters.get("posLeftX", 0))
+        self.posLeftY.setValue(self.parameters.get("posLeftY", 0) * -1)
+        self.rotationLeft.setValue(self.parameters.get("rotationLeft", 0))
+        self.posRightX.setValue(self.parameters.get("posRightX", 0))
+        self.posRightY.setValue(self.parameters.get("posRightY", 0) * -1)
+        self.rotationRight.setValue(self.parameters.get("rotationRight", 0))
+
         self.check_hotkeys()
 
         self.sizeX.valueChanged.connect(self.maintain_aspect_ratio_w)
@@ -36,30 +54,63 @@ class Settings(QWidget):
         self.posY.valueChanged.connect(self.save_current)
         self.posZ.valueChanged.connect(self.save_current)
         self.rotation.valueChanged.connect(self.save_current)
+        self.originY.valueChanged.connect(self.save_current)
+        self.originY.valueChanged.connect(self.save_current)
+
+        self.posBothX.valueChanged.connect(self.save_current)
+        self.posBothY.valueChanged.connect(self.save_current)
+        self.rotationBoth.valueChanged.connect(self.save_current)
+        self.posLeftX.valueChanged.connect(self.save_current)
+        self.posLeftY.valueChanged.connect(self.save_current)
+        self.rotationLeft.valueChanged.connect(self.save_current)
+        self.posRightX.valueChanged.connect(self.save_current)
+        self.posRightY.valueChanged.connect(self.save_current)
+        self.rotationRight.valueChanged.connect(self.save_current)
+
+        self.deg.valueChanged.connect(self.save_current)
+        self.deadzone.valueChanged.connect(self.save_current)
+        self.player.valueChanged.connect(self.save_current)
+        self.buttonCombo.currentIndexChanged.connect(self.save_current)
         self.setShortcut.clicked.connect(self.request_shortcut)
+
+        if "controller" not in self.parameters.keys():
+            self.parameters["controller"] = "ignore"
 
         self.blinkingGroup.setChecked(self.parameters["blinking"] != "ignore")
         self.talkingGroup.setChecked(self.parameters["talking"] != "ignore")
+        self.controllerGroup.setChecked(self.parameters["controller"] != "ignore")
         self.cssGroup.setChecked(self.parameters["use_css"])
 
         self.css.setPlainText(self.parameters["css"])
 
         self.blinkingGroup.toggled.connect(self.hide_blinking)
         self.talkingGroup.toggled.connect(self.hide_talking)
+        self.controllerGroup.toggled.connect(self.hide_controller)
         self.cssGroup.toggled.connect(self.hide_css)
 
         self.blinkOpen.setChecked(self.parameters["blinking"] == "blinking_open")
         self.blinkClosed.setChecked(self.parameters["blinking"] == "blinking_closed")
 
+        self.display.setChecked(self.parameters.get("mode", 'display') == "display")
+        self.move.setChecked(self.parameters.get("mode", 'display') == "move")
+
         self.talkOpen.setChecked(self.parameters["talking"] == "talking_open")
         self.talkClosed.setChecked(self.parameters["talking"] == "talking_closed")
         self.talkScreaming.setChecked(self.parameters["talking"] == "talking_screaming")
+
+        self.controllerButtons.setChecked("controller_buttons" in self.parameters["controller"])
+        self.controllerWheel.setChecked("controller_wheel" in self.parameters["controller"])
 
         self.blinkOpen.toggled.connect(self.save_current)
         self.blinkClosed.toggled.connect(self.save_current)
         self.talkOpen.toggled.connect(self.save_current)
         self.talkClosed.toggled.connect(self.save_current)
         self.talkScreaming.toggled.connect(self.save_current)
+        self.controllerButtons.toggled.connect(self.save_current)
+        self.controllerWheel.toggled.connect(self.save_current)
+
+        self.display.toggled.connect(self.save_current)
+        self.move.toggled.connect(self.save_current)
 
         self.css.textChanged.connect(self.css_finished_edit)
 
@@ -67,6 +118,7 @@ class Settings(QWidget):
 
         self.hide_blinking()
         self.hide_talking()
+        self.hide_controller()
         self.hide_css()
 
     def check_hotkeys(self):
@@ -107,6 +159,16 @@ class Settings(QWidget):
                 "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
         self.save_current()
 
+    def hide_controller(self):
+        if self.controllerGroup.isChecked():
+            self.frame_6.show()
+            self.controllerGroup.setStyleSheet("")
+        else:
+            self.frame_6.hide()
+            self.controllerGroup.setStyleSheet(
+                "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
+        self.save_current()
+
     def hide_css(self):
         if self.cssGroup.isChecked():
             self.frame_5.show()
@@ -123,13 +185,40 @@ class Settings(QWidget):
         self.parameters["sizeX"] = self.sizeX.value()
         self.parameters["sizeY"] = self.sizeY.value()
         self.parameters["posX"] = self.posX.value()
-        self.parameters["posY"] = self.posY.value()
+        self.parameters["posY"] = self.posY.value() * -1
         self.parameters["posZ"] = self.posZ.value()
+        self.parameters["originX"] = self.originX.value()
+        self.parameters["originY"] = self.originY.value() * -1
+        self.parameters["deg"] = self.deg.value()
+        self.parameters["deadzone"] = self.deadzone.value()
+        self.parameters["player"] = self.player.value()
+        self.parameters["buttons"] = self.buttonCombo.currentIndex()
+
+        self.parameters['mode'] = 'display' if self.display.isChecked() else 'move'
+
+        if self.display.isChecked():
+            self.frame_10.show()
+            self.tabWidget.hide()
+        else:
+            self.frame_10.hide()
+            self.tabWidget.show()
+
+        self.parameters['posBothX'] = self.posBothX.value()
+        self.parameters['posBothY'] = self.posBothY.value() * -1
+        self.parameters['rotationBoth'] = self.rotationBoth.value()
+        self.parameters['posLeftX'] = self.posLeftX.value()
+        self.parameters['posLeftY'] = self.posLeftY.value() * -1
+        self.parameters['rotationLeft'] = self.rotationLeft.value()
+        self.parameters['posRightX'] = self.posRightX.value()
+        self.parameters['posRightY'] = self.posRightY.value() * -1
+        self.parameters['rotationRight'] = self.rotationRight.value()
+
         self.parameters["use_css"] = True if self.cssGroup.isChecked() else False
         self.parameters["css"] = self.css.toPlainText()
         self.parameters["rotation"] = self.rotation.value()
         self.parameters["blinking"] = self.getBlinking() if self.blinkingGroup.isChecked() else "ignore"
         self.parameters["talking"] = self.getTalking() if self.talkingGroup.isChecked() else "ignore"
+        self.parameters["controller"] = self.getController() if self.controllerGroup.isChecked() else ["ignore"]
 
     def save_current(self):
         self.save()
@@ -143,6 +232,20 @@ class Settings(QWidget):
         if self.blinkOpen.isChecked():
             return "blinking_open"
         return "blinking_closed"
+
+    def getController(self):
+        checked = []
+        if self.controllerButtons.isChecked():
+            self.frame_8.show()
+            checked.append("controller_buttons")
+        else:
+            self.frame_8.hide()
+        if self.controllerWheel.isChecked():
+            self.frame_7.show()
+            checked.append("controller_wheel")
+        else:
+            self.frame_7.hide()
+        return checked if checked else ["ignore"]
 
     def getTalking(self):
         if self.talkOpen.isChecked():

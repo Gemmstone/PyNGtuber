@@ -63,6 +63,42 @@ class LayeredImageViewer(QWebEngineView):
 
         if image_list is not None:
             for layer in sorted(image_list, key=lambda x: x['posZ']):
+                controller_wheel_div = soup.new_tag('div', style=f"""
+                    position: absolute !important; 
+                    transform-origin: calc(50% + {layer.get('originX', 0)}px) calc(50% + {layer.get('originY', 0)}px);
+                    transform: rotate(0deg);
+                """)
+                controller_wheel_div['class'] = ["controller_wheel" if "controller_wheel" in layer.get('controller', ["ignore"]) else "ignore"]
+                controller_wheel_div['player'] = layer.get("player", 1) - 1
+                controller_wheel_div['deg'] = layer.get('deg', -90)
+                controller_wheel_div['deadzone'] = layer.get("deadzone", 0.0550)
+
+                controller_buttons_div = soup.new_tag('div', style=f"""
+                    position: absolute !important; 
+                    left: calc(50% + {layer.get('posIdleX', 0)}px);
+                    top: calc(50% + {layer.get('posIdleY', 0)}px);
+                    transform: rotate({layer.get('rotationIdle', 0)}deg);
+                    display: {("block" if layer.get("buttons", 0) == 0 else "none") if layer.get("mode", 'display') else "block"};
+                """)
+
+                controller_buttons_div['class'] = ["controller_buttons" if "controller_buttons" in layer.get('controller', ["ignore"]) else "ignore"]
+                controller_buttons_div['player'] = layer.get("player", 1) - 1
+
+                controller_buttons_div['mode'] = layer.get("mode", 'display')
+                controller_buttons_div['buttons'] = layer.get("buttons", 0)
+
+                controller_buttons_div['posBothX'] = layer.get("posBothX", 0)
+                controller_buttons_div['posBothY'] = layer.get("posBothY", 0)
+                controller_buttons_div['rotationBoth'] = layer.get("rotationBoth", 0)
+
+                controller_buttons_div['posLeftX'] = layer.get("posLeftX", 0)
+                controller_buttons_div['posLeftY'] = layer.get("posLeftY", 0)
+                controller_buttons_div['rotationLeft'] = layer.get("rotationLeft", 0)
+
+                controller_buttons_div['posRightX'] = layer.get("posRightX", 0)
+                controller_buttons_div['posRightY'] = layer.get("posRightY", 0)
+                controller_buttons_div['rotationRight'] = layer.get("rotationRight", 0)
+
                 img_tag = soup.new_tag('img', src=f"../{layer['route']}", style=f"""
                         position: absolute !important;
                         left: calc(50% + {layer['posX']}px);
@@ -76,10 +112,12 @@ class LayeredImageViewer(QWebEngineView):
                     """)
                 img_tag['class'] = [layer['blinking'], layer['talking']]
 
-                image_div.append(img_tag)
+                controller_buttons_div.append(img_tag)
+                controller_wheel_div.append(controller_buttons_div)
+
+                image_div.append(controller_wheel_div)
 
         beautiful_html = soup.prettify()
         with open('Viewer/viewer.html', 'w') as html_file:
             html_file.write(beautiful_html)
-
         self.reload()
