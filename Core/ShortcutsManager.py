@@ -91,10 +91,9 @@ class TwitchAPI(QThread):
         )
 
     async def _run(self):
-        auth = await self.authorize()
-        if auth:
-            user = await first(self.twitch.get_users())
-            await self.listen(user)
+        await self.authorize()
+        user = await first(self.twitch.get_users())
+        await self.listen(user)
 
     async def authorize(self):
         try:
@@ -104,9 +103,8 @@ class TwitchAPI(QThread):
                 storage_path=os.path.normpath(f"Data{os.path.sep}user_token.json")
             )
             await helper.bind()
-            return True
         except ClientConnectionError:
-            return False
+            pass
 
     async def listen(self, user):
         self.eventsub = EventSubWebsocket(self.twitch)
