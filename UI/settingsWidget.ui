@@ -1540,16 +1540,16 @@ QTabBar::tab:hover {
                <string>deg</string>
               </property>
               <property name="minimum">
-               <number>-360</number>
+               <number>-450</number>
               </property>
               <property name="maximum">
-               <number>360</number>
+               <number>450</number>
               </property>
               <property name="singleStep">
                <number>5</number>
               </property>
               <property name="value">
-               <number>90</number>
+               <number>450</number>
               </property>
              </widget>
             </item>
