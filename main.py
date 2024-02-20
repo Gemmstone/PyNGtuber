@@ -795,16 +795,11 @@ class MainWindow(QtWidgets.QMainWindow):
                         if (''' + str(status) + ''' == 1 || ''' + str(status) + ''' == 2) {
                             image.style.animation = "''' +
                        self.talking_animation.currentText() + ' ' +
-                       str(self.talking_speed.value()) + 's ' +
-                       self.talking_timing.currentText() + ' ' +
-                       str('infinite' if self.talking_iteration.value() == 0 else self.talking_iteration.value()) +
-                       '''"; 
+                       str(self.talking_speed.value()) + '''s ease-in-out infinite";
                         } else {
                             image.style.animation = "''' +
                        self.idle_animation.currentText() + ' ' +
-                       str(self.idle_speed.value()) + 's ' +
-                       self.idle_timing.currentText() + ' ' +
-                       str('infinite' if self.idle_iteration.value() == 0 else self.idle_iteration.value()) + '''";
+                       str(self.idle_speed.value()) + '''s ease-in-out infinite";
                         }
                     });
                 }
@@ -1004,7 +999,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.frame_5.show()
         self.frame_3.show()
         self.frame_8.show()
-        self.donationBtn.show()
 
         self.scaleFrame.show()
         if self.editorButton.isChecked():
@@ -1017,7 +1011,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.frame_5.hide()
             self.frame_3.hide()
             self.frame_8.hide()
-            self.donationBtn.hide()
             self.editor.hide()
             self.scaleFrame.hide()
             self.viewerFrame_2.setStyleSheet(f"background-color: {self.color}")

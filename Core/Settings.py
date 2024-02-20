@@ -37,6 +37,10 @@ class Settings(QWidget):
         self.originYzoom.setValue(self.parameters.get("originYzoom", self.parameters.get("originY", 0)) * -1)
         self.degZoom.setValue(self.parameters.get("degZoom", self.parameters.get("deg", 90)))
 
+        self.originXwhammy.setValue(self.parameters.get("originYwhammy", 0))
+        self.originYwhammy.setValue(self.parameters.get("originXwhammy", 0) * -1)
+        self.degWhammy.setValue(self.parameters.get("degWhammy", 0))
+
         self.deadzone.setValue(self.parameters.get("deadzone", 0.0550))
         self.player.setValue(self.parameters.get("player", 0))
         self.player2.setValue(self.parameters.get("player2", 0))
@@ -84,6 +88,8 @@ class Settings(QWidget):
         self.originYright.valueChanged.connect(self.save_current)
         self.originXzoom.valueChanged.connect(self.save_current)
         self.originYzoom.valueChanged.connect(self.save_current)
+        self.originXwhammy.valueChanged.connect(self.save_current)
+        self.originYwhammy.valueChanged.connect(self.save_current)
 
         self.posBothX.valueChanged.connect(self.save_current)
         self.posBothY.valueChanged.connect(self.save_current)
@@ -105,6 +111,7 @@ class Settings(QWidget):
         self.deg.valueChanged.connect(self.save_current)
         self.degZoom.valueChanged.connect(self.save_current)
         self.degRight.valueChanged.connect(self.save_current)
+        self.degWhammy.valueChanged.connect(self.save_current)
         self.deadzone.valueChanged.connect(self.save_current)
         self.player.valueChanged.connect(self.save_current)
         self.player2.valueChanged.connect(self.save_current)
@@ -246,6 +253,9 @@ class Settings(QWidget):
         self.parameters["originXzoom"] = self.originXzoom.value()
         self.parameters["originYzoom"] = self.originYzoom.value() * -1
         self.parameters["degZoom"] = self.degZoom.value()
+        self.parameters["originXwhammy"] = self.originXwhammy.value()
+        self.parameters["originYwhammy"] = self.originYwhammy.value() * -1
+        self.parameters["degWhammy"] = self.degWhammy.value()
         self.parameters["deadzone"] = self.deadzone.value()
         self.parameters["player"] = self.player.value()
         self.parameters["player2"] = self.player2.value()

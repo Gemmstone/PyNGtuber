@@ -156,6 +156,19 @@ class LayeredImageViewer(QWebEngineView):
                 controller_wheelZ_div['invertAxis'] = layer.get('invertAxis', 0)
                 controller_wheelZ_div['deadzone'] = layer.get("deadzone", 0.0550)
 
+                controller_wheelWhammy_div = soup.new_tag('div', style=f"""
+                    position: absolute !important; 
+                    transform-origin: calc(50% + {layer.get('originXwhammy', 0)}px) calc(50% + {layer.get('originYwhammy', 0)}px);
+                    transform: rotateZ(0deg);
+                """)
+                controller_wheelWhammy_div['class'] = [
+                    "Whammywheel" if "controller_wheel" in layer.get('controller', ["ignore"]) else "ignore"
+                ]
+                controller_wheelWhammy_div['player'] = layer.get("player", 1) - 1
+                controller_wheelWhammy_div['deg'] = layer.get('degWhammy', 0)
+                controller_wheelWhammy_div['invertAxis'] = layer.get('invertAxis', 0)
+                controller_wheelWhammy_div['deadzone'] = layer.get("deadzone", 0.0550)
+
                 img_tag = soup.new_tag('img', src=f"../{layer['route']}", style=f"""
                         position: absolute !important;
                         left: calc(50% + {layer['posX']}px);
@@ -171,10 +184,11 @@ class LayeredImageViewer(QWebEngineView):
                     layer['blinking'], layer['talking'],
                 ]
 
-                controller_wheelZ_div.append(img_tag)
+                controller_wheelWhammy_div.append(img_tag)
+                controller_wheelX_div.append(controller_wheelWhammy_div)
+                controller_wheelZ_div.append(controller_wheelX_div)
                 controller_wheelY_div.append(controller_wheelZ_div)
-                controller_wheelX_div.append(controller_wheelY_div)
-                guitar_buttons_div.append(controller_wheelX_div)
+                guitar_buttons_div.append(controller_wheelY_div)
                 controller_buttons_div.append(guitar_buttons_div)
                 animation_idle_div.append(controller_buttons_div)
 

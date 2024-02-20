@@ -956,73 +956,6 @@ QFrame{
               <number>0</number>
              </property>
              <item>
-              <widget class="QFrame" name="donationBtn">
-               <property name="frameShape">
-                <enum>QFrame::StyledPanel</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-               <layout class="QVBoxLayout" name="verticalLayout_51">
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <property name="topMargin">
-                 <number>6</number>
-                </property>
-                <property name="rightMargin">
-                 <number>0</number>
-                </property>
-                <property name="bottomMargin">
-                 <number>0</number>
-                </property>
-                <item alignment="Qt::AlignHCenter">
-                 <widget class="QFrame" name="frame_2">
-                  <property name="styleSheet">
-                   <string notr="true">#frame_2{
-	background-color: rgba(255, 255, 255, 200);
-	border-radius: 10px;
-}</string>
-                  </property>
-                  <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <layout class="QHBoxLayout" name="horizontalLayout_7">
-                   <property name="topMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="bottomMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <widget class="QLabel" name="donationBtnURL">
-                     <property name="toolTip">
-                      <string>Go to issues page</string>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                     </property>
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://streamlabs.com/agemmstone/tip&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#e93a9a;&quot;&gt;  💖 Donate!  &lt;/span&gt;&lt;/a&gt;  &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignCenter</set>
-                     </property>
-                     <property name="openExternalLinks">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item>
               <widget class="QFrame" name="viewerFrame">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -1441,6 +1374,25 @@ color: rgb(0, 0, 0);</string>
            <number>6</number>
           </property>
           <item>
+           <widget class="QLabel" name="donationBtnURL">
+            <property name="toolTip">
+             <string>Go to issues page</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+            </property>
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://streamlabs.com/agemmstone/tip&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#e93a9a;&quot;&gt;💖 Donate to support this project! &lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="openExternalLinks">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QStackedWidget" name="stackedWidget">
             <property name="currentIndex">
              <number>0</number>
@@ -1693,7 +1645,7 @@ QFrame{
                        <x>0</x>
                        <y>0</y>
                        <width>274</width>
-                       <height>505</height>
+                       <height>477</height>
                       </rect>
                      </property>
                      <attribute name="icon">
@@ -1783,7 +1735,7 @@ QFrame{
                            <x>0</x>
                            <y>0</y>
                            <width>274</width>
-                           <height>505</height>
+                           <height>477</height>
                           </rect>
                          </property>
                          <layout class="QVBoxLayout" name="verticalLayout_20">
@@ -1949,8 +1901,8 @@ QTabBar::tab:hover {
                                        <property name="spacing">
                                         <number>3</number>
                                        </property>
-                                       <item row="2" column="0">
-                                        <widget class="QLabel" name="label_16">
+                                       <item row="1" column="0">
+                                        <widget class="QLabel" name="label_15">
                                          <property name="sizePolicy">
                                           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                                            <horstretch>0</horstretch>
@@ -1964,38 +1916,7 @@ QTabBar::tab:hover {
                                           </size>
                                          </property>
                                          <property name="text">
-                                          <string>Timing:</string>
-                                         </property>
-                                        </widget>
-                                       </item>
-                                       <item row="1" column="3">
-                                        <widget class="QSpinBox" name="idle_iteration">
-                                         <property name="minimumSize">
-                                          <size>
-                                           <width>0</width>
-                                           <height>0</height>
-                                          </size>
-                                         </property>
-                                         <property name="maximumSize">
-                                          <size>
-                                           <width>16777215</width>
-                                           <height>25</height>
-                                          </size>
-                                         </property>
-                                         <property name="toolTip">
-                                          <string>0 = Infinite</string>
-                                         </property>
-                                         <property name="alignment">
-                                          <set>Qt::AlignCenter</set>
-                                         </property>
-                                         <property name="suffix">
-                                          <string/>
-                                         </property>
-                                         <property name="prefix">
-                                          <string/>
-                                         </property>
-                                         <property name="maximum">
-                                          <number>999999</number>
+                                          <string>Speed:</string>
                                          </property>
                                         </widget>
                                        </item>
@@ -2039,45 +1960,7 @@ QTabBar::tab:hover {
                                          </property>
                                         </widget>
                                        </item>
-                                       <item row="1" column="0">
-                                        <widget class="QLabel" name="label_15">
-                                         <property name="sizePolicy">
-                                          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                                           <horstretch>0</horstretch>
-                                           <verstretch>0</verstretch>
-                                          </sizepolicy>
-                                         </property>
-                                         <property name="maximumSize">
-                                          <size>
-                                           <width>16777215</width>
-                                           <height>25</height>
-                                          </size>
-                                         </property>
-                                         <property name="text">
-                                          <string>Speed:</string>
-                                         </property>
-                                        </widget>
-                                       </item>
-                                       <item row="1" column="2">
-                                        <widget class="QLabel" name="label_17">
-                                         <property name="sizePolicy">
-                                          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                                           <horstretch>0</horstretch>
-                                           <verstretch>0</verstretch>
-                                          </sizepolicy>
-                                         </property>
-                                         <property name="maximumSize">
-                                          <size>
-                                           <width>16777215</width>
-                                           <height>25</height>
-                                          </size>
-                                         </property>
-                                         <property name="text">
-                                          <string>x</string>
-                                         </property>
-                                        </widget>
-                                       </item>
-                                       <item row="0" column="0" colspan="4">
+                                       <item row="0" column="0" colspan="2">
                                         <widget class="QComboBox" name="idle_animation">
                                          <property name="sizePolicy">
                                           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -2112,68 +1995,6 @@ QTabBar::tab:hover {
                                          <item>
                                           <property name="text">
                                            <string>floaty</string>
-                                          </property>
-                                         </item>
-                                        </widget>
-                                       </item>
-                                       <item row="2" column="1" colspan="3">
-                                        <widget class="QComboBox" name="idle_timing">
-                                         <property name="sizePolicy">
-                                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                           <horstretch>0</horstretch>
-                                           <verstretch>0</verstretch>
-                                          </sizepolicy>
-                                         </property>
-                                         <property name="minimumSize">
-                                          <size>
-                                           <width>0</width>
-                                           <height>0</height>
-                                          </size>
-                                         </property>
-                                         <property name="maximumSize">
-                                          <size>
-                                           <width>16777215</width>
-                                           <height>25</height>
-                                          </size>
-                                         </property>
-                                         <property name="toolTip">
-                                          <string/>
-                                         </property>
-                                         <property name="whatsThis">
-                                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                                         </property>
-                                         <property name="currentIndex">
-                                          <number>4</number>
-                                         </property>
-                                         <property name="maxVisibleItems">
-                                          <number>10</number>
-                                         </property>
-                                         <property name="sizeAdjustPolicy">
-                                          <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
-                                         </property>
-                                         <item>
-                                          <property name="text">
-                                           <string>ease</string>
-                                          </property>
-                                         </item>
-                                         <item>
-                                          <property name="text">
-                                           <string>linear</string>
-                                          </property>
-                                         </item>
-                                         <item>
-                                          <property name="text">
-                                           <string>ease-in</string>
-                                          </property>
-                                         </item>
-                                         <item>
-                                          <property name="text">
-                                           <string>ease-out</string>
-                                          </property>
-                                         </item>
-                                         <item>
-                                          <property name="text">
-                                           <string>ease-in-out</string>
                                           </property>
                                          </item>
                                         </widget>
@@ -2230,8 +2051,8 @@ QTabBar::tab:hover {
                                        <property name="spacing">
                                         <number>3</number>
                                        </property>
-                                       <item row="2" column="0">
-                                        <widget class="QLabel" name="label_18">
+                                       <item row="1" column="0">
+                                        <widget class="QLabel" name="label_19">
                                          <property name="sizePolicy">
                                           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                                            <horstretch>0</horstretch>
@@ -2245,38 +2066,7 @@ QTabBar::tab:hover {
                                           </size>
                                          </property>
                                          <property name="text">
-                                          <string>Timing:</string>
-                                         </property>
-                                        </widget>
-                                       </item>
-                                       <item row="1" column="3">
-                                        <widget class="QSpinBox" name="talking_iteration">
-                                         <property name="minimumSize">
-                                          <size>
-                                           <width>0</width>
-                                           <height>0</height>
-                                          </size>
-                                         </property>
-                                         <property name="maximumSize">
-                                          <size>
-                                           <width>16777215</width>
-                                           <height>25</height>
-                                          </size>
-                                         </property>
-                                         <property name="toolTip">
-                                          <string>0 = Infinite</string>
-                                         </property>
-                                         <property name="alignment">
-                                          <set>Qt::AlignCenter</set>
-                                         </property>
-                                         <property name="suffix">
-                                          <string/>
-                                         </property>
-                                         <property name="prefix">
-                                          <string/>
-                                         </property>
-                                         <property name="maximum">
-                                          <number>999999</number>
+                                          <string>Speed:</string>
                                          </property>
                                         </widget>
                                        </item>
@@ -2320,45 +2110,7 @@ QTabBar::tab:hover {
                                          </property>
                                         </widget>
                                        </item>
-                                       <item row="1" column="0">
-                                        <widget class="QLabel" name="label_19">
-                                         <property name="sizePolicy">
-                                          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                                           <horstretch>0</horstretch>
-                                           <verstretch>0</verstretch>
-                                          </sizepolicy>
-                                         </property>
-                                         <property name="maximumSize">
-                                          <size>
-                                           <width>16777215</width>
-                                           <height>25</height>
-                                          </size>
-                                         </property>
-                                         <property name="text">
-                                          <string>Speed:</string>
-                                         </property>
-                                        </widget>
-                                       </item>
-                                       <item row="1" column="2">
-                                        <widget class="QLabel" name="label_20">
-                                         <property name="sizePolicy">
-                                          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                                           <horstretch>0</horstretch>
-                                           <verstretch>0</verstretch>
-                                          </sizepolicy>
-                                         </property>
-                                         <property name="maximumSize">
-                                          <size>
-                                           <width>16777215</width>
-                                           <height>25</height>
-                                          </size>
-                                         </property>
-                                         <property name="text">
-                                          <string>x</string>
-                                         </property>
-                                        </widget>
-                                       </item>
-                                       <item row="0" column="0" colspan="4">
+                                       <item row="0" column="0" colspan="2">
                                         <widget class="QComboBox" name="talking_animation">
                                          <property name="sizePolicy">
                                           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -2393,68 +2145,6 @@ QTabBar::tab:hover {
                                          <item>
                                           <property name="text">
                                            <string>floaty</string>
-                                          </property>
-                                         </item>
-                                        </widget>
-                                       </item>
-                                       <item row="2" column="1" colspan="3">
-                                        <widget class="QComboBox" name="talking_timing">
-                                         <property name="sizePolicy">
-                                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                           <horstretch>0</horstretch>
-                                           <verstretch>0</verstretch>
-                                          </sizepolicy>
-                                         </property>
-                                         <property name="minimumSize">
-                                          <size>
-                                           <width>0</width>
-                                           <height>0</height>
-                                          </size>
-                                         </property>
-                                         <property name="maximumSize">
-                                          <size>
-                                           <width>16777215</width>
-                                           <height>25</height>
-                                          </size>
-                                         </property>
-                                         <property name="toolTip">
-                                          <string/>
-                                         </property>
-                                         <property name="whatsThis">
-                                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                                         </property>
-                                         <property name="currentIndex">
-                                          <number>4</number>
-                                         </property>
-                                         <property name="maxVisibleItems">
-                                          <number>10</number>
-                                         </property>
-                                         <property name="sizeAdjustPolicy">
-                                          <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
-                                         </property>
-                                         <item>
-                                          <property name="text">
-                                           <string>ease</string>
-                                          </property>
-                                         </item>
-                                         <item>
-                                          <property name="text">
-                                           <string>linear</string>
-                                          </property>
-                                         </item>
-                                         <item>
-                                          <property name="text">
-                                           <string>ease-in</string>
-                                          </property>
-                                         </item>
-                                         <item>
-                                          <property name="text">
-                                           <string>ease-out</string>
-                                          </property>
-                                         </item>
-                                         <item>
-                                          <property name="text">
-                                           <string>ease-in-out</string>
                                           </property>
                                          </item>
                                         </widget>
@@ -2643,7 +2333,7 @@ QTabBar::tab:hover {
                        <x>0</x>
                        <y>0</y>
                        <width>274</width>
-                       <height>505</height>
+                       <height>467</height>
                       </rect>
                      </property>
                      <attribute name="icon">
@@ -3860,7 +3550,7 @@ background-color: rgba(0, 0, 0, 40);
                    <x>0</x>
                    <y>0</y>
                    <width>270</width>
-                   <height>608</height>
+                   <height>580</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_4">

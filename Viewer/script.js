@@ -21,7 +21,6 @@ async function pool(){
     while(true){
 
         // Wheel / stick control X
-
         var controllerWheels = document.querySelectorAll(".controller_wheelX");
         if(controllerWheels.length > 0) {
             controllerWheels.forEach(function(controllerWheel) {
@@ -88,6 +87,30 @@ async function pool(){
                 } else {
                     controllerWheelY.style.top = `calc(50% + ${rotation * 3}px)`;
                 }
+            });
+        };
+
+        // Whammy / stick control X
+        var controllerWhammyWheels = document.querySelectorAll(".Whammywheel");
+        if(controllerWhammyWheels.length > 0) {
+            controllerWhammyWheels.forEach(function(controllerWhammyWheel) {
+
+                let rawx = navigator.getGamepads()[controllerWhammyWheel.attributes.player.value].axes[controllerWhammyWheel.attributes.invertAxis.value == 0 ? 2 : 3]
+                let x = 0
+                if(rawx > controllerWhammyWheel.attributes.deadzone.value)
+                    x = rawx-controllerWhammyWheel.attributes.deadzone.value/(1-controllerWhammyWheel.attributes.deadzone.value)
+                else if(rawx < -controllerWhammyWheel.attributes.deadzone.value)
+                    x = rawx-controllerWhammyWheel.attributes.player.value/(1-controllerWhammyWheel.attributes.deadzone.value)
+                let rotation = x * controllerWhammyWheel.attributes.deg.value;
+
+                var currentTransform = controllerWhammyWheel.style.transform;
+                var currentRotate = 0;
+                if(currentTransform && currentTransform.includes("rotateZ")) {
+                    var rotateIndex = currentTransform.indexOf("rotateZ");
+                    var endIndex = currentTransform.indexOf("deg", rotateIndex);
+                    currentRotate = parseFloat(currentTransform.substring(rotateIndex + 8, endIndex));
+                }
+                controllerWhammyWheel.style.transform = currentTransform.replace(`rotateZ(${currentRotate}deg)`, `rotateZ(${rotation}deg)`);
             });
         };
 
@@ -224,6 +247,8 @@ async function pool(){
                 let blue = false
                 let orange = false
 
+                /* This was made for the PS4 controller
+
                 for(let i = 0; i < buttons.length; i++){
                     if(buttons[i].pressed){
                         if(!up && i == 12){
@@ -239,6 +264,31 @@ async function pool(){
                         }else if(!blue && i == 0){
                             blue = true
                         }else if(!orange && i == 2){
+                            orange = true
+                        }
+                    }
+                }
+
+                */
+                let rawx = navigator.getGamepads()[guitarButton.attributes.player.value].axes[9]
+
+                if(!up && parseInt(rawx) == -1){
+                    up = true
+                }else if(!down && parseInt(rawx) == 0){
+                    down = true
+                }
+
+                for(let i = 0; i < buttons.length; i++){
+                    if(buttons[i].pressed){
+                        if(!green && i == 1){
+                            green = true
+                        }else if(!red && i == 2){
+                            red = true
+                        }else if(!yellow && i == 0){
+                            yellow = true
+                        }else if(!blue && i == 3){
+                            blue = true
+                        }else if(!orange && i == 4){
                             orange = true
                         }
                     }
