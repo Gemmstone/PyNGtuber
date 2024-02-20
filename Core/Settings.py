@@ -29,8 +29,17 @@ class Settings(QWidget):
         self.originX.setValue(self.parameters.get("originX", 0))
         self.originY.setValue(self.parameters.get("originY", 0) * -1)
         self.deg.setValue(self.parameters.get("deg", 90))
+
+        self.originXright.setValue(self.parameters.get("originXright", self.parameters.get("originX", 0)))
+        self.originYright.setValue(self.parameters.get("originYright", self.parameters.get("originY", 0)) * -1)
+        self.degRight.setValue(self.parameters.get("degRight", self.parameters.get("deg", 90)))
+        self.originXzoom.setValue(self.parameters.get("originXzoom", self.parameters.get("originX", 0)))
+        self.originYzoom.setValue(self.parameters.get("originYzoom", self.parameters.get("originY", 0)) * -1)
+        self.degZoom.setValue(self.parameters.get("degZoom", self.parameters.get("deg", 90)))
+
         self.deadzone.setValue(self.parameters.get("deadzone", 0.0550))
         self.player.setValue(self.parameters.get("player", 0))
+        self.player2.setValue(self.parameters.get("player2", 0))
         self.buttonCombo.setCurrentIndex(self.parameters.get("buttons", 0))
 
         self.posBothX.setValue(self.parameters.get("posBothX", 0))
@@ -43,6 +52,21 @@ class Settings(QWidget):
         self.posRightY.setValue(self.parameters.get("posRightY", 0) * -1)
         self.rotationRight.setValue(self.parameters.get("rotationRight", 0))
 
+        self.posGuitarUpX.setValue(self.parameters.get("posGuitarUpX", 0))
+        self.posGuitarUpY.setValue(self.parameters.get("posGuitarUpY", 0) * -1)
+        self.rotationGuitarUp.setValue(self.parameters.get("rotationGuitarUp", 0))
+        self.posGuitarDownX.setValue(self.parameters.get("posGuitarDownX", 0))
+        self.posGuitarDownY.setValue(self.parameters.get("posGuitarDownY", 0) * -1)
+        self.rotationGuitarDown.setValue(self.parameters.get("rotationGuitarDown", 0))
+
+        self.guitarNote_Green.setChecked("Green" in self.parameters.get("chords", []))
+        self.guitarNote_Red.setChecked("Red" in self.parameters.get("chords", []))
+        self.guitarNote_Yellow.setChecked("Yellow" in self.parameters.get("chords", []))
+        self.guitarNote_Blue.setChecked("Blue" in self.parameters.get("chords", []))
+        self.guitarNote_Orange.setChecked("Orange" in self.parameters.get("chords", []))
+
+        self.animation_idle.setChecked(self.parameters.get("animation_idle", True))
+
         self.check_hotkeys()
 
         self.sizeX.valueChanged.connect(self.maintain_aspect_ratio_w)
@@ -54,8 +78,12 @@ class Settings(QWidget):
         self.posY.valueChanged.connect(self.save_current)
         self.posZ.valueChanged.connect(self.save_current)
         self.rotation.valueChanged.connect(self.save_current)
+        self.originX.valueChanged.connect(self.save_current)
         self.originY.valueChanged.connect(self.save_current)
-        self.originY.valueChanged.connect(self.save_current)
+        self.originXright.valueChanged.connect(self.save_current)
+        self.originYright.valueChanged.connect(self.save_current)
+        self.originXzoom.valueChanged.connect(self.save_current)
+        self.originYzoom.valueChanged.connect(self.save_current)
 
         self.posBothX.valueChanged.connect(self.save_current)
         self.posBothY.valueChanged.connect(self.save_current)
@@ -67,9 +95,19 @@ class Settings(QWidget):
         self.posRightY.valueChanged.connect(self.save_current)
         self.rotationRight.valueChanged.connect(self.save_current)
 
+        self.posGuitarUpX.valueChanged.connect(self.save_current)
+        self.posGuitarUpY.valueChanged.connect(self.save_current)
+        self.rotationGuitarUp.valueChanged.connect(self.save_current)
+        self.posGuitarDownX.valueChanged.connect(self.save_current)
+        self.posGuitarDownY.valueChanged.connect(self.save_current)
+        self.rotationGuitarDown.valueChanged.connect(self.save_current)
+
         self.deg.valueChanged.connect(self.save_current)
+        self.degZoom.valueChanged.connect(self.save_current)
+        self.degRight.valueChanged.connect(self.save_current)
         self.deadzone.valueChanged.connect(self.save_current)
         self.player.valueChanged.connect(self.save_current)
+        self.player2.valueChanged.connect(self.save_current)
         self.buttonCombo.currentIndexChanged.connect(self.save_current)
         self.setShortcut.clicked.connect(self.request_shortcut)
 
@@ -80,6 +118,7 @@ class Settings(QWidget):
         self.talkingGroup.setChecked(self.parameters["talking"] != "ignore")
         self.controllerGroup.setChecked(self.parameters["controller"] != "ignore")
         self.cssGroup.setChecked(self.parameters["use_css"])
+        self.invertAxis.setChecked(self.parameters.get("invertAxis", False))
 
         self.css.setPlainText(self.parameters["css"])
 
@@ -93,6 +132,7 @@ class Settings(QWidget):
 
         self.display.setChecked(self.parameters.get("mode", 'display') == "display")
         self.move.setChecked(self.parameters.get("mode", 'display') == "move")
+        self.guitar.setChecked(self.parameters.get("mode", 'display') == "guitar")
 
         self.talkOpen.setChecked(self.parameters["talking"] == "talking_open")
         self.talkClosed.setChecked(self.parameters["talking"] == "talking_closed")
@@ -108,9 +148,19 @@ class Settings(QWidget):
         self.talkScreaming.toggled.connect(self.save_current)
         self.controllerButtons.toggled.connect(self.save_current)
         self.controllerWheel.toggled.connect(self.save_current)
+        self.invertAxis.toggled.connect(self.save_current)
+
+        self.guitarNote_Green.toggled.connect(self.save_current)
+        self.guitarNote_Red.toggled.connect(self.save_current)
+        self.guitarNote_Yellow.toggled.connect(self.save_current)
+        self.guitarNote_Blue.toggled.connect(self.save_current)
+        self.guitarNote_Orange.toggled.connect(self.save_current)
+
+        self.animation_idle.toggled.connect(self.save_current)
 
         self.display.toggled.connect(self.save_current)
         self.move.toggled.connect(self.save_current)
+        self.guitar.toggled.connect(self.save_current)
 
         self.css.textChanged.connect(self.css_finished_edit)
 
@@ -190,18 +240,31 @@ class Settings(QWidget):
         self.parameters["originX"] = self.originX.value()
         self.parameters["originY"] = self.originY.value() * -1
         self.parameters["deg"] = self.deg.value()
+        self.parameters["originXright"] = self.originXright.value()
+        self.parameters["originYright"] = self.originYright.value() * -1
+        self.parameters["degRight"] = self.degRight.value()
+        self.parameters["originXzoom"] = self.originXzoom.value()
+        self.parameters["originYzoom"] = self.originYzoom.value() * -1
+        self.parameters["degZoom"] = self.degZoom.value()
         self.parameters["deadzone"] = self.deadzone.value()
         self.parameters["player"] = self.player.value()
+        self.parameters["player2"] = self.player2.value()
         self.parameters["buttons"] = self.buttonCombo.currentIndex()
+        self.parameters["invertAxis"] = 1 if self.invertAxis.isChecked() else 0
+        self.parameters["chords"] = self.get_chords()
 
-        self.parameters['mode'] = 'display' if self.display.isChecked() else 'move'
+        self.parameters['mode'] = 'display' if self.display.isChecked() else 'move' if self.move.isChecked() else 'guitar'
+
+        self.tabWidget.hide()
+        self.frame_10.hide()
+        self.frame_11.hide()
 
         if self.display.isChecked():
             self.frame_10.show()
-            self.tabWidget.hide()
-        else:
-            self.frame_10.hide()
+        elif self.move.isChecked():
             self.tabWidget.show()
+        else:
+            self.frame_11.show()
 
         self.parameters['posBothX'] = self.posBothX.value()
         self.parameters['posBothY'] = self.posBothY.value() * -1
@@ -213,12 +276,30 @@ class Settings(QWidget):
         self.parameters['posRightY'] = self.posRightY.value() * -1
         self.parameters['rotationRight'] = self.rotationRight.value()
 
+        self.parameters['posGuitarUpX'] = self.posGuitarUpX.value()
+        self.parameters['posGuitarUpY'] = self.posGuitarUpY.value() * -1
+        self.parameters['rotationGuitarUp'] = self.rotationGuitarUp.value()
+        self.parameters['posGuitarDownX'] = self.posGuitarDownX.value()
+        self.parameters['posGuitarDownY'] = self.posGuitarDownY.value() * -1
+        self.parameters['rotationGuitarDown'] = self.rotationGuitarDown.value()
+
+        self.parameters['animation_idle'] = self.animation_idle.isChecked()
+
         self.parameters["use_css"] = True if self.cssGroup.isChecked() else False
         self.parameters["css"] = self.css.toPlainText()
         self.parameters["rotation"] = self.rotation.value()
         self.parameters["blinking"] = self.getBlinking() if self.blinkingGroup.isChecked() else "ignore"
         self.parameters["talking"] = self.getTalking() if self.talkingGroup.isChecked() else "ignore"
         self.parameters["controller"] = self.getController() if self.controllerGroup.isChecked() else ["ignore"]
+
+    def get_chords(self):
+        chords = []
+        chords_colors = ["None", "Green", "Red", "Yellow", "Blue", "Orange"]
+        for color in chords_colors:
+            chord = getattr(self, f"guitarNote_{color}")
+            if chord.isChecked():
+                chords.append(color)
+        return chords
 
     def save_current(self):
         self.save()

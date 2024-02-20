@@ -956,22 +956,70 @@ QFrame{
               <number>0</number>
              </property>
              <item>
-              <widget class="QLabel" name="donationBtn">
-               <property name="toolTip">
-                <string>Go to issues page</string>
+              <widget class="QFrame" name="donationBtn">
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
                </property>
-               <property name="styleSheet">
-                <string notr="true">background-color: transparent;</string>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
                </property>
-               <property name="text">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://streamlabs.com/agemmstone/tip&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#e93a9a;&quot;&gt;💖 Donate!&lt;/span&gt;&lt;/a&gt;&lt;a href=&quot;https://streamlabs.com/agemmstone/tip&quot;&gt;&lt;span style=&quot; color:#e93a9a;&quot;/&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-               <property name="openExternalLinks">
-                <bool>true</bool>
-               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_51">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>6</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item alignment="Qt::AlignHCenter">
+                 <widget class="QFrame" name="frame_2">
+                  <property name="styleSheet">
+                   <string notr="true">#frame_2{
+	background-color: rgba(255, 255, 255, 200);
+	border-radius: 10px;
+}</string>
+                  </property>
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_7">
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QLabel" name="donationBtnURL">
+                     <property name="toolTip">
+                      <string>Go to issues page</string>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                     </property>
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://streamlabs.com/agemmstone/tip&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#e93a9a;&quot;&gt;  💖 Donate!  &lt;/span&gt;&lt;/a&gt;  &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                     <property name="openExternalLinks">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
               </widget>
              </item>
              <item>
@@ -1007,6 +1055,63 @@ QFrame{
                 <property name="bottomMargin">
                  <number>6</number>
                 </property>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QFrame" name="scaleFrame">
+               <layout class="QHBoxLayout" name="horizontalLayout_5">
+                <property name="leftMargin">
+                 <number>6</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>6</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="label_5">
+                  <property name="text">
+                   <string>Scale:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSlider" name="generalScale">
+                  <property name="minimum">
+                   <number>-100</number>
+                  </property>
+                  <property name="maximum">
+                   <number>100</number>
+                  </property>
+                  <property name="pageStep">
+                   <number>100</number>
+                  </property>
+                  <property name="tracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="tickPosition">
+                   <enum>QSlider::NoTicks</enum>
+                  </property>
+                  <property name="tickInterval">
+                   <number>10</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="scaleValue">
+                  <property name="text">
+                   <string>0</string>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </widget>
              </item>
@@ -1643,8 +1748,8 @@ QFrame{
     background: transparent;
 }
 * QCheckBox::indicator, * QRadioButton::indicator {
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
 }
 * QCheckBox::indicator:unchecked {
 	image: url(./Icons/checkbox-svgrepo-com.svg);
@@ -1724,6 +1829,644 @@ QFrame{
                                 <enum>QFrame::Raised</enum>
                                </property>
                                <layout class="QGridLayout" name="gridLayout"/>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QGroupBox" name="groupBox_14">
+                            <property name="title">
+                             <string>Animations</string>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_52">
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>23</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QFrame" name="audioFrame_4">
+                               <property name="styleSheet">
+                                <string notr="true"/>
+                               </property>
+                               <property name="frameShape">
+                                <enum>QFrame::StyledPanel</enum>
+                               </property>
+                               <property name="frameShadow">
+                                <enum>QFrame::Raised</enum>
+                               </property>
+                               <layout class="QVBoxLayout" name="verticalLayout_56">
+                                <item>
+                                 <widget class="QTabWidget" name="tabWidget_3">
+                                  <property name="sizePolicy">
+                                   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                   </sizepolicy>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QTabBar{  
+    background-color: rgba(255, 255, 255, 0);
+}
+QTabBar::tab {  
+    background-color: rgba(255, 255, 255, 40);
+	background-color: rgb(0, 157, 235);
+    min-width: 50px; 
+    min-height:22px;
+    padding: 0px  2px; 
+    color: white;
+	border-radius: 10px;
+    margin-left:2px;
+    margin-right:2px;
+}
+QTabBar::tab:selected {  
+    color: white;
+	background-color: black;;
+}
+QTabBar::tab:hover {  
+    color: black;
+    background-color: rgba(255, 0, 0, 100);
+}</string>
+                                  </property>
+                                  <property name="currentIndex">
+                                   <number>0</number>
+                                  </property>
+                                  <property name="documentMode">
+                                   <bool>true</bool>
+                                  </property>
+                                  <widget class="QWidget" name="tab_11">
+                                   <attribute name="title">
+                                    <string>Idle</string>
+                                   </attribute>
+                                   <attribute name="toolTip">
+                                    <string>When a button on the right side of the controller is pressed</string>
+                                   </attribute>
+                                   <layout class="QVBoxLayout" name="verticalLayout_53">
+                                    <property name="leftMargin">
+                                     <number>0</number>
+                                    </property>
+                                    <property name="topMargin">
+                                     <number>0</number>
+                                    </property>
+                                    <property name="rightMargin">
+                                     <number>0</number>
+                                    </property>
+                                    <property name="bottomMargin">
+                                     <number>0</number>
+                                    </property>
+                                    <item>
+                                     <widget class="QFrame" name="frame_20">
+                                      <property name="styleSheet">
+                                       <string notr="true"/>
+                                      </property>
+                                      <property name="frameShape">
+                                       <enum>QFrame::StyledPanel</enum>
+                                      </property>
+                                      <property name="frameShadow">
+                                       <enum>QFrame::Raised</enum>
+                                      </property>
+                                      <layout class="QGridLayout" name="gridLayout_9">
+                                       <property name="leftMargin">
+                                        <number>0</number>
+                                       </property>
+                                       <property name="topMargin">
+                                        <number>0</number>
+                                       </property>
+                                       <property name="rightMargin">
+                                        <number>0</number>
+                                       </property>
+                                       <property name="bottomMargin">
+                                        <number>0</number>
+                                       </property>
+                                       <property name="spacing">
+                                        <number>3</number>
+                                       </property>
+                                       <item row="2" column="0">
+                                        <widget class="QLabel" name="label_16">
+                                         <property name="sizePolicy">
+                                          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                                           <horstretch>0</horstretch>
+                                           <verstretch>0</verstretch>
+                                          </sizepolicy>
+                                         </property>
+                                         <property name="maximumSize">
+                                          <size>
+                                           <width>16777215</width>
+                                           <height>25</height>
+                                          </size>
+                                         </property>
+                                         <property name="text">
+                                          <string>Timing:</string>
+                                         </property>
+                                        </widget>
+                                       </item>
+                                       <item row="1" column="3">
+                                        <widget class="QSpinBox" name="idle_iteration">
+                                         <property name="minimumSize">
+                                          <size>
+                                           <width>0</width>
+                                           <height>0</height>
+                                          </size>
+                                         </property>
+                                         <property name="maximumSize">
+                                          <size>
+                                           <width>16777215</width>
+                                           <height>25</height>
+                                          </size>
+                                         </property>
+                                         <property name="toolTip">
+                                          <string>0 = Infinite</string>
+                                         </property>
+                                         <property name="alignment">
+                                          <set>Qt::AlignCenter</set>
+                                         </property>
+                                         <property name="suffix">
+                                          <string/>
+                                         </property>
+                                         <property name="prefix">
+                                          <string/>
+                                         </property>
+                                         <property name="maximum">
+                                          <number>999999</number>
+                                         </property>
+                                        </widget>
+                                       </item>
+                                       <item row="1" column="1">
+                                        <widget class="QDoubleSpinBox" name="idle_speed">
+                                         <property name="minimumSize">
+                                          <size>
+                                           <width>0</width>
+                                           <height>0</height>
+                                          </size>
+                                         </property>
+                                         <property name="maximumSize">
+                                          <size>
+                                           <width>16777215</width>
+                                           <height>25</height>
+                                          </size>
+                                         </property>
+                                         <property name="toolTip">
+                                          <string>Adjust if you feel that your microphone is too quiet or too loud</string>
+                                         </property>
+                                         <property name="alignment">
+                                          <set>Qt::AlignCenter</set>
+                                         </property>
+                                         <property name="prefix">
+                                          <string/>
+                                         </property>
+                                         <property name="suffix">
+                                          <string>s</string>
+                                         </property>
+                                         <property name="decimals">
+                                          <number>3</number>
+                                         </property>
+                                         <property name="minimum">
+                                          <double>0.000000000000000</double>
+                                         </property>
+                                         <property name="singleStep">
+                                          <double>0.100000000000000</double>
+                                         </property>
+                                         <property name="value">
+                                          <double>6.000000000000000</double>
+                                         </property>
+                                        </widget>
+                                       </item>
+                                       <item row="1" column="0">
+                                        <widget class="QLabel" name="label_15">
+                                         <property name="sizePolicy">
+                                          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                                           <horstretch>0</horstretch>
+                                           <verstretch>0</verstretch>
+                                          </sizepolicy>
+                                         </property>
+                                         <property name="maximumSize">
+                                          <size>
+                                           <width>16777215</width>
+                                           <height>25</height>
+                                          </size>
+                                         </property>
+                                         <property name="text">
+                                          <string>Speed:</string>
+                                         </property>
+                                        </widget>
+                                       </item>
+                                       <item row="1" column="2">
+                                        <widget class="QLabel" name="label_17">
+                                         <property name="sizePolicy">
+                                          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                                           <horstretch>0</horstretch>
+                                           <verstretch>0</verstretch>
+                                          </sizepolicy>
+                                         </property>
+                                         <property name="maximumSize">
+                                          <size>
+                                           <width>16777215</width>
+                                           <height>25</height>
+                                          </size>
+                                         </property>
+                                         <property name="text">
+                                          <string>x</string>
+                                         </property>
+                                        </widget>
+                                       </item>
+                                       <item row="0" column="0" colspan="4">
+                                        <widget class="QComboBox" name="idle_animation">
+                                         <property name="sizePolicy">
+                                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                           <horstretch>0</horstretch>
+                                           <verstretch>0</verstretch>
+                                          </sizepolicy>
+                                         </property>
+                                         <property name="minimumSize">
+                                          <size>
+                                           <width>0</width>
+                                           <height>0</height>
+                                          </size>
+                                         </property>
+                                         <property name="maximumSize">
+                                          <size>
+                                           <width>16777215</width>
+                                           <height>25</height>
+                                          </size>
+                                         </property>
+                                         <property name="toolTip">
+                                          <string>Animation name</string>
+                                         </property>
+                                         <property name="whatsThis">
+                                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                         </property>
+                                         <property name="maxVisibleItems">
+                                          <number>10</number>
+                                         </property>
+                                         <property name="sizeAdjustPolicy">
+                                          <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+                                         </property>
+                                         <item>
+                                          <property name="text">
+                                           <string>floaty</string>
+                                          </property>
+                                         </item>
+                                        </widget>
+                                       </item>
+                                       <item row="2" column="1" colspan="3">
+                                        <widget class="QComboBox" name="idle_timing">
+                                         <property name="sizePolicy">
+                                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                           <horstretch>0</horstretch>
+                                           <verstretch>0</verstretch>
+                                          </sizepolicy>
+                                         </property>
+                                         <property name="minimumSize">
+                                          <size>
+                                           <width>0</width>
+                                           <height>0</height>
+                                          </size>
+                                         </property>
+                                         <property name="maximumSize">
+                                          <size>
+                                           <width>16777215</width>
+                                           <height>25</height>
+                                          </size>
+                                         </property>
+                                         <property name="toolTip">
+                                          <string/>
+                                         </property>
+                                         <property name="whatsThis">
+                                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                         </property>
+                                         <property name="currentIndex">
+                                          <number>4</number>
+                                         </property>
+                                         <property name="maxVisibleItems">
+                                          <number>10</number>
+                                         </property>
+                                         <property name="sizeAdjustPolicy">
+                                          <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+                                         </property>
+                                         <item>
+                                          <property name="text">
+                                           <string>ease</string>
+                                          </property>
+                                         </item>
+                                         <item>
+                                          <property name="text">
+                                           <string>linear</string>
+                                          </property>
+                                         </item>
+                                         <item>
+                                          <property name="text">
+                                           <string>ease-in</string>
+                                          </property>
+                                         </item>
+                                         <item>
+                                          <property name="text">
+                                           <string>ease-out</string>
+                                          </property>
+                                         </item>
+                                         <item>
+                                          <property name="text">
+                                           <string>ease-in-out</string>
+                                          </property>
+                                         </item>
+                                        </widget>
+                                       </item>
+                                      </layout>
+                                     </widget>
+                                    </item>
+                                   </layout>
+                                  </widget>
+                                  <widget class="QWidget" name="tab_12">
+                                   <attribute name="title">
+                                    <string>  Talking  </string>
+                                   </attribute>
+                                   <attribute name="toolTip">
+                                    <string>When buttons on both sides of the controller are pressed</string>
+                                   </attribute>
+                                   <layout class="QVBoxLayout" name="verticalLayout_55">
+                                    <property name="leftMargin">
+                                     <number>0</number>
+                                    </property>
+                                    <property name="topMargin">
+                                     <number>0</number>
+                                    </property>
+                                    <property name="rightMargin">
+                                     <number>0</number>
+                                    </property>
+                                    <property name="bottomMargin">
+                                     <number>0</number>
+                                    </property>
+                                    <item>
+                                     <widget class="QFrame" name="frame_21">
+                                      <property name="styleSheet">
+                                       <string notr="true"/>
+                                      </property>
+                                      <property name="frameShape">
+                                       <enum>QFrame::StyledPanel</enum>
+                                      </property>
+                                      <property name="frameShadow">
+                                       <enum>QFrame::Raised</enum>
+                                      </property>
+                                      <layout class="QGridLayout" name="gridLayout_10">
+                                       <property name="leftMargin">
+                                        <number>0</number>
+                                       </property>
+                                       <property name="topMargin">
+                                        <number>0</number>
+                                       </property>
+                                       <property name="rightMargin">
+                                        <number>0</number>
+                                       </property>
+                                       <property name="bottomMargin">
+                                        <number>0</number>
+                                       </property>
+                                       <property name="spacing">
+                                        <number>3</number>
+                                       </property>
+                                       <item row="2" column="0">
+                                        <widget class="QLabel" name="label_18">
+                                         <property name="sizePolicy">
+                                          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                                           <horstretch>0</horstretch>
+                                           <verstretch>0</verstretch>
+                                          </sizepolicy>
+                                         </property>
+                                         <property name="maximumSize">
+                                          <size>
+                                           <width>16777215</width>
+                                           <height>25</height>
+                                          </size>
+                                         </property>
+                                         <property name="text">
+                                          <string>Timing:</string>
+                                         </property>
+                                        </widget>
+                                       </item>
+                                       <item row="1" column="3">
+                                        <widget class="QSpinBox" name="talking_iteration">
+                                         <property name="minimumSize">
+                                          <size>
+                                           <width>0</width>
+                                           <height>0</height>
+                                          </size>
+                                         </property>
+                                         <property name="maximumSize">
+                                          <size>
+                                           <width>16777215</width>
+                                           <height>25</height>
+                                          </size>
+                                         </property>
+                                         <property name="toolTip">
+                                          <string>0 = Infinite</string>
+                                         </property>
+                                         <property name="alignment">
+                                          <set>Qt::AlignCenter</set>
+                                         </property>
+                                         <property name="suffix">
+                                          <string/>
+                                         </property>
+                                         <property name="prefix">
+                                          <string/>
+                                         </property>
+                                         <property name="maximum">
+                                          <number>999999</number>
+                                         </property>
+                                        </widget>
+                                       </item>
+                                       <item row="1" column="1">
+                                        <widget class="QDoubleSpinBox" name="talking_speed">
+                                         <property name="minimumSize">
+                                          <size>
+                                           <width>0</width>
+                                           <height>0</height>
+                                          </size>
+                                         </property>
+                                         <property name="maximumSize">
+                                          <size>
+                                           <width>16777215</width>
+                                           <height>25</height>
+                                          </size>
+                                         </property>
+                                         <property name="toolTip">
+                                          <string>Adjust if you feel that your microphone is too quiet or too loud</string>
+                                         </property>
+                                         <property name="alignment">
+                                          <set>Qt::AlignCenter</set>
+                                         </property>
+                                         <property name="prefix">
+                                          <string/>
+                                         </property>
+                                         <property name="suffix">
+                                          <string>s</string>
+                                         </property>
+                                         <property name="decimals">
+                                          <number>3</number>
+                                         </property>
+                                         <property name="minimum">
+                                          <double>0.000000000000000</double>
+                                         </property>
+                                         <property name="singleStep">
+                                          <double>0.100000000000000</double>
+                                         </property>
+                                         <property name="value">
+                                          <double>0.500000000000000</double>
+                                         </property>
+                                        </widget>
+                                       </item>
+                                       <item row="1" column="0">
+                                        <widget class="QLabel" name="label_19">
+                                         <property name="sizePolicy">
+                                          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                                           <horstretch>0</horstretch>
+                                           <verstretch>0</verstretch>
+                                          </sizepolicy>
+                                         </property>
+                                         <property name="maximumSize">
+                                          <size>
+                                           <width>16777215</width>
+                                           <height>25</height>
+                                          </size>
+                                         </property>
+                                         <property name="text">
+                                          <string>Speed:</string>
+                                         </property>
+                                        </widget>
+                                       </item>
+                                       <item row="1" column="2">
+                                        <widget class="QLabel" name="label_20">
+                                         <property name="sizePolicy">
+                                          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                                           <horstretch>0</horstretch>
+                                           <verstretch>0</verstretch>
+                                          </sizepolicy>
+                                         </property>
+                                         <property name="maximumSize">
+                                          <size>
+                                           <width>16777215</width>
+                                           <height>25</height>
+                                          </size>
+                                         </property>
+                                         <property name="text">
+                                          <string>x</string>
+                                         </property>
+                                        </widget>
+                                       </item>
+                                       <item row="0" column="0" colspan="4">
+                                        <widget class="QComboBox" name="talking_animation">
+                                         <property name="sizePolicy">
+                                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                           <horstretch>0</horstretch>
+                                           <verstretch>0</verstretch>
+                                          </sizepolicy>
+                                         </property>
+                                         <property name="minimumSize">
+                                          <size>
+                                           <width>0</width>
+                                           <height>0</height>
+                                          </size>
+                                         </property>
+                                         <property name="maximumSize">
+                                          <size>
+                                           <width>16777215</width>
+                                           <height>25</height>
+                                          </size>
+                                         </property>
+                                         <property name="toolTip">
+                                          <string>Animation name</string>
+                                         </property>
+                                         <property name="whatsThis">
+                                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                         </property>
+                                         <property name="maxVisibleItems">
+                                          <number>10</number>
+                                         </property>
+                                         <property name="sizeAdjustPolicy">
+                                          <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+                                         </property>
+                                         <item>
+                                          <property name="text">
+                                           <string>floaty</string>
+                                          </property>
+                                         </item>
+                                        </widget>
+                                       </item>
+                                       <item row="2" column="1" colspan="3">
+                                        <widget class="QComboBox" name="talking_timing">
+                                         <property name="sizePolicy">
+                                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                           <horstretch>0</horstretch>
+                                           <verstretch>0</verstretch>
+                                          </sizepolicy>
+                                         </property>
+                                         <property name="minimumSize">
+                                          <size>
+                                           <width>0</width>
+                                           <height>0</height>
+                                          </size>
+                                         </property>
+                                         <property name="maximumSize">
+                                          <size>
+                                           <width>16777215</width>
+                                           <height>25</height>
+                                          </size>
+                                         </property>
+                                         <property name="toolTip">
+                                          <string/>
+                                         </property>
+                                         <property name="whatsThis">
+                                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                         </property>
+                                         <property name="currentIndex">
+                                          <number>4</number>
+                                         </property>
+                                         <property name="maxVisibleItems">
+                                          <number>10</number>
+                                         </property>
+                                         <property name="sizeAdjustPolicy">
+                                          <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+                                         </property>
+                                         <item>
+                                          <property name="text">
+                                           <string>ease</string>
+                                          </property>
+                                         </item>
+                                         <item>
+                                          <property name="text">
+                                           <string>linear</string>
+                                          </property>
+                                         </item>
+                                         <item>
+                                          <property name="text">
+                                           <string>ease-in</string>
+                                          </property>
+                                         </item>
+                                         <item>
+                                          <property name="text">
+                                           <string>ease-out</string>
+                                          </property>
+                                         </item>
+                                         <item>
+                                          <property name="text">
+                                           <string>ease-in-out</string>
+                                          </property>
+                                         </item>
+                                        </widget>
+                                       </item>
+                                      </layout>
+                                     </widget>
+                                    </item>
+                                   </layout>
+                                  </widget>
+                                 </widget>
+                                </item>
+                               </layout>
                               </widget>
                              </item>
                             </layout>
@@ -1876,6 +2619,218 @@ QFrame{
                            </widget>
                           </item>
                           <item>
+                           <spacer name="verticalSpacer">
+                            <property name="orientation">
+                             <enum>Qt::Vertical</enum>
+                            </property>
+                            <property name="sizeHint" stdset="0">
+                             <size>
+                              <width>20</width>
+                              <height>40</height>
+                             </size>
+                            </property>
+                           </spacer>
+                          </item>
+                         </layout>
+                        </widget>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
+                    <widget class="QWidget" name="toolBox_3Page2">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>0</y>
+                       <width>274</width>
+                       <height>505</height>
+                      </rect>
+                     </property>
+                     <attribute name="icon">
+                      <iconset>
+                       <normaloff>../Icons/mobile-setting-ui-svgrepo-com.svg</normaloff>../Icons/mobile-setting-ui-svgrepo-com.svg</iconset>
+                     </attribute>
+                     <attribute name="label">
+                      <string>Advanced</string>
+                     </attribute>
+                     <layout class="QVBoxLayout" name="verticalLayout_28">
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QScrollArea" name="scrollArea_7">
+                        <property name="styleSheet">
+                         <string notr="true">QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}
+
+#creditsFrame{
+	background-color: rgba(255, 255, 255, 0);
+}
+
+* QCheckBox, * QRadioButton {
+    background: transparent;
+}
+* QCheckBox::indicator, * QRadioButton::indicator {
+    width: 20px;
+    height: 20px;
+}
+* QCheckBox::indicator:unchecked {
+	image: url(./Icons/checkbox-svgrepo-com.svg);
+}
+* QCheckBox::indicator:checked {
+	image: url(./Icons/checked-checkbox-svgrepo-com.svg);
+}
+* QRadioButton::indicator:unchecked {
+	image: url(./Icons/circle-svgrepo-com.svg);
+}
+* QRadioButton::indicator:checked {
+	border-image: url(./Icons/checked-radio-svgrepo-com.svg);
+}</string>
+                        </property>
+                        <property name="widgetResizable">
+                         <bool>true</bool>
+                        </property>
+                        <widget class="QWidget" name="scrollAreaWidgetContents_7">
+                         <property name="geometry">
+                          <rect>
+                           <x>0</x>
+                           <y>0</y>
+                           <width>253</width>
+                           <height>585</height>
+                          </rect>
+                         </property>
+                         <layout class="QVBoxLayout" name="verticalLayout_34">
+                          <property name="leftMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
+                          <item>
+                           <widget class="QGroupBox" name="groupBox_20">
+                            <property name="styleSheet">
+                             <string notr="true">*{
+	color: black;
+}
+
+QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}</string>
+                            </property>
+                            <property name="title">
+                             <string>Integration</string>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_40">
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>23</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QFrame" name="audioFrame_7">
+                               <property name="styleSheet">
+                                <string notr="true"/>
+                               </property>
+                               <property name="frameShape">
+                                <enum>QFrame::StyledPanel</enum>
+                               </property>
+                               <property name="frameShadow">
+                                <enum>QFrame::Raised</enum>
+                               </property>
+                               <layout class="QVBoxLayout" name="verticalLayout_38">
+                                <item>
+                                 <widget class="QPushButton" name="twitchApiBtn">
+                                  <property name="cursor">
+                                   <cursorShape>PointingHandCursor</cursorShape>
+                                  </property>
+                                  <property name="toolTip">
+                                   <string>Better for assets with some transparency, better image results except if you have different size images</string>
+                                  </property>
+                                  <property name="statusTip">
+                                   <string/>
+                                  </property>
+                                  <property name="whatsThis">
+                                   <string/>
+                                  </property>
+                                  <property name="text">
+                                   <string>Set Twitch API keys</string>
+                                  </property>
+                                  <property name="icon">
+                                   <iconset>
+                                    <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
+                                  </property>
+                                  <property name="iconSize">
+                                   <size>
+                                    <width>25</width>
+                                    <height>25</height>
+                                   </size>
+                                  </property>
+                                 </widget>
+                                </item>
+                               </layout>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
                            <widget class="QGroupBox" name="groupBox_8">
                             <property name="title">
                              <string>Export PNG</string>
@@ -1975,218 +2930,6 @@ QFrame{
                                     <string>Pillow Paste</string>
                                    </property>
                                   </item>
-                                 </widget>
-                                </item>
-                               </layout>
-                              </widget>
-                             </item>
-                            </layout>
-                           </widget>
-                          </item>
-                          <item>
-                           <spacer name="verticalSpacer">
-                            <property name="orientation">
-                             <enum>Qt::Vertical</enum>
-                            </property>
-                            <property name="sizeHint" stdset="0">
-                             <size>
-                              <width>20</width>
-                              <height>40</height>
-                             </size>
-                            </property>
-                           </spacer>
-                          </item>
-                         </layout>
-                        </widget>
-                       </widget>
-                      </item>
-                     </layout>
-                    </widget>
-                    <widget class="QWidget" name="toolBox_3Page2">
-                     <property name="geometry">
-                      <rect>
-                       <x>0</x>
-                       <y>0</y>
-                       <width>274</width>
-                       <height>505</height>
-                      </rect>
-                     </property>
-                     <attribute name="icon">
-                      <iconset>
-                       <normaloff>../Icons/mobile-setting-ui-svgrepo-com.svg</normaloff>../Icons/mobile-setting-ui-svgrepo-com.svg</iconset>
-                     </attribute>
-                     <attribute name="label">
-                      <string>Advanced</string>
-                     </attribute>
-                     <layout class="QVBoxLayout" name="verticalLayout_28">
-                      <property name="leftMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="topMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="rightMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>0</number>
-                      </property>
-                      <item>
-                       <widget class="QScrollArea" name="scrollArea_7">
-                        <property name="styleSheet">
-                         <string notr="true">QGroupBox {
-border-color: #FF17365D;
-font-size: 14px;
-border-radius: 15px;
-}
-
-QGroupBox::title {
-border-top-left-radius: 9px;
-border-top-right-radius: 9px;
-padding: 2px 20px;
-background-color: #FF17365D;
-color: rgb(255, 255, 255);
-}
-
-QFrame{
-	border-top-right-radius: 9px;
-	border-bottom-right-radius: 9px;
-	border-bottom-left-radius: 9px;
-	background-color: rgb(255, 255, 255);
-}
-
-#creditsFrame{
-	background-color: rgba(255, 255, 255, 0);
-}
-
-* QCheckBox, * QRadioButton {
-    background: transparent;
-}
-* QCheckBox::indicator, * QRadioButton::indicator {
-    width: 25px;
-    height: 25px;
-}
-* QCheckBox::indicator:unchecked {
-	image: url(./Icons/checkbox-svgrepo-com.svg);
-}
-* QCheckBox::indicator:checked {
-	image: url(./Icons/checked-checkbox-svgrepo-com.svg);
-}
-* QRadioButton::indicator:unchecked {
-	image: url(./Icons/circle-svgrepo-com.svg);
-}
-* QRadioButton::indicator:checked {
-	border-image: url(./Icons/checked-radio-svgrepo-com.svg);
-}</string>
-                        </property>
-                        <property name="widgetResizable">
-                         <bool>true</bool>
-                        </property>
-                        <widget class="QWidget" name="scrollAreaWidgetContents_7">
-                         <property name="geometry">
-                          <rect>
-                           <x>0</x>
-                           <y>0</y>
-                           <width>274</width>
-                           <height>505</height>
-                          </rect>
-                         </property>
-                         <layout class="QVBoxLayout" name="verticalLayout_34">
-                          <property name="leftMargin">
-                           <number>0</number>
-                          </property>
-                          <property name="topMargin">
-                           <number>0</number>
-                          </property>
-                          <property name="rightMargin">
-                           <number>0</number>
-                          </property>
-                          <property name="bottomMargin">
-                           <number>0</number>
-                          </property>
-                          <item>
-                           <widget class="QGroupBox" name="groupBox_20">
-                            <property name="styleSheet">
-                             <string notr="true">*{
-	color: black;
-}
-
-QGroupBox {
-border-color: #FF17365D;
-font-size: 14px;
-border-radius: 15px;
-}
-
-QGroupBox::title {
-border-top-left-radius: 9px;
-border-top-right-radius: 9px;
-padding: 2px 20px;
-background-color: #FF17365D;
-color: rgb(255, 255, 255);
-}
-
-QFrame{
-	border-top-right-radius: 9px;
-	border-bottom-right-radius: 9px;
-	border-bottom-left-radius: 9px;
-	background-color: rgb(255, 255, 255);
-}</string>
-                            </property>
-                            <property name="title">
-                             <string>Integration</string>
-                            </property>
-                            <layout class="QVBoxLayout" name="verticalLayout_40">
-                             <property name="leftMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>23</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>0</number>
-                             </property>
-                             <item>
-                              <widget class="QFrame" name="audioFrame_7">
-                               <property name="styleSheet">
-                                <string notr="true"/>
-                               </property>
-                               <property name="frameShape">
-                                <enum>QFrame::StyledPanel</enum>
-                               </property>
-                               <property name="frameShadow">
-                                <enum>QFrame::Raised</enum>
-                               </property>
-                               <layout class="QVBoxLayout" name="verticalLayout_38">
-                                <item>
-                                 <widget class="QPushButton" name="twitchApiBtn">
-                                  <property name="cursor">
-                                   <cursorShape>PointingHandCursor</cursorShape>
-                                  </property>
-                                  <property name="toolTip">
-                                   <string>Better for assets with some transparency, better image results except if you have different size images</string>
-                                  </property>
-                                  <property name="statusTip">
-                                   <string/>
-                                  </property>
-                                  <property name="whatsThis">
-                                   <string/>
-                                  </property>
-                                  <property name="text">
-                                   <string>Set Twitch API keys</string>
-                                  </property>
-                                  <property name="icon">
-                                   <iconset>
-                                    <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
-                                  </property>
-                                  <property name="iconSize">
-                                   <size>
-                                    <width>25</width>
-                                    <height>25</height>
-                                   </size>
-                                  </property>
                                  </widget>
                                 </item>
                                </layout>
@@ -2467,7 +3210,7 @@ QFrame{
                                     <rect>
                                      <x>0</x>
                                      <y>0</y>
-                                     <width>262</width>
+                                     <width>241</width>
                                      <height>136</height>
                                     </rect>
                                    </property>
@@ -3117,7 +3860,7 @@ background-color: rgba(0, 0, 0, 40);
                    <x>0</x>
                    <y>0</y>
                    <width>270</width>
-                   <height>30</height>
+                   <height>608</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_4">

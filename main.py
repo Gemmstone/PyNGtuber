@@ -18,6 +18,8 @@ import sys
 import os
 
 
+os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = '4864'
+os.environ['QTWEBENGINE_CHROMIUM_FLAGS'] = '--no-sandbox'
 exe_dir = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
 
 
@@ -120,12 +122,11 @@ class MainWindow(QtWidgets.QMainWindow):
         except FileNotFoundError:
             pass
 
-
         try:
             with open(self.apiKeys, "r") as f:
                 keys = json.load(f)
-                self.twitch_api_client = keys["twitch"]["client"]
-                self.twitch_api_secret = keys["twitch"]["secret"]
+                self.twitch_api_client = keys["twitch"]["client"] if keys["twitch"]["client"] else None
+                self.twitch_api_secret = keys["twitch"]["secret"] if keys["twitch"]["secret"] else None
         except FileNotFoundError:
             self.twitch_api_client = None
             self.twitch_api_secret = None
@@ -168,6 +169,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.audioFrame.layout().addWidget(self.audio)
         self.audio.load_settings(settings=self.settings)
         self.audio.settingsChanged.connect(self.update_settings)
+        self.generalScale.valueChanged.connect(self.update_settings)
 
         self.load_settings()
         self.comboBox.currentIndexChanged.connect(self.update_settings)
@@ -233,6 +235,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.twitchApiBtn.clicked.connect(self.update_keys)
 
         self.reference_volume.valueChanged.connect(self.change_max_reference_volume)
+
+        self.generalScale.valueChanged.connect(lambda: self.update_viewer(self.current_files))
 
         self.toggle_editor()
         self.update_viewer(self.current_files, update_gallery=True)
@@ -348,6 +352,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.comboBox.setCurrentIndex(self.settings["background color"])
         self.PNGmethod.setCurrentIndex(self.settings["export mode"])
         self.HideUI.setChecked(self.settings["hide UI"])
+        self.generalScale.setValue(self.settings["general_scale"])
+        self.scaleValue.setText(f"{self.generalScale.value()}")
         # self.reference_volume.setChecked(self.settings["max_reference_volume"])
 
     def update_settings(self):
@@ -360,8 +366,10 @@ class MainWindow(QtWidgets.QMainWindow):
             "background color": self.comboBox.currentIndex(),
             "export mode": self.PNGmethod.currentIndex(),
             "hide UI": self.HideUI.isChecked(),
-            "max_reference_volume": self.reference_volume.value()
+            "max_reference_volume": self.reference_volume.value(),
+            "general_scale": self.generalScale.value()
         }
+        self.scaleValue.setText(f"{self.generalScale.value()}")
         self.save_parameters_to_json()
 
     def delete_shortcut(self, value):
@@ -754,11 +762,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def audioStatus(self, status):
         if self.viewer.is_loaded:
-            self.viewer.page().runJavaScript('''
+            js_code = ('''
                 var elementsOpen = document.getElementsByClassName("talking_open");
                 var elementsClosed = document.getElementsByClassName("talking_closed");
                 var elementsScreaming = document.getElementsByClassName("talking_screaming");
-                var imageWrapper = document.getElementById("image-wrapper");
+                // var imageWrapper = document.getElementById("image-wrapper");
+                var imageWrapper = document.querySelectorAll(".idle_animation");
         
                 var opacityOpen = ''' + str(1 if status == 1 else 0) + ''';
                 var opacityClosed = ''' + str(1 if status <= 0 else 0) + ''';
@@ -780,13 +789,27 @@ class MainWindow(QtWidgets.QMainWindow):
                     elementsScreaming[i].style.opacity = opacityScreaming;
                 }
         
-                // Add a CSS animation for jumping the image-wrapper
-                if (''' + str(status) + ''' == 1 || ''' + str(status) + ''' == 2) {
-                    imageWrapper.style.animation = "floaty 0.5s ease-in-out infinite"; 
-                } else {
-                    imageWrapper.style.animation = "floaty 6s ease-in-out infinite";
+                if(imageWrapper.length > 0) {
+                    imageWrapper.forEach(function(image) {
+                        // Add a CSS animation for jumping the image-wrapper
+                        if (''' + str(status) + ''' == 1 || ''' + str(status) + ''' == 2) {
+                            image.style.animation = "''' +
+                       self.talking_animation.currentText() + ' ' +
+                       str(self.talking_speed.value()) + 's ' +
+                       self.talking_timing.currentText() + ' ' +
+                       str('infinite' if self.talking_iteration.value() == 0 else self.talking_iteration.value()) +
+                       '''"; 
+                        } else {
+                            image.style.animation = "''' +
+                       self.idle_animation.currentText() + ' ' +
+                       str(self.idle_speed.value()) + 's ' +
+                       self.idle_timing.currentText() + ' ' +
+                       str('infinite' if self.idle_iteration.value() == 0 else self.idle_iteration.value()) + '''";
+                        }
+                    });
                 }
             ''')
+            self.viewer.page().runJavaScript(js_code)
 
     def saveSettings(self, settings):
         if settings['default']:
@@ -908,7 +931,10 @@ class MainWindow(QtWidgets.QMainWindow):
                 max_width, max_height = self.width(), self.height()
                 canvas = Image.new("RGBA", (max_width, max_height))
                 for image, _, posX, posY in images:
-                    canvas.paste(image, (int(posX), int(posY)), image)
+                    try:
+                        canvas.paste(image, (int(posX), int(posY)), image)
+                    except ValueError:
+                        pass
                 canvas.save(output_name, "PNG")
 
     def getFiles(self, files):
@@ -944,7 +970,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def update_viewer(self, files=None, update_gallery=False, update_settings=False):
         images_list = self.getFiles(files)
 
-        self.viewer.updateImages(images_list, self.color)
+        self.viewer.updateImages(images_list, self.color, self.generalScale.value())
         if self.tabWidget_2.currentIndex() == 1:
             if self.current_files != files or update_settings:
                 self.SettingsGallery.set_items(
@@ -979,6 +1005,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.frame_3.show()
         self.frame_8.show()
         self.donationBtn.show()
+
+        self.scaleFrame.show()
+        if self.editorButton.isChecked():
+            self.editor.show()
         self.viewerFrame_2.setStyleSheet(f"border-radius: 20px; background-color: {self.color}")
 
     def hideUI_(self):
@@ -988,6 +1018,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.frame_3.hide()
             self.frame_8.hide()
             self.donationBtn.hide()
+            self.editor.hide()
+            self.scaleFrame.hide()
             self.viewerFrame_2.setStyleSheet(f"background-color: {self.color}")
 
     def setBGColor(self):

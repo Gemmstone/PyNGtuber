@@ -1,8 +1,13 @@
 from PyQt6.QtWebEngineWidgets import QWebEngineView
-from PyQt6.QtWebEngineCore import QWebEngineSettings
+from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEnginePage
 from PyQt6.QtCore import QUrl, pyqtSignal
 from bs4 import BeautifulSoup
 import os
+
+
+class WebEnginePage(QWebEnginePage):
+    def javaScriptConsoleMessage(self, level, message, lineNumber, sourceID):
+        print("javaScriptConsoleMessage: ", level, message, lineNumber, sourceID)
 
 
 class LayeredImageViewer(QWebEngineView):
@@ -10,6 +15,7 @@ class LayeredImageViewer(QWebEngineView):
 
     def __init__(self, exe_dir, parent=None):
         super(LayeredImageViewer, self).__init__(parent)
+        self.setPage(WebEnginePage(self))
         self.html_code = ""
         self.setColor("#b8cdee")
         self.is_loaded = False
@@ -17,6 +23,9 @@ class LayeredImageViewer(QWebEngineView):
 
         settings = self.page().settings()
         settings.setAttribute(QWebEngineSettings.WebAttribute.LocalStorageEnabled, True)
+
+        settings.setAttribute(QWebEngineSettings.WebAttribute.Accelerated2dCanvasEnabled, True)
+        # settings.setAttribute(QWebEngineSettings.WebAttribute.Remo)
 
         self.file = os.path.join(exe_dir, 'Viewer', 'viewer.html')
         self.file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), self.file)
@@ -34,7 +43,7 @@ class LayeredImageViewer(QWebEngineView):
         self.is_loaded = False
         self.load(QUrl.fromLocalFile(self.file))
 
-    def updateImages(self, image_list=None, bg_color="#b8cdee"):
+    def updateImages(self, image_list=None, bg_color="#b8cdee", scale=0):
         with open(self.file, 'r') as html_file:
             self.html_code = html_file.read()
 
@@ -45,43 +54,32 @@ class LayeredImageViewer(QWebEngineView):
             image_div = soup.find('div', id='image-wrapper')
             image_div.clear()
 
-            self.page().toHtml(lambda html: self.handle_runtime_html(html, soup, image_div, image_list))
+            self.page().toHtml(lambda html: self.handle_runtime_html(soup, image_div, image_list, scale))
         except BaseException as err:
             print(f"HTML ERROR: {err}")
 
-    def handle_runtime_html(self, runtime_page, soup, image_div, image_list):
-        soup_runtime = BeautifulSoup(runtime_page, 'html.parser')
-        input_element = soup_runtime.find('input', {'id': 'scaleFactorInput'})
-        if input_element:
-            value = input_element.get('value')
-            if value:
-                scale_factor = float(value)
-            else:
-                scale_factor = 1.0
-        else:
-            scale_factor = 1.0
+    def handle_runtime_html(self, soup, image_div, image_list, scale_factor):
+        scale_factor = 1.0 + (scale_factor / 100)
 
         if image_list is not None:
             for layer in sorted(image_list, key=lambda x: x['posZ']):
-                controller_wheel_div = soup.new_tag('div', style=f"""
+                animation_idle_div = soup.new_tag('div', style=f"""
                     position: absolute !important; 
-                    transform-origin: calc(50% + {layer.get('originX', 0)}px) calc(50% + {layer.get('originY', 0)}px);
-                    transform: rotate(0deg);
                 """)
-                controller_wheel_div['class'] = ["controller_wheel" if "controller_wheel" in layer.get('controller', ["ignore"]) else "ignore"]
-                controller_wheel_div['player'] = layer.get("player", 1) - 1
-                controller_wheel_div['deg'] = layer.get('deg', -90)
-                controller_wheel_div['deadzone'] = layer.get("deadzone", 0.0550)
+                animation_idle_div['class'] = [
+                    "idle_animation" if layer.get("animation_idle", True) else "ignore"
+                ]
 
                 controller_buttons_div = soup.new_tag('div', style=f"""
-                    position: absolute !important; 
-                    left: calc(50% + {layer.get('posIdleX', 0)}px);
-                    top: calc(50% + {layer.get('posIdleY', 0)}px);
-                    transform: rotate({layer.get('rotationIdle', 0)}deg);
-                    display: {("block" if layer.get("buttons", 0) == 0 else "none") if layer.get("mode", 'display') else "block"};
-                """)
+                                    position: absolute !important; 
+                                    left: calc(50% + {layer.get('posIdleX', 0)}px);
+                                    top: calc(50% + {layer.get('posIdleY', 0)}px);
+                                    transform: rotate({layer.get('rotationIdle', 0)}deg);
+                                    display: {("block" if layer.get("buttons", 0) == 0 else "none") if layer.get("mode", 'display') else "block"};
+                                """)
 
-                controller_buttons_div['class'] = ["controller_buttons" if "controller_buttons" in layer.get('controller', ["ignore"]) else "ignore"]
+                controller_buttons_div['class'] = [
+                    "controller_buttons" if "controller_buttons" in layer.get('controller', ["ignore"]) else "ignore"]
                 controller_buttons_div['player'] = layer.get("player", 1) - 1
 
                 controller_buttons_div['mode'] = layer.get("mode", 'display')
@@ -99,6 +97,65 @@ class LayeredImageViewer(QWebEngineView):
                 controller_buttons_div['posRightY'] = layer.get("posRightY", 0)
                 controller_buttons_div['rotationRight'] = layer.get("rotationRight", 0)
 
+                guitar_buttons_div = soup.new_tag('div', style=f"""
+                                    position: absolute !important; 
+                                    left: calc(50% + {layer.get('posIdleX', 0)}px);
+                                    top: calc(50% + {layer.get('posIdleY', 0)}px);
+                                    transform: rotate({layer.get('rotationIdle', 0)}deg);
+                                    display: {("block" if "None" in layer.get("chords", []) else "none") if layer.get("chords", []) != [] else "block"};
+                                """)
+
+                guitar_buttons_div['class'] = [
+                    "guitar_buttons" if "controller_buttons" in layer.get('controller', ["ignore"]) else "ignore"]
+                guitar_buttons_div['player'] = layer.get("player", 1) - 1
+                guitar_buttons_div['chords'] = layer.get("chords", [])
+
+                guitar_buttons_div['posGuitarUpX'] = layer.get("posGuitarUpX", 0)
+                guitar_buttons_div['posGuitarUpY'] = layer.get("posGuitarUpY", 0)
+                guitar_buttons_div['rotationGuitarUp'] = layer.get("rotationGuitarUp", 0)
+                guitar_buttons_div['posGuitarDownX'] = layer.get("posGuitarDownX", 0)
+                guitar_buttons_div['posGuitarDownY'] = layer.get("posGuitarDownY", 0)
+                guitar_buttons_div['rotationGuitarDown'] = layer.get("rotationGuitarDown", 0)
+
+                controller_wheelX_div = soup.new_tag('div', style=f"""
+                    position: absolute !important; 
+                    transform-origin: calc(50% + {layer.get('originX', 0)}px) calc(50% + {layer.get('originY', 0)}px);
+                    transform: rotateZ(0deg);
+                """)
+                controller_wheelX_div['class'] = [
+                    "controller_wheelX" if "controller_wheel" in layer.get('controller', ["ignore"]) else "ignore"
+                ]
+                controller_wheelX_div['player'] = layer.get("player2", 1) - 1
+                controller_wheelX_div['deg'] = layer.get('deg', -90)
+                controller_wheelX_div['invertAxis'] = layer.get('invertAxis', 0)
+                controller_wheelX_div['deadzone'] = layer.get("deadzone", 0.0550)
+
+                controller_wheelY_div = soup.new_tag('div', style=f"""
+                    position: absolute !important; 
+                    transform-origin: calc(50% + {layer.get('originXzoom', layer.get('originX', 0))}px) calc(50% + {layer.get('originYzoom', layer.get('originY', 0))}px);
+                    transform: rotateX(0deg) scale(100%);
+                """)
+                controller_wheelY_div['class'] = [
+                    "controller_wheelY" if "controller_wheel" in layer.get('controller', ["ignore"]) else "ignore"
+                ]
+                controller_wheelY_div['player'] = layer.get("player2", 1) - 1
+                controller_wheelY_div['deg'] = layer.get('degZoom', layer.get('deg', -90))
+                controller_wheelY_div['invertAxis'] = layer.get('invertAxis', 0)
+                controller_wheelY_div['deadzone'] = layer.get("deadzone", 0.0550)
+
+                controller_wheelZ_div = soup.new_tag('div', style=f"""
+                    position: absolute !important; 
+                    transform-origin: calc(50% + {layer.get('originXright', layer.get('originX', 0))}px) calc(50% + {layer.get('originYright', layer.get('originY', 0))}px);
+                    transform: rotateY(0deg) rotateX(0deg);
+                """)
+                controller_wheelZ_div['class'] = [
+                    "controller_wheelZ" if "controller_wheel" in layer.get('controller', ["ignore"]) else "ignore"
+                ]
+                controller_wheelZ_div['player'] = layer.get("player", 1) - 1
+                controller_wheelZ_div['deg'] = layer.get('degRight', layer.get('deg', -90))
+                controller_wheelZ_div['invertAxis'] = layer.get('invertAxis', 0)
+                controller_wheelZ_div['deadzone'] = layer.get("deadzone", 0.0550)
+
                 img_tag = soup.new_tag('img', src=f"../{layer['route']}", style=f"""
                         position: absolute !important;
                         left: calc(50% + {layer['posX']}px);
@@ -110,12 +167,18 @@ class LayeredImageViewer(QWebEngineView):
                         {"opacity: 0" if layer['talking'] not in ['ignore', 'talking_closed'] else ""};
                         {layer['css']}
                     """)
-                img_tag['class'] = [layer['blinking'], layer['talking']]
+                img_tag['class'] = [
+                    layer['blinking'], layer['talking'],
+                ]
 
-                controller_buttons_div.append(img_tag)
-                controller_wheel_div.append(controller_buttons_div)
+                controller_wheelZ_div.append(img_tag)
+                controller_wheelY_div.append(controller_wheelZ_div)
+                controller_wheelX_div.append(controller_wheelY_div)
+                guitar_buttons_div.append(controller_wheelX_div)
+                controller_buttons_div.append(guitar_buttons_div)
+                animation_idle_div.append(controller_buttons_div)
 
-                image_div.append(controller_wheel_div)
+                image_div.append(animation_idle_div)
 
         beautiful_html = soup.prettify()
         with open('Viewer/viewer.html', 'w') as html_file:
