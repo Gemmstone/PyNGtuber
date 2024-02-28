@@ -21,8 +21,9 @@ https://github.com/Gemmstone/PyNGtuber/assets/31828821/fc5b1aa5-169c-4a53-8cef-9
 - dateutils
 - twitchapi
 - sounddevice
+- pyautogui
   
-  `pip install pyqt6 pyqt6-webengine pillow pyaudio beautifulsoup4 mido numpy pynput dateutils twitchapi sounddevice`
+  `pip install pyqt6 pyqt6-webengine pillow pyaudio beautifulsoup4 mido numpy pynput dateutils twitchapi sounddevice pyautogui`
 
 ## Future Plans
 
