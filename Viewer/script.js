@@ -17,6 +17,16 @@ let initialImageY;
 let mouseMovementX = 0;
 let mouseMovementY = 0;
 
+async function cursorPosition(X, Y){
+    var cursor_divs = document.querySelectorAll(".cursor_div");
+    if(cursor_divs.length > 0) {
+        cursor_divs.forEach(function(cursor_div) {
+            cursor_div.style.left = `calc(50% + ${X * cursor_div.attributes.cursorScale.value * -1}px)`;
+            cursor_div.style.top = `calc(50% - ${Y * cursor_div.attributes.cursorScale.value * -1}px)`;
+        });
+    }
+}
+
 async function pool(){
     while(true){
 

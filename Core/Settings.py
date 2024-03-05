@@ -41,6 +41,8 @@ class Settings(QWidget):
         self.originYwhammy.setValue(self.parameters.get("originXwhammy", 0) * -1)
         self.degWhammy.setValue(self.parameters.get("degWhammy", 0))
 
+        self.cursorScale.setValue(self.parameters.get("cursorScale", 0.01))
+
         self.deadzone.setValue(self.parameters.get("deadzone", 0.0550))
         self.player.setValue(self.parameters.get("player", 0))
         self.player2.setValue(self.parameters.get("player2", 0))
@@ -108,6 +110,8 @@ class Settings(QWidget):
         self.posGuitarDownY.valueChanged.connect(self.save_current)
         self.rotationGuitarDown.valueChanged.connect(self.save_current)
 
+        self.cursorScale.valueChanged.connect(self.save_current)
+
         self.deg.valueChanged.connect(self.save_current)
         self.degZoom.valueChanged.connect(self.save_current)
         self.degRight.valueChanged.connect(self.save_current)
@@ -119,19 +123,22 @@ class Settings(QWidget):
         self.setShortcut.clicked.connect(self.request_shortcut)
 
         if "controller" not in self.parameters.keys():
-            self.parameters["controller"] = "ignore"
+            self.parameters["controller"] = ["ignore"]
 
         self.blinkingGroup.setChecked(self.parameters["blinking"] != "ignore")
         self.talkingGroup.setChecked(self.parameters["talking"] != "ignore")
-        self.controllerGroup.setChecked(self.parameters["controller"] != "ignore")
+        self.controllerGroup.setChecked("ignore" not in self.parameters["controller"])
         self.cssGroup.setChecked(self.parameters["use_css"])
         self.invertAxis.setChecked(self.parameters.get("invertAxis", False))
+
+        self.cursorGroup.setChecked(self.parameters.get("cursor", False))
 
         self.css.setPlainText(self.parameters["css"])
 
         self.blinkingGroup.toggled.connect(self.hide_blinking)
         self.talkingGroup.toggled.connect(self.hide_talking)
         self.controllerGroup.toggled.connect(self.hide_controller)
+        self.cursorGroup.toggled.connect(self.hide_cursor)
         self.cssGroup.toggled.connect(self.hide_css)
 
         self.blinkOpen.setChecked(self.parameters["blinking"] == "blinking_open")
@@ -176,6 +183,7 @@ class Settings(QWidget):
         self.hide_blinking()
         self.hide_talking()
         self.hide_controller()
+        self.hide_cursor()
         self.hide_css()
 
     def check_hotkeys(self):
@@ -213,6 +221,16 @@ class Settings(QWidget):
         else:
             self.frame_4.hide()
             self.talkingGroup.setStyleSheet(
+                "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
+        self.save_current()
+
+    def hide_cursor(self):
+        if self.cursorGroup.isChecked():
+            self.frameCursor.show()
+            self.cursorGroup.setStyleSheet("")
+        else:
+            self.frameCursor.hide()
+            self.cursorGroup.setStyleSheet(
                 "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
         self.save_current()
 
@@ -262,6 +280,9 @@ class Settings(QWidget):
         self.parameters["buttons"] = self.buttonCombo.currentIndex()
         self.parameters["invertAxis"] = 1 if self.invertAxis.isChecked() else 0
         self.parameters["chords"] = self.get_chords()
+
+        self.parameters["cursorScale"] = self.cursorScale.value()
+        self.parameters["cursor"] = self.cursorGroup.isChecked()
 
         self.parameters['mode'] = 'display' if self.display.isChecked() else 'move' if self.move.isChecked() else 'guitar'
 

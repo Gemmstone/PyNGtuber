@@ -3,14 +3,18 @@ from twitchAPI.object.eventsub import ChannelPointsCustomRewardRedemptionAddEven
     ChannelSubscriptionGiftEvent
 from twitchAPI.oauth import UserAuthenticationStorageHelper
 from twitchAPI.eventsub.websocket import EventSubWebsocket
-from PyQt6.QtCore import QThread, pyqtSignal, pyqtSlot
-from PyQt6 import QtWidgets, QtCore, uic, QtGui
+from PyQt6.QtCore import QThread, pyqtSignal, pyqtSlot, QPoint
+from aiohttp.client_exceptions import ClientConnectionError
+from PyQt6 import QtWidgets, QtCore, uic
+from PyQt6.QtGui import QIcon
 from pynput.keyboard import Listener
 from twitchAPI.type import AuthScope
 from twitchAPI.twitch import Twitch
 from twitchAPI.helper import first
-from PyQt6.QtGui import QIcon
-from aiohttp.client_exceptions import ClientConnectionError
+try:
+    import pyautogui
+except ValueError:
+    pyautogui = None
 import os.path
 import asyncio
 import json
@@ -214,6 +218,24 @@ class KeyboardListener(QThread):
         self.ignore_commands = False
 
 
+class MouseTracker(QThread):
+    mouse_position = pyqtSignal(dict)
+
+    def __init__(self):
+        super().__init__()
+
+    def run(self):
+        while True:
+            if pyautogui is not None:
+                position = pyautogui.position()
+            else:
+                position = (0, 0)
+            self.mouse_position.emit({
+                "x": position[0], "y": position[1]
+            })
+
+
+
 def find_shortcut_usages(main_folder, current_folder, new_shortcut):
     usages = []
     for root, dirs, files in os.walk(main_folder):
@@ -272,22 +294,26 @@ class ShortcutsDialog(QtWidgets.QDialog):
 
         self.midi_listener.request_new_signal()
         self.keyboard_listener.request_new_signal()
-        self.twitch_listener.request_new_signal()
+        if self.twitch_listener is not None:
+            self.twitch_listener.request_new_signal()
 
         self.midi_listener.new_shortcut.connect(self.handle_midi)
         self.keyboard_listener.new_shortcut.connect(self.handle_keyboard)
-        self.twitch_listener.new_event_signal.connect(self.handle_twitch)
+        if self.twitch_listener is not None:
+            self.twitch_listener.new_event_signal.connect(self.handle_twitch)
 
         self.setWindowTitle(self.tr("Update Shortcuts"))
 
         # Connect the signals from both listeners to a slot
         self.midi_listener.shortcut.connect(self.handle_shortcuts)
         self.keyboard_listener.shortcut.connect(self.handle_shortcuts)
-        self.twitch_listener.event_signal.connect(self.handle_shortcuts)
+        if self.twitch_listener is not None:
+            self.twitch_listener.event_signal.connect(self.handle_shortcuts)
 
         self.saveMidi.clicked.connect(self.save_midi)
         self.savekeyboard.clicked.connect(self.save_keyboard)
-        self.saveTwitch.clicked.connect(self.save_twitch)
+        if self.twitch_listener is not None:
+            self.saveTwitch.clicked.connect(self.save_twitch)
 
         self.load_shortcuts()
 
@@ -638,7 +664,8 @@ class ShortcutsDialog(QtWidgets.QDialog):
         self.new_command.emit(self.data)
         self.midi_listener.new_shortcut.disconnect(self.handle_midi)
         self.keyboard_listener.new_shortcut.disconnect(self.handle_keyboard)
-        self.twitch_listener.new_event_signal.disconnect(self.handle_twitch)
+        if self.twitch_listener is not None:
+            self.twitch_listener.new_event_signal.disconnect(self.handle_twitch)
         self.midi_listener.resume_normal_operation()
         self.keyboard_listener.resume_normal_operation()
         super().closeEvent(event)

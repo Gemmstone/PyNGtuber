@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>966</width>
-    <height>620</height>
+    <width>1322</width>
+    <height>751</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -279,141 +279,13 @@ QTabBar::tab:hover {
                 <property name="currentIndex">
                  <number>0</number>
                 </property>
-                <widget class="QWidget" name="page">
-                 <property name="geometry">
-                  <rect>
-                   <x>0</x>
-                   <y>0</y>
-                   <width>208</width>
-                   <height>505</height>
-                  </rect>
-                 </property>
-                 <attribute name="icon">
-                  <iconset>
-                   <normaloff>../Icons/mobile-ui-user-svgrepo-com.svg</normaloff>../Icons/mobile-ui-user-svgrepo-com.svg</iconset>
-                 </attribute>
-                 <attribute name="label">
-                  <string>Models</string>
-                 </attribute>
-                 <layout class="QVBoxLayout" name="verticalLayout_8">
-                  <property name="leftMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>0</number>
-                  </property>
-                  <item>
-                   <widget class="QPushButton" name="saveAvatar">
-                    <property name="cursor">
-                     <cursorShape>PointingHandCursor</cursorShape>
-                    </property>
-                    <property name="text">
-                     <string>Save Avatar</string>
-                    </property>
-                    <property name="icon">
-                     <iconset>
-                      <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
-                    </property>
-                    <property name="iconSize">
-                     <size>
-                      <width>25</width>
-                      <height>25</height>
-                     </size>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QScrollArea" name="scrollArea_4">
-                    <property name="frameShape">
-                     <enum>QFrame::NoFrame</enum>
-                    </property>
-                    <property name="verticalScrollBarPolicy">
-                     <enum>Qt::ScrollBarAlwaysOff</enum>
-                    </property>
-                    <property name="horizontalScrollBarPolicy">
-                     <enum>Qt::ScrollBarAlwaysOff</enum>
-                    </property>
-                    <property name="widgetResizable">
-                     <bool>true</bool>
-                    </property>
-                    <widget class="QWidget" name="scrollAreaWidgetContents_4">
-                     <property name="geometry">
-                      <rect>
-                       <x>0</x>
-                       <y>0</y>
-                       <width>208</width>
-                       <height>458</height>
-                      </rect>
-                     </property>
-                     <layout class="QVBoxLayout" name="verticalLayout_30">
-                      <property name="leftMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="topMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="rightMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>0</number>
-                      </property>
-                      <item>
-                       <widget class="QFrame" name="frameModels">
-                        <property name="frameShape">
-                         <enum>QFrame::NoFrame</enum>
-                        </property>
-                        <property name="frameShadow">
-                         <enum>QFrame::Raised</enum>
-                        </property>
-                        <layout class="QVBoxLayout" name="verticalLayout_31">
-                         <property name="leftMargin">
-                          <number>0</number>
-                         </property>
-                         <property name="topMargin">
-                          <number>0</number>
-                         </property>
-                         <property name="rightMargin">
-                          <number>0</number>
-                         </property>
-                         <property name="bottomMargin">
-                          <number>0</number>
-                         </property>
-                        </layout>
-                       </widget>
-                      </item>
-                      <item>
-                       <spacer name="verticalSpacer_5">
-                        <property name="orientation">
-                         <enum>Qt::Vertical</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>20</width>
-                          <height>548</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                     </layout>
-                    </widget>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
                 <widget class="QWidget" name="page_2">
                  <property name="geometry">
                   <rect>
                    <x>0</x>
                    <y>0</y>
                    <width>208</width>
-                   <height>505</height>
+                   <height>636</height>
                   </rect>
                  </property>
                  <attribute name="icon">
@@ -476,7 +348,7 @@ QTabBar::tab:hover {
                        <x>0</x>
                        <y>0</y>
                        <width>208</width>
-                       <height>458</height>
+                       <height>589</height>
                       </rect>
                      </property>
                      <layout class="QVBoxLayout" name="verticalLayout_33">
@@ -518,6 +390,134 @@ QTabBar::tab:hover {
                       </item>
                       <item>
                        <spacer name="verticalSpacer_4">
+                        <property name="orientation">
+                         <enum>Qt::Vertical</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>20</width>
+                          <height>548</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                     </layout>
+                    </widget>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QWidget" name="page">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>208</width>
+                   <height>504</height>
+                  </rect>
+                 </property>
+                 <attribute name="icon">
+                  <iconset>
+                   <normaloff>../Icons/mobile-ui-user-svgrepo-com.svg</normaloff>../Icons/mobile-ui-user-svgrepo-com.svg</iconset>
+                 </attribute>
+                 <attribute name="label">
+                  <string>Models</string>
+                 </attribute>
+                 <layout class="QVBoxLayout" name="verticalLayout_8">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QPushButton" name="saveAvatar">
+                    <property name="cursor">
+                     <cursorShape>PointingHandCursor</cursorShape>
+                    </property>
+                    <property name="text">
+                     <string>Save Avatar</string>
+                    </property>
+                    <property name="icon">
+                     <iconset>
+                      <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>25</width>
+                      <height>25</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QScrollArea" name="scrollArea_4">
+                    <property name="frameShape">
+                     <enum>QFrame::NoFrame</enum>
+                    </property>
+                    <property name="verticalScrollBarPolicy">
+                     <enum>Qt::ScrollBarAlwaysOff</enum>
+                    </property>
+                    <property name="horizontalScrollBarPolicy">
+                     <enum>Qt::ScrollBarAlwaysOff</enum>
+                    </property>
+                    <property name="widgetResizable">
+                     <bool>true</bool>
+                    </property>
+                    <widget class="QWidget" name="scrollAreaWidgetContents_4">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>0</y>
+                       <width>208</width>
+                       <height>457</height>
+                      </rect>
+                     </property>
+                     <layout class="QVBoxLayout" name="verticalLayout_30">
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QFrame" name="frameModels">
+                        <property name="frameShape">
+                         <enum>QFrame::NoFrame</enum>
+                        </property>
+                        <property name="frameShadow">
+                         <enum>QFrame::Raised</enum>
+                        </property>
+                        <layout class="QVBoxLayout" name="verticalLayout_31">
+                         <property name="leftMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="topMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="rightMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="bottomMargin">
+                          <number>0</number>
+                         </property>
+                        </layout>
+                       </widget>
+                      </item>
+                      <item>
+                       <spacer name="verticalSpacer_5">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -656,7 +656,7 @@ QFrame{
                    <x>0</x>
                    <y>0</y>
                    <width>208</width>
-                   <height>548</height>
+                   <height>547</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout">
@@ -1645,7 +1645,7 @@ QFrame{
                        <x>0</x>
                        <y>0</y>
                        <width>274</width>
-                       <height>477</height>
+                       <height>608</height>
                       </rect>
                      </property>
                      <attribute name="icon">
@@ -1735,7 +1735,7 @@ QFrame{
                            <x>0</x>
                            <y>0</y>
                            <width>274</width>
-                           <height>477</height>
+                           <height>608</height>
                           </rect>
                          </property>
                          <layout class="QVBoxLayout" name="verticalLayout_20">
@@ -1992,11 +1992,6 @@ QTabBar::tab:hover {
                                          <property name="sizeAdjustPolicy">
                                           <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
                                          </property>
-                                         <item>
-                                          <property name="text">
-                                           <string>floaty</string>
-                                          </property>
-                                         </item>
                                         </widget>
                                        </item>
                                       </layout>
@@ -2142,11 +2137,6 @@ QTabBar::tab:hover {
                                          <property name="sizeAdjustPolicy">
                                           <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
                                          </property>
-                                         <item>
-                                          <property name="text">
-                                           <string>floaty</string>
-                                          </property>
-                                         </item>
                                         </widget>
                                        </item>
                                       </layout>
@@ -2333,7 +2323,7 @@ QTabBar::tab:hover {
                        <x>0</x>
                        <y>0</y>
                        <width>274</width>
-                       <height>467</height>
+                       <height>476</height>
                       </rect>
                      </property>
                      <attribute name="icon">
@@ -3550,7 +3540,7 @@ background-color: rgba(0, 0, 0, 40);
                    <x>0</x>
                    <y>0</y>
                    <width>270</width>
-                   <height>580</height>
+                   <height>30</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_4">

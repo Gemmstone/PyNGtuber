@@ -2,6 +2,7 @@ from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEnginePage
 from PyQt6.QtCore import QUrl, pyqtSignal
 from bs4 import BeautifulSoup
+import re
 import os
 
 
@@ -44,6 +45,7 @@ class LayeredImageViewer(QWebEngineView):
         self.load(QUrl.fromLocalFile(self.file))
 
     def updateImages(self, image_list=None, bg_color="#b8cdee", scale=0):
+        self.is_loaded = False
         with open(self.file, 'r') as html_file:
             self.html_code = html_file.read()
 
@@ -69,6 +71,16 @@ class LayeredImageViewer(QWebEngineView):
                 animation_idle_div['class'] = [
                     "idle_animation" if layer.get("animation_idle", True) else "ignore"
                 ]
+
+                cursor_div = soup.new_tag('div', style=f"""
+                                    position: absolute !important; 
+                                    left: calc(50% + {layer.get('posIdleX', 0)}px);
+                                    top: calc(50% + {layer.get('posIdleY', 0)}px);
+                                """)
+                cursor_div['class'] = [
+                    "cursor_div" if layer.get("cursor", False) else "ignore"
+                ]
+                cursor_div['cursorScale'] = layer.get("cursorScale", 0.01)
 
                 controller_buttons_div = soup.new_tag('div', style=f"""
                                     position: absolute !important; 
@@ -190,7 +202,8 @@ class LayeredImageViewer(QWebEngineView):
                 controller_wheelY_div.append(controller_wheelZ_div)
                 guitar_buttons_div.append(controller_wheelY_div)
                 controller_buttons_div.append(guitar_buttons_div)
-                animation_idle_div.append(controller_buttons_div)
+                cursor_div.append(controller_buttons_div)
+                animation_idle_div.append(cursor_div)
 
                 image_div.append(animation_idle_div)
 
@@ -198,3 +211,11 @@ class LayeredImageViewer(QWebEngineView):
         with open('Viewer/viewer.html', 'w') as html_file:
             html_file.write(beautiful_html)
         self.reload()
+
+    def get_animations(self, file_path):
+        with open(file_path, 'r') as file:
+            css_text = file.read()
+
+        animations = re.findall(r'@keyframes\s+([\w-]+)\s*{[^}]*\/\*\s*Avatar Animation\s*\*\/[^}]*}', css_text)
+        # print(animations)
+        return animations

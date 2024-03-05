@@ -2,11 +2,21 @@
     "volume threshold": 15,
     "scream threshold": 93,
     "delay threshold": 13,
-    "microphone selection": 10,
+    "microphone selection": 11,
     "microphone mute": false,
     "background color": 0,
     "export mode": 0,
     "hide UI": false,
     "max_reference_volume": 0.5,
-    "general_scale": 0
+    "general_scale": 0,
+    "animations": {
+        "idle": {
+            "name": "floaty",
+            "speed": 6.0
+        },
+        "talking": {
+            "name": "floaty",
+            "speed": 0.5
+        }
+    }
 }

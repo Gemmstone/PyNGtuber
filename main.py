@@ -1,4 +1,4 @@
-from Core.ShortcutsManager import MidiListener, KeyboardListener, TwitchAPI, ShortcutsDialog
+from Core.ShortcutsManager import MidiListener, KeyboardListener, TwitchAPI, ShortcutsDialog, MouseTracker
 from Core.imageGallery import ImageGallery, ExpressionSelector, ModelGallery
 from Core.audioManager import MicrophoneVolumeWidget
 from PIL import Image, ImageSequence, ImageOps
@@ -171,6 +171,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.audio.settingsChanged.connect(self.update_settings)
         self.generalScale.valueChanged.connect(self.update_settings)
 
+        self.idle_animation.activated.connect(self.update_settings)
+        self.talking_animation.activated.connect(self.update_settings)
+        self.idle_speed.valueChanged.connect(self.update_settings)
+        self.talking_speed.valueChanged.connect(self.update_settings)
+
         self.load_settings()
         self.comboBox.currentIndexChanged.connect(self.update_settings)
         self.PNGmethod.currentIndexChanged.connect(self.update_settings)
@@ -194,6 +199,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.viewer.loadFinishedSignal.connect(self.reboot_audio)
         self.viewerFrame.layout().addWidget(self.viewer)
         self.viewer.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
+
+        self.load_animations(self.settings["animations"])
 
         self.expressionSelector = ExpressionSelector("Assets")
         self.scrollArea_5.setWidget(self.expressionSelector)
@@ -240,6 +247,43 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.toggle_editor()
         self.update_viewer(self.current_files, update_gallery=True)
+
+        self.mouse_tracker = MouseTracker()
+        self.mouse_tracker.mouse_position.connect(self.on_mouse_position_changed)
+
+        # self.mouse_tracker.start()   # check opentabletdriver
+        QtCore.QTimer.singleShot(10000, self.mouse_tracker.start)
+
+    def on_mouse_position_changed(self, position):
+        if self.viewer.is_loaded:
+            self.viewer.page().runJavaScript(f"cursorPosition({position['x']}, {position['y']});""")
+
+    def load_animations(self, default=None):
+        if default is None:
+            default = self.settings["animations"]
+
+        animations = self.viewer.get_animations(self.anim_file)
+
+        self.idle_animation.clear()
+        self.talking_animation.clear()
+
+        for animation in animations:
+            self.idle_animation.addItem(animation)
+            self.talking_animation.addItem(animation)
+
+        idle_animation = default["idle"]["name"]
+        talking_animation = default["talking"]["name"]
+
+        if idle_animation in animations:
+            self.idle_animation.setCurrentText(idle_animation)
+        if talking_animation in animations:
+            self.talking_animation.setCurrentText(talking_animation)
+
+        self.idle_speed.setValue(default["idle"]["speed"])
+        self.talking_speed.setValue(default["talking"]["speed"])
+
+        if default is not None:
+            self.update_settings()
 
     def flipCanvas(self):
         if self.flipCanvasToggle.isChecked():
@@ -367,10 +411,21 @@ class MainWindow(QtWidgets.QMainWindow):
             "export mode": self.PNGmethod.currentIndex(),
             "hide UI": self.HideUI.isChecked(),
             "max_reference_volume": self.reference_volume.value(),
-            "general_scale": self.generalScale.value()
+            "general_scale": self.generalScale.value(),
+            "animations": {
+                "idle": {
+                    "name": self.idle_animation.currentText(),
+                    "speed": self.idle_speed.value()
+                },
+                "talking": {
+                    "name": self.talking_animation.currentText(),
+                    "speed": self.talking_speed.value()
+                }
+            }
         }
         self.scaleValue.setText(f"{self.generalScale.value()}")
         self.save_parameters_to_json()
+        self.audioStatus(0)
 
     def delete_shortcut(self, value):
         self.file_parameters_default[value['route']]["hotkeys"] = copy.deepcopy(value["hotkeys"])
@@ -467,7 +522,8 @@ class MainWindow(QtWidgets.QMainWindow):
                 QtCore.QTimer.singleShot(int(shortcuts["time"]), lambda x=disable_shortcuts: self.shortcut_received(x))
             else:
                 parts = shortcuts["path"].split(os.path.sep)
-                self.load_model({"name": parts[2], "type": parts[1]}, mode=shortcuts["mode"])
+                print(parts)
+                self.load_model({"name": parts[-2], "type": parts[-3]}, mode=shortcuts["mode"])
 
         elif shortcuts["type"] == "Asset":
             if shortcuts["path"] in self.current_files:
@@ -594,6 +650,11 @@ class MainWindow(QtWidgets.QMainWindow):
             current_files.append(os.path.normpath(file["route"]))
 
         self.update_viewer(current_files)
+        if data["type"] == "Expressions":
+            with open(os.path.join(exe_dir, "Models", data['type'], data['name'], "data.json"), "r") as load_file:
+                animations = json.load(load_file).get("animations", None)
+                if animations is not None:
+                    self.load_animations(default=animations)
 
         if data["type"] == "Avatars":
             self.current_model = copy.deepcopy(data)
@@ -739,7 +800,19 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             data = None
         with open(data_file, "w") as file:
-            data = {"shortcuts": []} if data is None else data
+            data = {"shortcuts": [], "animations": {}} if data is None else data
+            if "animations" not in data:
+                data["animations"] = {}
+            data["animations"] = {
+                "idle": {
+                    "name": self.idle_animation.currentText(),
+                    "speed": self.idle_speed.value()
+                },
+                "talking": {
+                    "name": self.talking_animation.currentText(),
+                    "speed": self.talking_speed.value()
+                }
+            }
             json.dump(data, file, indent=4)
 
     def export_png(self):
