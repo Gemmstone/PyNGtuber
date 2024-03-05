@@ -1849,6 +1849,37 @@ QFrame{
                                </property>
                                <layout class="QVBoxLayout" name="verticalLayout_56">
                                 <item>
+                                 <widget class="QCheckBox" name="mouseTrackingToggle">
+                                  <property name="sizePolicy">
+                                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                   </sizepolicy>
+                                  </property>
+                                  <property name="cursor">
+                                   <cursorShape>PointingHandCursor</cursorShape>
+                                  </property>
+                                  <property name="toolTip">
+                                   <string>Disable mouse tracking to save processing power</string>
+                                  </property>
+                                  <property name="layoutDirection">
+                                   <enum>Qt::LeftToRight</enum>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true"/>
+                                  </property>
+                                  <property name="text">
+                                   <string>Enable Mouse tracking</string>
+                                  </property>
+                                  <property name="checked">
+                                   <bool>true</bool>
+                                  </property>
+                                  <property name="tristate">
+                                   <bool>false</bool>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
                                  <widget class="QTabWidget" name="tabWidget_3">
                                   <property name="sizePolicy">
                                    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -2290,37 +2321,6 @@ QTabBar::tab:hover {
                                   </property>
                                   <property name="checked">
                                    <bool>false</bool>
-                                  </property>
-                                  <property name="tristate">
-                                   <bool>false</bool>
-                                  </property>
-                                 </widget>
-                                </item>
-                                <item>
-                                 <widget class="QCheckBox" name="mouseTrackingToggle">
-                                  <property name="sizePolicy">
-                                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                   </sizepolicy>
-                                  </property>
-                                  <property name="cursor">
-                                   <cursorShape>PointingHandCursor</cursorShape>
-                                  </property>
-                                  <property name="toolTip">
-                                   <string>Disable mouse tracking to save processing power</string>
-                                  </property>
-                                  <property name="layoutDirection">
-                                   <enum>Qt::LeftToRight</enum>
-                                  </property>
-                                  <property name="styleSheet">
-                                   <string notr="true"/>
-                                  </property>
-                                  <property name="text">
-                                   <string>Enable Mouse tracking</string>
-                                  </property>
-                                  <property name="checked">
-                                   <bool>true</bool>
                                   </property>
                                   <property name="tristate">
                                    <bool>false</bool>
