@@ -21,8 +21,16 @@ async function cursorPosition(X, Y){
     var cursor_divs = document.querySelectorAll(".cursor_div");
     if(cursor_divs.length > 0) {
         cursor_divs.forEach(function(cursor_div) {
-            cursor_div.style.left = `calc(50% + ${X * cursor_div.attributes.cursorScale.value * -1}px)`;
-            cursor_div.style.top = `calc(50% - ${Y * cursor_div.attributes.cursorScale.value * -1}px)`;
+            if(cursor_div.attributes.invert_mouse_x.value == 1){
+                cursor_div.style.left = `calc(50% + ${X * cursor_div.attributes.cursorScale.value * -1}px)`;
+            } else {
+                cursor_div.style.left = `calc(50% + ${X * cursor_div.attributes.cursorScale.value}px)`;
+            }
+            if(cursor_div.attributes.invert_mouse_y.value == 1){
+                cursor_div.style.top = `calc(50% - ${Y * cursor_div.attributes.cursorScale.value}px)`;
+            } else {
+                cursor_div.style.top = `calc(50% - ${Y * cursor_div.attributes.cursorScale.value * -1}px)`;
+            }
         });
     }
 }

@@ -1294,6 +1294,38 @@ color: rgb(0, 0, 0);</string>
                 </widget>
                </item>
                <item>
+                <spacer name="horizontalSpacer_3">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_16">
+                 <property name="toolTip">
+                  <string>Support her!</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
+                 <property name="text">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Debug at &lt;a href=&quot;http://127.0.0.1:4864&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#e93a9a;&quot;&gt;http://127.0.0.1:4864&lt;/span&gt;&lt;/a&gt; in a chromium browser&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                 <property name="openExternalLinks">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
                 <spacer name="horizontalSpacer_2">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
@@ -2258,6 +2290,37 @@ QTabBar::tab:hover {
                                   </property>
                                   <property name="checked">
                                    <bool>false</bool>
+                                  </property>
+                                  <property name="tristate">
+                                   <bool>false</bool>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <widget class="QCheckBox" name="mouseTrackingToggle">
+                                  <property name="sizePolicy">
+                                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                   </sizepolicy>
+                                  </property>
+                                  <property name="cursor">
+                                   <cursorShape>PointingHandCursor</cursorShape>
+                                  </property>
+                                  <property name="toolTip">
+                                   <string>Disable mouse tracking to save processing power</string>
+                                  </property>
+                                  <property name="layoutDirection">
+                                   <enum>Qt::LeftToRight</enum>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true"/>
+                                  </property>
+                                  <property name="text">
+                                   <string>Enable Mouse tracking</string>
+                                  </property>
+                                  <property name="checked">
+                                   <bool>true</bool>
                                   </property>
                                   <property name="tristate">
                                    <bool>false</bool>

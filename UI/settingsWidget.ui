@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>269</width>
-    <height>1349</height>
+    <height>1405</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -726,10 +726,7 @@ border-radius: 9px;}</string>
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_8">
-         <property name="spacing">
-          <number>3</number>
-         </property>
+        <layout class="QGridLayout" name="gridLayout_2">
          <property name="leftMargin">
           <number>3</number>
          </property>
@@ -742,7 +739,7 @@ border-radius: 9px;}</string>
          <property name="bottomMargin">
           <number>3</number>
          </property>
-         <item>
+         <item row="0" column="0">
           <widget class="QLabel" name="label_42">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -755,7 +752,7 @@ border-radius: 9px;}</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="0" column="1">
           <widget class="QDoubleSpinBox" name="cursorScale">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -783,6 +780,52 @@ border-radius: 9px;}</string>
            </property>
            <property name="value">
             <double>0.010000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QCheckBox" name="invert_mouse_x">
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgba(255, 255, 255, 0);
+
+QCheckBox::indicator:unchecked {
+	background-color : cyan;
+}</string>
+           </property>
+           <property name="text">
+            <string>Invert horizontal axis</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QCheckBox" name="invert_mouse_y">
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgba(255, 255, 255, 0);
+
+QCheckBox::indicator:unchecked {
+	background-color : cyan;
+}</string>
+           </property>
+           <property name="text">
+            <string>Invert vertical axis</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
            </property>
           </widget>
          </item>

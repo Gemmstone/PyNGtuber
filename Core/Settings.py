@@ -42,6 +42,8 @@ class Settings(QWidget):
         self.degWhammy.setValue(self.parameters.get("degWhammy", 0))
 
         self.cursorScale.setValue(self.parameters.get("cursorScale", 0.01))
+        self.invert_mouse_x.setChecked(self.parameters.get("invert_mouse_x", 1) == 1)
+        self.invert_mouse_y.setChecked(self.parameters.get("invert_mouse_y", 1) == 0)
 
         self.deadzone.setValue(self.parameters.get("deadzone", 0.0550))
         self.player.setValue(self.parameters.get("player", 0))
@@ -111,6 +113,8 @@ class Settings(QWidget):
         self.rotationGuitarDown.valueChanged.connect(self.save_current)
 
         self.cursorScale.valueChanged.connect(self.save_current)
+        self.invert_mouse_x.toggled.connect(self.save_current)
+        self.invert_mouse_y.toggled.connect(self.save_current)
 
         self.deg.valueChanged.connect(self.save_current)
         self.degZoom.valueChanged.connect(self.save_current)
@@ -282,6 +286,8 @@ class Settings(QWidget):
         self.parameters["chords"] = self.get_chords()
 
         self.parameters["cursorScale"] = self.cursorScale.value()
+        self.parameters["invert_mouse_x"] = 1 if self.invert_mouse_x.isChecked() else 0
+        self.parameters["invert_mouse_y"] = 1 if self.invert_mouse_y.isChecked() else 0
         self.parameters["cursor"] = self.cursorGroup.isChecked()
 
         self.parameters['mode'] = 'display' if self.display.isChecked() else 'move' if self.move.isChecked() else 'guitar'

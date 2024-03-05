@@ -250,15 +250,22 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.generalScale.valueChanged.connect(lambda: self.update_viewer(self.current_files))
 
+        self.mouseTrackingToggle.toggled.connect(self.mouse_tracking_changed)
+
         self.toggle_editor()
         self.change_audio_engine()
         self.update_viewer(self.current_files, update_gallery=True)
 
         self.mouse_tracker = MouseTracker()
         self.mouse_tracker.mouse_position.connect(self.on_mouse_position_changed)
+        self.mouse_tracking_changed()
 
-        # self.mouse_tracker.start()   # check opentabletdriver
-        QtCore.QTimer.singleShot(10000, self.mouse_tracker.start)
+    def mouse_tracking_changed(self):
+        if self.mouseTrackingToggle.isChecked():
+            self.mouse_tracker.start()
+        else:
+            self.mouse_tracker.stop()
+        self.update_settings()
 
     def change_audio_engine(self):
         engine_selected = self.audio_engine.currentText()
@@ -418,6 +425,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.generalScale.setValue(self.settings["general_scale"])
         self.scaleValue.setText(f"{self.generalScale.value()}")
         self.audio_engine.setCurrentText(self.settings["audio engine"])
+        self.mouseTrackingToggle.setChecked(self.settings.get("mouse tracking", True))
         # self.reference_volume.setChecked(self.settings["max_reference_volume"])
 
     def update_settings(self):
@@ -442,7 +450,8 @@ class MainWindow(QtWidgets.QMainWindow):
                     "speed": self.talking_speed.value()
                 }
             },
-            "audio engine": self.audio_engine.currentText()
+            "audio engine": self.audio_engine.currentText(),
+            "mouse tracking": self.mouseTrackingToggle.isChecked()
         }
         self.scaleValue.setText(f"{self.generalScale.value()}")
         self.save_parameters_to_json()
@@ -855,50 +864,53 @@ class MainWindow(QtWidgets.QMainWindow):
         self.audio.active_audio_signal = -1
 
     def audioStatus(self, status):
-        if self.viewer.is_loaded:
-            js_code = ('''
-                var elementsOpen = document.getElementsByClassName("talking_open");
-                var elementsClosed = document.getElementsByClassName("talking_closed");
-                var elementsScreaming = document.getElementsByClassName("talking_screaming");
-                // var imageWrapper = document.getElementById("image-wrapper");
-                var imageWrapper = document.querySelectorAll(".idle_animation");
-        
-                var opacityOpen = ''' + str(1 if status == 1 else 0) + ''';
-                var opacityClosed = ''' + str(1 if status <= 0 else 0) + ''';
-                var opacityScreaming = ''' + str(1 if status == 2 else 0) + ''';
-        
-                // Apply CSS transitions for a smooth animation to text elements
-                for (var i = 0; i < elementsOpen.length; i++) {
-                    elementsOpen[i].style.transition = "opacity 0.3s";
-                    elementsOpen[i].style.opacity = opacityOpen;
-                }
-        
-                for (var i = 0; i < elementsClosed.length; i++) {
-                    elementsClosed[i].style.transition = "opacity 0.3s";
-                    elementsClosed[i].style.opacity = opacityClosed;
-                }
-        
-                for (var i = 0; i < elementsScreaming.length; i++) {
-                    elementsScreaming[i].style.transition = "opacity 0.3s";
-                    elementsScreaming[i].style.opacity = opacityScreaming;
-                }
-        
-                if(imageWrapper.length > 0) {
-                    imageWrapper.forEach(function(image) {
-                        // Add a CSS animation for jumping the image-wrapper
-                        if (''' + str(status) + ''' == 1 || ''' + str(status) + ''' == 2) {
-                            image.style.animation = "''' +
-                       self.talking_animation.currentText() + ' ' +
-                       str(self.talking_speed.value()) + '''s ease-in-out infinite";
-                        } else {
-                            image.style.animation = "''' +
-                       self.idle_animation.currentText() + ' ' +
-                       str(self.idle_speed.value()) + '''s ease-in-out infinite";
-                        }
-                    });
-                }
-            ''')
-            self.viewer.page().runJavaScript(js_code)
+        try:
+            if self.viewer.is_loaded:
+                js_code = ('''
+                    var elementsOpen = document.getElementsByClassName("talking_open");
+                    var elementsClosed = document.getElementsByClassName("talking_closed");
+                    var elementsScreaming = document.getElementsByClassName("talking_screaming");
+                    // var imageWrapper = document.getElementById("image-wrapper");
+                    var imageWrapper = document.querySelectorAll(".idle_animation");
+            
+                    var opacityOpen = ''' + str(1 if status == 1 else 0) + ''';
+                    var opacityClosed = ''' + str(1 if status <= 0 else 0) + ''';
+                    var opacityScreaming = ''' + str(1 if status == 2 else 0) + ''';
+            
+                    // Apply CSS transitions for a smooth animation to text elements
+                    for (var i = 0; i < elementsOpen.length; i++) {
+                        elementsOpen[i].style.transition = "opacity 0.3s";
+                        elementsOpen[i].style.opacity = opacityOpen;
+                    }
+            
+                    for (var i = 0; i < elementsClosed.length; i++) {
+                        elementsClosed[i].style.transition = "opacity 0.3s";
+                        elementsClosed[i].style.opacity = opacityClosed;
+                    }
+            
+                    for (var i = 0; i < elementsScreaming.length; i++) {
+                        elementsScreaming[i].style.transition = "opacity 0.3s";
+                        elementsScreaming[i].style.opacity = opacityScreaming;
+                    }
+            
+                    if(imageWrapper.length > 0) {
+                        imageWrapper.forEach(function(image) {
+                            // Add a CSS animation for jumping the image-wrapper
+                            if (''' + str(status) + ''' == 1 || ''' + str(status) + ''' == 2) {
+                                image.style.animation = "''' +
+                           self.talking_animation.currentText() + ' ' +
+                           str(self.talking_speed.value()) + '''s ease-in-out infinite";
+                            } else {
+                                image.style.animation = "''' +
+                           self.idle_animation.currentText() + ' ' +
+                           str(self.idle_speed.value()) + '''s ease-in-out infinite";
+                            }
+                        });
+                    }
+                ''')
+                self.viewer.page().runJavaScript(js_code)
+        except AttributeError:
+            pass
 
     def saveSettings(self, settings):
         if settings['default']:

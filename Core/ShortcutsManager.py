@@ -225,10 +225,12 @@ class MouseTracker(QThread):
     def __init__(self, target_fps=30):
         super().__init__()
         self.target_fps = target_fps
+        self._running = False
 
     def run(self):
         interval = 1.0 / self.target_fps
-        while True:
+        self._running = True
+        while self._running:
             start_time = time.time()
 
             if pyautogui is not None:
@@ -242,6 +244,9 @@ class MouseTracker(QThread):
             elapsed = time.time() - start_time
             if elapsed < interval:
                 time.sleep(interval - elapsed)
+
+    def stop(self):
+        self._running = False
 
 
 def find_shortcut_usages(main_folder, current_folder, new_shortcut):

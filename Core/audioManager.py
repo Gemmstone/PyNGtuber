@@ -14,11 +14,11 @@ class AudioThread(QThread):
 
     def __init__(self, max_reference_volume=0.5, engine="pyaudio", parent=None):
         super().__init__(parent)
+        self.p = pyaudio.PyAudio()
         self.audio_stream = None
         self.selected_microphone_index = None
         self.max_reference_volume = max_reference_volume
         self.engine = engine
-        self.p = pyaudio.PyAudio()
 
     def run(self):
         if self.engine == "pyaudio":
@@ -67,23 +67,7 @@ class AudioThread(QThread):
                 self.handle_error(e)
 
     def stop_stream(self):
-        if self.engine == "pyaudio":
-            self.stop_stream_pyaudio()
-        else:
-            self.stop_stream_sounddevice()
-
-    def stop_stream_sounddevice(self):
-        # print("stopped")
         self.quit()
-
-    def stop_stream_pyaudio(self):
-        try:
-            if self.audio_stream is not None:
-                self.audio_stream.stop_stream()
-                self.audio_stream.close()
-                self.audio_stream = None
-        except OSError as e:
-            self.handle_error(e)
 
     def handle_error(self, error):
         print(f"An error occurred: {error}")
