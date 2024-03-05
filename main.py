@@ -164,7 +164,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.get_shortcuts()
 
-        self.audio = MicrophoneVolumeWidget(exe_dir=exe_dir)
+        self.audio = MicrophoneVolumeWidget(
+            exe_dir=exe_dir,
+            engine=self.settings.get('audio engine', "pyaudio")
+        )
         self.audio.activeAudio.connect(self.audioStatus)
         self.audioFrame.layout().addWidget(self.audio)
         self.audio.load_settings(settings=self.settings)
@@ -241,11 +244,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.twitchApiBtn.clicked.connect(self.update_keys)
 
+        self.audio_engine.currentIndexChanged.connect(self.change_audio_engine)
+
         self.reference_volume.valueChanged.connect(self.change_max_reference_volume)
 
         self.generalScale.valueChanged.connect(lambda: self.update_viewer(self.current_files))
 
         self.toggle_editor()
+        self.change_audio_engine()
         self.update_viewer(self.current_files, update_gallery=True)
 
         self.mouse_tracker = MouseTracker()
@@ -253,6 +259,19 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # self.mouse_tracker.start()   # check opentabletdriver
         QtCore.QTimer.singleShot(10000, self.mouse_tracker.start)
+
+    def change_audio_engine(self):
+        engine_selected = self.audio_engine.currentText()
+
+        if engine_selected == "pyaudio":
+            self.label.hide()
+            self.reference_volume.hide()
+        else:
+            self.label.show()
+            self.reference_volume.show()
+
+        self.audio.change_audio_engine(engine_selected)
+        self.update_settings()
 
     def on_mouse_position_changed(self, position):
         if self.viewer.is_loaded:
@@ -398,6 +417,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.HideUI.setChecked(self.settings["hide UI"])
         self.generalScale.setValue(self.settings["general_scale"])
         self.scaleValue.setText(f"{self.generalScale.value()}")
+        self.audio_engine.setCurrentText(self.settings["audio engine"])
         # self.reference_volume.setChecked(self.settings["max_reference_volume"])
 
     def update_settings(self):
@@ -421,7 +441,8 @@ class MainWindow(QtWidgets.QMainWindow):
                     "name": self.talking_animation.currentText(),
                     "speed": self.talking_speed.value()
                 }
-            }
+            },
+            "audio engine": self.audio_engine.currentText()
         }
         self.scaleValue.setText(f"{self.generalScale.value()}")
         self.save_parameters_to_json()

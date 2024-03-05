@@ -2,7 +2,7 @@
     "volume threshold": 15,
     "scream threshold": 93,
     "delay threshold": 13,
-    "microphone selection": 11,
+    "microphone selection": 2,
     "microphone mute": false,
     "background color": 0,
     "export mode": 0,
@@ -18,5 +18,6 @@
             "name": "floaty",
             "speed": 0.5
         }
-    }
+    },
+    "audio engine": "pyaudio"
 }

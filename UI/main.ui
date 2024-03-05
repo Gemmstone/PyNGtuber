@@ -413,7 +413,7 @@ QTabBar::tab:hover {
                    <x>0</x>
                    <y>0</y>
                    <width>208</width>
-                   <height>504</height>
+                   <height>636</height>
                   </rect>
                  </property>
                  <attribute name="icon">
@@ -476,7 +476,7 @@ QTabBar::tab:hover {
                        <x>0</x>
                        <y>0</y>
                        <width>208</width>
-                       <height>457</height>
+                       <height>589</height>
                       </rect>
                      </property>
                      <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -656,7 +656,7 @@ QFrame{
                    <x>0</x>
                    <y>0</y>
                    <width>208</width>
-                   <height>547</height>
+                   <height>679</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout">
@@ -2323,7 +2323,7 @@ QTabBar::tab:hover {
                        <x>0</x>
                        <y>0</y>
                        <width>274</width>
-                       <height>476</height>
+                       <height>608</height>
                       </rect>
                      </property>
                      <attribute name="icon">
@@ -2403,7 +2403,7 @@ QFrame{
                            <x>0</x>
                            <y>0</y>
                            <width>253</width>
-                           <height>585</height>
+                           <height>627</height>
                           </rect>
                          </property>
                          <layout class="QVBoxLayout" name="verticalLayout_34">
@@ -2745,17 +2745,7 @@ QFrame{
                                 <enum>QFrame::Raised</enum>
                                </property>
                                <layout class="QGridLayout" name="gridLayout_2">
-                                <item row="0" column="0">
-                                 <widget class="QLabel" name="label">
-                                  <property name="toolTip">
-                                   <string>Adjust if you feel that your microphone is too quiet or too loud</string>
-                                  </property>
-                                  <property name="text">
-                                   <string>max volume ref.:</string>
-                                  </property>
-                                 </widget>
-                                </item>
-                                <item row="0" column="1">
+                                <item row="1" column="1">
                                  <widget class="QDoubleSpinBox" name="reference_volume">
                                   <property name="toolTip">
                                    <string>Adjust if you feel that your microphone is too quiet or too loud</string>
@@ -2778,6 +2768,37 @@ QFrame{
                                   <property name="value">
                                    <double>0.500000000000000</double>
                                   </property>
+                                 </widget>
+                                </item>
+                                <item row="1" column="0">
+                                 <widget class="QLabel" name="label">
+                                  <property name="toolTip">
+                                   <string>Adjust if you feel that your microphone is too quiet or too loud</string>
+                                  </property>
+                                  <property name="text">
+                                   <string>max volume ref.:</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item row="0" column="0">
+                                 <widget class="QLabel" name="label_9">
+                                  <property name="text">
+                                   <string>Audio Engine:</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item row="0" column="1">
+                                 <widget class="QComboBox" name="audio_engine">
+                                  <item>
+                                   <property name="text">
+                                    <string>pyaudio</string>
+                                   </property>
+                                  </item>
+                                  <item>
+                                   <property name="text">
+                                    <string>sounddevice</string>
+                                   </property>
+                                  </item>
                                  </widget>
                                 </item>
                                </layout>
