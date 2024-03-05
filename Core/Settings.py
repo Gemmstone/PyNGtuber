@@ -43,7 +43,7 @@ class Settings(QWidget):
 
         self.cursorScale.setValue(self.parameters.get("cursorScale", 0.01))
         self.invert_mouse_x.setChecked(self.parameters.get("invert_mouse_x", 1) == 1)
-        self.invert_mouse_y.setChecked(self.parameters.get("invert_mouse_y", 1) == 0)
+        self.invert_mouse_y.setChecked(self.parameters.get("invert_mouse_y", 0) == 1)
 
         self.deadzone.setValue(self.parameters.get("deadzone", 0.0550))
         self.player.setValue(self.parameters.get("player", 0))
