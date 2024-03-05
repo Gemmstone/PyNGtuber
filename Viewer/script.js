@@ -27,9 +27,9 @@ async function cursorPosition(X, Y){
                 cursor_div.style.left = `calc(50% + ${X * cursor_div.attributes.cursorScale.value}px)`;
             }
             if(cursor_div.attributes.invert_mouse_y.value == 1){
-                cursor_div.style.top = `calc(50% - ${Y * cursor_div.attributes.cursorScale.value}px)`;
+                cursor_div.style.top = `calc(50% - ${Y * (cursor_div.attributes.cursorScale.value * 2)}px)`;
             } else {
-                cursor_div.style.top = `calc(50% - ${Y * cursor_div.attributes.cursorScale.value * -1}px)`;
+                cursor_div.style.top = `calc(50% - ${Y * (cursor_div.attributes.cursorScale.value * 2) * -1}px)`;
             }
         });
     }
