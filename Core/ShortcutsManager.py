@@ -19,6 +19,7 @@ import os.path
 import asyncio
 import json
 import mido
+import time
 import os
 
 
@@ -221,11 +222,15 @@ class KeyboardListener(QThread):
 class MouseTracker(QThread):
     mouse_position = pyqtSignal(dict)
 
-    def __init__(self):
+    def __init__(self, target_fps=30):
         super().__init__()
+        self.target_fps = target_fps
 
     def run(self):
+        interval = 1.0 / self.target_fps
         while True:
+            start_time = time.time()
+
             if pyautogui is not None:
                 position = pyautogui.position()
             else:
@@ -234,6 +239,9 @@ class MouseTracker(QThread):
                 "x": position[0], "y": position[1]
             })
 
+            elapsed = time.time() - start_time
+            if elapsed < interval:
+                time.sleep(interval - elapsed)
 
 
 def find_shortcut_usages(main_folder, current_folder, new_shortcut):

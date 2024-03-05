@@ -379,8 +379,7 @@ function onMouseMove(event) {
   const images = imageContainer.querySelectorAll("img");
   images.forEach((img) => {
     const imgLeft = img.style.left;
-    const imgTop = img.style.top;
-    console.log(imgLeft + " " + imgTop)
+    const imgTop = img.style.top
     const newLeft = `calc(${imgLeft} + ${deltaX}px)`;
     const newTop = `calc(${imgTop} + ${deltaY}px)`;
     img.style.left = `${newLeft}`;
