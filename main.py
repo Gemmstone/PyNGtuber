@@ -172,7 +172,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.audioFrame.layout().addWidget(self.audio)
         self.audio.load_settings(settings=self.settings)
         self.audio.settingsChanged.connect(self.update_settings)
-        self.generalScale.valueChanged.connect(self.update_settings)
+        # self.generalScale.valueChanged.connect(self.update_settings)
 
         self.idle_animation.activated.connect(self.update_settings)
         self.talking_animation.activated.connect(self.update_settings)
@@ -248,7 +248,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.reference_volume.valueChanged.connect(self.change_max_reference_volume)
 
-        self.generalScale.valueChanged.connect(lambda: self.update_viewer(self.current_files))
+        self.generalScale.valueChanged.connect(self.on_zoom_delta_changed)
+        self.resetZoom.clicked.connect(lambda: self.generalScale.setValue(100))
 
         self.mouseTrackingToggle.toggled.connect(self.mouse_tracking_changed)
 
@@ -283,6 +284,11 @@ class MainWindow(QtWidgets.QMainWindow):
     def on_mouse_position_changed(self, position):
         if self.viewer.is_loaded:
             self.viewer.page().runJavaScript(f"cursorPosition({position['x']}, {position['y']});""")
+
+    def on_zoom_delta_changed(self):
+        if self.viewer.is_loaded:
+            self.viewer.page().runJavaScript(f"document.body.style.zoom = `{self.generalScale.value()}%`;""")
+        self.scaleValue.setText(f"{self.generalScale.value()}")
 
     def load_animations(self, default=None):
         if default is None:
@@ -453,7 +459,6 @@ class MainWindow(QtWidgets.QMainWindow):
             "audio engine": self.audio_engine.currentText(),
             "mouse tracking": self.mouseTrackingToggle.isChecked()
         }
-        self.scaleValue.setText(f"{self.generalScale.value()}")
         self.save_parameters_to_json()
         self.audioStatus(0)
 
@@ -1142,6 +1147,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.update_settings()
 
     def closeEvent(self, event):
+        self.update_settings()
         self.audio.audio_thread.stop_stream()
         self.midi_listener.terminate()
         self.keyboard_listener.terminate()

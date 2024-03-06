@@ -55697,7 +55697,7 @@
     "Assets/Controllers/Pen_001.png": {
         "sizeX": 40,
         "sizeY": 224,
-        "posX": 80,
+        "posX": 40,
         "posY": 150,
         "posZ": 40,
         "blinking": "ignore",
@@ -55745,13 +55745,15 @@
         "posGuitarDownY": 0,
         "rotationGuitarDown": 0,
         "animation_idle": false,
-        "cursorScale": 0.05,
-        "cursor": true
+        "cursorScale": 0.03,
+        "cursor": true,
+        "invert_mouse_x": 1,
+        "invert_mouse_y": 0
     },
     "Assets/Controllers/Pen_007.png": {
         "sizeX": 40,
         "sizeY": 271,
-        "posX": 80,
+        "posX": 40,
         "posY": 150,
         "posZ": 40,
         "blinking": "ignore",
@@ -55782,7 +55784,7 @@
         "buttons": 0,
         "invertAxis": 0,
         "chords": [],
-        "cursorScale": 0.05,
+        "cursorScale": 0.03,
         "cursor": true,
         "mode": "display",
         "posBothX": 0,
@@ -55800,12 +55802,14 @@
         "posGuitarDownX": 0,
         "posGuitarDownY": 0,
         "rotationGuitarDown": 0,
-        "animation_idle": false
+        "animation_idle": false,
+        "invert_mouse_x": 1,
+        "invert_mouse_y": 0
     },
     "Assets/Controllers/Pen_006.png": {
         "sizeX": 40,
         "sizeY": 268,
-        "posX": 80,
+        "posX": 40,
         "posY": 150,
         "posZ": 40,
         "blinking": "ignore",
@@ -55836,7 +55840,7 @@
         "buttons": 0,
         "invertAxis": 0,
         "chords": [],
-        "cursorScale": 0.05,
+        "cursorScale": 0.03,
         "cursor": true,
         "mode": "display",
         "posBothX": 0,
@@ -55854,12 +55858,14 @@
         "posGuitarDownX": 0,
         "posGuitarDownY": 0,
         "rotationGuitarDown": 0,
-        "animation_idle": false
+        "animation_idle": false,
+        "invert_mouse_x": 1,
+        "invert_mouse_y": 0
     },
     "Assets/Controllers/Pen_005.png": {
         "sizeX": 40,
         "sizeY": 270,
-        "posX": 80,
+        "posX": 40,
         "posY": 150,
         "posZ": 40,
         "blinking": "ignore",
@@ -55890,7 +55896,7 @@
         "buttons": 0,
         "invertAxis": 0,
         "chords": [],
-        "cursorScale": 0.05,
+        "cursorScale": 0.03,
         "cursor": true,
         "mode": "display",
         "posBothX": 0,
@@ -55908,12 +55914,14 @@
         "posGuitarDownX": 0,
         "posGuitarDownY": 0,
         "rotationGuitarDown": 0,
-        "animation_idle": false
+        "animation_idle": false,
+        "invert_mouse_x": 1,
+        "invert_mouse_y": 0
     },
     "Assets/Controllers/Pen_004.png": {
         "sizeX": 40,
         "sizeY": 224,
-        "posX": 80,
+        "posX": 40,
         "posY": 150,
         "posZ": 40,
         "blinking": "ignore",
@@ -55944,7 +55952,7 @@
         "buttons": 0,
         "invertAxis": 0,
         "chords": [],
-        "cursorScale": 0.05,
+        "cursorScale": 0.03,
         "cursor": true,
         "mode": "display",
         "posBothX": 0,
@@ -55962,12 +55970,14 @@
         "posGuitarDownX": 0,
         "posGuitarDownY": 0,
         "rotationGuitarDown": 0,
-        "animation_idle": false
+        "animation_idle": false,
+        "invert_mouse_x": 1,
+        "invert_mouse_y": 0
     },
     "Assets/Controllers/Pen_003.png": {
         "sizeX": 40,
         "sizeY": 223,
-        "posX": 80,
+        "posX": 40,
         "posY": 150,
         "posZ": 40,
         "blinking": "ignore",
@@ -55998,7 +56008,7 @@
         "buttons": 0,
         "invertAxis": 0,
         "chords": [],
-        "cursorScale": 0.05,
+        "cursorScale": 0.03,
         "cursor": true,
         "mode": "display",
         "posBothX": 0,
@@ -56016,12 +56026,14 @@
         "posGuitarDownX": 0,
         "posGuitarDownY": 0,
         "rotationGuitarDown": 0,
-        "animation_idle": false
+        "animation_idle": false,
+        "invert_mouse_x": 1,
+        "invert_mouse_y": 0
     },
     "Assets/Controllers/Pen_002.png": {
         "sizeX": 40,
         "sizeY": 224,
-        "posX": 80,
+        "posX": 40,
         "posY": 150,
         "posZ": 40,
         "blinking": "ignore",
@@ -56052,7 +56064,7 @@
         "buttons": 0,
         "invertAxis": 0,
         "chords": [],
-        "cursorScale": 0.05,
+        "cursorScale": 0.03,
         "cursor": true,
         "mode": "display",
         "posBothX": 0,
@@ -56070,6 +56082,8 @@
         "posGuitarDownX": 0,
         "posGuitarDownY": 0,
         "rotationGuitarDown": 0,
-        "animation_idle": false
+        "animation_idle": false,
+        "invert_mouse_x": 1,
+        "invert_mouse_y": 0
     }
 }

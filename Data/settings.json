@@ -8,7 +8,7 @@
     "export mode": 0,
     "hide UI": false,
     "max_reference_volume": 0.5,
-    "general_scale": -1,
+    "general_scale": 100,
     "animations": {
         "idle": {
             "name": "floaty",

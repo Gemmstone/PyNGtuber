@@ -44,7 +44,7 @@ class LayeredImageViewer(QWebEngineView):
         self.is_loaded = False
         self.load(QUrl.fromLocalFile(self.file))
 
-    def updateImages(self, image_list=None, bg_color="#b8cdee", scale=0):
+    def updateImages(self, image_list=None, bg_color="#b8cdee", scale=100):
         self.is_loaded = False
         with open(self.file, 'r') as html_file:
             self.html_code = html_file.read()
@@ -52,17 +52,15 @@ class LayeredImageViewer(QWebEngineView):
         try:
             soup = BeautifulSoup(self.html_code, 'html.parser')
             body_tag = soup.body
-            body_tag['style'] = f'background-color: {bg_color};'
+            body_tag['style'] = f'background-color: {bg_color}; zoom: {scale}%'
             image_div = soup.find('div', id='image-wrapper')
             image_div.clear()
 
-            self.page().toHtml(lambda html: self.handle_runtime_html(soup, image_div, image_list, scale))
+            self.page().toHtml(lambda html: self.handle_runtime_html(soup, image_div, image_list))
         except BaseException as err:
             print(f"HTML ERROR: {err}")
 
-    def handle_runtime_html(self, soup, image_div, image_list, scale_factor):
-        scale_factor = 1.0 + (scale_factor / 100)
-
+    def handle_runtime_html(self, soup, image_div, image_list):
         if image_list is not None:
             for layer in sorted(image_list, key=lambda x: x['posZ']):
                 animation_idle_div = soup.new_tag('div', style=f"""
@@ -188,7 +186,7 @@ class LayeredImageViewer(QWebEngineView):
                         left: calc(50% + {layer['posX']}px);
                         top: calc(50% + {layer['posY']}px);
                         z-index: {layer['posZ']};
-                        transform: translate(-50%, -50%) scale({scale_factor}) rotate({layer['rotation']}deg);
+                        transform: translate(-50%, -50%) rotate({layer['rotation']}deg);
                         width: {layer['sizeX']}px; 
                         height: {layer['sizeY']}px;
                         {"opacity: 0" if layer['talking'] not in ['ignore', 'talking_closed'] else ""};

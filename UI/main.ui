@@ -1016,16 +1016,19 @@ QFrame{
                 <item>
                  <widget class="QSlider" name="generalScale">
                   <property name="minimum">
-                   <number>-100</number>
+                   <number>1</number>
                   </property>
                   <property name="maximum">
-                   <number>100</number>
+                   <number>500</number>
                   </property>
                   <property name="pageStep">
                    <number>100</number>
                   </property>
+                  <property name="value">
+                   <number>100</number>
+                  </property>
                   <property name="tracking">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
@@ -1042,6 +1045,29 @@ QFrame{
                  <widget class="QLabel" name="scaleValue">
                   <property name="text">
                    <string>0</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="resetZoom">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                  <property name="toolTip">
+                   <string>reset</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../Icons/clock-mobile-ui-svgrepo-com.svg</normaloff>../Icons/clock-mobile-ui-svgrepo-com.svg</iconset>
                   </property>
                  </widget>
                 </item>
@@ -1282,7 +1308,7 @@ color: rgb(0, 0, 0);</string>
                   <cursorShape>PointingHandCursor</cursorShape>
                  </property>
                  <property name="toolTip">
-                  <string>Save all changes</string>
+                  <string>restore default files</string>
                  </property>
                  <property name="text">
                   <string>Restore Default</string>
@@ -2465,7 +2491,7 @@ QFrame{
                           <rect>
                            <x>0</x>
                            <y>0</y>
-                           <width>253</width>
+                           <width>261</width>
                            <height>627</height>
                           </rect>
                          </property>
@@ -2974,7 +3000,7 @@ QFrame{
                                     <rect>
                                      <x>0</x>
                                      <y>0</y>
-                                     <width>241</width>
+                                     <width>249</width>
                                      <height>136</height>
                                     </rect>
                                    </property>
