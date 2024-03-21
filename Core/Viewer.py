@@ -208,7 +208,7 @@ class LayeredImageViewer(QWebEngineView):
                 image_div.append(animation_idle_div)
 
         beautiful_html = soup.prettify()
-        with open('Viewer/viewer.html', 'w') as html_file:
+        with open(self.file, 'w') as html_file:
             html_file.write(beautiful_html)
         self.reload()
 
