@@ -24,7 +24,7 @@ import os
 import re
 
 
-current_version = "v1.4.0"
+current_version = "v1.4.1"
 repo_owner = "Gemmstone"
 repo_name = "PyNGtuber"
 
