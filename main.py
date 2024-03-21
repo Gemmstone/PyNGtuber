@@ -251,7 +251,13 @@ class UpdateDialog(QtWidgets.QDialog):
             extracting_dialog.show()
             extracting_dialog.setWindowTitle("Extracting...")
             with zipfile.ZipFile(os.path.join(exe_dir, 'update.zip'), 'r') as zip_ref:
-                zip_ref.extractall(exe_dir)
+                if platform_name == "Python":
+                    zip_file_name = zip_ref.namelist()[0]
+                    zip_ref.extractall(exe_dir, members=[member for member in zip_ref.namelist() if
+                                                         member.startswith(zip_file_name) and len(member) > len(
+                                                             zip_file_name) + 1])
+                else:
+                    zip_ref.extractall(exe_dir)
             extracting_dialog.accept()
 
             os.remove(os.path.join(exe_dir, 'update.zip'))
