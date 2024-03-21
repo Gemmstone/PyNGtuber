@@ -53,6 +53,41 @@ def compare_versions(current_version, latest_version):
         return True   # Up to date
 
 
+def is_path(string):
+    # Check if the string is an absolute path
+    if os.path.isabs(string):
+        return True
+    # Check if the string has an extension
+    _, extension = os.path.splitext(string)
+    if extension:
+        return True
+    # Check if the string contains path separators
+    if os.path.sep in string:
+        return True
+    return False
+
+
+def update_nested_dict(dest_data, source_data):
+    for key, value in source_data.items():
+        if isinstance(value, dict):
+            if is_path(os.path.normpath(key)):
+                if os.path.normpath(key) not in dest_data:
+                    dest_data[os.path.normpath(key)] = value
+                else:
+                    update_nested_dict(dest_data[key], value)
+            else:
+                if key not in dest_data:
+                    dest_data[key] = value
+                else:
+                    update_nested_dict(dest_data[key], value)
+        else:
+            if is_path(os.path.normpath(key)):
+                if os.path.normpath(key) not in dest_data:
+                    dest_data[os.path.normpath(key)] = value
+            else:
+                dest_data[key] = value
+
+
 def update_json_file(source_path, dest_path):
     with open(source_path, 'r') as source_file:
         source_data = json.load(source_file)
@@ -68,9 +103,7 @@ def update_json_file(source_path, dest_path):
             with open(dest_path, 'w', encoding='utf-8') as dest_file:
                 json.dump(source_data, dest_file, indent=4, ensure_ascii=False)
         else:
-            for key, value in source_data.items():
-                if key not in dest_data:
-                    dest_data[key] = value
+            update_nested_dict(dest_data, source_data)
 
         with open(dest_path, 'w') as dest_file:
             json.dump(dest_data, dest_file, indent=4, ensure_ascii=False)
