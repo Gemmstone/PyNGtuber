@@ -371,7 +371,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.SettingsGallery.delete_shortcut.connect(self.delete_shortcut)
         self.scrollArea_2.setWidget(self.SettingsGallery)
 
-        self.ImageGallery = ImageGallery(self.current_files, exe_dir=exe_dir)
+        self.ImageGallery = ImageGallery(self.current_files, exe_dir=res_dir)
         self.ImageGallery.selectionChanged.connect(self.update_viewer)
         self.ImageGallery.currentChanged.connect(self.change_settings_gallery)
         self.scrollArea.setWidget(self.ImageGallery)
@@ -388,15 +388,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.expressionSelector = ExpressionSelector("Assets")
         self.scrollArea_5.setWidget(self.expressionSelector)
 
-        self.savedAvatars = [folder for folder in os.listdir(os.path.normpath("Models/Avatars")) if "." not in folder]
-        self.modelGallery = ModelGallery(models_list=self.savedAvatars, models_type="Avatars", exe_dir=exe_dir)
+        self.savedAvatars = [folder for folder in os.listdir(os.path.join(res_dir, "Models", "Avatars")) if "." not in folder]
+        self.modelGallery = ModelGallery(models_list=self.savedAvatars, models_type="Avatars", exe_dir=exe_dir, res_dir=res_dir)
         self.modelGallery.saving.connect(self.save_avatar)
         self.modelGallery.selected.connect(self.load_model)
         self.modelGallery.shortcut.connect(self.dialog_shortcut)
         self.frameModels.layout().addWidget(self.modelGallery)
 
-        self.savedExpressions = [folder for folder in os.listdir(os.path.normpath("Models/Expressions")) if "." not in folder]
-        self.expressionGallery = ModelGallery(models_list=self.savedExpressions, models_type="Expressions", exe_dir=exe_dir)
+        self.savedExpressions = [folder for folder in os.listdir(os.path.join(res_dir, "Models", "Expressions")) if "." not in folder]
+        self.expressionGallery = ModelGallery(models_list=self.savedExpressions, models_type="Expressions", exe_dir=exe_dir, res_dir=res_dir)
         self.expressionGallery.saving.connect(self.save_expression)
         self.expressionGallery.selected.connect(self.load_model)
         self.expressionGallery.shortcut.connect(self.dialog_shortcut)
@@ -561,7 +561,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if values["APP_ID"] is None or values["APP_SECRET"] is None:
             return
 
-        self.TwitchAPI = TwitchAPI(APP_ID=values["APP_ID"], APP_SECRET=values["APP_SECRET"])
+        self.TwitchAPI = TwitchAPI(APP_ID=values["APP_ID"], APP_SECRET=values["APP_SECRET"], res_dir=res_dir)
         self.TwitchAPI.event_signal.connect(self.shortcut_received)
         self.twitchApiBtn.setText("Change Twitch API keys")
         self.TwitchAPI.start()

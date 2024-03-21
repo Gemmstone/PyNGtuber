@@ -27,10 +27,11 @@ class TwitchAPI(QThread):
     event_signal = pyqtSignal(dict)
     new_event_signal = pyqtSignal(dict)
 
-    def __init__(self, APP_ID, APP_SECRET):
+    def __init__(self, APP_ID, APP_SECRET, res_dir):
         super().__init__()
         self.APP_ID = APP_ID
         self.APP_SECRET = APP_SECRET
+        self.res_dir = res_dir
         self.PUBLIC_APP_ID = "v3pheb41eiqaal8e1pefkjrygpvjt8"
         self.TARGET_SCOPES = [
             AuthScope.CHANNEL_MANAGE_REDEMPTIONS,
@@ -105,7 +106,7 @@ class TwitchAPI(QThread):
             self.twitch = await Twitch(self.APP_ID, self.APP_SECRET)
             helper = UserAuthenticationStorageHelper(
                 self.twitch, self.TARGET_SCOPES,
-                storage_path=os.path.normpath(f"Data{os.path.sep}user_token.json")
+                storage_path=os.path.join(self.res_dir, "Data", "user_token.json")
             )
             await helper.bind()
         except ClientConnectionError:

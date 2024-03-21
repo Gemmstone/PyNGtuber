@@ -341,11 +341,12 @@ class ModelItem(QGroupBox):
     deleted = pyqtSignal()
     saving = pyqtSignal(str)
 
-    def __init__(self, modelName, modelType, exe_dir):
+    def __init__(self, modelName, modelType, exe_dir, res_dir):
         super().__init__()
         uic.loadUi(os.path.join(exe_dir, f"UI", "avatar.ui"), self)
         self.modelName = modelName
         self.modelType = modelType
+        self.res_dir = res_dir
 
         self.avatarButton.clicked.connect(self.selectedModel)
         self.avatarButton.setToolTip(f"Load {self.modelType}")
@@ -361,7 +362,6 @@ class ModelItem(QGroupBox):
         self.frame_3.hide()
         self.frame_2.hide()
         self.shortcutText.hide()
-
 
     def saveChanges(self):
         self.saving.emit(self.modelName)
@@ -386,12 +386,12 @@ class ModelItem(QGroupBox):
     def setup(self):
         self.setTitle(self.modelName)
         self.avatarButton.setIcon(
-            QIcon(f"Models{os.path.sep}{self.modelType}{os.path.sep}{self.modelName}{os.path.sep}thumb.png")
+            QIcon(os.path.join(self.res_dir, "Models", self.modelType, self.modelName, "thumb.png"))
         )
         self.show_shortcut()
 
     def show_shortcut(self):
-        with open(f"Models{os.path.sep}{self.modelType}{os.path.sep}{self.modelName}{os.path.sep}data.json",
+        with open(os.path.join(self.res_dir, "Models", self.modelType, self.modelName, "data.json"),
                   "r") as data_file:
             self.shortcuts = json.load(data_file)["shortcuts"]
             if self.shortcuts:
@@ -438,11 +438,12 @@ class ModelGallery(QWidget):
     shortcut = pyqtSignal(dict)
     saving = pyqtSignal(str)
 
-    def __init__(self, models_list, models_type, exe_dir):
+    def __init__(self, models_list, models_type, exe_dir, res_dir):
         super().__init__()
         self.models_list = models_list
         self.models_type = models_type
         self.exe_dir = exe_dir
+        self.res_dir = res_dir
         layout = QVBoxLayout()
 
         layout.setContentsMargins(0, 0, 0, 0)
@@ -463,7 +464,7 @@ class ModelGallery(QWidget):
             self.add_model(model)
 
     def add_model(self, model):
-        model_item = ModelItem(model, self.models_type, self.exe_dir)
+        model_item = ModelItem(model, self.models_type, self.exe_dir, self.res_dir)
 
         model_item.selected.connect(self.selected.emit)
         model_item.deleted.connect(self.model_deleted)
