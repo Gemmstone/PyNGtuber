@@ -28,6 +28,9 @@ current_version = "v1.4.0"
 repo_owner = "Gemmstone"
 repo_name = "PyNGtuber"
 
+directories = ["Data", "Models", "Assets", "Viewer"]
+directories_skip = ["Models"]
+
 os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = '4864'
 os.environ['QTWEBENGINE_CHROMIUM_FLAGS'] = '--no-sandbox'
 
@@ -104,13 +107,15 @@ if not os.path.isfile(os.path.join(exe_dir, ".gitignore")):
 
     if not os.path.exists(res_dir):
         os.makedirs(res_dir)
-        shutil.copytree(os.path.join(exe_dir, "Data"), os.path.join(res_dir, "Data"))
-        shutil.copytree(os.path.join(exe_dir, "Models"), os.path.join(res_dir, "Models"))
-        shutil.copytree(os.path.join(exe_dir, "Assets"), os.path.join(res_dir, "Assets"))
-    else:
-        update_directory(os.path.join(exe_dir, "Data"), os.path.join(res_dir, "Data"))
-        # update_directory(os.path.join(exe_dir, "Models"), os.path.join(res_dir, "Models"))
-        update_directory(os.path.join(exe_dir, "Assets"), os.path.join(res_dir, "Assets"))
+
+    for directory in directories:
+        src_path = os.path.join(exe_dir, directory)
+        dest_path = os.path.join(res_dir, directory)
+
+        if not os.path.exists(dest_path):
+            shutil.copytree(src_path, dest_path)
+        elif directory not in directories_skip:
+            update_directory(src_path, dest_path)
 
 
 class twitchKeysDialog(QtWidgets.QDialog):
@@ -249,15 +254,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings_json_file = os.path.join(res_dir, "Data", "settings.json")
         self.apiKeys = os.path.join(res_dir, "Data", "keys.json")
 
-        self.js_file = os.path.join(exe_dir, "Viewer", "script.js")
-        self.css_file = os.path.join(exe_dir, "Viewer", "styles.css")
-        self.anim_file = os.path.join(exe_dir, "Viewer", "animations.css")
-        self.html_file = os.path.join(exe_dir, "Viewer", "viewer.html")
+        self.js_file = os.path.join(res_dir, "Viewer", "script.js")
+        self.css_file = os.path.join(res_dir, "Viewer", "styles.css")
+        self.anim_file = os.path.join(res_dir, "Viewer", "animations.css")
+        self.html_file = os.path.join(res_dir, "Viewer", "viewer.html")
 
-        self.js_file_default = os.path.join(exe_dir, "Viewer", "default", "script.js")
-        self.css_file_default = os.path.join(exe_dir, "Viewer", "default", "styles.css")
-        self.anim_file_default = os.path.join(exe_dir, "Viewer", "default", "animations.css")
-        self.html_file_default = os.path.join(exe_dir, "Viewer", "default", "viewer.html")
+        self.js_file_default = os.path.join(exe_dir, "Viewer", "script.js")
+        self.css_file_default = os.path.join(exe_dir, "Viewer", "styles.css")
+        self.anim_file_default = os.path.join(exe_dir, "Viewer", "animations.css")
+        self.html_file_default = os.path.join(exe_dir, "Viewer", "viewer.html")
 
         self.keyboard_listener = KeyboardListener()
         self.keyboard_listener.shortcut.connect(self.shortcut_received)
@@ -378,7 +383,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.comboBox.currentIndexChanged.connect(self.setBGColor)
 
-        self.viewer = LayeredImageViewer(exe_dir=exe_dir)
+        self.viewer = LayeredImageViewer(exe_dir=res_dir)
         self.viewer.loadFinishedSignal.connect(self.reboot_audio)
         self.viewerFrame.layout().addWidget(self.viewer)
         self.viewer.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
