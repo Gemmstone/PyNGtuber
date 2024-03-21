@@ -85,7 +85,8 @@ def update_nested_dict(dest_data, source_data):
                 if os.path.normpath(key) not in dest_data:
                     dest_data[os.path.normpath(key)] = value
             else:
-                dest_data[key] = value
+                if key not in dest_data:
+                    dest_data[key] = value
 
 
 def update_json_file(source_path, dest_path):
