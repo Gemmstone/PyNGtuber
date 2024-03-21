@@ -1,3 +1,5 @@
+import shutil
+
 from Core.ShortcutsManager import MidiListener, KeyboardListener, TwitchAPI, ShortcutsDialog, MouseTracker
 from Core.imageGallery import ImageGallery, ExpressionSelector, ModelGallery
 from Core.audioManager import MicrophoneVolumeWidget
@@ -11,16 +13,104 @@ from collections import Counter
 from PyQt6.QtGui import QIcon
 from pathlib import Path
 import subprocess
+import webbrowser
+import requests
+import zipfile
 import json
 import copy
 import mido
 import sys
 import os
+import re
 
+
+current_version = "v1.2.0"
+repo_owner = "Gemmstone"
+repo_name = "PyNGtuber"
 
 os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = '4864'
 os.environ['QTWEBENGINE_CHROMIUM_FLAGS'] = '--no-sandbox'
+
+
+def compare_versions(current_version, latest_version):
+    current_version_parts = list(map(int, re.findall(r'\d+', current_version)))
+    latest_version_parts = list(map(int, re.findall(r'\d+', latest_version)))
+
+    for i in range(min(len(current_version_parts), len(latest_version_parts))):
+        if current_version_parts[i] < latest_version_parts[i]:
+            return False  # Outdated
+        elif current_version_parts[i] > latest_version_parts[i]:
+            return True   # Ahead of latest version
+
+    if len(current_version_parts) < len(latest_version_parts):
+        return False  # Outdated
+    elif len(current_version_parts) > len(latest_version_parts):
+        return True   # Ahead of latest version
+    else:
+        return True   # Up to date
+
+
+def update_json_file(source_path, dest_path):
+    with open(source_path, 'r') as source_file:
+        source_data = json.load(source_file)
+
+    if isinstance(source_data, list):
+        return
+
+    if os.path.exists(dest_path):
+        with open(dest_path, 'r') as dest_file:
+            dest_data = json.load(dest_file)
+
+        if isinstance(dest_data, list):
+            with open(dest_path, 'w', encoding='utf-8') as dest_file:
+                json.dump(source_data, dest_file, indent=4, ensure_ascii=False)
+        else:
+            for key, value in source_data.items():
+                if key not in dest_data:
+                    dest_data[key] = value
+
+        with open(dest_path, 'w') as dest_file:
+            json.dump(dest_data, dest_file, indent=4, ensure_ascii=False)
+    else:
+        shutil.copyfile(source_path, dest_path)
+
+
+def update_directory(source_dir, dest_dir):
+    if not os.path.exists(dest_dir):
+        os.makedirs(dest_dir)
+
+    for filename in os.listdir(source_dir):
+        source_path = os.path.join(source_dir, filename)
+        dest_path = os.path.join(dest_dir, filename)
+
+        if os.path.isdir(source_path):
+            update_directory(source_path, dest_path)
+        elif filename.endswith('.json'):
+            update_json_file(source_path, dest_path)
+        elif not os.path.exists(dest_path):
+            shutil.copyfile(source_path, dest_path)
+
+
 exe_dir = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
+res_dir = exe_dir
+if os.path.isfile(os.path.join(exe_dir, ".gitignore")):
+    if os.name == 'posix':
+        if sys.platform == 'darwin':
+            res_dir = os.path.expanduser("~/Library/Application Support/PyNGtuber")
+        else:
+            res_dir = os.path.expanduser("~/.config/PyNGtuber")
+    elif os.name == 'nt':
+        res_dir = os.path.join(os.getenv("APPDATA"), "PyNGtuber")
+
+    if not os.path.exists(res_dir):
+        os.makedirs(res_dir)
+        shutil.copytree(os.path.join(exe_dir, "Data"), os.path.join(res_dir, "Data"))
+        shutil.copytree(os.path.join(exe_dir, "Models"), os.path.join(res_dir, "Models"))
+        shutil.copytree(os.path.join(exe_dir, "Assets"), os.path.join(res_dir, "Assets"))
+    else:
+        update_directory(os.path.join(exe_dir, "Data"), os.path.join(res_dir, "Data"))
+        # update_directory(os.path.join(exe_dir, "Models"), os.path.join(res_dir, "Models"))
+        update_directory(os.path.join(exe_dir, "Assets"), os.path.join(res_dir, "Assets"))
 
 
 class twitchKeysDialog(QtWidgets.QDialog):
@@ -48,6 +138,95 @@ class twitchKeysDialog(QtWidgets.QDialog):
         })
 
 
+class UpdateDialog(QtWidgets.QDialog):
+    def __init__(self, latest_version, data, parent=None):
+        super().__init__(parent)
+        uic.loadUi(os.path.join(exe_dir, f"UI", "update.ui"), self)
+        self.setWindowTitle("Update Available")
+
+        self.data = data
+
+        for key, item in self.data.items():
+            print(key, ":", item)
+
+        self.changelog.setPlainText(self.format_changelog(self.data["body"].split("Changelog")[-1].strip()))
+
+        self.label_2.setText(f"A new version of {repo_name} is available!")
+        self.label_3.setText(f"{latest_version}")
+        self.label_5.setText(f"{self.data['published_at'].split('T')[0].replace('-', '/')}")
+
+        self.update.clicked.connect(self.download)
+        self.gotopage.clicked.connect(self.go_to_page)
+        self.skip.clicked.connect(self.ignore)
+
+    def format_changelog(self, text):
+        lines = text.split('\n')
+        formatted_text = ''
+        for line in lines:
+            if line.strip():
+                if line.strip().startswith('*'):
+                    formatted_text += '• ' + line[1:].strip() + '\n'
+                elif line.strip().startswith('-'):
+                    formatted_text += '   • ' + line[4:].strip() + '\n'
+                elif line.strip().startswith('+'):
+                    formatted_text += '      • ' + line[4:].strip() + '\n'
+                else:
+                    formatted_text += line.strip() + '\n'
+        return formatted_text.strip()
+
+    def download(self):
+        if os.path.exists(os.path.join(exe_dir, 'main.exe')):
+            self.download_app('Windows')
+        elif os.path.exists(os.path.join(exe_dir, 'main.py')):
+            self.download_app('Python')
+        else:
+            self.download_app('Linux')
+
+    def download_app(self, platform_name):
+        download_url = None
+        if platform_name == "Python":
+            download_url = f"https://github.com/{repo_owner}/{repo_name}/archive/refs/tags/{self.data['tag_name']}.zip"
+        else:
+            for asset in self.data['assets']:
+                if platform_name in asset['name']:
+                    download_url = asset['browser_download_url']
+
+        if download_url:
+            download_dialog = QtWidgets.QProgressDialog("Downloading update. Please wait...", "", 0, 0, self)
+            download_dialog.setWindowTitle("Downloading...")
+            download_dialog.setCancelButton(None)
+            download_dialog.setModal(True)
+            download_dialog.setValue(0)
+            download_dialog.show()
+            with requests.get(download_url, stream=True) as r:
+                with open(os.path.join(exe_dir, 'update.zip'), 'wb') as f:
+                    for chunk in r.iter_content(chunk_size=8192):
+                        f.write(chunk)
+            download_dialog.accept()
+
+        if os.path.isfile(os.path.join(exe_dir, 'update.zip')):
+            extracting_dialog = QtWidgets.QProgressDialog("Downloading update. Please wait...", "", 0, 0, self)
+            extracting_dialog.setWindowTitle("Extracting...")
+            extracting_dialog.setCancelButton(None)
+            extracting_dialog.setModal(True)
+            extracting_dialog.setValue(0)
+            extracting_dialog.show()
+            extracting_dialog.setWindowTitle("Extracting...")
+            with zipfile.ZipFile(os.path.join(exe_dir, 'update.zip'), 'r') as zip_ref:
+                zip_ref.extractall(exe_dir)
+            extracting_dialog.accept()
+
+            os.remove(os.path.join(exe_dir, 'update.zip'))
+
+        self.accept()
+
+    def go_to_page(self):
+        webbrowser.open(f"https://github.com/{repo_owner}/{repo_name}/releases/tag/{self.data['tag_name']}")
+
+    def ignore(self):
+        self.reject()
+
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -55,16 +234,20 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.setWindowTitle("PyNGTuber")
 
+        self.label_7.setText(
+            f'<a href="https://github.com/{repo_owner}/{repo_name}/releases/tag/{current_version}">{current_version}</a>'
+        )
+
         self.color = (184, 205, 238)
         self.file_parameters_current = {}
         self.current_files = []
         self.TwitchAPI = None
-        self.json_file = os.path.join(exe_dir, "Data", "parameters.json")
-        self.current_json_file = os.path.join(exe_dir, "Data", "current.json")
-        self.current_model_json_file = os.path.join(exe_dir, "Data", "current_model.json")
-        self.current_expression_json_file = os.path.join(exe_dir, "Data", "current_expression.json")
-        self.settings_json_file = os.path.join(exe_dir, "Data", "settings.json")
-        self.apiKeys = os.path.join(exe_dir, "Data", "keys.json")
+        self.json_file = os.path.join(res_dir, "Data", "parameters.json")
+        self.current_json_file = os.path.join(res_dir, "Data", "current.json")
+        self.current_model_json_file = os.path.join(res_dir, "Data", "current_model.json")
+        self.current_expression_json_file = os.path.join(res_dir, "Data", "current_expression.json")
+        self.settings_json_file = os.path.join(res_dir, "Data", "settings.json")
+        self.apiKeys = os.path.join(res_dir, "Data", "keys.json")
 
         self.js_file = os.path.join(exe_dir, "Viewer", "script.js")
         self.css_file = os.path.join(exe_dir, "Viewer", "styles.css")
@@ -140,9 +323,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.file_parameters_current = {os.path.normpath(key): value for key, value in self.file_parameters_current.items()}
 
         self.current_files = [os.path.normpath(i) for i in self.current_files]
-        # print(self.file_parameters_current["Assets\\hairback\\hairback_127.png"])
-        # print(self.file_parameters_current["Assets/hairback/hairback_127.png"])
-        # print(self.current_files)
 
         try:
             with open(self.js_file, "r") as f:
@@ -261,6 +441,35 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mouse_tracker.mouse_position.connect(self.on_mouse_position_changed)
         self.mouse_tracking_changed()
 
+        QtCore.QTimer.singleShot(500, self.check_for_update)
+
+    def check_for_update(self):
+        latest_tag, data = self.get_latest_release_tag(repo_owner, repo_name)
+
+        if latest_tag:
+            comparison_result = compare_versions(current_version, latest_tag)
+            if not comparison_result:
+                dialog = UpdateDialog(latest_tag, data, self)
+                result = dialog.exec()
+                print(result)
+                if result:
+                    reboot_dialog = QtWidgets.QMessageBox(self)
+                    reboot_dialog.setWindowTitle("Update Complete")
+                    reboot_dialog.setText("Update has been completed. Please restart the program.")
+                    reboot_dialog.setIcon(QtWidgets.QMessageBox.Icon.Information)
+                    reboot_dialog.exec()
+
+                    self.close()
+
+    def get_latest_release_tag(self, repo_owner, repo_name):
+        url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest"
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            return data['tag_name'], data
+        else:
+            return None
+
     def mouse_tracking_changed(self):
         if self.mouseTrackingToggle.isChecked():
             self.mouse_tracker.start()
@@ -345,7 +554,7 @@ class MainWindow(QtWidgets.QMainWindow):
                         "client": values["APP_ID"],
                         "secret": values["APP_SECRET"]
                       }
-                    }, f, indent=4)
+                    }, f, indent=4, ensure_ascii=False)
                 self.twitch_api_client = values["APP_ID"]
                 self.twitch_api_secret = values["APP_SECRET"]
 
@@ -480,7 +689,7 @@ class MainWindow(QtWidgets.QMainWindow):
             "TwitchGiftedSub": []
         }
 
-        for root, dirs, files in os.walk(os.path.join(exe_dir, "Models")):
+        for root, dirs, files in os.walk(os.path.join(res_dir, "Models")):
             for filename in files:
                 if filename == "data.json":
                     data_json_path = os.path.join(root, filename)
@@ -620,7 +829,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def create_shortcuts(self, data):
         if data["type"] in ["Avatars", "Expressions"]:
-            mainFolder = str(os.path.join(exe_dir, "Models", data['type']))
+            mainFolder = str(os.path.join(res_dir, "Models", data['type']))
             with open(
                     os.path.join(mainFolder, data['name'], "data.json"), 'r'
             ) as json_file:
@@ -629,7 +838,7 @@ class MainWindow(QtWidgets.QMainWindow):
             with open(
                     os.path.join(mainFolder, data['name'], "data.json"), 'w'
             ) as json_file:
-                json.dump(old_data, json_file, indent=4)
+                json.dump(old_data, json_file, indent=4, ensure_ascii=False)
             self.modelGallery.reload_models(self.savedAvatars)
         elif data["type"] in ["Assets"]:
             self.file_parameters_default[data['value']['route']]["hotkeys"] = copy.deepcopy(data['value']["hotkeys"])
@@ -663,7 +872,7 @@ class MainWindow(QtWidgets.QMainWindow):
             elif data["type"] == "Expressions":
                 data = copy.deepcopy(self.last_expression)
 
-        with open(os.path.join(exe_dir, "Models", data['type'], data['name'], "model.json"), "r") as load_file:
+        with open(os.path.join(res_dir, "Models", data['type'], data['name'], "model.json"), "r") as load_file:
             files = json.load(load_file)
             for file in files:
                 self.file_parameters_current[os.path.normpath(file["route"])] = \
@@ -686,7 +895,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.update_viewer(current_files)
         if data["type"] == "Expressions":
-            with open(os.path.join(exe_dir, "Models", data['type'], data['name'], "data.json"), "r") as load_file:
+            with open(os.path.join(res_dir, "Models", data['type'], data['name'], "data.json"), "r") as load_file:
                 animations = json.load(load_file).get("animations", None)
                 if animations is not None:
                     self.load_animations(default=animations)
@@ -697,7 +906,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.current_expression = copy.deepcopy(data)
 
     def check_if_expression(self, file):
-        with open(os.path.join(exe_dir, "Data", "expressionFolders.json"), "r") as expressions_list:
+        with open(os.path.join(res_dir, "Data", "expressionFolders.json"), "r") as expressions_list:
             for expression in json.load(expressions_list):
                 if expression in file:
                     return True
@@ -707,18 +916,18 @@ class MainWindow(QtWidgets.QMainWindow):
         text, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter new category name:')
 
         if ok:
-            if os.path.exists(os.path.join(exe_dir, "Assets", text)):
+            if os.path.exists(os.path.join(res_dir, "Assets", text)):
                 msg = QtWidgets.QMessageBox()
                 msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
                 msg.setText("Asset category with this name already exists.")
                 msg.setWindowTitle("Warning")
                 msg.exec()
             else:
-                os.mkdir(os.path.join(exe_dir, "Assets", text))
+                os.mkdir(os.path.join(res_dir, "Assets", text))
         self.update_viewer(self.current_files, update_gallery=True)
 
     def OpenAssetsFolder(self):
-        path = os.path.join(exe_dir, "Assets")
+        path = os.path.join(res_dir, "Assets")
         if os.name == "posix":
             subprocess.run(["xdg-open", path])
         elif os.name == "nt":
@@ -727,7 +936,7 @@ class MainWindow(QtWidgets.QMainWindow):
             print("Unsupported operating system")
 
     def get_folders_in_assets(self):
-        folder_path = os.path.join(exe_dir, "Assets")
+        folder_path = os.path.join(res_dir, "Assets")
         if os.path.exists(folder_path) and os.path.isdir(folder_path):
             folders = [self.tr(f) for f in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, f))]
             return [self.tr("Select Category...")] + folders
@@ -753,7 +962,7 @@ class MainWindow(QtWidgets.QMainWindow):
             modelName, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter new avatar name:')
 
         if ok:
-            directory = os.path.join(exe_dir, "Models", "Avatars", modelName)
+            directory = os.path.join(res_dir, "Models", "Avatars", modelName)
             if model is None or model is False:
                 if os.path.exists(directory):
                     msg = QtWidgets.QMessageBox()
@@ -776,7 +985,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.modelGallery.add_model(modelName)
             else:
                 self.modelGallery.reload_models(
-                    [folder for folder in os.listdir(os.path.join(exe_dir, "Models", "Avatars")) if "." not in folder])
+                    [folder for folder in os.listdir(os.path.join(res_dir, "Models", "Avatars")) if "." not in folder])
 
     def save_expression(self, model=None):
         if model is not None and model is not False:
@@ -797,7 +1006,7 @@ class MainWindow(QtWidgets.QMainWindow):
             modelName, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter new expression name:')
 
         if ok:
-            directory = os.path.join(exe_dir, "Models", "Expressions", modelName)
+            directory = os.path.join(res_dir, "Models", "Expressions", modelName)
             if model is None or model is False:
                 if os.path.exists(directory):
                     msg = QtWidgets.QMessageBox()
@@ -820,13 +1029,13 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.expressionGallery.add_model(modelName)
             else:
                 self.expressionGallery.reload_models(
-                    [folder for folder in os.listdir(os.path.join(exe_dir, "Models", "Expressions")) if "." not in folder])
+                    [folder for folder in os.listdir(os.path.join(res_dir, "Models", "Expressions")) if "." not in folder])
 
     def save_model(self, directory, modelName, temp, files):
         self.ImageGallery.create_thumbnail(temp, custom_name=os.path.join(directory, "thumb.png"))
         os.remove(temp)
         with open(os.path.join(directory, "model.json"), "w") as file:
-            json.dump(files, file, indent=4)
+            json.dump(files, file, indent=4, ensure_ascii=False)
 
         data_file = os.path.normpath(os.path.join(directory, "data.json"))
         if os.path.exists(data_file):
@@ -848,7 +1057,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     "speed": self.talking_speed.value()
                 }
             }
-            json.dump(data, file, indent=4)
+            json.dump(data, file, indent=4, ensure_ascii=False)
 
     def export_png(self):
         method = self.PNGmethod.currentIndex()
@@ -927,16 +1136,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def save_parameters_to_json(self):
         with open(self.json_file, "w") as f:
-            json.dump(self.file_parameters_default, f, indent=4)
+            json.dump(self.file_parameters_default, f, indent=4, ensure_ascii=False)
 
         with open(self.current_model_json_file, "w") as f:
-            json.dump(self.current_model, f, indent=4)
+            json.dump(self.current_model, f, indent=4, ensure_ascii=False)
 
         with open(self.current_json_file, "w") as f:
-            json.dump(self.current_files, f, indent=4)
+            json.dump(self.current_files, f, indent=4, ensure_ascii=False)
 
         with open(self.settings_json_file, "w") as f:
-            json.dump(self.settings, f, indent=4)
+            json.dump(self.settings, f, indent=4, ensure_ascii=False)
 
     def image_generator(self, output_name, method=1, savingModel=0, custom_file_list=None):
         files = self.getFiles(self.current_files) if custom_file_list is None else custom_file_list
