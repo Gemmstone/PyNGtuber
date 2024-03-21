@@ -24,7 +24,7 @@ import os
 import re
 
 
-current_version = "v1.4.1"
+current_version = "v1.4.2"
 repo_owner = "Gemmstone"
 repo_name = "PyNGtuber"
 
@@ -74,7 +74,7 @@ def update_nested_dict(dest_data, source_data):
                 if os.path.normpath(key) not in dest_data:
                     dest_data[os.path.normpath(key)] = value
                 else:
-                    update_nested_dict(dest_data[key], value)
+                    update_nested_dict(dest_data[os.path.normpath(key)], value)
             else:
                 if key not in dest_data:
                     dest_data[key] = value
@@ -1296,7 +1296,7 @@ class MainWindow(QtWidgets.QMainWindow):
             if file in self.file_parameters_current:
                 parameters = self.file_parameters_current[file]
             else:
-                image = Image.open(file)
+                image = Image.open(os.path.join(res_dir, file))
                 width, height = image.size
                 parameters = {
                     "sizeX": width,

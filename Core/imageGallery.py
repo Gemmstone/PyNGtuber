@@ -329,7 +329,7 @@ class ImageGallery(QToolBox):
         path = self.sender().toolTip()
         if result == QMessageBox.StandardButton.Yes:
             try:
-                os.remove(path)
+                os.remove(os.path.join(self.exe_dir, path))
                 self.load_images(self.last_model)
             except Exception as e:
                 print(f"Error deleting file: {str(e)}")
