@@ -1403,7 +1403,7 @@ class MainWindow(QtWidgets.QMainWindow):
         event.accept()
 
 
-if __name__ == "__main__":
+def main():
     app = QtWidgets.QApplication(sys.argv)
     app.setStyle('Fusion')
     QCoreApplication.setApplicationName("PyNGtuber")
@@ -1414,3 +1414,7 @@ if __name__ == "__main__":
     window.show()
 
     app.exec()
+
+
+if __name__ == "__main__":
+    main()
