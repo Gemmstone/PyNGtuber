@@ -418,7 +418,7 @@ class ModelItem(QGroupBox):
         result = confirmation.exec()
 
         if result == QMessageBox.StandardButton.Yes:
-            shutil.rmtree(f"Models/{self.modelType}/{self.modelName}")
+            shutil.rmtree(os.path.join(self.res_dir, "Models", self.modelType, self.modelName))
             self.deleted.emit()
 
     def rename_model(self):
