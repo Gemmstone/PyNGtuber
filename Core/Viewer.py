@@ -181,6 +181,15 @@ class LayeredImageViewer(QWebEngineView):
                 controller_wheelWhammy_div['invertAxis'] = layer.get('invertAxis', 0)
                 controller_wheelWhammy_div['deadzone'] = layer.get("deadzone", 0.0550)
 
+                animation_blinking_div = soup.new_tag('div', style="position: absolute !important;")
+                animation_blinking_div['class'] = [layer.get("blinking", "ignore")]
+
+                animation_talking_div = soup.new_tag('div', style=f"""
+                    position: absolute !important;
+                    {"opacity: 0" if layer['talking'] not in ['ignore', 'talking_closed'] else ""};
+                """)
+                animation_talking_div['class'] = [layer.get("talking", "ignore")]
+
                 img_tag = soup.new_tag('img', src=f"../{layer['route']}", style=f"""
                         position: absolute !important;
                         left: calc(50% + {layer['posX']}px);
@@ -189,14 +198,12 @@ class LayeredImageViewer(QWebEngineView):
                         transform: translate(-50%, -50%) rotate({layer['rotation']}deg);
                         width: {layer['sizeX']}px; 
                         height: {layer['sizeY']}px;
-                        {"opacity: 0" if layer['talking'] not in ['ignore', 'talking_closed'] else ""};
                         {layer['css']}
                     """)
-                img_tag['class'] = [
-                    layer['blinking'], layer['talking'],
-                ]
 
-                controller_wheelWhammy_div.append(img_tag)
+                animation_talking_div.append(img_tag)
+                animation_blinking_div.append(animation_talking_div)
+                controller_wheelWhammy_div.append(animation_blinking_div)
                 controller_wheelX_div.append(controller_wheelWhammy_div)
                 controller_wheelZ_div.append(controller_wheelX_div)
                 controller_wheelY_div.append(controller_wheelZ_div)
