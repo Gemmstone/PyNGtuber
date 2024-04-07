@@ -96,9 +96,14 @@ class AudioThread(QThread):
             self.audio_stream_error.emit(f"{status}")
 
         audio_data = np.frombuffer(in_data, dtype=np.int16)
-        rms_volume = abs(np.max(audio_data))
 
+        max_abs_value = np.max(np.abs(audio_data))
+        if max_abs_value > 32768:
+            return
+
+        rms_volume = abs(np.max(audio_data))
         volume = int((rms_volume / 32768) * 100)
+
 
         try:
             self.audio_stream_signal.emit(volume)
