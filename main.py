@@ -69,6 +69,7 @@ def is_path(string):
 
 def update_nested_dict(dest_data, source_data):
     for key, value in source_data.items():
+        pass
         if isinstance(value, dict):
             if is_path(os.path.normpath(key)):
                 if os.path.normpath(key) not in dest_data:
@@ -106,10 +107,11 @@ def update_json_file(source_path, dest_path):
             with open(dest_path, 'w', encoding='utf-8') as dest_file:
                 json.dump(source_data, dest_file, indent=4, ensure_ascii=False)
         else:
-            dest_data = update_nested_dict(dest_data, source_data)
+            pass
+            # dest_data = update_nested_dict(dest_data, source_data)
 
-            with open(dest_path, 'w') as dest_file:
-                json.dump(dest_data, dest_file, indent=4, ensure_ascii=False)
+            # with open(dest_path, 'w') as dest_file:
+            #     json.dump(dest_data, dest_file, indent=4, ensure_ascii=False)
     else:
         shutil.copyfile(source_path, dest_path)
 
