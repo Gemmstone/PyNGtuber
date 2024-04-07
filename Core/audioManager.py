@@ -104,7 +104,6 @@ class AudioThread(QThread):
         rms_volume = abs(np.max(audio_data))
         volume = int((rms_volume / 32768) * 100)
 
-
         try:
             self.audio_stream_signal.emit(volume)
         except RuntimeError:
