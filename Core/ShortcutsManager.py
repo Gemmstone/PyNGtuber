@@ -238,9 +238,12 @@ class MouseTracker(QThread):
                 position = pyautogui.position()
             else:
                 position = (0, 0)
-            self.mouse_position.emit({
-                "x": position[0], "y": position[1]
-            })
+            try:
+                self.mouse_position.emit({
+                    "x": position[0], "y": position[1]
+                })
+            except AttributeError:
+                pass
 
             elapsed = time.time() - start_time
             if elapsed < interval:
