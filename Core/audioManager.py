@@ -87,6 +87,9 @@ class AudioThread(QThread):
         self.audio_stream_signal.emit(normalized_volume)
 
     def callback_pyaudio(self, in_data, frame_count, time_info, status):
+        if self.audio_stream is None:
+            return
+
         if status:
             self.audio_stream.close()
             self.audio_stream = None
@@ -97,7 +100,10 @@ class AudioThread(QThread):
 
         volume = int((rms_volume / 32768) * 100)
 
-        self.audio_stream_signal.emit(volume)
+        try:
+            self.audio_stream_signal.emit(volume)
+        except RuntimeError:
+            pass
         # print(volume, frame_count, time_info, status)
 
         return None, pyaudio.paContinue
