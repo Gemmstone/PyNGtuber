@@ -55699,7 +55699,7 @@
         "sizeY": 224,
         "posX": 40,
         "posY": 150,
-        "posZ": 40,
+        "posZ": 39,
         "blinking": "ignore",
         "talking": "ignore",
         "css": "",
@@ -55748,14 +55748,18 @@
         "cursorScale": 0.03,
         "cursor": true,
         "invert_mouse_x": 1,
-        "invert_mouse_y": 0
+        "invert_mouse_y": 0,
+        "cursorScaleX": 0.03,
+        "cursorScaleY": 0.03,
+        "track_mouse_x": 1,
+        "track_mouse_y": 1
     },
     "Assets/Controllers/Pen_007.png": {
         "sizeX": 40,
         "sizeY": 271,
         "posX": 40,
         "posY": 150,
-        "posZ": 40,
+        "posZ": 39,
         "blinking": "ignore",
         "talking": "ignore",
         "css": "",
@@ -55804,14 +55808,18 @@
         "rotationGuitarDown": 0,
         "animation_idle": false,
         "invert_mouse_x": 1,
-        "invert_mouse_y": 0
+        "invert_mouse_y": 0,
+        "cursorScaleX": 0.03,
+        "cursorScaleY": 0.03,
+        "track_mouse_x": 1,
+        "track_mouse_y": 1
     },
     "Assets/Controllers/Pen_006.png": {
         "sizeX": 40,
         "sizeY": 268,
         "posX": 40,
         "posY": 150,
-        "posZ": 40,
+        "posZ": 39,
         "blinking": "ignore",
         "talking": "ignore",
         "css": "",
@@ -55860,14 +55868,18 @@
         "rotationGuitarDown": 0,
         "animation_idle": false,
         "invert_mouse_x": 1,
-        "invert_mouse_y": 0
+        "invert_mouse_y": 0,
+        "cursorScaleX": 0.03,
+        "cursorScaleY": 0.03,
+        "track_mouse_x": 1,
+        "track_mouse_y": 1
     },
     "Assets/Controllers/Pen_005.png": {
         "sizeX": 40,
         "sizeY": 270,
         "posX": 40,
         "posY": 150,
-        "posZ": 40,
+        "posZ": 39,
         "blinking": "ignore",
         "talking": "ignore",
         "css": "",
@@ -55916,14 +55928,18 @@
         "rotationGuitarDown": 0,
         "animation_idle": false,
         "invert_mouse_x": 1,
-        "invert_mouse_y": 0
+        "invert_mouse_y": 0,
+        "cursorScaleX": 0.03,
+        "cursorScaleY": 0.03,
+        "track_mouse_x": 1,
+        "track_mouse_y": 1
     },
     "Assets/Controllers/Pen_004.png": {
         "sizeX": 40,
         "sizeY": 224,
         "posX": 40,
         "posY": 150,
-        "posZ": 40,
+        "posZ": 39,
         "blinking": "ignore",
         "talking": "ignore",
         "css": "",
@@ -55972,14 +55988,18 @@
         "rotationGuitarDown": 0,
         "animation_idle": false,
         "invert_mouse_x": 1,
-        "invert_mouse_y": 0
+        "invert_mouse_y": 0,
+        "cursorScaleX": 0.03,
+        "cursorScaleY": 0.03,
+        "track_mouse_x": 1,
+        "track_mouse_y": 1
     },
     "Assets/Controllers/Pen_003.png": {
         "sizeX": 40,
         "sizeY": 223,
         "posX": 40,
         "posY": 150,
-        "posZ": 40,
+        "posZ": 39,
         "blinking": "ignore",
         "talking": "ignore",
         "css": "",
@@ -56028,14 +56048,18 @@
         "rotationGuitarDown": 0,
         "animation_idle": false,
         "invert_mouse_x": 1,
-        "invert_mouse_y": 0
+        "invert_mouse_y": 0,
+        "cursorScaleX": 0.03,
+        "cursorScaleY": 0.03,
+        "track_mouse_x": 1,
+        "track_mouse_y": 1
     },
     "Assets/Controllers/Pen_002.png": {
         "sizeX": 40,
         "sizeY": 224,
         "posX": 40,
         "posY": 150,
-        "posZ": 40,
+        "posZ": 39,
         "blinking": "ignore",
         "talking": "ignore",
         "css": "",
@@ -56084,6 +56108,10 @@
         "rotationGuitarDown": 0,
         "animation_idle": false,
         "invert_mouse_x": 1,
-        "invert_mouse_y": 0
+        "invert_mouse_y": 0,
+        "cursorScaleX": 0.03,
+        "cursorScaleY": 0.03,
+        "track_mouse_x": 1,
+        "track_mouse_y": 1
     }
 }
