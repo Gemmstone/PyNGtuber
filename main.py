@@ -30,6 +30,7 @@ repo_name = "PyNGtuber"
 
 directories = ["Data", "Models", "Assets", "Viewer"]
 directories_skip = ["Models"]
+overwrite_files = ["script.js", "animations.css"]
 
 os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = '4864'
 os.environ['QTWEBENGINE_CHROMIUM_FLAGS'] = '--no-sandbox'
@@ -121,6 +122,8 @@ def update_directory(source_dir, dest_dir):
         os.makedirs(dest_dir)
 
     for filename in os.listdir(source_dir):
+        if filename == "script.js":
+            pass
         source_path = os.path.join(source_dir, filename)
         dest_path = os.path.join(dest_dir, filename)
 
@@ -128,13 +131,13 @@ def update_directory(source_dir, dest_dir):
             update_directory(source_path, dest_path)
         elif filename.endswith('.json'):
             update_json_file(source_path, dest_path)
-        elif not os.path.exists(dest_path):
+        elif not os.path.exists(dest_path) or filename in overwrite_files:
             shutil.copyfile(source_path, dest_path)
 
 
 exe_dir = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
 res_dir = exe_dir
-if not os.path.isfile(os.path.join(exe_dir, ".gitignore")):
+if os.path.isfile(os.path.join(exe_dir, ".gitignore")):
     if os.name == 'posix':
         if sys.platform == 'darwin':
             res_dir = os.path.expanduser("~/Library/Application Support/PyNGtuber")
