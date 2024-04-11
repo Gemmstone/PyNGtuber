@@ -78,9 +78,12 @@ class LayeredImageViewer(QWebEngineView):
                 cursor_div['class'] = [
                     "cursor_div" if layer.get("cursor", False) else "ignore"
                 ]
-                cursor_div['cursorScale'] = layer.get("cursorScale", 0.01)
+                cursor_div['cursorScaleX'] = layer.get("cursorScaleX", layer.get("cursorScale", 0.01))
+                cursor_div['cursorScaleY'] = layer.get("cursorScaleY", layer.get("cursorScale", 0.01))
                 cursor_div['invert_mouse_x'] = layer.get("invert_mouse_x", 1)
                 cursor_div['invert_mouse_y'] = layer.get("invert_mouse_y", 0)
+                cursor_div['track_mouse_x'] = layer.get("track_mouse_x", 1)
+                cursor_div['track_mouse_y'] = layer.get("track_mouse_y", 1)
 
                 controller_buttons_div = soup.new_tag('div', style=f"""
                                     position: absolute !important; 
