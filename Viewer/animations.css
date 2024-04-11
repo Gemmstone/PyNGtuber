@@ -1,5 +1,10 @@
  /* Add the comment  "Avatar Animation" to add it to the avatar idle and talking animations */
 
+@keyframes None { /* Avatar Animation */
+    0% {transform: translateY(0px);}
+    100% {transform: translateY(0px);}
+}
+
 @keyframes floaty { /* Avatar Animation */
     0% {transform: translateY(0px);}
     50% {transform: translateY(20px);}
