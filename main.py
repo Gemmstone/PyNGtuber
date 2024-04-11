@@ -137,7 +137,7 @@ def update_directory(source_dir, dest_dir):
 
 exe_dir = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
 res_dir = exe_dir
-if os.path.isfile(os.path.join(exe_dir, ".gitignore")):
+if not os.path.isfile(os.path.join(exe_dir, ".gitignore")):
     if os.name == 'posix':
         if sys.platform == 'darwin':
             res_dir = os.path.expanduser("~/Library/Application Support/PyNGtuber")
