@@ -14,7 +14,7 @@ class WebEnginePage(QWebEnginePage):
 class LayeredImageViewer(QWebEngineView):
     loadFinishedSignal = pyqtSignal(bool)
 
-    def __init__(self, exe_dir, parent=None):
+    def __init__(self, exe_dir, hw_acceleration=False, parent=None):
         super(LayeredImageViewer, self).__init__(parent)
         self.setPage(WebEnginePage(self))
         self.html_code = ""
@@ -22,16 +22,19 @@ class LayeredImageViewer(QWebEngineView):
         self.is_loaded = False
         self.loadFinished.connect(self.on_load_finished)
 
-        settings = self.page().settings()
-        settings.setAttribute(QWebEngineSettings.WebAttribute.LocalStorageEnabled, True)
-
-        settings.setAttribute(QWebEngineSettings.WebAttribute.Accelerated2dCanvasEnabled, True)
-        # settings.setAttribute(QWebEngineSettings.WebAttribute.Remo)
+        self.update_settings(hw_acceleration=hw_acceleration)
 
         self.file = os.path.join(exe_dir, 'Viewer', 'viewer.html')
         self.file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), self.file)
 
         self.updateImages()
+
+    def update_settings(self, hw_acceleration=False):
+        settings = self.page().settings()
+        settings.setAttribute(QWebEngineSettings.WebAttribute.LocalStorageEnabled, True)
+
+        settings.setAttribute(QWebEngineSettings.WebAttribute.Accelerated2dCanvasEnabled, hw_acceleration)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.WebGLEnabled, hw_acceleration)
 
     def on_load_finished(self, result: bool):
         self.is_loaded = result

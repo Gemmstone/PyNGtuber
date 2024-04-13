@@ -284,8 +284,8 @@ QTabBar::tab:hover {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>208</width>
-                   <height>636</height>
+                   <width>191</width>
+                   <height>643</height>
                   </rect>
                  </property>
                  <attribute name="icon">
@@ -347,8 +347,8 @@ QTabBar::tab:hover {
                       <rect>
                        <x>0</x>
                        <y>0</y>
-                       <width>208</width>
-                       <height>589</height>
+                       <width>191</width>
+                       <height>606</height>
                       </rect>
                      </property>
                      <layout class="QVBoxLayout" name="verticalLayout_33">
@@ -412,8 +412,8 @@ QTabBar::tab:hover {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>208</width>
-                   <height>636</height>
+                   <width>191</width>
+                   <height>643</height>
                   </rect>
                  </property>
                  <attribute name="icon">
@@ -475,8 +475,8 @@ QTabBar::tab:hover {
                       <rect>
                        <x>0</x>
                        <y>0</y>
-                       <width>208</width>
-                       <height>589</height>
+                       <width>191</width>
+                       <height>606</height>
                       </rect>
                      </property>
                      <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -655,8 +655,8 @@ QFrame{
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>208</width>
-                   <height>679</height>
+                   <width>191</width>
+                   <height>676</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout">
@@ -1703,7 +1703,7 @@ QFrame{
                        <x>0</x>
                        <y>0</y>
                        <width>274</width>
-                       <height>608</height>
+                       <height>626</height>
                       </rect>
                      </property>
                      <attribute name="icon">
@@ -1793,7 +1793,7 @@ QFrame{
                            <x>0</x>
                            <y>0</y>
                            <width>274</width>
-                           <height>608</height>
+                           <height>626</height>
                           </rect>
                          </property>
                          <layout class="QVBoxLayout" name="verticalLayout_20">
@@ -2412,7 +2412,7 @@ QTabBar::tab:hover {
                        <x>0</x>
                        <y>0</y>
                        <width>274</width>
-                       <height>608</height>
+                       <height>626</height>
                       </rect>
                      </property>
                      <attribute name="icon">
@@ -2491,8 +2491,8 @@ QFrame{
                           <rect>
                            <x>0</x>
                            <y>0</y>
-                           <width>261</width>
-                           <height>627</height>
+                           <width>260</width>
+                           <height>673</height>
                           </rect>
                          </property>
                          <layout class="QVBoxLayout" name="verticalLayout_34">
@@ -2897,6 +2897,64 @@ QFrame{
                            </widget>
                           </item>
                           <item>
+                           <widget class="QGroupBox" name="groupBox_15">
+                            <property name="title">
+                             <string>Video</string>
+                            </property>
+                            <layout class="QVBoxLayout" name="verticalLayout_51">
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>23</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QFrame" name="audioFrame_5">
+                               <property name="styleSheet">
+                                <string notr="true"/>
+                               </property>
+                               <property name="frameShape">
+                                <enum>QFrame::StyledPanel</enum>
+                               </property>
+                               <property name="frameShadow">
+                                <enum>QFrame::Raised</enum>
+                               </property>
+                               <layout class="QGridLayout" name="gridLayout_3">
+                                <item row="0" column="1">
+                                 <widget class="QComboBox" name="hw_acceleration">
+                                  <item>
+                                   <property name="text">
+                                    <string>Disabled</string>
+                                   </property>
+                                  </item>
+                                  <item>
+                                   <property name="text">
+                                    <string>Enabled</string>
+                                   </property>
+                                  </item>
+                                 </widget>
+                                </item>
+                                <item row="0" column="0">
+                                 <widget class="QLabel" name="label_18">
+                                  <property name="text">
+                                   <string>Hardware
+Acceleration:</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                               </layout>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
                            <widget class="QGroupBox" name="groupBox_12">
                             <property name="styleSheet">
                              <string notr="true">*{
@@ -3000,7 +3058,7 @@ QFrame{
                                     <rect>
                                      <x>0</x>
                                      <y>0</y>
-                                     <width>249</width>
+                                     <width>242</width>
                                      <height>136</height>
                                     </rect>
                                    </property>

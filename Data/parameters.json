@@ -53336,7 +53336,14 @@
         "posGuitarDownX": 0,
         "posGuitarDownY": 0,
         "rotationGuitarDown": 0,
-        "animation_idle": true
+        "animation_idle": true,
+        "cursorScaleX": 0.01,
+        "cursorScaleY": 0.01,
+        "invert_mouse_x": 1,
+        "invert_mouse_y": 0,
+        "track_mouse_x": 1,
+        "track_mouse_y": 1,
+        "cursor": false
     },
     "Assets/Controllers/hands_016.png": {
         "sizeX": 600,

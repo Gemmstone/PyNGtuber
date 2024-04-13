@@ -16,6 +16,7 @@ import subprocess
 import webbrowser
 import requests
 import zipfile
+import psutil
 import json
 import copy
 import mido
@@ -24,7 +25,7 @@ import os
 import re
 
 
-current_version = "v1.5.2"
+current_version = "v1.5.3"
 repo_owner = "Gemmstone"
 repo_name = "PyNGtuber"
 
@@ -138,12 +139,16 @@ def update_directory(source_dir, dest_dir):
 exe_dir = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
 res_dir = exe_dir
 if not os.path.isfile(os.path.join(exe_dir, ".gitignore")):
+    process = psutil.Process(os.getpid())
     if os.name == 'posix':
         if sys.platform == 'darwin':
+            process.nice(20)
             res_dir = os.path.expanduser("~/Library/Application Support/PyNGtuber")
         else:
+            process.nice(psutil.IOPRIO_HIGH)
             res_dir = os.path.expanduser("~/.config/PyNGtuber")
     elif os.name == 'nt':
+        process.nice(psutil.REALTIME_PRIORITY_CLASS)
         res_dir = os.path.join(os.getenv("APPDATA"), "PyNGtuber")
 
     if not os.path.exists(res_dir):
@@ -434,7 +439,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.comboBox.currentIndexChanged.connect(self.setBGColor)
 
-        self.viewer = LayeredImageViewer(exe_dir=res_dir)
+        self.viewer = LayeredImageViewer(exe_dir=res_dir, hw_acceleration=self.settings.get("hardware acceleration", False))
         self.viewer.loadFinishedSignal.connect(self.reboot_audio)
         self.viewerFrame.layout().addWidget(self.viewer)
         self.viewer.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
@@ -582,6 +587,10 @@ class MainWindow(QtWidgets.QMainWindow):
         if default is not None:
             self.update_settings()
 
+    def update_hw_acceleration(self):
+        self.update_settings()
+        self.viewer.update_settings(hw_acceleration=self.settings.get("hardware acceleration", False))
+
     def flipCanvas(self):
         if self.flipCanvasToggle.isChecked():
             self.viewer.page().runJavaScript("document.body.style.transform = 'scaleX(-1)';")
@@ -697,6 +706,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.scaleValue.setText(f"{self.generalScale.value()}")
         self.audio_engine.setCurrentText(self.settings["audio engine"])
         self.mouseTrackingToggle.setChecked(self.settings.get("mouse tracking", True))
+        self.hw_acceleration.setCurrentIndex(1 if self.settings.get("hardware acceleration", False) else 0)
         # self.reference_volume.setChecked(self.settings["max_reference_volume"])
 
     def update_settings(self):
@@ -722,7 +732,8 @@ class MainWindow(QtWidgets.QMainWindow):
                 }
             },
             "audio engine": self.audio_engine.currentText(),
-            "mouse tracking": self.mouseTrackingToggle.isChecked()
+            "mouse tracking": self.mouseTrackingToggle.isChecked(),
+            "hardware acceleration": False if self.hw_acceleration.currentIndex() == 0 else True
         }
         self.save_parameters_to_json()
         self.audioStatus(0)
