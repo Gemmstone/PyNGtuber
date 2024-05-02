@@ -68,6 +68,7 @@ class LayeredImageViewer(QWebEngineView):
             for layer in sorted(image_list, key=lambda x: x['posZ']):
                 animation_idle_div = soup.new_tag('div', style=f"""
                     position: absolute !important; 
+                    z-index: {layer['posZ']};
                 """)
                 animation_idle_div['class'] = [
                     "idle_animation" if layer.get("animation_idle", True) else "ignore"
@@ -75,6 +76,7 @@ class LayeredImageViewer(QWebEngineView):
 
                 cursor_div = soup.new_tag('div', style=f"""
                                     position: absolute !important; 
+                                    z-index: {layer['posZ']};
                                     left: calc(50% + {layer.get('posIdleX', 0)}px);
                                     top: calc(50% + {layer.get('posIdleY', 0)}px);
                                 """)
@@ -90,6 +92,7 @@ class LayeredImageViewer(QWebEngineView):
 
                 controller_buttons_div = soup.new_tag('div', style=f"""
                                     position: absolute !important; 
+                                    z-index: {layer['posZ']};
                                     left: calc(50% + {layer.get('posIdleX', 0)}px);
                                     top: calc(50% + {layer.get('posIdleY', 0)}px);
                                     transform: rotate({layer.get('rotationIdle', 0)}deg);
@@ -117,6 +120,7 @@ class LayeredImageViewer(QWebEngineView):
 
                 guitar_buttons_div = soup.new_tag('div', style=f"""
                                     position: absolute !important; 
+                                    z-index: {layer['posZ']};
                                     left: calc(50% + {layer.get('posIdleX', 0)}px);
                                     top: calc(50% + {layer.get('posIdleY', 0)}px);
                                     transform: rotate({layer.get('rotationIdle', 0)}deg);
@@ -137,6 +141,7 @@ class LayeredImageViewer(QWebEngineView):
 
                 controller_wheelX_div = soup.new_tag('div', style=f"""
                     position: absolute !important; 
+                    z-index: {layer['posZ']};
                     transform-origin: calc(50% + {layer.get('originX', 0)}px) calc(50% + {layer.get('originY', 0)}px);
                     transform: rotateZ(0deg);
                 """)
@@ -150,6 +155,7 @@ class LayeredImageViewer(QWebEngineView):
 
                 controller_wheelY_div = soup.new_tag('div', style=f"""
                     position: absolute !important; 
+                    z-index: {layer['posZ']};
                     transform-origin: calc(50% + {layer.get('originXzoom', layer.get('originX', 0))}px) calc(50% + {layer.get('originYzoom', layer.get('originY', 0))}px);
                     transform: rotateX(0deg) scale(100%);
                 """)
@@ -163,6 +169,7 @@ class LayeredImageViewer(QWebEngineView):
 
                 controller_wheelZ_div = soup.new_tag('div', style=f"""
                     position: absolute !important; 
+                    z-index: {layer['posZ']};
                     transform-origin: calc(50% + {layer.get('originXright', layer.get('originX', 0))}px) calc(50% + {layer.get('originYright', layer.get('originY', 0))}px);
                     transform: rotateY(0deg) rotateX(0deg);
                 """)
@@ -176,6 +183,7 @@ class LayeredImageViewer(QWebEngineView):
 
                 controller_wheelWhammy_div = soup.new_tag('div', style=f"""
                     position: absolute !important; 
+                    z-index: {layer['posZ']};
                     transform-origin: calc(50% + {layer.get('originXwhammy', 0)}px) calc(50% + {layer.get('originYwhammy', 0)}px);
                     transform: rotateZ(0deg);
                 """)
@@ -192,6 +200,7 @@ class LayeredImageViewer(QWebEngineView):
 
                 animation_talking_div = soup.new_tag('div', style=f"""
                     position: absolute !important;
+                    z-index: {layer['posZ']};
                     {"opacity: 0" if layer['talking'] not in ['ignore', 'talking_closed'] else ""};
                 """)
                 animation_talking_div['class'] = [layer.get("talking", "ignore")]

@@ -25,7 +25,7 @@ import os
 import re
 
 
-current_version = "v1.5.3"
+current_version = "v1.5.4"
 repo_owner = "Gemmstone"
 repo_name = "PyNGtuber"
 
@@ -142,10 +142,10 @@ if not os.path.isfile(os.path.join(exe_dir, ".gitignore")):
     process = psutil.Process(os.getpid())
     if os.name == 'posix':
         if sys.platform == 'darwin':
-            process.nice(20)
+            # process.nice(20)
             res_dir = os.path.expanduser("~/Library/Application Support/PyNGtuber")
         else:
-            process.nice(psutil.IOPRIO_HIGH)
+            # process.nice(psutil.IOPRIO_HIGH)
             res_dir = os.path.expanduser("~/.config/PyNGtuber")
     elif os.name == 'nt':
         process.nice(psutil.REALTIME_PRIORITY_CLASS)
