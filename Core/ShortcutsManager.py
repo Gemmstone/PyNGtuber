@@ -1,6 +1,7 @@
 from twitchAPI.object.eventsub import ChannelPointsCustomRewardRedemptionAddEvent, \
     ChannelFollowEvent, ChannelCheerEvent, ChannelRaidEvent, ChannelSubscribeEvent, \
     ChannelSubscriptionGiftEvent
+from twitchAPI.chat import Chat, EventData, ChatMessage, ChatSub, ChatCommand
 from twitchAPI.oauth import UserAuthenticationStorageHelper
 from twitchAPI.eventsub.websocket import EventSubWebsocket
 from PyQt6.QtCore import QThread, pyqtSignal, pyqtSlot, QPoint
@@ -8,7 +9,7 @@ from aiohttp.client_exceptions import ClientConnectionError
 from PyQt6 import QtWidgets, QtCore, uic
 from PyQt6.QtGui import QIcon
 from pynput.keyboard import Listener
-from twitchAPI.type import AuthScope
+from twitchAPI.type import AuthScope, ChatEvent
 from twitchAPI.twitch import Twitch
 from twitchAPI.helper import first
 try:
@@ -27,17 +28,19 @@ class TwitchAPI(QThread):
     event_signal = pyqtSignal(dict)
     new_event_signal = pyqtSignal(dict)
 
-    def __init__(self, APP_ID, APP_SECRET, res_dir):
+    def __init__(self, APP_ID, APP_SECRET, APP_USER, res_dir):
         super().__init__()
         self.APP_ID = APP_ID
         self.APP_SECRET = APP_SECRET
+        self.APP_USER = APP_USER
         self.res_dir = res_dir
         self.PUBLIC_APP_ID = "v3pheb41eiqaal8e1pefkjrygpvjt8"
         self.TARGET_SCOPES = [
             AuthScope.CHANNEL_MANAGE_REDEMPTIONS,
             AuthScope.MODERATOR_READ_FOLLOWERS,
             AuthScope.BITS_READ,
-            AuthScope.CHANNEL_READ_SUBSCRIPTIONS
+            AuthScope.CHANNEL_READ_SUBSCRIPTIONS,
+            AuthScope.CHAT_READ
         ]
         self.ignore_commands = False
         self.commands = {}
@@ -59,6 +62,73 @@ class TwitchAPI(QThread):
         if self.ignore_commands:
             self.new_event_signal.emit(data)
         else:
+            for command in self.commands[data["type"]]:
+                emit = False
+                match data["type"]:
+                    case "TwitchReward":
+                        if data["command"]["reward"] == command["command"]["command"]["reward"]:
+                            if (data["command"]["prompt"] == command["command"]["command"]["prompt"] or
+                                    not command["command"]["command"]["prompt"]):
+                                emit = True
+                    case "TwitchFollow":
+                        emit = True
+                    case "TwitchCheer" | "TwitchRaid":
+                        if command["command"]["command"][0] <= data["command"] <= command["command"]["command"][1]:
+                            emit = True
+                    case "TwitchSub" | "TwitchGiftedSub":
+                        if data["command"] == command["command"]["command"]:
+                            emit = True
+                    case "TwitchChatMessage":
+                        if data["command"]["parameters"].lower().strip() == "bruh":
+                            print(data)
+
+                        if not (
+                                command["command"]["command"]["type"] == "Any" or (
+                                command["command"]["command"]["type"] == "Mod" and
+                                int(data["command"]["tags"].get("mod", 0)) == 1
+                                    ) or (
+                                command["command"]["command"]["type"] == "VIP" and
+                                int(data["command"]["tags"].get("vip", 0)) == 1
+                                    ) or (
+                                command["command"]["command"]["type"] == "Sub" and
+                                int(data["command"]["tags"].get("subscriber", 0)) == 1
+                                    )
+                        ):
+                            return
+
+                        if not (
+                                command["command"]["command"]["user"].lower() == data["command"]["tags"]["display-name"].lower() \
+                                or not command["command"]["command"]["user"]
+                        ):
+                            return
+
+                        if command["command"]["command"]["message"]:
+                            match command["command"]["command"]["modal"]:
+                                case 1:
+                                    if command["command"]["command"]["message"] == data["command"]["parameters"].lower().strip():
+                                        emit = True
+                                case 2:
+                                    if command["command"]["command"]["message"] in data["command"]["parameters"].lower().strip():
+                                        emit = True
+                                case 3:
+                                    if data["command"]["parameters"].lower().strip().startswith(
+                                            command["command"]["command"]["message"].lower().strip()
+                                    ):
+                                        emit = True
+                                case 4:
+                                    if data["command"]["parameters"].lower().strip().endswith(
+                                            command["command"]["command"]["message"].lower().strip()
+                                    ):
+                                        emit = True
+                        else:
+                            emit = True
+                    case _:
+                        pass
+
+                if emit:
+                    command["source"] = data["type"]
+                    self.event_signal.emit(command)
+
             for key in self.commands:
                 for command in self.commands[key]:
                     if data["command"] == command["command"]["command"] and\
@@ -67,9 +137,14 @@ class TwitchAPI(QThread):
                         self.event_signal.emit(command)
 
     async def on_redeem(self, data: ChannelPointsCustomRewardRedemptionAddEvent):
-        self.EventSignalHandler(
-            {"command": data.event.reward.title, "type": "TwitchReward", "mode": self.selected_mode}
-        )
+        self.EventSignalHandler({
+            "command": {
+                "reward": data.event.reward.title,
+                "prompt": data.event.reward.prompt
+            },
+            "type": "TwitchReward",
+            "mode": self.selected_mode
+        })
 
     async def on_follow(self, data: ChannelFollowEvent):
         self.EventSignalHandler(
@@ -96,6 +171,9 @@ class TwitchAPI(QThread):
             {"command": data.event.tier, "type": "TwitchGiftedSub", "mode": self.selected_mode}
         )
 
+    async def on_message(self, msg: ChatMessage):
+        self.EventSignalHandler({"command": msg._parsed, "type": "TwitchChatMessage", "mode": self.selected_mode})
+
     async def _run(self):
         await self.authorize()
         user = await first(self.twitch.get_users())
@@ -112,6 +190,10 @@ class TwitchAPI(QThread):
         except ClientConnectionError:
             pass
 
+    async def on_ready(self, ready_event: EventData):
+        print('Bot is ready for work, joining channels')
+        await ready_event.chat.join_room(self.APP_USER)
+
     async def listen(self, user):
         self.eventsub = EventSubWebsocket(self.twitch)
         self.eventsub.start()
@@ -122,6 +204,13 @@ class TwitchAPI(QThread):
         await self.eventsub.listen_channel_raid(to_broadcaster_user_id=user.id,  callback=self.on_raid)
         await self.eventsub.listen_channel_subscribe(user.id, callback=self.on_sub)
         await self.eventsub.listen_channel_subscription_gift(user.id, callback=self.on_gifted_sub)
+
+        if self.APP_USER is not None:
+            self.eventChat = await Chat(self.twitch)
+
+            self.eventChat.register_event(ChatEvent.READY, self.on_ready)
+            self.eventChat.register_event(ChatEvent.MESSAGE, self.on_message)
+            self.eventChat.start()
 
     async def stop(self):
         await self.eventsub.stop()
@@ -481,22 +570,32 @@ class ShortcutsDialog(QtWidgets.QDialog):
                 self.frameTextTwitch.show()
                 self.frameRangeTwitch.hide()
                 self.frameTierTwitch.hide()
+                self.frameMessageTwitch.hide()
             case 1:
                 self.frameTextTwitch.hide()
                 self.frameRangeTwitch.hide()
                 self.frameTierTwitch.hide()
+                self.frameMessageTwitch.hide()
             case 2 | 3:
                 self.frameTextTwitch.hide()
                 self.frameRangeTwitch.show()
                 self.frameTierTwitch.hide()
+                self.frameMessageTwitch.hide()
             case 4 | 5:
                 self.frameTextTwitch.hide()
                 self.frameRangeTwitch.hide()
                 self.frameTierTwitch.show()
+                self.frameMessageTwitch.hide()
+            case 6:
+                self.frameTextTwitch.hide()
+                self.frameRangeTwitch.hide()
+                self.frameTierTwitch.hide()
+                self.frameMessageTwitch.show()
             case _:
                 self.frameTextTwitch.hide()
                 self.frameRangeTwitch.hide()
                 self.frameTierTwitch.hide()
+                self.frameMessageTwitch.hide()
 
     @pyqtSlot(dict)
     def handle_keyboard(self, shortcut):
@@ -586,14 +685,15 @@ class ShortcutsDialog(QtWidgets.QDialog):
             2: "TwitchCheer",
             3: "TwitchRaid",
             4: "TwitchSub",
-            5: "TwitchGiftedSub"
+            5: "TwitchGiftedSub",
+            6: "TwitchChatMessage"
         }
         index = self.twitchSelector.currentIndex()
 
         missing_data = []
         match index:
             case 0:
-                command = self.TwitchReward.text()
+                command = self.TwitchReward.text().strip()
                 if not command:
                     missing_data.append("Missing twitch reward")
             case 2 | 3:
@@ -604,6 +704,15 @@ class ShortcutsDialog(QtWidgets.QDialog):
                     missing_data.append('The value "To" can\'t be Zero')
             case 4 | 5:
                 command = self.TwitchTier.value()
+            case 6:
+                command = {
+                    "message": self.TwitchMessage.text().strip(),
+                    "user": self.TwitchUser.text().strip(),
+                    "modal": self.TwitchModal.currentIndex(),
+                    "type": self.TwitchUserType.currentText()
+                }
+                if command["modal"] == 0 and command["message"]:
+                    missing_data.append("Please, select a match modal")
             case _:
                 command = None
         mode = self.modes.get(self.modeTwitch.currentIndex(), None)

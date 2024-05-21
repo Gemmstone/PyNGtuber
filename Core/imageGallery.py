@@ -1,8 +1,9 @@
 
 from PyQt6.QtWidgets import QWidget, QToolBox, QVBoxLayout, QPushButton, QFrame, QHBoxLayout, QSizePolicy, \
-    QGridLayout, QCheckBox, QGroupBox, QMessageBox, QInputDialog, QLabel, QFileDialog
+    QGridLayout, QCheckBox, QGroupBox, QMessageBox, QInputDialog, QLabel, QFileDialog, QDialog
+from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtGui import QIcon, QPixmap, QImage
-from PyQt6.QtCore import pyqtSignal, QSize, Qt
+from PyQt6.QtCore import pyqtSignal, QSize, Qt, QUrl
 from PyQt6 import uic
 from PIL import Image, ImageSequence
 import shutil
@@ -10,12 +11,82 @@ import json
 import os
 
 
+class URL_Saver(QDialog):
+    new_url = pyqtSignal(dict)
+
+    def __init__(self, exe_dir, folder_path, folder, url=None, parent=None):
+        super().__init__(parent)
+        uic.loadUi(os.path.join(exe_dir, f"UI", "url_selector.ui"), self)
+
+        self.exe_dir = exe_dir
+        self.folder_path = folder_path
+        self.folder = folder
+        self.url = url
+        self.type = "url"
+
+        self.browser = QWebEngineView()
+        self.browser_field.layout().addWidget(self.browser)
+
+        self.url_field.editingFinished.connect(self.update_browser)
+        self.url_field.editingFinished.connect(self.update_browser)
+
+        if self.url is not None:
+            self.type = "file"
+            self.url_field.setText(self.url)
+            self.url_field.setReadOnly(True)
+
+        self.save_button.clicked.connect(self.save)
+
+    def update_browser(self):
+        self.url = self.url_field.text()
+        if self.type == "url":
+            self.browser.load(QUrl.fromUserInput(self.url))
+        else:
+            self.browser.load(QUrl.fromLocalFile(self.url))
+
+    def check_name_repeated(self, name):
+        with open(os.path.join(self.folder_path, self.folder, "html_sources.json"), "r") as file:
+            names = json.load(file)
+        if name in list(names.keys()):
+            return True
+        return False
+
+    def save(self):
+        name = self.name_field.text()
+        if self.check_name_repeated(name):
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setText(f"This name already exists in this category")
+            msg.setInformativeText(name)
+            msg.setWindowTitle(f"Repeated name")
+            msg.exec()
+            return
+        if name and (self.url is not None and self.url):
+            self.new_url.emit({
+                "name": name,
+                "url": self.url,
+                "folder": self.folder,
+                "type": self.type,
+                "route": f"$url/{self.folder}/urls/{self.type}/{self.url}"
+            })
+        else:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setText(f"Please fill the name and URL before saving")
+            msg.setInformativeText(
+                f"Missing: {'Name' if not name else ''} {'URL' if self.url is None or not self.url else ''} "
+            )
+            msg.setWindowTitle(f"Mising data")
+            msg.exec()
+
+
 class ImageGallery(QToolBox):
     selectionChanged = pyqtSignal(list)
 
-    def __init__(self, load_model, exe_dir):
+    def __init__(self, load_model, res_dir, exe_dir):
         super().__init__()
         self.last_model = None
+        self.res_dir = res_dir
         self.exe_dir = exe_dir
 
         StyleSheet = """
@@ -121,7 +192,7 @@ class ImageGallery(QToolBox):
 
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        self.folder_path = os.path.join(self.exe_dir, f"Assets")
+        self.folder_path = os.path.join(self.res_dir, f"Assets")
 
     def create_thumbnail(self, input_path, max_size=(50, 50), quality=90, custom_name=None):
         file_name = os.path.basename(input_path)
@@ -237,6 +308,10 @@ class ImageGallery(QToolBox):
                     column_count = 0
                     fileCount = 1
 
+                    if not os.path.isfile(os.path.join(self.folder_path, folder_name, "html_sources.json")):
+                        with open(os.path.join(self.folder_path, folder_name, "html_sources.json"), "w") as file:
+                            json.dump({}, file, indent=4, ensure_ascii=False)
+
                     for file in files:
                         if file.lower().endswith((".png", ".jpg", ".jpeg", ".gif")):
                             button_name = str(os.path.join(subdir, file)).split(f"{os.path.sep}..{os.path.sep}")[-1]
@@ -272,6 +347,35 @@ class ImageGallery(QToolBox):
                                 page_layout.addLayout(row_layout)
                                 column_count = 0
 
+                        elif file.lower().endswith((".json")):
+                            with open(os.path.join(subdir, file), "r") as html_sources_file:
+                                html_sources = json.load(html_sources_file)
+                            for html_source in html_sources:
+                                button_name = html_source
+                                route = html_sources[html_source]["route"]
+
+                                item = QPushButton(button_name)
+                                item.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+                                item.setAccessibleName(route)
+                                item.setToolTip(route)
+                                item.setCheckable(True)
+                                item.setStyleSheet("QPushButton:checked{background-color: red !important}")
+
+                                if load_model is not None:
+                                    item.setChecked(
+                                        (
+                                            html_sources[html_source]["route"].replace("/file//", "/file/")
+                                            if route.startswith("$url") else
+                                            html_sources[html_source]
+                                         ) in load_model
+                                    )
+
+                                item.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+                                item.customContextMenuRequested.connect(self.delete_file)
+
+                                item.clicked.connect(self.get_selected_files)
+                                fileCount += 1
+                                page_layout.addWidget(item)
                     if fileCount > 0:
                         self.addItem(page_widget, folder_name.title())
 
@@ -290,18 +394,66 @@ class ImageGallery(QToolBox):
     def add_asset(self):
         sender = self.sender()
         folder = sender.accessibleName()
-        print(folder)
+        # print(folder)
 
-        file_dialog = QFileDialog()
-        file_dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
-        file_dialog.setNameFilter("Images (*.png *.jpg *.jpeg *.gif *.webp)")
-        files, _ = file_dialog.getOpenFileNames(None, "Select Images", "", "Images (*.png *.jpg *.jpeg *.gif *.webp)")
-        if files:
-            for file in files:
-                extension = os.path.splitext(file)[1].lstrip('.').lower()
-                unique_filename = self.get_unique_filename(self.folder_path, folder, extension)
-                shutil.copy(file, unique_filename)
-            self.load_images(self.last_model)
+        asset_type = QMessageBox()
+        asset_type.setIcon(QMessageBox.Icon.Question)
+        asset_type.setText("What kind of asset you want to add?")
+        asset_type.setWindowTitle("Type of asset")
+        asset_type.setStandardButtons(
+            QMessageBox.StandardButton.Yes |
+            QMessageBox.StandardButton.Apply |
+            # QMessageBox.StandardButton.Ok |
+            QMessageBox.StandardButton.Cancel
+        )
+
+        buttonY = asset_type.button(QMessageBox.StandardButton.Yes)
+        buttonY.setText('Image File')
+        buttonN = asset_type.button(QMessageBox.StandardButton.Apply)
+        buttonN.setText('HTML File')
+        # buttonN = asset_type.button(QMessageBox.StandardButton.Ok)
+        # buttonN.setText('URL')
+
+        result = asset_type.exec()
+
+        if result == QMessageBox.StandardButton.Yes:
+            file_dialog = QFileDialog()
+            file_dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
+            file_dialog.setNameFilter("Images (*.png *.jpg *.jpeg *.gif *.webp)")
+            files, _ = file_dialog.getOpenFileNames(None, "Select Images", "", "Images (*.png *.jpg *.jpeg *.gif *.webp)")
+            if files:
+                for file in files:
+                    extension = os.path.splitext(file)[1].lstrip('.').lower()
+                    unique_filename = self.get_unique_filename(self.folder_path, folder, extension)
+                    shutil.copy(file, unique_filename)
+        elif result == QMessageBox.StandardButton.Apply:
+            file_dialog = QFileDialog()
+            file_dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
+            file_dialog.setNameFilter("HTML Files (*.html)")
+            files, _ = file_dialog.getOpenFileNames(None, "Select Images", "", "HTML Files (*.html)")
+            if files:
+                for file in files:
+                    self.select_url(folder, file)
+
+        elif result == QMessageBox.StandardButton.Ok:
+            self.select_url(folder)
+        else:
+            return
+
+        self.load_images(self.last_model)
+
+    def select_url(self, folder, url=None):
+        twitch_dialog = URL_Saver(exe_dir=self.exe_dir, folder_path=self.folder_path, folder=folder, url=url)
+        twitch_dialog.new_url.connect(self.save_url)
+        twitch_dialog.exec()
+
+    def save_url(self, data):
+        with open(os.path.join(self.folder_path, data["folder"], "html_sources.json"), "r") as html_sources_file:
+            html_sources = json.load(html_sources_file)
+
+        html_sources[data["name"]] = data
+        with open(os.path.join(self.folder_path, data["folder"], "html_sources.json"), "w") as file:
+            json.dump(html_sources, file, indent=4, ensure_ascii=False)
 
     def get_selected_files(self):
         file_paths = []
@@ -311,7 +463,10 @@ class ImageGallery(QToolBox):
             page_widget = self.widget(index)
             for button in page_widget.findChildren(QPushButton):
                 if button.isChecked():
-                    selected_images.append(os.path.normpath(button.accessibleName()))
+                    try:
+                        selected_images.append(json.loads(button.accessibleName()))
+                    except BaseException:
+                        selected_images.append(os.path.normpath(button.accessibleName()))
                     file_paths.append(os.path.normpath(button.toolTip()))
 
         self.selectionChanged.emit(selected_images)
@@ -326,10 +481,25 @@ class ImageGallery(QToolBox):
 
         result = confirmation.exec()
 
-        path = self.sender().toolTip()
+        sender = self.sender()
+        path = sender.toolTip()
+        button_text = sender.text()
+
         if result == QMessageBox.StandardButton.Yes:
             try:
-                os.remove(os.path.join(self.exe_dir, path))
+                if path.startswith("$url"):
+                    with open(os.path.join(self.res_dir, "Assets", path.split("/")[1], "html_sources.json"), "r") as html_sources_file:
+                        html_sources = json.load(html_sources_file)
+
+                    result = {}
+                    for i in html_sources:
+                        if not path == html_sources[i]["route"]:
+                            result[i] = html_sources[i]
+
+                    with open(os.path.join(self.res_dir, "Assets", path.split("/")[1], "html_sources.json"), "w") as html_sources_file:
+                        json.dump(result, html_sources_file, indent=4, ensure_ascii=False)
+                else:
+                    os.remove(os.path.join(self.res_dir, path))
                 self.load_images(self.last_model)
             except Exception as e:
                 print(f"Error deleting file: {str(e)}")

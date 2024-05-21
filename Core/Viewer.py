@@ -32,7 +32,8 @@ class LayeredImageViewer(QWebEngineView):
     def update_settings(self, hw_acceleration=False):
         settings = self.page().settings()
         settings.setAttribute(QWebEngineSettings.WebAttribute.LocalStorageEnabled, True)
-
+        settings.setAttribute(QWebEngineSettings.WebAttribute.LocalContentCanAccessRemoteUrls, True)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.AllowRunningInsecureContent, True)
         settings.setAttribute(QWebEngineSettings.WebAttribute.Accelerated2dCanvasEnabled, hw_acceleration)
         settings.setAttribute(QWebEngineSettings.WebAttribute.WebGLEnabled, hw_acceleration)
 
@@ -73,6 +74,17 @@ class LayeredImageViewer(QWebEngineView):
                 animation_idle_div['class'] = [
                     "idle_animation" if layer.get("animation_idle", True) else "ignore"
                 ]
+                animation_added_div = soup.new_tag('div', style=f"""
+                                    position: absolute !important; 
+                                    z-index: {layer['posZ']};
+                                """)
+                animation_added_div['class'] = [
+                    "added_animation" if layer.get("animation_idle", True) else "ignore"
+                ]
+                animation_added_div['animation_name_idle'] = layer.get("animation_name_idle", "None")
+                animation_added_div['animation_name_talking'] = layer.get("animation_name_talking", "None")
+                animation_added_div['animation_speed_idle'] = layer.get("animation_speed_idle", 6)
+                animation_added_div['animation_speed_talking'] = layer.get("animation_speed_talking", 0.5)
 
                 cursor_div = soup.new_tag('div', style=f"""
                                     position: absolute !important; 
@@ -205,16 +217,32 @@ class LayeredImageViewer(QWebEngineView):
                 """)
                 animation_talking_div['class'] = [layer.get("talking", "ignore")]
 
-                img_tag = soup.new_tag('img', src=f"../{layer['route']}", style=f"""
-                        position: absolute !important;
-                        left: calc(50% + {layer['posX']}px);
-                        top: calc(50% + {layer['posY']}px);
-                        z-index: {layer['posZ']};
-                        transform: translate(-50%, -50%) rotate({layer['rotation']}deg);
-                        width: {layer['sizeX']}px; 
-                        height: {layer['sizeY']}px;
-                        {layer['css']}
-                    """)
+                if layer['route'].startswith("$url/"):
+                    print(f"file:///{layer['route'].split('/file/')[-1]}" if "/file/" in layer['route'] else f"https://{layer['route'].split('/url/')[-1]}")
+                    img_tag = soup.new_tag(
+                        'iframe',
+                        src=f"file:///{layer['route'].split('/file/')[-1]}" if "/file/" in layer['route'] else f"https://{layer['route'].split('/url/')[-1]}",
+                        style=f"""
+                            position: absolute !important;
+                            left: calc(50% + {layer['posX']}px);
+                            top: calc(50% + {layer['posY']}px);
+                            z-index: {layer['posZ']};
+                            transform: translate(-50%, -50%) rotate({layer['rotation']}deg);
+                            width: {layer['sizeX']}px; 
+                            height: {layer['sizeY']}px;
+                            {layer['css']}
+                        """)
+                else:
+                    img_tag = soup.new_tag('img', src=f"../{layer['route']}", style=f"""
+                                                position: absolute !important;
+                                                left: calc(50% + {layer['posX']}px);
+                                                top: calc(50% + {layer['posY']}px);
+                                                z-index: {layer['posZ']};
+                                                transform: translate(-50%, -50%) rotate({layer['rotation']}deg);
+                                                width: {layer['sizeX']}px; 
+                                                height: {layer['sizeY']}px;
+                                                {layer['css']}
+                                            """)
 
                 animation_talking_div.append(img_tag)
                 animation_blinking_div.append(animation_talking_div)
@@ -225,7 +253,8 @@ class LayeredImageViewer(QWebEngineView):
                 guitar_buttons_div.append(controller_wheelY_div)
                 controller_buttons_div.append(guitar_buttons_div)
                 cursor_div.append(controller_buttons_div)
-                animation_idle_div.append(cursor_div)
+                animation_added_div.append(cursor_div)
+                animation_idle_div.append(animation_added_div)
 
                 image_div.append(animation_idle_div)
 
@@ -234,10 +263,13 @@ class LayeredImageViewer(QWebEngineView):
             html_file.write(beautiful_html)
         self.reload()
 
-    def get_animations(self, file_path):
+    def get_animations(self, file_path, get_all=False):
         with open(file_path, 'r') as file:
             css_text = file.read()
 
-        animations = re.findall(r'@keyframes\s+([\w-]+)\s*{[^}]*\/\*\s*Avatar Animation\s*\*\/[^}]*}', css_text)
+        if get_all:
+            animations = re.findall(r'@keyframes\s+([\w-]+)\s*{[^}]*}', css_text)
+        else:
+            animations = re.findall(r'@keyframes\s+([\w-]+)\s*{[^}]*\/\*\s*Avatar Animation\s*\*\/[^}]*}', css_text)
         # print(animations)
         return animations

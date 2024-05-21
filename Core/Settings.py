@@ -11,10 +11,12 @@ class Settings(QWidget):
     shortcut = pyqtSignal(dict)
     delete_shortcut = pyqtSignal(dict)
 
-    def __init__(self, parameters, exe_dir):
+    def __init__(self, parameters, exe_dir, viewer, anim_file):
         super().__init__()
         uic.loadUi(os.path.join(exe_dir, f"UI", "settingsWidget.ui"), self)
         self.parameters = parameters
+        self.viewer = viewer
+        self.anim_file = anim_file
         self.sizeX.setValue(self.parameters["sizeX"])
         self.sizeY.setValue(self.parameters["sizeY"])
 
@@ -77,6 +79,7 @@ class Settings(QWidget):
         self.guitarNote_Orange.setChecked("Orange" in self.parameters.get("chords", []))
 
         self.animation_idle.setChecked(self.parameters.get("animation_idle", True))
+        self.load_animations()
 
         self.check_hotkeys()
 
@@ -180,7 +183,12 @@ class Settings(QWidget):
         self.guitarNote_Blue.toggled.connect(self.save_current)
         self.guitarNote_Orange.toggled.connect(self.save_current)
 
-        self.animation_idle.toggled.connect(self.save_current)
+        self.animation_idle.toggled.connect(self.hide_animations)
+
+        self.idle_animation.currentIndexChanged.connect(self.save_current)
+        self.talking_animation.currentIndexChanged.connect(self.save_current)
+        self.idle_speed.valueChanged.connect(self.save_current)
+        self.talking_speed.valueChanged.connect(self.save_current)
 
         self.display.toggled.connect(self.save_current)
         self.move.toggled.connect(self.save_current)
@@ -195,6 +203,28 @@ class Settings(QWidget):
         self.hide_controller()
         self.hide_cursor()
         self.hide_css()
+        self.hide_animations()
+
+    def load_animations(self):
+        animations = self.viewer.get_animations(self.anim_file, get_all=True)
+
+        self.idle_animation.clear()
+        self.talking_animation.clear()
+
+        for animation in animations:
+            self.idle_animation.addItem(animation)
+            self.talking_animation.addItem(animation)
+
+        idle_animation = self.parameters.get("animation_name_idle", "None")
+        talking_animation = self.parameters.get("animation_name_talking", "None")
+
+        if idle_animation in animations:
+            self.idle_animation.setCurrentText(idle_animation)
+        if talking_animation in animations:
+            self.talking_animation.setCurrentText(talking_animation)
+
+        self.idle_speed.setValue(self.parameters.get("animation_speed_idle", 6))
+        self.talking_speed.setValue(self.parameters.get("animation_speed_talking", 0.5))
 
     def check_hotkeys(self):
         if self.parameters["hotkeys"]:
@@ -221,6 +251,16 @@ class Settings(QWidget):
         else:
             self.frame_3.hide()
             self.blinkingGroup.setStyleSheet(
+                "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
+        self.save_current()
+
+    def hide_animations(self):
+        if self.animation_idle.isChecked():
+            self.frameAnimations.show()
+            self.animation_idle.setStyleSheet("")
+        else:
+            self.frameAnimations.hide()
+            self.animation_idle.setStyleSheet(
                 "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
         self.save_current()
 
@@ -330,6 +370,10 @@ class Settings(QWidget):
         self.parameters['rotationGuitarDown'] = self.rotationGuitarDown.value()
 
         self.parameters['animation_idle'] = self.animation_idle.isChecked()
+        self.parameters['animation_name_idle'] = self.idle_animation.currentText()
+        self.parameters['animation_name_talking'] = self.talking_animation.currentText()
+        self.parameters['animation_speed_idle'] = self.idle_speed.value()
+        self.parameters['animation_speed_talking'] = self.talking_speed.value()
 
         self.parameters["use_css"] = True if self.cssGroup.isChecked() else False
         self.parameters["css"] = self.css.toPlainText()
@@ -410,12 +454,14 @@ class SettingsToolBox(QToolBox):
     shortcut = pyqtSignal(dict)
     delete_shortcut = pyqtSignal(dict)
 
-    def __init__(self, exe_dir):
+    def __init__(self, exe_dir, viewer, anim_file):
         super().__init__()
 
         self.items = []
         self.page = None
         self.exe_dir = exe_dir
+        self.viewer = viewer
+        self.anim_file = anim_file
 
         StyleSheet = """
 
@@ -522,6 +568,7 @@ class SettingsToolBox(QToolBox):
     def set_items(self, items, page):
         self.items = items
         self.page = page
+
         self.update()
 
     def change_page(self, page):
@@ -530,12 +577,12 @@ class SettingsToolBox(QToolBox):
 
     def update(self):
         routes = [i["route"] for i in self.items]
+
         used_routes = []
         while self.count() > 0:
             index = 0
             widget = self.widget(index)
             if widget:
-
                 for i in range(widget.layout().count()):
                     child_widget = widget.layout().itemAt(i).widget()
                     if child_widget:
@@ -550,10 +597,11 @@ class SettingsToolBox(QToolBox):
         filtered_items = [i for i in self.items if i["route"] not in used_routes]
 
         for item in filtered_items:
+
             route = item["route"]
 
             filename = os.path.basename(route)
-            parent_folder = os.path.basename(os.path.dirname(route))
+            parent_folder = os.path.basename(os.path.dirname(route)) if not route.startswith("$url") else route.split("/")[1]
 
             if parent_folder.lower() == self.page.lower():
                 title = f"{filename}"
@@ -562,9 +610,9 @@ class SettingsToolBox(QToolBox):
                     os.path.dirname(route), "thumbs", os.path.basename(
                         route.replace(".gif", ".png").replace(".webp", ".png")
                     )
-                )
+                ) if not filename.endswith(".html") else None
 
-                settings_widget = Settings(item, exe_dir=self.exe_dir)
+                settings_widget = Settings(item, exe_dir=self.exe_dir, viewer=self.viewer, anim_file=self.anim_file)
                 settings_widget.settings_changed.connect(self.save)
                 settings_widget.settings_changed_default.connect(self.save_as_default)
                 settings_widget.delete_shortcut.connect(self.delete_shortcut_)
@@ -581,10 +629,11 @@ class SettingsToolBox(QToolBox):
                 self.addItem(page, "")
                 index = self.count() - 1
 
-                thumbnail_label = QLabel()
-                thumbnail_pixmap = QPixmap(thumbnail_path)
-                thumbnail_label.setPixmap(thumbnail_pixmap.scaledToWidth(15))
-                self.setItemIcon(index, QIcon(thumbnail_pixmap))
+                if thumbnail_path is not None:
+                    thumbnail_label = QLabel()
+                    thumbnail_pixmap = QPixmap(thumbnail_path)
+                    thumbnail_label.setPixmap(thumbnail_pixmap.scaledToWidth(15))
+                    self.setItemIcon(index, QIcon(thumbnail_pixmap))
                 self.setItemText(index, title)
 
     def save(self, value):

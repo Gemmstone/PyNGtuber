@@ -25,7 +25,7 @@ import os
 import re
 
 
-current_version = "v1.5.4"
+current_version = "v1.6.0"
 repo_owner = "Gemmstone"
 repo_name = "PyNGtuber"
 
@@ -167,25 +167,29 @@ if not os.path.isfile(os.path.join(exe_dir, ".gitignore")):
 class twitchKeysDialog(QtWidgets.QDialog):
     new_keys = QtCore.pyqtSignal(dict)
 
-    def __init__(self, APP_ID, APP_SECRET, parent=None):
+    def __init__(self, APP_ID, APP_SECRET, APP_USER, parent=None):
         super().__init__(parent)
         uic.loadUi(os.path.join(exe_dir, f"UI", "auth_twitch.ui"), self)
 
         self.APP_ID = APP_ID
         self.APP_SECRET = APP_SECRET
+        self.APP_USER = APP_USER
 
         self.client.setText(self.APP_ID)
         self.secret.setText(self.APP_SECRET)
+        self.user.setText(self.APP_USER)
 
         self.saveKeysBtn.clicked.connect(self.save)
 
     def save(self):
         self.APP_ID = self.client.text() if self.client.text() else None
         self.APP_SECRET = self.secret.text() if self.secret.text() else None
+        self.APP_USER = self.user.text() if self.user.text() else None
 
         self.new_keys.emit({
             "APP_ID": self.APP_ID,
-            "APP_SECRET": self.APP_SECRET
+            "APP_SECRET": self.APP_SECRET,
+            "APP_USER": self.APP_USER
         })
 
 
@@ -369,11 +373,13 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             with open(self.apiKeys, "r") as f:
                 keys = json.load(f)
+                self.twitch_user = keys["twitch"].get("user", None) if keys["twitch"].get("user", "") else None
                 self.twitch_api_client = keys["twitch"]["client"] if keys["twitch"]["client"] else None
                 self.twitch_api_secret = keys["twitch"]["secret"] if keys["twitch"]["secret"] else None
         except FileNotFoundError:
             self.twitch_api_client = None
             self.twitch_api_secret = None
+            self.twitch_user = None
 
         self.start_twitch_connection({
             "APP_ID": self.twitch_api_client,
@@ -426,13 +432,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.HideUI.toggled.connect(self.update_settings)
         self.flipCanvasToggle.toggled.connect(self.flipCanvas)
 
-        self.SettingsGallery = SettingsToolBox(exe_dir=exe_dir)
-        self.SettingsGallery.settings_changed.connect(self.saveSettings)
-        self.SettingsGallery.shortcut.connect(self.dialog_shortcut)
-        self.SettingsGallery.delete_shortcut.connect(self.delete_shortcut)
-        self.scrollArea_2.setWidget(self.SettingsGallery)
-
-        self.ImageGallery = ImageGallery(self.current_files, exe_dir=res_dir)
+        self.ImageGallery = ImageGallery(self.current_files, res_dir=res_dir, exe_dir=exe_dir)
         self.ImageGallery.selectionChanged.connect(self.update_viewer)
         self.ImageGallery.currentChanged.connect(self.change_settings_gallery)
         self.scrollArea.setWidget(self.ImageGallery)
@@ -443,6 +443,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.viewer.loadFinishedSignal.connect(self.reboot_audio)
         self.viewerFrame.layout().addWidget(self.viewer)
         self.viewer.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
+
+        self.SettingsGallery = SettingsToolBox(exe_dir=exe_dir, viewer=self.viewer, anim_file=self.anim_file)
+        self.SettingsGallery.settings_changed.connect(self.saveSettings)
+        self.SettingsGallery.shortcut.connect(self.dialog_shortcut)
+        self.SettingsGallery.delete_shortcut.connect(self.delete_shortcut)
+        self.scrollArea_2.setWidget(self.SettingsGallery)
 
         self.load_animations(self.settings["animations"])
 
@@ -602,7 +608,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.update_settings()
 
     def update_keys(self):
-        twitch_dialog = twitchKeysDialog(APP_ID=self.twitch_api_client, APP_SECRET=self.twitch_api_secret)
+        twitch_dialog = twitchKeysDialog(
+            APP_ID=self.twitch_api_client,
+            APP_SECRET=self.twitch_api_secret,
+            APP_USER=self.twitch_user
+        )
         twitch_dialog.new_keys.connect(self.start_twitch_connection)
         twitch_dialog.exec()
 
@@ -610,23 +620,34 @@ class MainWindow(QtWidgets.QMainWindow):
         self.twitchApiBtn.setText("Set Twitch API keys")
 
         if not starting:
-            if values["APP_ID"] == self.twitch_api_client and values["APP_SECRET"] == self.twitch_api_secret:
+            if (
+                    values["APP_ID"] == self.twitch_api_client and
+                    values["APP_SECRET"] == self.twitch_api_secret and
+                    values.get("APP_USER", None) == self.twitch_user
+            ):
                 return
             else:
                 with open(self.apiKeys, "w") as f:
                     json.dump({
                       "twitch": {
+                        "user": values.get("APP_USER", None),
                         "client": values["APP_ID"],
                         "secret": values["APP_SECRET"]
                       }
                     }, f, indent=4, ensure_ascii=False)
                 self.twitch_api_client = values["APP_ID"]
                 self.twitch_api_secret = values["APP_SECRET"]
+                self.twitch_user = values.get("APP_USER", None)
 
         if values["APP_ID"] is None or values["APP_SECRET"] is None:
             return
 
-        self.TwitchAPI = TwitchAPI(APP_ID=values["APP_ID"], APP_SECRET=values["APP_SECRET"], res_dir=res_dir)
+        self.TwitchAPI = TwitchAPI(
+            APP_ID=values["APP_ID"],
+            APP_SECRET=values["APP_SECRET"],
+            APP_USER=values.get("APP_USER", None),
+            res_dir=res_dir
+        )
         self.TwitchAPI.event_signal.connect(self.shortcut_received)
         self.twitchApiBtn.setText("Change Twitch API keys")
         self.TwitchAPI.start()
@@ -753,7 +774,8 @@ class MainWindow(QtWidgets.QMainWindow):
             "TwitchCheer": [],
             "TwitchRaid": [],
             "TwitchSub": [],
-            "TwitchGiftedSub": []
+            "TwitchGiftedSub": [],
+            "TwitchChatMessage": []
         }
 
         for root, dirs, files in os.walk(os.path.join(res_dir, "Models")):
@@ -861,6 +883,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                 QtCore.QTimer.singleShot(command["time"], lambda x=enable_shortcuts: self.shortcut_received(x))
             else:
                 if self.file_parameters_default[shortcuts["path"]]:
+                    print(shortcuts)
                     for command in self.file_parameters_default[shortcuts["path"]]["hotkeys"]:
                         if (
                                 "command" in shortcuts["command"]
@@ -879,7 +902,10 @@ class MainWindow(QtWidgets.QMainWindow):
                                 self.shortcut_received(enable_shortcuts)
                                 disable_shortcuts = copy.deepcopy(command)
                                 disable_shortcuts["mode"] = "disable"
-                                QtCore.QTimer.singleShot(command["time"], lambda x=disable_shortcuts: self.shortcut_received(x))
+                                QtCore.QTimer.singleShot(
+                                    command["time"],
+                                    lambda x=disable_shortcuts: self.shortcut_received(x)
+                                )
             self.update_viewer(self.current_files, update_settings=self.tabWidget_2.currentIndex() == 1)
         else:
             print(f"Received: {shortcuts} System")
@@ -1153,6 +1179,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     var elementsScreaming = document.getElementsByClassName("talking_screaming");
                     // var imageWrapper = document.getElementById("image-wrapper");
                     var imageWrapper = document.querySelectorAll(".idle_animation");
+                    var imageAddedWrapper = document.querySelectorAll(".added_animation");
             
                     var opacityOpen = ''' + str(1 if status == 1 else 0) + ''';
                     var opacityClosed = ''' + str(1 if status <= 0 else 0) + ''';
@@ -1176,15 +1203,23 @@ class MainWindow(QtWidgets.QMainWindow):
             
                     if(imageWrapper.length > 0) {
                         imageWrapper.forEach(function(image) {
-                            // Add a CSS animation for jumping the image-wrapper
                             if (''' + str(status) + ''' == 1 || ''' + str(status) + ''' == 2) {
-                                image.style.animation = "''' +
-                           self.talking_animation.currentText() + ' ' +
-                           str(self.talking_speed.value()) + '''s ease-in-out infinite";
+                                var animation = "''' + self.talking_animation.currentText() + '''"
+                                var speed = "''' + str(self.talking_speed.value()) + '''"
+                                image.style.animation = animation + " " + speed + "s ease-in-out infinite";
                             } else {
-                                image.style.animation = "''' +
-                           self.idle_animation.currentText() + ' ' +
-                           str(self.idle_speed.value()) + '''s ease-in-out infinite";
+                                var animation = "''' + self.idle_animation.currentText() + '''"
+                                var speed = "''' + str(self.idle_speed.value()) + '''"
+                                image.style.animation = animation + " " + speed + "s ease-in-out infinite";
+                            }
+                        });
+                    }
+                    if(imageAddedWrapper.length > 0) {
+                        imageAddedWrapper.forEach(function(animation_div) {
+                            if (''' + str(status) + ''' == 1 || ''' + str(status) + ''' == 2) {
+                                animation_div.style.animation = animation_div.attributes.animation_name_talking.value + " " + animation_div.attributes.animation_speed_talking.value + "s ease-in-out infinite";
+                            } else {
+                                animation_div.style.animation = animation_div.attributes.animation_name_idle.value + " " + animation_div.attributes.animation_speed_idle.value + "s ease-in-out infinite";
                             }
                         });
                     }
@@ -1325,22 +1360,38 @@ class MainWindow(QtWidgets.QMainWindow):
             if file in self.file_parameters_current:
                 parameters = self.file_parameters_current[file]
             else:
-                image = Image.open(os.path.join(res_dir, file))
-                width, height = image.size
-                parameters = {
-                    "sizeX": width,
-                    "sizeY": height,
-                    "posX": 0,
-                    "posY": 0,
-                    "posZ": 40,
-                    "blinking": "ignore",
-                    "talking": "ignore",
-                    "css": "",
-                    "use_css": False,
-                    "hotkeys": [],
-                    "animation": [],
-                    "rotation": 0,
-                }
+                if file.startswith('$url/'):
+                    parameters = {
+                        "sizeX": 600,
+                        "sizeY": 600,
+                        "posX": 0,
+                        "posY": 0,
+                        "posZ": 40,
+                        "blinking": "ignore",
+                        "talking": "ignore",
+                        "css": "",
+                        "use_css": False,
+                        "hotkeys": [],
+                        "animation": [],
+                        "rotation": 0,
+                    }
+                else:
+                    image = Image.open(os.path.join(res_dir, file))
+                    width, height = image.size
+                    parameters = {
+                        "sizeX": width,
+                        "sizeY": height,
+                        "posX": 0,
+                        "posY": 0,
+                        "posZ": 0,
+                        "blinking": "ignore",
+                        "talking": "ignore",
+                        "css": "",
+                        "use_css": False,
+                        "hotkeys": [],
+                        "animation": [],
+                        "rotation": 0,
+                    }
 
                 self.file_parameters_current[file] = parameters
             images_list.append({

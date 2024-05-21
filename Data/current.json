@@ -1,13 +1,4 @@
 [
-    "Assets/right eye/right eye_001.png",
-    "Assets/right eye/right eye_058.png",
-    "Assets/left eye/left eye_001.png",
-    "Assets/left eye/left eye_058.png",
-    "Assets/eyebrows/eyebrows_003.png",
-    "Assets/eyebrows/eyebrows_004.png",
-    "Assets/mouth/[mouth]_013.PNG",
-    "Assets/mouth/[mouth]_009.PNG",
-    "Assets/mouth/[mouth]_007.PNG",
     "Assets/hairbows/hairbows_360.png",
     "Assets/ahoge/ahoge_027.png",
     "Assets/bangs/bangs_171.png",
@@ -23,5 +14,14 @@
     "Assets/freckles/freckles_002.png",
     "Assets/body/body_068.png",
     "Assets/hairback/hairback_189.png",
-    "Assets/Controllers/hands_017.png"
+    "Assets/Controllers/hands_017.png",
+    "Assets/right eye/right eye_001.png",
+    "Assets/right eye/right eye_058.png",
+    "Assets/left eye/left eye_001.png",
+    "Assets/left eye/left eye_058.png",
+    "Assets/eyebrows/eyebrows_003.png",
+    "Assets/eyebrows/eyebrows_004.png",
+    "Assets/mouth/[mouth]_013.PNG",
+    "Assets/mouth/[mouth]_009.PNG",
+    "Assets/mouth/[mouth]_007.PNG"
 ]
