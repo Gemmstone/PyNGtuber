@@ -32,7 +32,7 @@ I've just started developing my own PNGtubing software, and I'm excited to make 
 
 ## Demo
 
-<div align="center"><video width="90%" height="auto" src="https://github.com/Gemmstone/PyNGtuber/assets/31828821/fc5b1aa5-169c-4a53-8cef-9f7ddb45287b" controls="controls"></video></div>
+<div align="center"><video width="100%" height="auto" src="https://github.com/Gemmstone/PyNGtuber/assets/31828821/fc5b1aa5-169c-4a53-8cef-9f7ddb45287b" controls="controls"></video></div>
 
 ## Python Native Instalation
 
