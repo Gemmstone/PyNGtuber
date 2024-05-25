@@ -15,7 +15,7 @@ function resolveAfter2Seconds() {
 async function asyncCall() {
   while(true) {
     
-    var status = Math.floor(Math.random() * 3);
+    var status = await Math.floor(Math.random() * 3);
     
     var opacityOpen = (status == 1) ? 1 : 0;
     var opacityClosed = (status <= 1) ? 1 : 0;
@@ -23,18 +23,18 @@ async function asyncCall() {
     
     // Apply CSS transitions for a smooth animation to text elements
     for (var i = 0; i < elementsOpen.length; i++) {
-        await elementsOpen[i].style.transition = "opacity 0.3s";
-        await elementsOpen[i].style.opacity = opacityOpen;
+        elementsOpen[i].style.transition = "opacity 0.3s";
+        elementsOpen[i].style.opacity = opacityOpen;
     }
     
     for (var i = 0; i < elementsClosed.length; i++) {
-        await elementsClosed[i].style.transition = "opacity 0.3s";
-        await elementsClosed[i].style.opacity = opacityClosed;
+        elementsClosed[i].style.transition = "opacity 0.3s";
+        elementsClosed[i].style.opacity = opacityClosed;
     }
     
     for (var i = 0; i < elementsScreaming.length; i++) {
-        await elementsScreaming[i].style.transition = "opacity 0.3s";
-        await elementsScreaming[i].style.opacity = opacityScreaming;
+        elementsScreaming[i].style.transition = "opacity 0.3s";
+        elementsScreaming[i].style.opacity = opacityScreaming;
     }
     
     if(imageWrapper.length > 0) {
@@ -42,20 +42,20 @@ async function asyncCall() {
             if (status == 1 || status == 2) {
                 var animation = "floaty";
                 var speed = "0.500";
-                await image.style.animation = animation + " " + speed + "s ease-in-out infinite";
+                image.style.animation = animation + " " + speed + "s ease-in-out infinite";
             } else {
                 var animation = "floaty";
                 var speed = "6.000";
-                await image.style.animation = animation + " " + speed + "s ease-in-out infinite";
+                image.style.animation = animation + " " + speed + "s ease-in-out infinite";
             }
         });
     }
     if(imageAddedWrapper.length > 0) {
         imageAddedWrapper.forEach(function(animation_div) {
             if (status == 1 || status == 2) {
-                await animation_div.style.animation = animation_div.attributes.animation_name_talking.value + " " + animation_div.attributes.animation_speed_talking.value + "s ease-in-out infinite";
+                animation_div.style.animation = animation_div.attributes.animation_name_talking.value + " " + animation_div.attributes.animation_speed_talking.value + "s ease-in-out infinite";
             } else {
-                await animation_div.style.animation = animation_div.attributes.animation_name_idle.value + " " + animation_div.attributes.animation_speed_idle.value + "s ease-in-out infinite";
+                animation_div.style.animation = animation_div.attributes.animation_name_idle.value + " " + animation_div.attributes.animation_speed_idle.value + "s ease-in-out infinite";
             }
         });
     }
