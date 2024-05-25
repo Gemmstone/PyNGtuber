@@ -14,9 +14,8 @@ function resolveAfter2Seconds() {
 
 async function asyncCall() {
   while(true) {
-    await resolveAfter2Seconds();
     
-    var status = await Math.floor(Math.random() * 3);
+    var status = Math.floor(Math.random() * 3);
     
     var opacityOpen = (status == 1) ? 1 : 0;
     var opacityClosed = (status <= 1) ? 1 : 0;
@@ -60,6 +59,7 @@ async function asyncCall() {
             }
         });
     }
+    await resolveAfter2Seconds();
   }
 }
 
