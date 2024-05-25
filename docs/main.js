@@ -71,7 +71,7 @@ function markdownParse(url, id) {
         addCopyButton(preContainer, id + "-pre-" + i);
         e.replaceWith(preContainer);
       }
-      // Add this line to replace the content of the first element with class "hot_icon"
+      
       document.getElementsByClassName("hot_icon")[0].innerHTML = '<iframe src="Viewer/viewer.html"></iframe>';
       
       document.getElementById(id).innerHTML = parsedMarkdown.innerHTML;
