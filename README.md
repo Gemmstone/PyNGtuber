@@ -9,6 +9,7 @@
 ![hot icon](https://raw.githubusercontent.com/Gemmstone/PyNGtuber/master/docs/icon.png)
 </div>
 
+
 [![GitHub Release](https://img.shields.io/github/v/release/Gemmstone/PyNGtuber?style=for-the-badge&logo=download&label=Download)](https://github.com/Gemmstone/PyNGtuber/releases/latest)
 
 🔥 Open-source and completely FREE to use!
