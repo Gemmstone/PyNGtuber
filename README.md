@@ -4,7 +4,7 @@
 
 ### A highly customizable PNGtuber app.
 
-<div class="hot_icon">
+<div id="hot_icon">
   
 ![hot icon](https://raw.githubusercontent.com/Gemmstone/PyNGtuber/master/docs/icon.png)
 </div>
