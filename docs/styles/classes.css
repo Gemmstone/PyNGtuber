@@ -131,9 +131,3 @@
   height:100%;
   width:90%;
 }
-
-.videoContainer video
-{
-  min-width: 90%;
-  min-height: 100%;
-}
