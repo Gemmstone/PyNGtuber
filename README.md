@@ -8,6 +8,8 @@
 
 Open-Source and completelly **FREE** to use
 
+[![GitHub Release](https://img.shields.io/github/v/release/Gemmstone/PyNGtuber?style=for-the-badge&logo=download&label=Download)](https://github.com/Gemmstone/PyNGtuber/releases/latest)
+
 [![Python 3.11](https://img.shields.io/badge/python-3670A0?style=flat&logo=python&logoColor=ffdd54&label=3.11)](https://www.python.org/downloads/release/python-3110/)
 [![Qt](https://img.shields.io/badge/Qt-%23217346.svg?style=flat&logo=Qt&logoColor=white&label=6)](https://doc.qt.io/qtforpython-6/)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=flat&logo=javascript&logoColor=%23F7DF1E)
@@ -19,8 +21,6 @@ Open-Source and completelly **FREE** to use
 
 [![PRs Welcome](https://img.shields.io/github/issues-pr/Gemmstone/PyNGtuber)](https://makeapullrequest.com)
 [![GitHub Issues](https://img.shields.io/github/issues/Gemmstone/PyNGtuber)](https://github.com/Gemmstone/PyNGtuber/issues)
-
-![GitHub Release](https://img.shields.io/github/v/release/Gemmstone/PyNGtuber?style=for-the-badge&logo=download&label=Download&link=https%3A%2F%2Fgithub.com%2FGemmstone%2FPyNGtuber%2Freleases%2Flatest)
 
 </div>
 
