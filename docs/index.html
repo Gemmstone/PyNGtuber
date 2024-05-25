@@ -31,17 +31,16 @@
         "https://raw.githubusercontent.com/Gemmstone/PyNGtuber/master/README.md",
         "content",
       );
+      
+      var hot_icon = document.querySelector('.hot_icon')[0];
+      var div = document.createElement('div');
+      div.innerHTML = <iframe src="Viewer/viewer.html"></iframe>;
+      hot_icon.parentNode.appendChild(div);
+      hot_icon.parentNode.removeChild(hot_icon)
     </script>
     
     <footer>
       <div id="footer"></div>
     </footer>
   </body>
-  <script>
-    var hot_icon = document.querySelector('img[alt="cat"]')[0];
-    var div = document.createElement('div');
-    div.innerHTML = <iframe src="Viewer/viewer.html"></iframe>;
-    hot_icon.parentNode.appendChild(div);
-    hot_icon.parentNode.removeChild(hot_icon)
-  </script>
 </html>
