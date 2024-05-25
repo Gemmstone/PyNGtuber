@@ -50,6 +50,5 @@ while(true) {
           }
       });
   }
-  
-  await new Promise(r => setTimeout(r, 2000));
+  setTimeout(2000)
 }
