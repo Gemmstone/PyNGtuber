@@ -15,7 +15,7 @@ function resolveAfter2Seconds() {
 async function asyncCall() {
   while(true) {
     
-    var status = await Math.floor(Math.random() * 3);
+    var status = await Math.floor(Math.random() * 2);
     
     var opacityOpen = (status == 1) ? 1 : 0;
     var opacityClosed = (status <= 0) ? 1 : 0;
