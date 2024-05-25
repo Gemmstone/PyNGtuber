@@ -73,7 +73,7 @@ function markdownParse(url, id) {
       }
       
       document.getElementById(id).innerHTML = parsedMarkdown.innerHTML;
-      document.getElementById("hot_icon").innerHTML = '<iframe width=95% height=auto src="Viewer/viewer.html"></iframe seamless>';
+      document.getElementById("hot_icon").innerHTML = '<iframe width="600" height="600" src="Viewer/viewer.html"></iframe seamless>';
     });
   });
 }
