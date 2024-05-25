@@ -126,9 +126,16 @@
   opacity: 1;
 }
 
-.video{
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  object-fit: cover;
+.videoContainer
+{
+  position:absolute;
+  height:100%;
+  width:100%;
+  overflow: hidden;
+}
+
+.videoContainer video
+{
+  min-width: 100%;
+  min-height: 100%;
 }
