@@ -52,7 +52,7 @@ svg {
 }
 
 img {
-  margin: 20px;
+  margin: auto;
   max-width: -webkit-fill-available;
   transition: 0.3s;
 }
