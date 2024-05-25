@@ -8,27 +8,32 @@
 
 Open-Source and completelly **FREE** to use
 
-[![Python 3.11](https://img.shields.io/badge/python-3670A0?style=flat&logo=python&logoColor=ffdd54)](https://www.python.org/downloads/release/python-3110/)
-[![Qt](https://img.shields.io/badge/Qt-%23217346.svg?style=flat&logo=Qt&logoColor=white)](https://doc.qt.io/qtforpython-6/)
+[![Python 3.11](https://img.shields.io/badge/python-3670A0?style=flat&logo=python&logoColor=ffdd54&label=3.11)](https://www.python.org/downloads/release/python-3110/)
+[![Qt](https://img.shields.io/badge/Qt-%23217346.svg?style=flat&logo=Qt&logoColor=white&label=6)](https://doc.qt.io/qtforpython-6/)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=flat&logo=javascript&logoColor=%23F7DF1E)
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=flat&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=flat&logo=css3&logoColor=white)
 
 [![GitHub](https://img.shields.io/badge/GitHub-Source%20Code-grey?style=flat&logo=GitHub&logoColor=white&labelColor=grey)](https://github.com/aGemmstone/PyNGtuber)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](https://makeapullrequest.com)
+[![Licence](https://img.shields.io/github/license/Gemmstone/PyNGtuber?style=flat)](./LICENSE)
 
-Suport this project:
+[![PRs Welcome](https://img.shields.io/github/issues-pr/Gemmstone/PyNGtuber)](https://makeapullrequest.com)
+[![GitHub Issues](https://img.shields.io/github/issues/Gemmstone/PyNGtuber)](https://github.com/Gemmstone/PyNGtuber/issues)
 
-[![Ko-Fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/gemmstone)
+[![Ko-Fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white&label=Suport%20this%20project)](https://ko-fi.com/gemmstone)
 </div>
 
 ## features
-
 -   Lorem ipsum
+
+## Demo
+
+<video src="https://github.com/Gemmstone/PyNGtuber/assets/31828821/fc5b1aa5-169c-4a53-8cef-9f7ddb45287b" controls="controls"></video>
 
 ## Python Native Instalation
 
 Requires `Python 3.11`
+
 - PyQt6
 - pyaudio
 - pillow
@@ -53,9 +58,6 @@ This project is licensed under the GNU General Public License, version 3.0 (GPL-
 
 I've just started developing my own PNGtubing software, and I'm excited to make it open-source. This means it will be completely free, and I welcome contributions from the community to add new features and improve the codebase.
 
-## Current Status Demo
-
-https://github.com/Gemmstone/PyNGtuber/assets/31828821/fc5b1aa5-169c-4a53-8cef-9f7ddb45287b
 
 ## Contributions
 
