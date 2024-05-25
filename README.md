@@ -1,3 +1,5 @@
+<div align="center">
+
 # PyNGtuber
 
 ### A highly customizable PNGtuber app.
@@ -19,6 +21,7 @@
 
 [![PRs Welcome](https://img.shields.io/github/issues-pr/Gemmstone/PyNGtuber)](https://makeapullrequest.com)
 [![GitHub Issues](https://img.shields.io/github/issues/Gemmstone/PyNGtuber)](https://github.com/Gemmstone/PyNGtuber/issues)
+</div>
 
 ## Introduction
 
@@ -29,7 +32,7 @@ I've just started developing my own PNGtubing software, and I'm excited to make 
 
 ## Demo
 
-<video src="https://github.com/Gemmstone/PyNGtuber/assets/31828821/fc5b1aa5-169c-4a53-8cef-9f7ddb45287b" controls="controls"></video>
+<video class="video" src="https://github.com/Gemmstone/PyNGtuber/assets/31828821/fc5b1aa5-169c-4a53-8cef-9f7ddb45287b" controls="controls"></video>
 
 ## Python Native Instalation
 
