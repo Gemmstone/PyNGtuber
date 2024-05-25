@@ -19,6 +19,9 @@ Open-Source and completelly **FREE** to use
 
 [![PRs Welcome](https://img.shields.io/github/issues-pr/Gemmstone/PyNGtuber)](https://makeapullrequest.com)
 [![GitHub Issues](https://img.shields.io/github/issues/Gemmstone/PyNGtuber)](https://github.com/Gemmstone/PyNGtuber/issues)
+
+![GitHub Release](https://img.shields.io/github/v/release/Gemmstone/PyNGtuber?style=for-the-badge&logo=download&label=Download&link=https%3A%2F%2Fgithub.com%2FGemmstone%2FPyNGtuber%2Freleases%2Flatest)
+
 </div>
 
 ## Introduction
