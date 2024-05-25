@@ -6,7 +6,7 @@ var imageWrapper = document.querySelectorAll(".idle_animation");
 var imageAddedWrapper = document.querySelectorAll(".added_animation");
 
 while(true) {
-  var status = Math.floor(Math.random() * 3)
+  var status = Math.floor(Math.random() * 3);
   
   var opacityOpen = (status == 1) ? 1 : 0;
   var opacityClosed = (status <= 1) ? 1 : 0;
@@ -31,12 +31,12 @@ while(true) {
   if(imageWrapper.length > 0) {
       imageWrapper.forEach(function(image) {
           if (''' + str(status) + ''' == 1 || ''' + str(status) + ''' == 2) {
-              var animation = "floaty"
-              var speed = "0.500"
+              var animation = "floaty";
+              var speed = "0.500";
               image.style.animation = animation + " " + speed + "s ease-in-out infinite";
           } else {
-              var animation = "floaty"
-              var speed = "6.000"
+              var animation = "floaty";
+              var speed = "6.000";
               image.style.animation = animation + " " + speed + "s ease-in-out infinite";
           }
       });
