@@ -1,3 +1,9 @@
+<div align="right">
+![Support this Project](https://img.shields.io/badge/Support%20this%20project%3A-grey?style=for-the-badge)
+[![Ko-Fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/gemmstone)
+[![StreamLabs](https://img.shields.io/badge/StreamLabs-teal?style=for-the-badge&logo=streamlabs&logoColor=white)]([https://ko-fi.com/gemmstone](https://streamlabs.com/agemmstone/tip))
+</div>
+
 <div align="center">
 
 # PyNGtuber
@@ -19,9 +25,11 @@ Open-Source and completelly **FREE** to use
 
 [![PRs Welcome](https://img.shields.io/github/issues-pr/Gemmstone/PyNGtuber)](https://makeapullrequest.com)
 [![GitHub Issues](https://img.shields.io/github/issues/Gemmstone/PyNGtuber)](https://github.com/Gemmstone/PyNGtuber/issues)
-
-[![Ko-Fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white&label=Suport%20this%20project)](https://ko-fi.com/gemmstone)
 </div>
+
+## Introduction
+
+I've just started developing my own PNGtubing software, and I'm excited to make it open-source. This means it will be completely free, and I welcome contributions from the community to add new features and improve the codebase.
 
 ## features
 -   Lorem ipsum
@@ -33,7 +41,6 @@ Open-Source and completelly **FREE** to use
 ## Python Native Instalation
 
 Requires `Python 3.11`
-
 - PyQt6
 - pyaudio
 - pillow
@@ -46,30 +53,18 @@ Requires `Python 3.11`
 - twitchapi
 - sounddevice
 - pyautogui
+- psutil
   
-  `pip install pyqt6 pyqt6-webengine pillow pyaudio beautifulsoup4 mido numpy pynput dateutils twitchapi sounddevice pyautogui`
-
-## license
-
-This project is licensed under the GNU General Public License, version 3.0 (GPL-3.0). You can find a copy of the license in the [LICENSE](LICENSE) file.
-
-
-## Introduction
-
-I've just started developing my own PNGtubing software, and I'm excited to make it open-source. This means it will be completely free, and I welcome contributions from the community to add new features and improve the codebase.
-
-
+  ```pip install pyqt6 pyqt6-webengine pillow pyaudio beautifulsoup4 mido numpy pynput dateutils twitchapi sounddevice pyautogui psutil```
+  
 ## Contributions
 
 If you're interested in contributing to this project or checking out the code, feel free to get involved. Contributions are highly appreciated!
 
-## License
-
-
-## Getting Started
-
-Instructions on how to set up and run the software will be provided here as the project develops.
-
 ## Feedback
 
-Your feedback and ideas are valuable. If you have suggestions or questions, please don't hesitate to reach out.
+Your feedback and ideas are valuable. If you have suggestions, issues or questions, please don't hesitate to reach out.
+
+## license
+
+This project is licensed under the GNU General Public License, version 3.0 (GPL-3.0). You can find a copy of the license in the [LICENSE](./LICENSE) file.
