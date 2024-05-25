@@ -6,9 +6,9 @@
 
 ![hot icon](https://raw.githubusercontent.com/Gemmstone/PyNGtuber/master/docs/icon.png)
 
-🔥 Open-source and completely FREE to use!
-
 [![GitHub Release](https://img.shields.io/github/v/release/Gemmstone/PyNGtuber?style=for-the-badge&logo=download&label=Download)](https://github.com/Gemmstone/PyNGtuber/releases/latest)
+
+🔥 Open-source and completely FREE to use!
 
 [![Python 3.11](https://img.shields.io/badge/python-3670A0?style=flat&logo=python&logoColor=ffdd54&label=3.11)](https://www.python.org/downloads/release/python-3110/)
 [![Qt](https://img.shields.io/badge/Qt-%23217346.svg?style=flat&logo=Qt&logoColor=white&label=6)](https://doc.qt.io/qtforpython-6/)
