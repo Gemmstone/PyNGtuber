@@ -30,7 +30,7 @@ while(true) {
   
   if(imageWrapper.length > 0) {
       imageWrapper.forEach(function(image) {
-          if (''' + str(status) + ''' == 1 || ''' + str(status) + ''' == 2) {
+          if (status == 1 || status == 2) {
               var animation = "floaty";
               var speed = "0.500";
               image.style.animation = animation + " " + speed + "s ease-in-out infinite";
@@ -43,7 +43,7 @@ while(true) {
   }
   if(imageAddedWrapper.length > 0) {
       imageAddedWrapper.forEach(function(animation_div) {
-          if (''' + str(status) + ''' == 1 || ''' + str(status) + ''' == 2) {
+          if (status == 1 || status == 2) {
               animation_div.style.animation = animation_div.attributes.animation_name_talking.value + " " + animation_div.attributes.animation_speed_talking.value + "s ease-in-out infinite";
           } else {
               animation_div.style.animation = animation_div.attributes.animation_name_idle.value + " " + animation_div.attributes.animation_speed_idle.value + "s ease-in-out infinite";
