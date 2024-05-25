@@ -1,5 +1,3 @@
-<div align="center">
-
 # PyNGtuber
 
 ### A highly customizable PNGtuber app.
@@ -21,8 +19,6 @@
 
 [![PRs Welcome](https://img.shields.io/github/issues-pr/Gemmstone/PyNGtuber)](https://makeapullrequest.com)
 [![GitHub Issues](https://img.shields.io/github/issues/Gemmstone/PyNGtuber)](https://github.com/Gemmstone/PyNGtuber/issues)
-
-</div>
 
 ## Introduction
 
