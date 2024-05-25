@@ -6,6 +6,8 @@ var imageAddedWrapper = document.querySelectorAll(".added_animation");
 
 async function asyncCall() {
   while(true) {
+    setTimeout(2000);
+    
     var status = Math.floor(Math.random() * 3);
     
     var opacityOpen = (status == 1) ? 1 : 0;
@@ -50,7 +52,6 @@ async function asyncCall() {
             }
         });
     }
-    setTimeout(2000)
   }
 }
 
