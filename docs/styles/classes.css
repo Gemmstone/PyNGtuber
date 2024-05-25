@@ -125,3 +125,10 @@
 .pre-container:hover .pre-copy-button {
   opacity: 1;
 }
+
+.video{
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  object-fit: cover;
+}
