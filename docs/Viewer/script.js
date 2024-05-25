@@ -18,7 +18,7 @@ async function asyncCall() {
     var status = await Math.floor(Math.random() * 3);
     
     var opacityOpen = (status == 1) ? 1 : 0;
-    var opacityClosed = (status <= 1) ? 1 : 0;
+    var opacityClosed = (status <= 0) ? 1 : 0;
     var opacityScreaming = (status == 2) ? 1 : 0;
     
     // Apply CSS transitions for a smooth animation to text elements
