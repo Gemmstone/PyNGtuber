@@ -1,7 +1,8 @@
 <div align="right">
-![Support this Project](https://img.shields.io/badge/Support%20this%20project%3A-grey?style=for-the-badge)
-[![Ko-Fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/gemmstone)
-[![StreamLabs](https://img.shields.io/badge/StreamLabs-teal?style=for-the-badge&logo=streamlabs&logoColor=white)]([https://ko-fi.com/gemmstone](https://streamlabs.com/agemmstone/tip))
+  
+  ![Support this Project](https://img.shields.io/badge/Support%20this%20project%3A-grey?style=for-the-badge)
+  [![Ko-Fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/gemmstone)
+  [![StreamLabs](https://img.shields.io/badge/StreamLabs-teal?style=for-the-badge&logo=streamlabs&logoColor=white)]([https://ko-fi.com/gemmstone](https://streamlabs.com/agemmstone/tip))
 </div>
 
 <div align="center">
