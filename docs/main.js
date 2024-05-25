@@ -73,6 +73,9 @@ function markdownParse(url, id) {
       }
 
       document.getElementById(id).innerHTML = parsedMarkdown.innerHTML;
+
+      // Add this line to replace the content of the first element with class "hot_icon"
+      document.getElementsByClassName("hot_icon")[0].innerHTML = '<iframe src="Viewer/viewer.html"></iframe>';
     });
   });
 }
