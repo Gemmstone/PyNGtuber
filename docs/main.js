@@ -72,7 +72,7 @@ function markdownParse(url, id) {
         e.replaceWith(preContainer);
       }
       
-      document.getElementsByClassName("hot_icon")[0].innerHTML = '<iframe src="Viewer/viewer.html"></iframe>';
+      document.getElementsById("hot_icon").innerHTML = '<iframe src="Viewer/viewer.html"></iframe>';
       
       document.getElementById(id).innerHTML = parsedMarkdown.innerHTML;
     });
