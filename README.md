@@ -2,11 +2,11 @@
 
 # PyNGtuber
 
-### A PNGtuber app with lots of customizablility.
+### A highly customizable PNGtuber app.
 
 ![hot icon](https://raw.githubusercontent.com/Gemmstone/PyNGtuber/master/docs/icon.png)
 
-Open-Source and completelly **FREE** to use
+🔥 Open-source and completely FREE to use!
 
 [![GitHub Release](https://img.shields.io/github/v/release/Gemmstone/PyNGtuber?style=for-the-badge&logo=download&label=Download)](https://github.com/Gemmstone/PyNGtuber/releases/latest)
 
