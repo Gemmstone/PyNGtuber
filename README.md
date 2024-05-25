@@ -58,7 +58,3 @@ If you're interested in contributing to this project or checking out the code, f
 ## Feedback
 
 Your feedback and ideas are valuable. If you have suggestions, issues or questions, please don't hesitate to reach out.
-
-## license
-
-This project is licensed under the GNU General Public License, version 3.0 (GPL-3.0). You can find a copy of the license in the [LICENSE](./LICENSE) file.
