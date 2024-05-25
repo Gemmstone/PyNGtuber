@@ -4,9 +4,17 @@ var elementsScreaming = document.getElementsByClassName("talking_screaming");
 var imageWrapper = document.querySelectorAll(".idle_animation");
 var imageAddedWrapper = document.querySelectorAll(".added_animation");
 
+function resolveAfter2Seconds() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve('resolved');
+    }, 2000);
+  });
+}
+
 async function asyncCall() {
   while(true) {
-    setTimeout(2000);
+    await resolveAfter2Seconds();
     
     var status = Math.floor(Math.random() * 3);
     
