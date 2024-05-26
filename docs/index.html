@@ -41,7 +41,7 @@
   </body>
   
   <script>
-    function waitForElement("demo"){
+    function waitForElement("demo", null){
       window.setTimeout(function(){
         var demo = document.getElementById("demo");
         if(demo){
@@ -56,7 +56,7 @@
               demo.getElementById("resultFrame").contentWindow.cursorPosition(0, 0);
           }
         }else{
-          waitForElement("demo");
+          waitForElement("demo", null);
         }
       },500)
     }
