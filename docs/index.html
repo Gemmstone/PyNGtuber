@@ -35,6 +35,20 @@
     <div class="navright" align="right" style="float: right; display: block; bottom: 3px; right: 3px; !important; position: -webkit-sticky; position: sticky;">
       <a href="https://www.twitch.tv/agemmstone"><img alt="Twitch Status" src="https://img.shields.io/twitch/status/aGemmstone?style=for-the-badge&logo=twitch&logoColor=white&label=aGemmstone&labelColor=purple&color=pink"></a>
     </div>
+
+    <script>
+      demo = document.getElementByID("demo")
+      demo.onmousemove = (event) => {
+          var x = event.clientX;
+          var y = event.clientY;
+          document.getElementById("resultFrame").cursorPosition(x, y);
+      }
+      
+      demo.onmouseout = (event) => {
+          cursorPosition(0, 0);
+          document.getElementById("resultFrame").cursorPosition(0, 0);
+      }
+    </script>
     
     <footer>
       <div id="footer"></div>
