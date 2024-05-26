@@ -46,6 +46,7 @@
       demo.onmousemove = (event) => {
           var x = event.clientX;
           var y = event.clientY;
+          console.log("x: " + x + " y: " + y)
           demo.getElementById("resultFrame").contentWindow.cursorPosition(x, y);
       }
       demo.onmouseout = (event) => {
