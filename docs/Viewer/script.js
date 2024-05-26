@@ -92,8 +92,8 @@ async function cursorPosition(X, Y){
 }
 
 document.onmousemove = (event) => {
-    var x = (event.clientX - container.offsetLeft) * 100;
-    var y = (event.clientY - container.offsetTop) * 100;
+    var x = event.clientX - container.offsetLeft;
+    var y = event.clientY - container.offsetTop;
     cursorPosition(x, y);
 }
 
