@@ -96,8 +96,8 @@ function preventDefaultDrag(event) {
 }
 
 document.onmousemove = (event) => {
-  var x = event.clientX * 100 / document.innerWidth + "%";
-  var y = event.clientY * 100 / document.innerHeight + "%";
+  var x = event.clientX;
+  var y = event.clientY;
   cursorPosition(x, y);
 }
 
