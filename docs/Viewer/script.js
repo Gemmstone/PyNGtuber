@@ -98,6 +98,6 @@ function preventDefaultDrag(event) {
   event.preventDefault();
 }
 
-moveContainer.addEventListener("dragstart", preventDefaultDrag);
+document.addEventListener("dragstart", preventDefaultDrag);
 
 asyncCall();
