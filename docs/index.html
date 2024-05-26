@@ -41,18 +41,13 @@
   </body>
   
   <script>
-    waitForElement("demo", function() {
-        var demo = document.getElementById("demo");
-        if(demo){
-          demo.onmousemove = (event) => {
-            var x = event.clientX;
-            var y = event.clientY;
-            document.getElementById("resultFrame").contentWindow.cursorPosition(x, y);
-          }
-          demo.onmouseout = (event) => {
-              document.getElementById("resultFrame").contentWindow.cursorPosition(0, 0);
-          }
-        }
-    });
+    document.onmousemove = (event) => {
+      var x = event.clientX;
+      var y = event.clientY;
+      document.getElementById("resultFrame").contentWindow.cursorPosition(x, y);
+    }
+    document.onmouseout = (event) => {
+        document.getElementById("resultFrame").contentWindow.cursorPosition(0, 0);
+    }
   </script>
 </html>
