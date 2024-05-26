@@ -41,12 +41,7 @@
   </body>
   
   <script>
-    waitForElement("yourId",function(){
-        console.log("done");
-    });
-    
-    function waitForElement("demo", function() {
-      window.setTimeout(function(){
+    waitForElement("demo", function() {
         var demo = document.getElementById("demo");
         if(demo){
           demo.onmousemove = (event) => {
@@ -59,10 +54,7 @@
               cursorPosition(0, 0);
               demo.getElementById("resultFrame").contentWindow.cursorPosition(0, 0);
           }
-        }else{
-          waitForElement("demo", null);
         }
-      },500)
-    }
+    });
   </script>
 </html>
