@@ -88,8 +88,8 @@ function preventDefaultDrag(event) {
 }
 
 document.onmousemove = (event) => {
-  var x = event.clientX * 3;
-  var y = event.clientY * -3;
+  var x = event.clientX * 2;
+  var y = event.clientY * -2;
   document.getElementById("resultFrame").contentWindow.cursorPosition(x, y);
 }
 
