@@ -68,7 +68,8 @@ class LayeredImageViewer(QWebEngineView):
         if image_list is not None:
             for layer in sorted(image_list, key=lambda x: x['posZ']):
                 animation_idle_div = soup.new_tag('div', style=f"""
-                    position: absolute !important; 
+                    position: absolute !important;
+                    animation-direction: normal;
                     z-index: {layer['posZ']};
                 """)
                 animation_idle_div['class'] = [
@@ -76,6 +77,7 @@ class LayeredImageViewer(QWebEngineView):
                 ]
                 animation_added_div = soup.new_tag('div', style=f"""
                                     position: absolute !important; 
+                                    animation-direction: normal;
                                     z-index: {layer['posZ']};
                                 """)
                 animation_added_div['class'] = [
@@ -85,6 +87,8 @@ class LayeredImageViewer(QWebEngineView):
                 animation_added_div['animation_name_talking'] = layer.get("animation_name_talking", "None")
                 animation_added_div['animation_speed_idle'] = layer.get("animation_speed_idle", 6)
                 animation_added_div['animation_speed_talking'] = layer.get("animation_speed_talking", 0.5)
+                animation_added_div['animation_direction_idle'] = layer.get('animation_direction_idle',  "normal")
+                animation_added_div['animation_direction_talking'] = layer.get('animation_direction_talking',  "normal")
 
                 cursor_div = soup.new_tag('div', style=f"""
                                     position: absolute !important; 
@@ -233,16 +237,20 @@ class LayeredImageViewer(QWebEngineView):
                             {layer['css']}
                         """)
                 else:
-                    img_tag = soup.new_tag('img', src=f"../{layer['route']}", style=f"""
-                                                position: absolute !important;
-                                                left: calc(50% + {layer['posX']}px);
-                                                top: calc(50% + {layer['posY']}px);
-                                                z-index: {layer['posZ']};
-                                                transform: translate(-50%, -50%) rotate({layer['rotation']}deg);
-                                                width: {layer['sizeX']}px; 
-                                                height: {layer['sizeY']}px;
-                                                {layer['css']}
-                                            """)
+                    img_tag = soup.new_tag(
+                        'img',
+                        src=f"../{layer['route']}",
+                        style=f"""
+                            position: absolute !important;
+                            left: calc(50% + {layer['posX']}px);
+                            top: calc(50% + {layer['posY']}px);
+                            z-index: {layer['posZ']};
+                            transform: translate(-50%, -50%) rotate({layer['rotation']}deg);
+                            width: {layer['sizeX']}px; 
+                            height: {layer['sizeY']}px;
+                            {layer['css']}
+                        """)
+                img_tag["class"] = ["asset"]
 
                 animation_talking_div.append(img_tag)
                 animation_blinking_div.append(animation_talking_div)

@@ -25,7 +25,7 @@ import os
 import re
 
 
-current_version = "v1.6.0"
+current_version = "v1.6.1"
 repo_owner = "Gemmstone"
 repo_name = "PyNGtuber"
 
@@ -1173,56 +1173,62 @@ class MainWindow(QtWidgets.QMainWindow):
     def audioStatus(self, status):
         try:
             if self.viewer.is_loaded:
-                js_code = ('''
+                js_code = (f'''
                     var elementsOpen = document.getElementsByClassName("talking_open");
                     var elementsClosed = document.getElementsByClassName("talking_closed");
                     var elementsScreaming = document.getElementsByClassName("talking_screaming");
-                    // var imageWrapper = document.getElementById("image-wrapper");
                     var imageWrapper = document.querySelectorAll(".idle_animation");
                     var imageAddedWrapper = document.querySelectorAll(".added_animation");
             
-                    var opacityOpen = ''' + str(1 if status == 1 else 0) + ''';
-                    var opacityClosed = ''' + str(1 if status <= 0 else 0) + ''';
-                    var opacityScreaming = ''' + str(1 if status == 2 else 0) + ''';
+                    var opacityOpen = {str(1 if status == 1 else 0)};
+                    var opacityClosed = {str(1 if status <= 0 else 0)};
+                    var opacityScreaming = {str(1 if status == 2 else 0)};
             
-                    // Apply CSS transitions for a smooth animation to text elements
-                    for (var i = 0; i < elementsOpen.length; i++) {
+                    for (var i = 0; i < elementsOpen.length; i++) {{
                         elementsOpen[i].style.transition = "opacity 0.3s";
                         elementsOpen[i].style.opacity = opacityOpen;
-                    }
+                    }}
             
-                    for (var i = 0; i < elementsClosed.length; i++) {
+                    for (var i = 0; i < elementsClosed.length; i++) {{
                         elementsClosed[i].style.transition = "opacity 0.3s";
                         elementsClosed[i].style.opacity = opacityClosed;
-                    }
+                    }}
             
-                    for (var i = 0; i < elementsScreaming.length; i++) {
+                    for (var i = 0; i < elementsScreaming.length; i++) {{
                         elementsScreaming[i].style.transition = "opacity 0.3s";
                         elementsScreaming[i].style.opacity = opacityScreaming;
-                    }
+                    }}
             
-                    if(imageWrapper.length > 0) {
-                        imageWrapper.forEach(function(image) {
-                            if (''' + str(status) + ''' == 1 || ''' + str(status) + ''' == 2) {
-                                var animation = "''' + self.talking_animation.currentText() + '''"
-                                var speed = "''' + str(self.talking_speed.value()) + '''"
-                                image.style.animation = animation + " " + speed + "s ease-in-out infinite";
-                            } else {
-                                var animation = "''' + self.idle_animation.currentText() + '''"
-                                var speed = "''' + str(self.idle_speed.value()) + '''"
-                                image.style.animation = animation + " " + speed + "s ease-in-out infinite";
-                            }
-                        });
-                    }
-                    if(imageAddedWrapper.length > 0) {
-                        imageAddedWrapper.forEach(function(animation_div) {
-                            if (''' + str(status) + ''' == 1 || ''' + str(status) + ''' == 2) {
-                                animation_div.style.animation = animation_div.attributes.animation_name_talking.value + " " + animation_div.attributes.animation_speed_talking.value + "s ease-in-out infinite";
-                            } else {
-                                animation_div.style.animation = animation_div.attributes.animation_name_idle.value + " " + animation_div.attributes.animation_speed_idle.value + "s ease-in-out infinite";
-                            }
-                        });
-                    }
+                    if(imageWrapper.length > 0) {{
+                        imageWrapper.forEach(function(image) {{
+                            if ({status} == 1 || {status} == 2) {{
+                                var animation = "{self.talking_animation.currentText()}";
+                                var speed = {self.talking_speed.value()};
+                                var direction = "{self.talking_animation_direction.currentText()}";
+                           }} else {{
+                               var animation = "{self.idle_animation.currentText()}";
+                               var speed = {self.idle_speed.value()};
+                               var direction = "{self.idle_animation_direction.currentText()}";
+                           }} 
+                           image.style.animation = `${{animation}} ${{speed}}s ease-in-out infinite`;
+                           image.style.animationDirection = "{self.idle_animation_direction.currentText()}";
+                        }});
+                    }}
+                    if(imageAddedWrapper.length > 0) {{
+                        imageAddedWrapper.forEach(function(animation_div) {{
+                            if ({status} == 1 || {status} == 2) {{
+                                var animation = animation_div.attributes.animation_name_talking.value;
+                                var speed = animation_div.attributes.animation_speed_talking.value;
+                                var direction = animation_div.attributes.animation_direction_talking.value;
+                            }} else {{
+                                var animation = animation_div.attributes.animation_name_idle.value;
+                                var speed = animation_div.attributes.animation_speed_idle.value;
+                                var direction = animation_div.attributes.animation_direction_idle.value;
+                            }}
+                            animation_div.style.animation = `${{animation}} ${{speed}}s ease-in-out infinite`;
+                            animation_div.style.animationDirection = direction;
+                        }});
+                    }}
                 ''')
                 self.viewer.page().runJavaScript(js_code)
         except AttributeError:

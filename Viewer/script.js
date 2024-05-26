@@ -6,12 +6,14 @@ const container = document.getElementById("container");
 const leftButtons = [4,6,8,10,12,13,14,15];
 const rightButtons = [0,1,2,3,5,7,9,11];
 
+/*
 // Variables to track the mouse position and dragging state
 let isDragging = false;
 let initialMouseX;
 let initialMouseY;
 let initialImageX;
 let initialImageY;
+*/
 
 // Variables to store the current offset due to mouse movement
 let mouseMovementX = 0;
@@ -369,7 +371,7 @@ async function pool(){
 }
 
 // Function to handle the mouse down event
-function onMouseDown(event) {
+/*function onMouseDown(event) {
   isDragging = true;
   initialMouseX = event.clientX;
   initialMouseY = event.clientY;
@@ -379,17 +381,18 @@ function onMouseDown(event) {
 
   // Add "grabbing" cursor style
   moveContainer.style.cursor = "grabbing";
-}
+}/*
 
 // Function to handle the mouse move event
-function onMouseMove(event) {
+/*function onMouseMove(event) {
    if (!isDragging) return;
 
   const deltaX = event.clientX - initialMouseX;
   const deltaY = event.clientY - initialMouseY;
 
   // Apply the new position to each image separately while preserving their existing offset
-  const images = imageContainer.querySelectorAll("img");
+  // const images = imageContainer.querySelectorAll("img");
+  const images = imageContainer.querySelectorAll(".asset");
   images.forEach((img) => {
     const imgLeft = img.style.left;
     const imgTop = img.style.top
@@ -402,14 +405,14 @@ function onMouseMove(event) {
   // Update the initial mouse position
   initialMouseX = event.clientX;
   initialMouseY = event.clientY;
-}
+}*/
 
 // Function to handle the mouse up event
-function onMouseUp() {
+/*function onMouseUp() {
   isDragging = false;
   // Restore the default cursor style
   moveContainer.style.cursor = "grab";
-}
+}*/
 
 // Function to prevent the default drag behavior
 function preventDefaultDrag(event) {
@@ -417,9 +420,11 @@ function preventDefaultDrag(event) {
 }
 
 // Add event listeners for mouse events on the move-container
+/*
 document.addEventListener("mousedown", onMouseDown);
 document.addEventListener("mousemove", onMouseMove);
 document.addEventListener("mouseup", onMouseUp);
+*/
 
 // Add an event listener to prevent default drag behavior on the move-container
 moveContainer.addEventListener("dragstart", preventDefaultDrag);

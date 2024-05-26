@@ -599,8 +599,27 @@ QTabBar::tab:hover {
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="0" colspan="2">
-                 <widget class="QComboBox" name="idle_animation">
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_42">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>25</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Speed:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QComboBox" name="idle_animation_direction">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -631,15 +650,41 @@ QTabBar::tab:hover {
                   <property name="sizeAdjustPolicy">
                    <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
                   </property>
+                  <item>
+                   <property name="text">
+                    <string>normal</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>reverse</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>alternate</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>alternate-reverse</string>
+                   </property>
+                  </item>
                  </widget>
                 </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_42">
+                <item row="0" column="0" colspan="3">
+                 <widget class="QComboBox" name="idle_animation">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
                   </property>
                   <property name="maximumSize">
                    <size>
@@ -647,8 +692,17 @@ QTabBar::tab:hover {
                     <height>25</height>
                    </size>
                   </property>
-                  <property name="text">
-                   <string>Speed:</string>
+                  <property name="toolTip">
+                   <string>Animation name</string>
+                  </property>
+                  <property name="whatsThis">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="maxVisibleItems">
+                   <number>10</number>
+                  </property>
+                  <property name="sizeAdjustPolicy">
+                   <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
                   </property>
                  </widget>
                 </item>
@@ -704,25 +758,6 @@ QTabBar::tab:hover {
                 <property name="spacing">
                  <number>3</number>
                 </property>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_43">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>25</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Speed:</string>
-                  </property>
-                 </widget>
-                </item>
                 <item row="1" column="1">
                  <widget class="QDoubleSpinBox" name="talking_speed">
                   <property name="minimumSize">
@@ -763,7 +798,26 @@ QTabBar::tab:hover {
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="0" colspan="2">
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_43">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>25</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Speed:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0" colspan="3">
                  <widget class="QComboBox" name="talking_animation">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -795,6 +849,60 @@ QTabBar::tab:hover {
                   <property name="sizeAdjustPolicy">
                    <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
                   </property>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QComboBox" name="talking_animation_direction">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>25</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Animation name</string>
+                  </property>
+                  <property name="whatsThis">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="maxVisibleItems">
+                   <number>10</number>
+                  </property>
+                  <property name="sizeAdjustPolicy">
+                   <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>normal</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>reverse</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>alternate</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>alternate-reverse</string>
+                   </property>
+                  </item>
                  </widget>
                 </item>
                </layout>
@@ -1268,10 +1376,10 @@ QCheckBox::indicator:unchecked {
                    <double>10.000000000000000</double>
                   </property>
                   <property name="singleStep">
-                   <double>0.010000000000000</double>
+                   <double>0.001000000000000</double>
                   </property>
                   <property name="value">
-                   <double>0.010000000000000</double>
+                   <double>0.003000000000000</double>
                   </property>
                  </widget>
                 </item>
@@ -1387,10 +1495,10 @@ QCheckBox::indicator:unchecked {
                    <double>10.000000000000000</double>
                   </property>
                   <property name="singleStep">
-                   <double>0.010000000000000</double>
+                   <double>0.001000000000000</double>
                   </property>
                   <property name="value">
-                   <double>0.010000000000000</double>
+                   <double>0.004000000000000</double>
                   </property>
                  </widget>
                 </item>

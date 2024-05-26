@@ -43,8 +43,8 @@ class Settings(QWidget):
         self.originYwhammy.setValue(self.parameters.get("originXwhammy", 0) * -1)
         self.degWhammy.setValue(self.parameters.get("degWhammy", 0))
 
-        self.cursorScaleX.setValue(self.parameters.get("cursorScaleX", self.parameters.get("cursorScale", 0.01)))
-        self.cursorScaleY.setValue(self.parameters.get("cursorScaleY", self.parameters.get("cursorScale", 0.01)))
+        self.cursorScaleX.setValue(self.parameters.get("cursorScaleX", self.parameters.get("cursorScale", 0.003)))
+        self.cursorScaleY.setValue(self.parameters.get("cursorScaleY", self.parameters.get("cursorScale", 0.004)))
         self.invert_mouse_x.setChecked(self.parameters.get("invert_mouse_x", 1) == 1)
         self.invert_mouse_y.setChecked(self.parameters.get("invert_mouse_y", 0) == 1)
         self.track_mouse_x.setChecked(self.parameters.get("track_mouse_x", 1) == 1)
@@ -187,6 +187,8 @@ class Settings(QWidget):
 
         self.idle_animation.currentIndexChanged.connect(self.save_current)
         self.talking_animation.currentIndexChanged.connect(self.save_current)
+        self.idle_animation_direction.currentIndexChanged.connect(self.save_current)
+        self.talking_animation_direction.currentIndexChanged.connect(self.save_current)
         self.idle_speed.valueChanged.connect(self.save_current)
         self.talking_speed.valueChanged.connect(self.save_current)
 
@@ -217,11 +219,16 @@ class Settings(QWidget):
 
         idle_animation = self.parameters.get("animation_name_idle", "None")
         talking_animation = self.parameters.get("animation_name_talking", "None")
+        talking_animation_direction = self.parameters.get("animation_direction_idle", "normal")
+        idle_animation_direction = self.parameters.get("animation_direction_talking", "normal")
 
         if idle_animation in animations:
             self.idle_animation.setCurrentText(idle_animation)
         if talking_animation in animations:
             self.talking_animation.setCurrentText(talking_animation)
+
+        self.talking_animation_direction.setCurrentText(talking_animation_direction)
+        self.idle_animation_direction.setCurrentText(idle_animation_direction)
 
         self.idle_speed.setValue(self.parameters.get("animation_speed_idle", 6))
         self.talking_speed.setValue(self.parameters.get("animation_speed_talking", 0.5))
@@ -374,6 +381,8 @@ class Settings(QWidget):
         self.parameters['animation_name_talking'] = self.talking_animation.currentText()
         self.parameters['animation_speed_idle'] = self.idle_speed.value()
         self.parameters['animation_speed_talking'] = self.talking_speed.value()
+        self.parameters['animation_direction_idle'] = self.idle_animation_direction.currentText()
+        self.parameters['animation_direction_talking'] = self.talking_animation_direction.currentText()
 
         self.parameters["use_css"] = True if self.cssGroup.isChecked() else False
         self.parameters["css"] = self.css.toPlainText()
