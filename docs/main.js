@@ -78,3 +78,15 @@ function markdownParse(url, id) {
     });
   });
 }
+
+demo = document.getElementById("demo")
+demo.onmousemove = (event) => {
+    var x = event.clientX;
+    var y = event.clientY;
+    demo.getElementById("resultFrame").contentWindow.cursorPosition(x, y);
+}
+
+demo.onmouseout = (event) => {
+    cursorPosition(0, 0);
+    demo.getElementById("resultFrame").contentWindow.cursorPosition(0, 0);
+}
