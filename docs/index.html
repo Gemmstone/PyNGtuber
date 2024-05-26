@@ -42,8 +42,8 @@
   
   <script>
     document.onmousemove = (event) => {
-      var x = event.clientX * 2;
-      var y = event.clientY * -2;
+      var x = event.clientX * 100 / window.innerWidth + "%";
+      var y = event.clientY * 100 / window.innerHeight + "%";
       document.getElementById("resultFrame").contentWindow.cursorPosition(x, y);
     }
   </script>
