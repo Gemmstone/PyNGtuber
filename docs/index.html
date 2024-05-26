@@ -42,7 +42,6 @@
   
   <script>
     demo = document.getElementById("demo")
-
     demo.onload = function(){ 
       demo.onmousemove = (event) => {
           var x = event.clientX;
@@ -50,7 +49,6 @@
           demo.getElementById("resultFrame").contentWindow.cursorPosition(x, y);
       }
     }
-    
     demo.onload = function(){ 
       demo.onmouseout = (event) => {
           cursorPosition(0, 0);
