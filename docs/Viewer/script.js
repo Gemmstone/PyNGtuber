@@ -91,13 +91,12 @@ async function cursorPosition(X, Y){
     }
 }
 
-(function() {
-    document.onmousemove = handleMouseMove;
-    function handleMouseMove(event) {
-        var eventDoc, doc, body;
-        cursorPosition(event.pageX * 100 / window.innerWidth + "%", event.pageY * 100 / window.innerHeight + "%");
-    }
-})();
+document.onmousemove = (event) => {
+    var x = (event.clientX - container.offsetLeft) * 100 / container.offsetWidth  + "%";
+    var y = (event.clientY - container.offsetTop) * 100 / container.offsetHeight + "%";
+    cursorPosition(x, y);
+}
+
 
 function preventDefaultDrag(event) {
   event.preventDefault();
