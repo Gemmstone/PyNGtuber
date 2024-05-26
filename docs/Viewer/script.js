@@ -95,12 +95,12 @@ async function cursorPosition(X, Y){
     document.onmousemove = handleMouseMove;
     function handleMouseMove(event) {
         var eventDoc, doc, body;
-
-        event = event || window.event; // IE-ism
-
-        // Use event.pageX / event.pageY here
         cursorPosition(event.pageX * 100 / window.innerWidth + "%", event.pageY * 100 / window.innerHeight + "%");
     }
 })();
+
+function preventDefaultDrag(event) {
+  event.preventDefault();
+}
 
 asyncCall();
