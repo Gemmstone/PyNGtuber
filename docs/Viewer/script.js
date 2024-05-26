@@ -75,16 +75,16 @@ async function cursorPosition(X, Y){
         cursor_divs.forEach(function(cursor_div) {
             if(cursor_div.attributes.track_mouse_x.value == 1){
                 if(cursor_div.attributes.invert_mouse_x.value == 1){
-                    cursor_div.style.left = `calc(50% + ${X * cursor_div.attributes.cursorScaleX.value * 5}px)`;
+                    cursor_div.style.left = `${X}px)`;
                 } else {
-                    cursor_div.style.left = `calc(50% + ${X * cursor_div.attributes.cursorScaleX.value * -5}px)`;
+                    cursor_div.style.left = `${X * -1}px)`;
                 }
             }
             if(cursor_div.attributes.track_mouse_y.value == 1){
                 if(cursor_div.attributes.invert_mouse_y.value == 1){
-                    cursor_div.style.top = `calc(50% - ${Y * (cursor_div.attributes.cursorScaleY.value) * 5}px)`;
+                    cursor_div.style.top = `${Y}px)`;
                 } else {
-                    cursor_div.style.top = `calc(50% - ${Y * (cursor_div.attributes.cursorScaleY.value * 2) * -5}px)`;
+                    cursor_div.style.top = `calc(${Y * -1}px)`;
                 }
             }
         });
@@ -98,6 +98,10 @@ function preventDefaultDrag(event) {
 document.onmousemove = (event) => {
   var x = event.clientX;
   var y = event.clientY;
+
+  x = x * 100 / document.innerWidth + "%" 
+  y = y * 100 / document.innerWidth + "%"
+  
   cursorPosition(x, y);
 }
 
