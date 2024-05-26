@@ -75,16 +75,16 @@ async function cursorPosition(X, Y){
         cursor_divs.forEach(function(cursor_div) {
             if(cursor_div.attributes.track_mouse_x.value == 1){
                 if(cursor_div.attributes.invert_mouse_x.value == 1){
-                    cursor_div.style.left = `calc(50% + ${X * cursor_div.attributes.cursorScaleX.value * 3}px)`;
+                    cursor_div.style.left = `calc(50% + ${X * cursor_div.attributes.cursorScaleX.value * 2.5}px)`;
                 } else {
-                    cursor_div.style.left = `calc(50% + ${X * cursor_div.attributes.cursorScaleX.value * -3}px)`;
+                    cursor_div.style.left = `calc(50% + ${X * cursor_div.attributes.cursorScaleX.value * -2.5}px)`;
                 }
             }
             if(cursor_div.attributes.track_mouse_y.value == 1){
                 if(cursor_div.attributes.invert_mouse_y.value == 1){
-                    cursor_div.style.top = `calc(50% - ${Y * (cursor_div.attributes.cursorScaleY.value * 2) * 4}px)`;
+                    cursor_div.style.top = `calc(50% - ${Y * (cursor_div.attributes.cursorScaleY.value * 2) * 3.5}px)`;
                 } else {
-                    cursor_div.style.top = `calc(50% - ${Y * (cursor_div.attributes.cursorScaleY.value * 2) * -4}px)`;
+                    cursor_div.style.top = `calc(50% - ${Y * (cursor_div.attributes.cursorScaleY.value * 2) * -3.5}px)`;
                 }
             }
         });
