@@ -83,17 +83,6 @@ async function cursorPosition(X, Y){
     }
 }
 
-document.onmousemove = (event) => {
-    var x = event.clientX;
-    var y = event.clientY;
-    cursorPosition(x, y);
-}
-
-document.onmouseout = (event) => {
-    cursorPosition(0, 0);
-}
-
-
 function preventDefaultDrag(event) {
   event.preventDefault();
 }
