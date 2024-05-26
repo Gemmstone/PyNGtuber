@@ -20,7 +20,7 @@
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=flat&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=flat&logo=css3&logoColor=white)
 
-[![GitHub](https://img.shields.io/badge/GitHub-Source%20Code-grey?style=flat&logo=GitHub&logoColor=white&labelColor=grey)](https://github.com/aGemmstone/PyNGtuber)
+[![GitHub](https://img.shields.io/badge/GitHub-Source%20Code-grey?style=flat&logo=GitHub&logoColor=white&labelColor=grey)](https://github.com/Gemmstone/PyNGtuber)
 [![Licence](https://img.shields.io/github/license/Gemmstone/PyNGtuber?style=flat)](./LICENSE)
 
 [![PRs Welcome](https://img.shields.io/github/issues-pr/Gemmstone/PyNGtuber)](https://makeapullrequest.com)
