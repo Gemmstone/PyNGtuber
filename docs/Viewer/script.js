@@ -92,14 +92,20 @@ async function cursorPosition(X, Y){
 }
 
 document.onmousemove = (event) => {
-    var x = (event.clientX - container.offsetLeft) * 100 / container.offsetWidth  + "%";
-    var y = (event.clientY - container.offsetTop) * 100 / container.offsetHeight + "%";
+    var x = (event.clientX - container.offsetLeft) * 100;
+    var y = (event.clientY - container.offsetTop) * 100;
     cursorPosition(x, y);
+}
+
+document.onmouseout = (event) => {
+    cursorPosition(0, 0);
 }
 
 
 function preventDefaultDrag(event) {
   event.preventDefault();
 }
+
+moveContainer.addEventListener("dragstart", preventDefaultDrag);
 
 asyncCall();
