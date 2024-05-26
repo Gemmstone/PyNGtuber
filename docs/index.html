@@ -48,11 +48,11 @@
             var x = event.clientX;
             var y = event.clientY;
             console.log("x: " + x + " y: " + y)
-            demo.getElementById("resultFrame").contentWindow.cursorPosition(x, y);
+            document.getElementById("resultFrame").contentWindow.cursorPosition(x, y);
           }
           demo.onmouseout = (event) => {
               cursorPosition(0, 0);
-              demo.getElementById("resultFrame").contentWindow.cursorPosition(0, 0);
+              document.getElementById("resultFrame").contentWindow.cursorPosition(0, 0);
           }
         }
     });
