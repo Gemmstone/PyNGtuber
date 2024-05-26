@@ -41,12 +41,12 @@
       demo.onmousemove = (event) => {
           var x = event.clientX;
           var y = event.clientY;
-          document.getElementById("resultFrame").cursorPosition(x, y);
+          demo.getElementById("resultFrame").contentWindow.cursorPosition(x, y);
       }
       
       demo.onmouseout = (event) => {
           cursorPosition(0, 0);
-          document.getElementById("resultFrame").cursorPosition(0, 0);
+          demo.getElementById("resultFrame").contentWindow.cursorPosition(0, 0);
       }
     </script>
     
