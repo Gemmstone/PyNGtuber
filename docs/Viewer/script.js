@@ -87,6 +87,12 @@ function preventDefaultDrag(event) {
   event.preventDefault();
 }
 
+document.onmousemove = (event) => {
+  var x = event.clientX * 3;
+  var y = event.clientY * -3;
+  document.getElementById("resultFrame").contentWindow.cursorPosition(x, y);
+}
+
 document.addEventListener("dragstart", preventDefaultDrag);
 
 asyncCall();
