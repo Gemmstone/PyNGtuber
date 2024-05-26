@@ -41,7 +41,11 @@
   </body>
   
   <script>
-    function waitForElement("demo", null){
+    waitForElement("yourId",function(){
+        console.log("done");
+    });
+    
+    function waitForElement("demo", function() {
       window.setTimeout(function(){
         var demo = document.getElementById("demo");
         if(demo){
