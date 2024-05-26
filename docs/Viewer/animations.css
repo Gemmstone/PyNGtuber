@@ -126,6 +126,12 @@
   75% { transform: scale(0.95, 1.05); }
 }
 
+@keyframes gelatine2 { /* Avatar Animation */
+  from, to { transform: scale(1, 1); }
+  25% { transform: scale(0.95, 1.005); }
+  75% { transform: scale(1.005, 0.95); }
+}
+
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -213,6 +219,16 @@
   45% { transform: translateX(-15%) rotate(-3deg); }
   60% { transform: translateX(10%) rotate(2deg); }
   75% { transform: translateX(-5%) rotate(-1deg); }
+  100% { transform: translateX(0%); }
+}
+
+@keyframes ears { /* Avatar Animation */
+  0% { transform: translateX(0%); }
+  15% { transform: translateX(-25%) rotate(-5deg); }
+  30% { transform: translateX(10%) rotate(3deg); }
+  50% { transform: translateX(0%) rotate(0deg); }
+  70% { transform: translateX(-10%) rotate(-3deg); }
+  85% { transform: translateX(25%) rotate(5deg); }
   100% { transform: translateX(0%); }
 }
 
