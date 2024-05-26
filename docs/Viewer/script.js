@@ -69,4 +69,54 @@ async function asyncCall() {
   }
 }
 
+async function cursorPosition(X, Y){
+    var cursor_divs = document.querySelectorAll(".cursor_div");
+    if(cursor_divs.length > 0) {
+        cursor_divs.forEach(function(cursor_div) {
+            if(cursor_div.attributes.track_mouse_x.value == 1){
+                if(cursor_div.attributes.invert_mouse_x.value == 1){
+                    cursor_div.style.left = `calc(50% + ${X * cursor_div.attributes.cursorScaleX.value * -1}px)`;
+                } else {
+                    cursor_div.style.left = `calc(50% + ${X * cursor_div.attributes.cursorScaleX.value}px)`;
+                }
+            }
+            if(cursor_div.attributes.track_mouse_y.value == 1){
+                if(cursor_div.attributes.invert_mouse_y.value == 1){
+                    cursor_div.style.top = `calc(50% - ${Y * (cursor_div.attributes.cursorScaleY.value * 2)}px)`;
+                } else {
+                    cursor_div.style.top = `calc(50% - ${Y * (cursor_div.attributes.cursorScaleY.value * 2) * -1}px)`;
+                }
+            }
+        });
+    }
+}
+
+(function() {
+    document.onmousemove = handleMouseMove;
+    function handleMouseMove(event) {
+        var eventDoc, doc, body;
+
+        event = event || window.event; // IE-ism
+
+        // If pageX/Y aren't available and clientX/Y are,
+        // calculate pageX/Y - logic taken from jQuery.
+        // (This is to support old IE)
+        if (event.pageX == null && event.clientX != null) {
+            eventDoc = (event.target && event.target.ownerDocument) || document;
+            doc = eventDoc.documentElement;
+            body = eventDoc.body;
+
+            event.pageX = event.clientX +
+              (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
+              (doc && doc.clientLeft || body && body.clientLeft || 0);
+            event.pageY = event.clientY +
+              (doc && doc.scrollTop  || body && body.scrollTop  || 0) -
+              (doc && doc.clientTop  || body && body.clientTop  || 0 );
+        }
+
+        // Use event.pageX / event.pageY here
+        cursorPosition(event.pageX, event.pageY);
+    }
+})();
+
 asyncCall();
