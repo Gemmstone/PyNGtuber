@@ -536,12 +536,15 @@ class MainWindow(QtWidgets.QMainWindow):
                     self.close()
 
     def get_latest_release_tag(self, repo_owner, repo_name):
-        url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest"
-        response = requests.get(url)
-        if response.status_code == 200:
-            data = response.json()
-            return data['tag_name'], data
-        else:
+        try:
+            url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest"
+            response = requests.get(url)
+            if response.status_code == 200:
+                data = response.json()
+                return data['tag_name'], data
+            else:
+                return None
+        except BaseException:
             return None
 
     def mouse_tracking_changed(self):
@@ -570,7 +573,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def on_zoom_delta_changed(self):
         if self.viewer.is_loaded:
-            self.viewer.page().runJavaScript(f"document.body.style.zoom = `{self.generalScale.value()}%`;""")
+            self.viewer.page().runJavaScript(f"document.body.style.zoom = '{self.generalScale.value()}%';""")
         self.scaleValue.setText(f"{self.generalScale.value()}")
 
     def load_animations(self, default=None):
@@ -1229,22 +1232,14 @@ class MainWindow(QtWidgets.QMainWindow):
             
                     if(imageWrapper.length > 0) {{
                         imageWrapper.forEach(function(image) {{
-                            if ({status} == 1 || {status} == 2) {{
-                                var animation = "{self.talking_animation.currentText()}";
-                                var speed = {self.talking_speed.value()};
-                                var direction = "{self.talking_animation_direction.currentText()}";
-                                var pacing = "{self.talking_animation_pacing.currentText()}";
-                                var iteration = {self.talking_animation_iteration.value()};
-                           }} else {{
-                                var animation = "{self.idle_animation.currentText()}";
-                                var speed = {self.idle_speed.value()};
-                                var direction = "{self.idle_animation_direction.currentText()}";
-                                var pacing = "{self.idle_animation_pacing.currentText()}";
-                                var iteration = {self.idle_animation_iteration.value()};
-                           }} 
-                           iteration = (iteration == 0) ? "infinite" : iteration;
-                           image.style.animation = `${{animation}} ${{speed}}s  ${{pacing}} ${{iteration}}`;
-                           image.style.animationDirection = "{self.idle_animation_direction.currentText()}";
+                            var animation = "{self.talking_animation.currentText() if status > 0 else self.idle_animation.currentText()}";
+                            var speed = {self.talking_speed.value() if status > 0 else self.idle_speed.value()};
+                            var direction = "{self.talking_animation_direction.currentText() if status > 0 else self.idle_animation_direction.currentText()}";
+                            var pacing = "{self.talking_animation_pacing.currentText() if status > 0 else self.idle_animation_pacing.currentText()}";
+                            var iteration = {self.talking_animation_iteration.value() if status > 0 else self.idle_animation_iteration.value()};
+                            iteration = (iteration == 0) ? "infinite" : iteration;
+                            image.style.animation = `${{animation}} ${{speed}}s  ${{pacing}} ${{iteration}}`;
+                            image.style.animationDirection = "{self.idle_animation_direction.currentText()}";
                         }});
                     }}
                     if(imageAddedWrapper.length > 0) {{
