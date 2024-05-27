@@ -1,8 +1,9 @@
 import os
 from PyQt6.QtGui import QIcon, QPixmap
 from PyQt6.QtWidgets import QToolBox, QWidget, QVBoxLayout, QLabel, QSizePolicy
-from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtCore import pyqtSignal, QTimer
 from PyQt6 import uic
+from copy import deepcopy
 
 
 class Settings(QWidget):
@@ -17,71 +18,14 @@ class Settings(QWidget):
         self.parameters = parameters
         self.viewer = viewer
         self.anim_file = anim_file
-        self.sizeX.setValue(self.parameters["sizeX"])
-        self.sizeY.setValue(self.parameters["sizeY"])
 
-        self.og_width = self.parameters["sizeX"]
-        self.og_height = self.parameters["sizeY"]
+        if self.parameters["route"] != "General Settings":
+            self.warning.hide()
+            self.warning_2.hide()
+        else:
+            self.frame_2.hide()
 
-        self.posX.setValue(self.parameters["posX"])
-        self.posY.setValue(self.parameters["posY"] * -1)
-        self.posZ.setValue(self.parameters["posZ"])
-        self.rotation.setValue(self.parameters["rotation"])
-
-        self.originX.setValue(self.parameters.get("originX", 0))
-        self.originY.setValue(self.parameters.get("originY", 0) * -1)
-        self.deg.setValue(self.parameters.get("deg", 90))
-
-        self.originXright.setValue(self.parameters.get("originXright", self.parameters.get("originX", 0)))
-        self.originYright.setValue(self.parameters.get("originYright", self.parameters.get("originY", 0)) * -1)
-        self.degRight.setValue(self.parameters.get("degRight", self.parameters.get("deg", 90)))
-        self.originXzoom.setValue(self.parameters.get("originXzoom", self.parameters.get("originX", 0)))
-        self.originYzoom.setValue(self.parameters.get("originYzoom", self.parameters.get("originY", 0)) * -1)
-        self.degZoom.setValue(self.parameters.get("degZoom", self.parameters.get("deg", 90)))
-
-        self.originXwhammy.setValue(self.parameters.get("originYwhammy", 0))
-        self.originYwhammy.setValue(self.parameters.get("originXwhammy", 0) * -1)
-        self.degWhammy.setValue(self.parameters.get("degWhammy", 0))
-
-        self.cursorScaleX.setValue(self.parameters.get("cursorScaleX", self.parameters.get("cursorScale", 0.003)))
-        self.cursorScaleY.setValue(self.parameters.get("cursorScaleY", self.parameters.get("cursorScale", 0.004)))
-        self.invert_mouse_x.setChecked(self.parameters.get("invert_mouse_x", 1) == 1)
-        self.invert_mouse_y.setChecked(self.parameters.get("invert_mouse_y", 0) == 1)
-        self.track_mouse_x.setChecked(self.parameters.get("track_mouse_x", 1) == 1)
-        self.track_mouse_y.setChecked(self.parameters.get("track_mouse_y", 1) == 1)
-
-        self.deadzone.setValue(self.parameters.get("deadzone", 0.0550))
-        self.player.setValue(self.parameters.get("player", 0))
-        self.player2.setValue(self.parameters.get("player2", 0))
-        self.buttonCombo.setCurrentIndex(self.parameters.get("buttons", 0))
-
-        self.posBothX.setValue(self.parameters.get("posBothX", 0))
-        self.posBothY.setValue(self.parameters.get("posBothY", 0) * -1)
-        self.rotationBoth.setValue(self.parameters.get("rotationBoth", 0))
-        self.posLeftX.setValue(self.parameters.get("posLeftX", 0))
-        self.posLeftY.setValue(self.parameters.get("posLeftY", 0) * -1)
-        self.rotationLeft.setValue(self.parameters.get("rotationLeft", 0))
-        self.posRightX.setValue(self.parameters.get("posRightX", 0))
-        self.posRightY.setValue(self.parameters.get("posRightY", 0) * -1)
-        self.rotationRight.setValue(self.parameters.get("rotationRight", 0))
-
-        self.posGuitarUpX.setValue(self.parameters.get("posGuitarUpX", 0))
-        self.posGuitarUpY.setValue(self.parameters.get("posGuitarUpY", 0) * -1)
-        self.rotationGuitarUp.setValue(self.parameters.get("rotationGuitarUp", 0))
-        self.posGuitarDownX.setValue(self.parameters.get("posGuitarDownX", 0))
-        self.posGuitarDownY.setValue(self.parameters.get("posGuitarDownY", 0) * -1)
-        self.rotationGuitarDown.setValue(self.parameters.get("rotationGuitarDown", 0))
-
-        self.guitarNote_Green.setChecked("Green" in self.parameters.get("chords", []))
-        self.guitarNote_Red.setChecked("Red" in self.parameters.get("chords", []))
-        self.guitarNote_Yellow.setChecked("Yellow" in self.parameters.get("chords", []))
-        self.guitarNote_Blue.setChecked("Blue" in self.parameters.get("chords", []))
-        self.guitarNote_Orange.setChecked("Orange" in self.parameters.get("chords", []))
-
-        self.animation_idle.setChecked(self.parameters.get("animation_idle", True))
-        self.load_animations()
-
-        self.check_hotkeys()
+        self.set_data(changed_keys=[])
 
         self.sizeX.valueChanged.connect(self.maintain_aspect_ratio_w)
         self.sizeY.valueChanged.connect(self.maintain_aspect_ratio_h)
@@ -135,38 +79,11 @@ class Settings(QWidget):
         self.buttonCombo.currentIndexChanged.connect(self.save_current)
         self.setShortcut.clicked.connect(self.request_shortcut)
 
-        if "controller" not in self.parameters.keys():
-            self.parameters["controller"] = ["ignore"]
-
-        self.blinkingGroup.setChecked(self.parameters["blinking"] != "ignore")
-        self.talkingGroup.setChecked(self.parameters["talking"] != "ignore")
-        self.controllerGroup.setChecked("ignore" not in self.parameters["controller"])
-        self.cssGroup.setChecked(self.parameters["use_css"])
-        self.invertAxis.setChecked(self.parameters.get("invertAxis", False))
-
-        self.cursorGroup.setChecked(self.parameters.get("cursor", False))
-
-        self.css.setPlainText(self.parameters["css"])
-
         self.blinkingGroup.toggled.connect(self.hide_blinking)
         self.talkingGroup.toggled.connect(self.hide_talking)
         self.controllerGroup.toggled.connect(self.hide_controller)
         self.cursorGroup.toggled.connect(self.hide_cursor)
         self.cssGroup.toggled.connect(self.hide_css)
-
-        self.blinkOpen.setChecked(self.parameters["blinking"] == "blinking_open")
-        self.blinkClosed.setChecked(self.parameters["blinking"] == "blinking_closed")
-
-        self.display.setChecked(self.parameters.get("mode", 'display') == "display")
-        self.move.setChecked(self.parameters.get("mode", 'display') == "move")
-        self.guitar.setChecked(self.parameters.get("mode", 'display') == "guitar")
-
-        self.talkOpen.setChecked(self.parameters["talking"] == "talking_open")
-        self.talkClosed.setChecked(self.parameters["talking"] == "talking_closed")
-        self.talkScreaming.setChecked(self.parameters["talking"] == "talking_screaming")
-
-        self.controllerButtons.setChecked("controller_buttons" in self.parameters["controller"])
-        self.controllerWheel.setChecked("controller_wheel" in self.parameters["controller"])
 
         self.blinkOpen.toggled.connect(self.save_current)
         self.blinkClosed.toggled.connect(self.save_current)
@@ -191,6 +108,10 @@ class Settings(QWidget):
         self.talking_animation_direction.currentIndexChanged.connect(self.save_current)
         self.idle_speed.valueChanged.connect(self.save_current)
         self.talking_speed.valueChanged.connect(self.save_current)
+        self.idle_animation_pacing.currentIndexChanged.connect(self.save_current)
+        self.talking_animation_pacing.currentIndexChanged.connect(self.save_current)
+        self.idle_animation_iteration.valueChanged.connect(self.save_current)
+        self.talking_animation_iteration.valueChanged.connect(self.save_current)
 
         self.display.toggled.connect(self.save_current)
         self.move.toggled.connect(self.save_current)
@@ -207,31 +128,147 @@ class Settings(QWidget):
         self.hide_css()
         self.hide_animations()
 
-    def load_animations(self):
-        animations = self.viewer.get_animations(self.anim_file, get_all=True)
+    def update_value(self, changed_keys, updating, key, function, default, type="normal"):
+        if (key in changed_keys) or (not updating):
+            obj_name, method_name = function.rsplit('.', 1)
+            obj = getattr(self, obj_name)  # Get the object
+            method = getattr(obj, method_name)  # Get the method
 
-        self.idle_animation.clear()
-        self.talking_animation.clear()
+            if hasattr(obj, 'blockSignals'):  # Check if the object has blockSignals method
+                obj.blockSignals(True)  # Block signals for the object
 
-        for animation in animations:
-            self.idle_animation.addItem(animation)
-            self.talking_animation.addItem(animation)
+            match type:
+                case "result_ready":
+                    method(default)
+                case "invert":
+                    method(self.parameters.get(key, default) * -1)
+                case "compare to 1":
+                    method(self.parameters.get(key, default) == 1)
+                case "Green" | "Red" | "Yellow" | "Blue" | "Orange":
+                    method(type in self.parameters.get(key, default))
+                case "is not ignore":
+                    method(self.parameters.get(key, default) != "ignore")
+                case "ignore not in":
+                    method("ignore" not in self.parameters.get(key, default))
+                case "controller_buttons" | "controller_wheel":
+                    method(type in self.parameters.get(key, default))
+                case "blinking_open" | "blinking_closed" | "talking_open" | "talking_closed" | "talking_screaming" | "display" | "move" | "guitar":
+                    method(type == self.parameters.get(key, default))
+                case _:
+                    method(self.parameters.get(key, default))
+
+            if hasattr(obj, 'blockSignals'):
+                obj.blockSignals(False)
+            return True
+        return False
+
+    def set_data(self, changed_keys, updating=False):
+        if self.update_value(changed_keys, updating, "sizeX", "sizeX.setValue", 600):
+            if not updating:
+                self.og_width = self.parameters["sizeX"]
+        if self.update_value(changed_keys, updating, "sizeY", "sizeY.setValue", 600):
+            if not updating:
+                self.og_height = self.parameters["sizeY"]
+        self.update_value(changed_keys, updating, "posX", "posX.setValue", 0)
+        self.update_value(changed_keys, updating, "posY", "posY.setValue", 0, "invert")
+        self.update_value(changed_keys, updating, "posZ", "posZ.setValue", 0)
+        self.update_value(changed_keys, updating, "rotation", "rotation.setValue", 0)
+        self.update_value(changed_keys, updating, "originX", "originX.setValue", 0)
+        self.update_value(changed_keys, updating, "originY", "originY.setValue", 0, "invert")
+        self.update_value(changed_keys, updating, "deg", "deg.setValue", 90)
+        self.update_value(changed_keys, updating, "originXright", "originXright.setValue", self.parameters.get("originX", 0))
+        self.update_value(changed_keys, updating, "originYright", "originYright.setValue", self.parameters.get("originY", 0), "invert")
+        self.update_value(changed_keys, updating, "degRight", "degRight.setValue", self.parameters.get("deg", 90))
+        self.update_value(changed_keys, updating, "originXzoom", "originXzoom.setValue", self.parameters.get("originX", 0))
+        self.update_value(changed_keys, updating, "originYzoom", "originYzoom.setValue", self.parameters.get("originY", 0), "invert")
+        self.update_value(changed_keys, updating, "degZoom", "degZoom.setValue", self.parameters.get("deg", 90))
+        self.update_value(changed_keys, updating, "originYwhammy", "originXwhammy.setValue", 0)
+        self.update_value(changed_keys, updating, "originXwhammy", "originYwhammy.setValue", 0, "invert")
+        self.update_value(changed_keys, updating, "degWhammy", "degWhammy.setValue", 0)
+        self.update_value(changed_keys, updating, "cursorScaleX", "cursorScaleX.setValue", self.parameters.get("cursorScale", 0.003))
+        self.update_value(changed_keys, updating, "cursorScaleY", "cursorScaleY.setValue", self.parameters.get("cursorScale", 0.004))
+        self.update_value(changed_keys, updating, "invert_mouse_x", "invert_mouse_x.setChecked", 1, "compare to 1")
+        self.update_value(changed_keys, updating, "invert_mouse_y", "invert_mouse_y.setChecked", 1, "compare to 1")
+        self.update_value(changed_keys, updating, "track_mouse_x", "track_mouse_x.setChecked", 1, "compare to 1")
+        self.update_value(changed_keys, updating, "track_mouse_y", "track_mouse_y.setChecked", 1, "compare to 1")
+        self.update_value(changed_keys, updating, "deadzone", "deadzone.setValue", 0.0550)
+        self.update_value(changed_keys, updating, "player", "player.setValue", 0)
+        self.update_value(changed_keys, updating, "player2", "player2.setValue", 0)
+        self.update_value(changed_keys, updating, "buttons", "buttonCombo.setCurrentIndex", 0)
+        self.update_value(changed_keys, updating, "posBothX", "posBothX.setValue", 0)
+        self.update_value(changed_keys, updating, "posBothY", "posBothY.setValue", 0, "invert")
+        self.update_value(changed_keys, updating, "rotationBoth", "rotationBoth.setValue", 0)
+        self.update_value(changed_keys, updating, "posLeftX", "posLeftX.setValue", 0)
+        self.update_value(changed_keys, updating, "posLeftY", "posLeftY.setValue", 0, "invert")
+        self.update_value(changed_keys, updating, "rotationLeft", "rotationLeft.setValue", 0)
+        self.update_value(changed_keys, updating, "posRightX", "posRightX.setValue", 0)
+        self.update_value(changed_keys, updating, "posRightY", "posRightY.setValue", 0, "invert")
+        self.update_value(changed_keys, updating, "rotationRight", "rotationRight.setValue", 0)
+        self.update_value(changed_keys, updating, "posGuitarUpX", "posGuitarUpX.setValue", 0)
+        self.update_value(changed_keys, updating, "posGuitarUpY", "posGuitarUpY.setValue", 0, "invert")
+        self.update_value(changed_keys, updating, "rotationGuitarUp", "rotationGuitarUp.setValue", 0)
+        self.update_value(changed_keys, updating, "posGuitarDownX", "posGuitarDownX.setValue", 0)
+        self.update_value(changed_keys, updating, "posGuitarDownY", "posGuitarDownY.setValue", 0, "invert")
+        self.update_value(changed_keys, updating, "rotationGuitarDown", "rotationGuitarDown.setValue", 0)
+        self.update_value(changed_keys, updating, "chords", "guitarNote_Green.setChecked", [], "Green")
+        self.update_value(changed_keys, updating, "chords", "guitarNote_Red.setChecked", [], "Red")
+        self.update_value(changed_keys, updating, "chords", "guitarNote_Yellow.setChecked", [], "Yellow")
+        self.update_value(changed_keys, updating, "chords", "guitarNote_Blue.setChecked", [], "Blue")
+        self.update_value(changed_keys, updating, "chords", "guitarNote_Orange.setChecked", [], "Orange")
+        self.update_value(changed_keys, updating, "animation_idle", "animation_idle.setChecked", True)
+        self.update_value(changed_keys, updating, "blinking", "blinkingGroup.setChecked", "ignore", "is not ignore")
+        self.update_value(changed_keys, updating, "talking", "talkingGroup.setChecked", "ignore", "is not ignore")
+        self.update_value(changed_keys, updating, "talking", "controllerGroup.setChecked", ["ignore"], "ignore not in")
+        self.update_value(changed_keys, updating, "use_css", "cssGroup.setChecked", False)
+        self.update_value(changed_keys, updating, "invertAxis", "invertAxis.setChecked", False)
+        self.update_value(changed_keys, updating, "cursor", "cursorGroup.setChecked", False)
+        self.update_value(changed_keys, updating, "css", "css.setPlainText", "")
+        self.update_value(changed_keys, updating, "cursor", "cursorGroup.setChecked", False)
+        self.update_value(changed_keys, updating, "blinking", "blinkOpen.setChecked", "ignore", "blinking_open")
+        self.update_value(changed_keys, updating, "blinking", "blinkClosed.setChecked", "ignore", "blinking_closed")
+        self.update_value(changed_keys, updating, "talking", "talkOpen.setChecked", "ignore", "talking_open")
+        self.update_value(changed_keys, updating, "talking", "talkClosed.setChecked", "ignore", "talking_closed")
+        self.update_value(changed_keys, updating, "talking", "talkScreaming.setChecked", "ignore", "talking_screaming")
+        self.update_value(changed_keys, updating, "mode", "display.setChecked", "display", "talking_open")
+        self.update_value(changed_keys, updating, "mode", "move.setChecked", "display", "talking_closed")
+        self.update_value(changed_keys, updating, "mode", "guitar.setChecked", "display", "talking_screaming")
+        self.update_value(changed_keys, updating, "controller", "talkClosed.setChecked", ["ignore"], "controller_buttons")
+        self.update_value(changed_keys, updating, "controller", "talkScreaming.setChecked", ["ignore"], "controller_wheel")
+        self.load_animations(changed_keys, updating)
+        if not updating:
+            self.check_hotkeys()
+
+    def load_animations(self, changed_keys, updating):
+        if not updating:
+            animations = self.viewer.get_animations(self.anim_file, get_all=True)
+
+            self.idle_animation.clear()
+            self.talking_animation.clear()
+
+            for animation in animations:
+                self.idle_animation.addItem(animation)
+                self.talking_animation.addItem(animation)
+        else:
+            animations = []
 
         idle_animation = self.parameters.get("animation_name_idle", "None")
         talking_animation = self.parameters.get("animation_name_talking", "None")
-        talking_animation_direction = self.parameters.get("animation_direction_idle", "normal")
-        idle_animation_direction = self.parameters.get("animation_direction_talking", "normal")
 
-        if idle_animation in animations:
-            self.idle_animation.setCurrentText(idle_animation)
-        if talking_animation in animations:
-            self.talking_animation.setCurrentText(talking_animation)
+        if idle_animation in animations or updating:
+            self.update_value(changed_keys, updating, "animation_name_idle", "idle_animation.setCurrentText", idle_animation, "result_ready")
+        if talking_animation in animations or updating:
+            self.update_value(changed_keys, updating, "animation_name_talking", "talking_animation.setCurrentText", talking_animation, "result_ready")
+        self.update_value(changed_keys, updating, "animation_direction_talking", "talking_animation_direction.setCurrentText", "normal")
+        self.update_value(changed_keys, updating, "animation_direction_idle", "idle_animation_direction.setCurrentText", "normal")
 
-        self.talking_animation_direction.setCurrentText(talking_animation_direction)
-        self.idle_animation_direction.setCurrentText(idle_animation_direction)
+        self.update_value(changed_keys, updating, "animation_pacing_talking", "talking_animation_pacing.setCurrentText", "ease-in-out")
+        self.update_value(changed_keys, updating, "animation_pacing_idle", "idle_animation_pacing.setCurrentText", "ease-in-out")
 
-        self.idle_speed.setValue(self.parameters.get("animation_speed_idle", 6))
-        self.talking_speed.setValue(self.parameters.get("animation_speed_talking", 0.5))
+        self.update_value(changed_keys, updating, "animation_speed_idle", "idle_speed.setValue", 6)
+        self.update_value(changed_keys, updating, "animation_speed_talking", "talking_speed.setValue", 0.5)
+
+        self.update_value(changed_keys, updating, "animation_iteration_idle", "idle_animation_iteration.setValue", 0)
+        self.update_value(changed_keys, updating, "animation_iteration_talking", "talking_animation_iteration.setValue", 0)
 
     def check_hotkeys(self):
         if self.parameters["hotkeys"]:
@@ -384,6 +421,11 @@ class Settings(QWidget):
         self.parameters['animation_direction_idle'] = self.idle_animation_direction.currentText()
         self.parameters['animation_direction_talking'] = self.talking_animation_direction.currentText()
 
+        self.parameters['animation_iteration_idle'] = self.idle_animation_iteration.value()
+        self.parameters['animation_iteration_talking'] = self.talking_animation_iteration.value()
+        self.parameters['animation_pacing_idle'] = self.idle_animation_pacing.currentText()
+        self.parameters['animation_pacing_talking'] = self.talking_animation_pacing.currentText()
+
         self.parameters["use_css"] = True if self.cssGroup.isChecked() else False
         self.parameters["css"] = self.css.toPlainText()
         self.parameters["rotation"] = self.rotation.value()
@@ -457,9 +499,25 @@ class Settings(QWidget):
             self.og_height = self.sizeY.value()
             self.save_current()
 
+    def update_data(self, value, default=False):
+        exclusion_list = ['route', 'filename', "parent_folder", "thumbnail_path", "title", "hotkeys"]
+        changed_keys = []
+        for key, val in value.items():
+            if key not in exclusion_list:
+                if self.parameters.get(key) != val:
+                    self.parameters[key] = deepcopy(val)
+                    changed_keys.append(key)
+        # print(self.parameters)
+        self.set_data(changed_keys, True)
+        if default:
+            self.settings_changed_default.emit(self.parameters)
+        else:
+            self.settings_changed.emit(self.parameters)
+
 
 class SettingsToolBox(QToolBox):
     settings_changed = pyqtSignal(dict)
+    settings_changed_list = pyqtSignal(list)
     shortcut = pyqtSignal(dict)
     delete_shortcut = pyqtSignal(dict)
 
@@ -467,13 +525,15 @@ class SettingsToolBox(QToolBox):
         super().__init__()
 
         self.items = []
+        self.values = []
         self.page = None
         self.exe_dir = exe_dir
         self.viewer = viewer
         self.anim_file = anim_file
+        self.childs = {}
+        self.general_settings_changed = False
 
         StyleSheet = """
-
                 QWidget{
                     background: #b8cdee;
                 }
@@ -574,6 +634,18 @@ class SettingsToolBox(QToolBox):
         self.setStyleSheet(StyleSheet)
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
 
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.check_values)
+        self.timer.start(1000)
+
+    def addValue(self, value):
+        self.values.append(value)
+
+    def check_values(self):
+        if self.values:
+            self.settings_changed_list.emit(self.values)
+            self.values.clear()
+
     def set_items(self, items, page):
         self.items = items
         self.page = page
@@ -585,32 +657,13 @@ class SettingsToolBox(QToolBox):
         self.update()
 
     def update(self):
-        routes = [i["route"] for i in self.items]
-
-        used_routes = []
-        while self.count() > 0:
-            index = 0
-            widget = self.widget(index)
-            if widget:
-                for i in range(widget.layout().count()):
-                    child_widget = widget.layout().itemAt(i).widget()
-                    if child_widget:
-                        if child_widget.accessibleName() not in routes:
-                            child_widget.setParent(None)
-                        else:
-                            used_routes.append(child_widget.accessibleName())
-
-                widget.setParent(None)
-            self.removeItem(index)
-
-        filtered_items = [i for i in self.items if i["route"] not in used_routes]
-
-        for item in filtered_items:
-
+        filtered_items_category = []
+        for item in self.items:
             route = item["route"]
 
             filename = os.path.basename(route)
-            parent_folder = os.path.basename(os.path.dirname(route)) if not route.startswith("$url") else route.split("/")[1]
+            parent_folder = os.path.basename(os.path.dirname(route)) if not route.startswith("$url") else \
+                route.split("/")[1]
 
             if parent_folder.lower() == self.page.lower():
                 title = f"{filename}"
@@ -619,37 +672,108 @@ class SettingsToolBox(QToolBox):
                     os.path.dirname(route), "thumbs", os.path.basename(
                         route.replace(".gif", ".png").replace(".webp", ".png")
                     )
-                ) if not filename.endswith(".html") else None
+                ) if not filename.endswith(".html") and route != "General Settings" else None
 
-                settings_widget = Settings(item, exe_dir=self.exe_dir, viewer=self.viewer, anim_file=self.anim_file)
+                result = deepcopy(item)
+                result["filename"] = filename
+                result["parent_folder"] = parent_folder
+                result["thumbnail_path"] = thumbnail_path
+                result["title"] = title
+
+                filtered_items_category.append(result)
+
+        if len(filtered_items_category) > 2:
+            general_settings_data = deepcopy(filtered_items_category[0])
+            general_settings_data["route"] = "General Settings"
+            general_settings_data["filename"] = "General Settings"
+            general_settings_data["parent_folder"] = ""
+            general_settings_data["thumbnail_path"] = ""
+            general_settings_data["title"] = "General Settings"
+            filtered_items_category = [general_settings_data] + filtered_items_category
+
+        filtered_routes = [item["route"] for item in filtered_items_category]
+
+        existing_widgets = {self.widget(index).accessibleName(): self.widget(index) for index in range(self.count())}
+        used_routes = []
+        for route, widget in existing_widgets.items():
+            if route not in filtered_routes:
+                for i in range(widget.layout().count()):
+                    child_widget = widget.layout().itemAt(i).widget()
+                    if child_widget:
+                        child_widget.setParent(None)
+                widget.setParent(None)
+                self.removeItem(self.indexOf(widget))
+                if route != "General Settings":
+                    self.childs.pop(route)
+            else:
+                used_routes.append(route)
+
+        for item in filtered_items_category:
+            route = item["route"]
+            thumbnail_path = item["thumbnail_path"]
+            title = item["title"]
+
+            if route in used_routes:
+                continue
+
+            settings_widget = Settings(item, exe_dir=self.exe_dir, viewer=self.viewer, anim_file=self.anim_file)
+            if route == "General Settings":
+                settings_widget.settings_changed.connect(self.update_childs)
+                settings_widget.settings_changed_default.connect(self.save_as_default_childs)
+            else:
                 settings_widget.settings_changed.connect(self.save)
                 settings_widget.settings_changed_default.connect(self.save_as_default)
                 settings_widget.delete_shortcut.connect(self.delete_shortcut_)
                 settings_widget.shortcut.connect(self.request_shortcut)
+            settings_widget.setAccessibleName(route)
 
-                page = QWidget()
-                page.setAccessibleName(route)
-                layout = QVBoxLayout()
-                layout.setContentsMargins(0, 0, 0, 0)
+            page = QWidget()
+            page.setAccessibleName(route)
+            layout = QVBoxLayout()
+            layout.setContentsMargins(0, 0, 0, 0)
 
-                layout.addWidget(settings_widget)
-                page.setLayout(layout)
-
+            layout.addWidget(settings_widget)
+            page.setLayout(layout)
+            if route == "General Settings":
+                self.insertItem(0, page, None)
+                self.setCurrentIndex(0)
+                self.setItemText(0, title)
+            else:
                 self.addItem(page, "")
                 index = self.count() - 1
-
+                self.setItemText(index, title)
                 if thumbnail_path is not None:
                     thumbnail_label = QLabel()
                     thumbnail_pixmap = QPixmap(thumbnail_path)
                     thumbnail_label.setPixmap(thumbnail_pixmap.scaledToWidth(15))
                     self.setItemIcon(index, QIcon(thumbnail_pixmap))
-                self.setItemText(index, title)
+
+                self.setCurrentIndex(index)
+                self.childs[route] = settings_widget
+
+    def update_childs(self, value):
+        self.general_settings_changed = True
+        for child in self.childs:
+            self.childs[child].update_data(value)
+        self.general_settings_changed = False
+
+    def save_as_default_childs(self, value):
+        self.general_settings_changed = True
+        for child in self.childs:
+            self.childs[child].update_data(value, True)
+        self.general_settings_changed = False
 
     def save(self, value):
-        self.settings_changed.emit({"value": value, "default": False})
+        if self.general_settings_changed:
+            self.addValue({"value": value, "default": False})
+        else:
+            self.settings_changed.emit({"value": value, "default": False})
 
     def save_as_default(self, value):
-        self.settings_changed.emit({"value": value, "default": True})
+        if self.general_settings_changed:
+            self.addValue({"value": value, "default": True})
+        else:
+            self.settings_changed.emit({"value": value, "default": True})
 
     def request_shortcut(self, value):
         self.shortcut.emit({"value": value, "type": "Assets"})

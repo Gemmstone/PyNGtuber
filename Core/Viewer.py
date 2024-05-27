@@ -85,10 +85,18 @@ class LayeredImageViewer(QWebEngineView):
                 ]
                 animation_added_div['animation_name_idle'] = layer.get("animation_name_idle", "None")
                 animation_added_div['animation_name_talking'] = layer.get("animation_name_talking", "None")
+
                 animation_added_div['animation_speed_idle'] = layer.get("animation_speed_idle", 6)
                 animation_added_div['animation_speed_talking'] = layer.get("animation_speed_talking", 0.5)
+
                 animation_added_div['animation_direction_idle'] = layer.get('animation_direction_idle',  "normal")
                 animation_added_div['animation_direction_talking'] = layer.get('animation_direction_talking',  "normal")
+
+                animation_added_div['animation_iteration_idle'] = layer.get("animation_iteration_idle", 0)
+                animation_added_div['animation_iteration_talking'] = layer.get("animation_iteration_talking", 0)
+
+                animation_added_div['animation_pacing_idle'] = layer.get('animation_pacing_idle',  "ease-in-out")
+                animation_added_div['animation_pacing_talking'] = layer.get('animation_pacing_talking',  "ease-in-out")
 
                 cursor_div = soup.new_tag('div', style=f"""
                                     position: absolute !important; 

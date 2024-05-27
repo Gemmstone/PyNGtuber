@@ -25,13 +25,13 @@ import os
 import re
 
 
-current_version = "v1.6.1"
+current_version = "v1.7.0"
 repo_owner = "Gemmstone"
 repo_name = "PyNGtuber"
 
 directories = ["Data", "Models", "Assets", "Viewer"]
 directories_skip = ["Models"]
-overwrite_files = ["script.js", "animations.css"]
+overwrite_files = ["script.js", "animations.css", "viewer.html"]
 
 os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = '4864'
 os.environ['QTWEBENGINE_CHROMIUM_FLAGS'] = '--no-sandbox'
@@ -423,8 +423,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.idle_animation.activated.connect(self.update_settings)
         self.talking_animation.activated.connect(self.update_settings)
+        self.idle_animation_pacing.activated.connect(self.update_settings)
+        self.talking_animation_pacing.activated.connect(self.update_settings)
+        self.idle_animation_direction.activated.connect(self.update_settings)
+        self.talking_animation_direction.activated.connect(self.update_settings)
         self.idle_speed.valueChanged.connect(self.update_settings)
         self.talking_speed.valueChanged.connect(self.update_settings)
+        self.idle_animation_iteration.valueChanged.connect(self.update_settings)
+        self.talking_animation_iteration.valueChanged.connect(self.update_settings)
 
         self.load_settings()
         self.comboBox.currentIndexChanged.connect(self.update_settings)
@@ -446,6 +452,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.SettingsGallery = SettingsToolBox(exe_dir=exe_dir, viewer=self.viewer, anim_file=self.anim_file)
         self.SettingsGallery.settings_changed.connect(self.saveSettings)
+        self.SettingsGallery.settings_changed_list.connect(self.saveSettings_list)
         self.SettingsGallery.shortcut.connect(self.dialog_shortcut)
         self.SettingsGallery.delete_shortcut.connect(self.delete_shortcut)
         self.scrollArea_2.setWidget(self.SettingsGallery)
@@ -589,6 +596,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.idle_speed.setValue(default["idle"]["speed"])
         self.talking_speed.setValue(default["talking"]["speed"])
+
+        self.idle_animation_pacing.setCurrentText(default["idle"].get("pacing", "ease-in-out"))
+        self.talking_animation_pacing.setCurrentText(default["talking"].get("pacing", "ease-in-out"))
+
+        self.idle_animation_direction.setCurrentText(default["idle"].get("direction", "normal"))
+        self.talking_animation_direction.setCurrentText(default["talking"].get("direction", "normal"))
+
+        self.idle_animation_iteration.setValue(default["idle"].get("iteration", 0))
+        self.talking_animation_iteration.setValue(default["talking"].get("iteration", 0))
 
         if default is not None:
             self.update_settings()
@@ -745,11 +761,17 @@ class MainWindow(QtWidgets.QMainWindow):
             "animations": {
                 "idle": {
                     "name": self.idle_animation.currentText(),
-                    "speed": self.idle_speed.value()
+                    "speed": self.idle_speed.value(),
+                    "iteration": self.idle_animation_iteration.value(),
+                    "pacing": self.idle_animation_pacing.currentText(),
+                    "direction": self.idle_animation_direction.currentText()
                 },
                 "talking": {
                     "name": self.talking_animation.currentText(),
-                    "speed": self.talking_speed.value()
+                    "speed": self.talking_speed.value(),
+                    "iteration": self.talking_animation_iteration.value(),
+                    "pacing": self.talking_animation_pacing.currentText(),
+                    "direction": self.talking_animation_direction.currentText()
                 }
             },
             "audio engine": self.audio_engine.currentText(),
@@ -1143,11 +1165,17 @@ class MainWindow(QtWidgets.QMainWindow):
             data["animations"] = {
                 "idle": {
                     "name": self.idle_animation.currentText(),
-                    "speed": self.idle_speed.value()
+                    "speed": self.idle_speed.value(),
+                    "iteration": self.idle_animation_iteration.value(),
+                    "pacing": self.idle_animation_pacing.currentText(),
+                    "direction": self.idle_animation_direction.currentText()
                 },
                 "talking": {
                     "name": self.talking_animation.currentText(),
-                    "speed": self.talking_speed.value()
+                    "speed": self.talking_speed.value(),
+                    "iteration": self.talking_animation_iteration.value(),
+                    "pacing": self.talking_animation_pacing.currentText(),
+                    "direction": self.talking_animation_direction.currentText()
                 }
             }
             json.dump(data, file, indent=4, ensure_ascii=False)
@@ -1205,12 +1233,17 @@ class MainWindow(QtWidgets.QMainWindow):
                                 var animation = "{self.talking_animation.currentText()}";
                                 var speed = {self.talking_speed.value()};
                                 var direction = "{self.talking_animation_direction.currentText()}";
+                                var pacing = "{self.talking_animation_pacing.currentText()}";
+                                var iteration = {self.talking_animation_iteration.value()};
                            }} else {{
-                               var animation = "{self.idle_animation.currentText()}";
-                               var speed = {self.idle_speed.value()};
-                               var direction = "{self.idle_animation_direction.currentText()}";
+                                var animation = "{self.idle_animation.currentText()}";
+                                var speed = {self.idle_speed.value()};
+                                var direction = "{self.idle_animation_direction.currentText()}";
+                                var pacing = "{self.idle_animation_pacing.currentText()}";
+                                var iteration = {self.idle_animation_iteration.value()};
                            }} 
-                           image.style.animation = `${{animation}} ${{speed}}s ease-in-out infinite`;
+                           iteration = (iteration == 0) ? "infinite" : iteration;
+                           image.style.animation = `${{animation}} ${{speed}}s  ${{pacing}} ${{iteration}}`;
                            image.style.animationDirection = "{self.idle_animation_direction.currentText()}";
                         }});
                     }}
@@ -1220,12 +1253,17 @@ class MainWindow(QtWidgets.QMainWindow):
                                 var animation = animation_div.attributes.animation_name_talking.value;
                                 var speed = animation_div.attributes.animation_speed_talking.value;
                                 var direction = animation_div.attributes.animation_direction_talking.value;
+                                var pacing = animation_div.attributes.animation_pacing_talking.value;
+                                var iteration = animation_div.attributes.animation_iteration_talking.value;
                             }} else {{
                                 var animation = animation_div.attributes.animation_name_idle.value;
                                 var speed = animation_div.attributes.animation_speed_idle.value;
                                 var direction = animation_div.attributes.animation_direction_idle.value;
+                                var pacing = animation_div.attributes.animation_pacing_idle.value;
+                                var iteration = animation_div.attributes.animation_iteration_idle.value;
                             }}
-                            animation_div.style.animation = `${{animation}} ${{speed}}s ease-in-out infinite`;
+                            iteration = (iteration == 0) ? "infinite" : iteration;
+                            animation_div.style.animation = `${{animation}} ${{speed}}s ${{pacing}} ${{iteration}}`;
                             animation_div.style.animationDirection = direction;
                         }});
                     }}
@@ -1233,6 +1271,15 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.viewer.page().runJavaScript(js_code)
         except AttributeError:
             pass
+
+    def saveSettings_list(self, settings_list):
+        for settings in settings_list:
+            if settings['default']:
+                self.file_parameters_default[settings['value']['route']] = copy.deepcopy(settings["value"])
+                self.file_parameters_default[settings['value']['route']].pop("route")
+            self.file_parameters_current[settings['value']['route']] = copy.deepcopy(settings["value"])
+            self.file_parameters_current[settings['value']['route']].pop("route")
+        self.update_viewer(self.current_files)
 
     def saveSettings(self, settings):
         if settings['default']:

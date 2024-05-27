@@ -81,6 +81,49 @@ QFrame{
     <number>0</number>
    </property>
    <item>
+    <widget class="QLabel" name="warning">
+     <property name="styleSheet">
+      <string notr="true">font-weight: bold;
+background-color: red;
+color: yellow;
+border-top-left-radius: 9px;</string>
+     </property>
+     <property name="text">
+      <string>These are General Settings,
+all settings changed here will
+change the settings in all the
+selected assets in the
+selected category</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="warning_2">
+     <property name="styleSheet">
+      <string notr="true">font-weight: bold;
+background-color: yellow;
+color: red;
+border-top-left-radius: 9px;</string>
+     </property>
+     <property name="text">
+      <string>To change settings per asset,
+select it at the bottom</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="styleSheet">
       <string notr="true"/>
@@ -507,7 +550,7 @@ QTabBar::tab:hover {
 }</string>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>1</number>
            </property>
            <property name="documentMode">
             <bool>true</bool>
@@ -559,66 +602,7 @@ QTabBar::tab:hover {
                 <property name="spacing">
                  <number>3</number>
                 </property>
-                <item row="1" column="1">
-                 <widget class="QDoubleSpinBox" name="idle_speed">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>25</height>
-                   </size>
-                  </property>
-                  <property name="toolTip">
-                   <string>Adjust if you feel that your microphone is too quiet or too loud</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                  <property name="prefix">
-                   <string/>
-                  </property>
-                  <property name="suffix">
-                   <string>s</string>
-                  </property>
-                  <property name="decimals">
-                   <number>3</number>
-                  </property>
-                  <property name="minimum">
-                   <double>0.000000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>0.100000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>6.000000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_42">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>25</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Speed:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="2">
+                <item row="1" column="3">
                  <widget class="QComboBox" name="idle_animation_direction">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -672,7 +656,123 @@ QTabBar::tab:hover {
                   </item>
                  </widget>
                 </item>
-                <item row="0" column="0" colspan="3">
+                <item row="1" column="0">
+                 <widget class="QDoubleSpinBox" name="idle_speed">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>25</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Adjust if you feel that your microphone is too quiet or too loud</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                  <property name="prefix">
+                   <string/>
+                  </property>
+                  <property name="suffix">
+                   <string>s</string>
+                  </property>
+                  <property name="decimals">
+                   <number>3</number>
+                  </property>
+                  <property name="minimum">
+                   <double>0.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>6.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QSpinBox" name="idle_animation_iteration">
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QComboBox" name="idle_animation_pacing">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>25</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Animation name</string>
+                  </property>
+                  <property name="whatsThis">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="maxVisibleItems">
+                   <number>10</number>
+                  </property>
+                  <property name="sizeAdjustPolicy">
+                   <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>ease</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>ease-in</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>ease-out</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>ease-in-out</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>linear</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>step-start</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>step-end</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="0" column="0" colspan="4">
                  <widget class="QComboBox" name="idle_animation">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -758,100 +858,7 @@ QTabBar::tab:hover {
                 <property name="spacing">
                  <number>3</number>
                 </property>
-                <item row="1" column="1">
-                 <widget class="QDoubleSpinBox" name="talking_speed">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>25</height>
-                   </size>
-                  </property>
-                  <property name="toolTip">
-                   <string>Adjust if you feel that your microphone is too quiet or too loud</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                  <property name="prefix">
-                   <string/>
-                  </property>
-                  <property name="suffix">
-                   <string>s</string>
-                  </property>
-                  <property name="decimals">
-                   <number>3</number>
-                  </property>
-                  <property name="minimum">
-                   <double>0.000000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>0.100000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>0.500000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_43">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>25</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Speed:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0" colspan="3">
-                 <widget class="QComboBox" name="talking_animation">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>25</height>
-                   </size>
-                  </property>
-                  <property name="toolTip">
-                   <string>Animation name</string>
-                  </property>
-                  <property name="whatsThis">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                  </property>
-                  <property name="maxVisibleItems">
-                   <number>10</number>
-                  </property>
-                  <property name="sizeAdjustPolicy">
-                   <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="2">
+                <item row="1" column="3">
                  <widget class="QComboBox" name="talking_animation_direction">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -903,6 +910,156 @@ QTabBar::tab:hover {
                     <string>alternate-reverse</string>
                    </property>
                   </item>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QDoubleSpinBox" name="talking_speed">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>25</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Adjust if you feel that your microphone is too quiet or too loud</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                  <property name="prefix">
+                   <string/>
+                  </property>
+                  <property name="suffix">
+                   <string>s</string>
+                  </property>
+                  <property name="decimals">
+                   <number>3</number>
+                  </property>
+                  <property name="minimum">
+                   <double>0.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.500000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QSpinBox" name="talking_animation_iteration">
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QComboBox" name="talking_animation_pacing">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>25</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Animation name</string>
+                  </property>
+                  <property name="whatsThis">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="maxVisibleItems">
+                   <number>10</number>
+                  </property>
+                  <property name="sizeAdjustPolicy">
+                   <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>ease</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>ease-in</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>ease-out</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>ease-in-out</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>linear</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>step-start</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>step-end</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="0" column="0" colspan="4">
+                 <widget class="QComboBox" name="talking_animation">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>25</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Animation name</string>
+                  </property>
+                  <property name="whatsThis">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="maxVisibleItems">
+                   <number>10</number>
+                  </property>
+                  <property name="sizeAdjustPolicy">
+                   <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+                  </property>
                  </widget>
                 </item>
                </layout>
