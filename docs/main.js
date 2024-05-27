@@ -73,8 +73,18 @@ function markdownParse(url, id) {
       }
       
       document.getElementById(id).innerHTML = parsedMarkdown.innerHTML;
-      
-      document.getElementById("hot_icon").innerHTML = '<iframe width="300" height="300" frameBorder="0" src="Viewer/viewer.html"></iframe seamless>';
+      document.getElementById("hot_icon").innerHTML = '<iframe id="resultFrame" width="300" height="300" frameBorder="0" src="Viewer/viewer.html"></iframe seamless>';
     });
   });
+}
+
+function waitForElement(elementId, callBack){
+  window.setTimeout(function(){
+    var element = document.getElementById(elementId);
+    if(element){
+      callBack(elementId, element);
+    }else{
+      waitForElement(elementId, callBack);
+    }
+  },500)
 }
