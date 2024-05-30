@@ -304,6 +304,20 @@ class MainWindow(QtWidgets.QMainWindow):
         self.hidden_ui = False
         uic.loadUi(os.path.join(exe_dir, f"UI", "main.ui"), self)
 
+        self.settings_json_file = os.path.join(res_dir, "Data", "settings.json")
+        try:
+            with open(self.settings_json_file, "r") as f:
+                self.settings = json.load(f)
+        except FileNotFoundError:
+            pass
+
+        self.viewer = LayeredImageViewer(exe_dir=res_dir, hw_acceleration=self.settings.get("hardware acceleration", False))
+        self.viewer.failed_to_load_images.connect(self.retry_load)
+        self.viewer.loadFinishedSignal.connect(self.reboot_audio)
+        self.viewer.div_count_signal.connect(self.update_div_count)
+        self.viewerFrame.layout().addWidget(self.viewer)
+        self.viewer.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
+
         self.threadpool = QThreadPool()
 
         self.edited = self.edited = None
@@ -324,7 +338,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.current_json_file = os.path.join(res_dir, "Data", "current.json")
         self.current_model_json_file = os.path.join(res_dir, "Data", "current_model.json")
         self.current_expression_json_file = os.path.join(res_dir, "Data", "current_expression.json")
-        self.settings_json_file = os.path.join(res_dir, "Data", "settings.json")
         self.apiKeys = os.path.join(res_dir, "Data", "keys.json")
 
         self.js_file = os.path.join(res_dir, "Viewer", "script.js")
@@ -367,18 +380,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.midi_listener = MidiListener()
         self.midi_listener.shortcut.connect(self.shortcut_received)
         self.midi_listener.start()
-
-        try:
-            with open(self.settings_json_file, "r") as f:
-                self.settings = json.load(f)
-        except FileNotFoundError:
-            pass
-
-        self.viewer = LayeredImageViewer(exe_dir=res_dir, hw_acceleration=self.settings.get("hardware acceleration", False))
-        self.viewer.loadFinishedSignal.connect(self.reboot_audio)
-        self.viewer.div_count_signal.connect(self.update_div_count)
-        self.viewerFrame.layout().addWidget(self.viewer)
-        self.viewer.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
 
         try:
             with open(self.json_file, "r") as f:
@@ -570,8 +571,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mouse_tracker.mouse_position.connect(self.on_mouse_position_changed)
         self.mouse_tracking_changed()
 
-        QtCore.QTimer.singleShot(1500, lambda: self.update_viewer(self.current_files, update_gallery=True))
-        QtCore.QTimer.singleShot(10000, self.check_for_update)
+        self.check_for_update()
+        self.update_viewer(self.current_files, update_gallery=True)
+
+    def retry_load(self):
+        QtCore.QTimer.singleShot(500, lambda: self.update_viewer(self.current_files, update_gallery=True))
+        # self.update_viewer(self.current_files, update_gallery=True)
 
     def update_div_count(self, count):
         self.div_count.setText(count)
