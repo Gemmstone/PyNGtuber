@@ -1,8 +1,8 @@
 {
-    "volume threshold": 6,
-    "scream threshold": 85,
-    "delay threshold": 1,
-    "microphone selection": 3,
+    "volume threshold": 10,
+    "scream threshold": 84,
+    "delay threshold": 3,
+    "microphone selection": 2,
     "microphone mute": false,
     "background color": 0,
     "export mode": 0,
@@ -24,9 +24,20 @@
             "iteration": 0,
             "pacing": "ease-in-out",
             "direction": "normal"
+        },
+        "screaming": {
+            "name": "floaty",
+            "speed": 0.5,
+            "iteration": 0,
+            "pacing": "ease-in-out",
+            "direction": "normal"
         }
     },
     "audio engine": "pyaudio",
     "mouse tracking": true,
-    "hardware acceleration": true
+    "hardware acceleration": true,
+    "track_mouse_x": true,
+    "track_mouse_y": true,
+    "invert_mouse_x": false,
+    "invert_mouse_y": false
 }

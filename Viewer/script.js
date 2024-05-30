@@ -89,19 +89,29 @@ async function update_mic(status, animation, speed, direction, pacing, iteration
     }
     if(imageAddedWrapper.length > 0) {
         imageAddedWrapper.forEach(function(animation_div) {
-            if (status == 1 || status == 2) {
-                animation = animation_div.attributes.animation_name_talking.value;
-                speed = animation_div.attributes.animation_speed_talking.value;
-                direction = animation_div.attributes.animation_direction_talking.value;
-                pacing = animation_div.attributes.animation_pacing_talking.value;
-                iteration = animation_div.attributes.animation_iteration_talking.value;
-            } else {
-                animation = animation_div.attributes.animation_name_idle.value;
-                speed = animation_div.attributes.animation_speed_idle.value;
-                direction = animation_div.attributes.animation_direction_idle.value;
-                pacing = animation_div.attributes.animation_pacing_idle.value;
-                iteration = animation_div.attributes.animation_iteration_idle.value;
+            switch(status) {
+                case 2:
+                    animation = animation_div.attributes.animation_name_screaming.value;
+                    speed = animation_div.attributes.animation_speed_screaming.value;
+                    direction = animation_div.attributes.animation_direction_screaming.value;
+                    pacing = animation_div.attributes.animation_pacing_screaming.value;
+                    iteration = animation_div.attributes.animation_iteration_screaming.value;
+                    break;
+                case 1:
+                    animation = animation_div.attributes.animation_name_talking.value;
+                    speed = animation_div.attributes.animation_speed_talking.value;
+                    direction = animation_div.attributes.animation_direction_talking.value;
+                    pacing = animation_div.attributes.animation_pacing_talking.value;
+                    iteration = animation_div.attributes.animation_iteration_talking.value;
+                    break;
+                default:
+                    animation = animation_div.attributes.animation_name_idle.value;
+                    speed = animation_div.attributes.animation_speed_idle.value;
+                    direction = animation_div.attributes.animation_direction_idle.value;
+                    pacing = animation_div.attributes.animation_pacing_idle.value;
+                    iteration = animation_div.attributes.animation_iteration_idle.value;
             }
+
             iteration = (iteration == 0) ? "infinite" : iteration;
             animation_div.style.animation = `${animation} ${speed}s ${pacing} ${iteration}`;
             animation_div.style.animationDirection = direction;

@@ -309,9 +309,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.edited = self.edited = None
         self.color = "limegreen"
         self.viewerFrame_2.setStyleSheet(f"background-color: {self.color}")
-        self.frame_3.setStyleSheet("#frame_3 {border-radius: 10px}")
-        self.frame_4.setStyleSheet("#frame_4 {border-radius: 10px}")
-        self.editor.setStyleSheet("#editor {border-radius: 10px}")
 
         self.setWindowTitle("PyNGTuber")
 
@@ -339,6 +336,30 @@ class MainWindow(QtWidgets.QMainWindow):
         self.css_file_default = os.path.join(exe_dir, "Viewer", "styles.css")
         self.anim_file_default = os.path.join(exe_dir, "Viewer", "animations.css")
         self.html_file_default = os.path.join(exe_dir, "Viewer", "viewer.html")
+
+        self.selected_animations = {
+            0: {
+                "animation": self.idle_animation,
+                "speed": self.idle_speed,
+                "direction": self.idle_animation_direction,
+                "pacing": self.idle_animation_pacing,
+                "iteration": self.idle_animation_iteration
+            },
+            1: {
+                "animation": self.talking_animation,
+                "speed": self.talking_speed,
+                "direction": self.talking_animation_direction,
+                "pacing": self.talking_animation_pacing,
+                "iteration": self.talking_animation_iteration
+            },
+            2: {
+                "animation": self.screaming_animation,
+                "speed": self.screaming_speed,
+                "direction": self.screaming_animation_direction,
+                "pacing": self.screaming_animation_pacing,
+                "iteration": self.screaming_animation_iteration
+            }
+        }
 
         self.keyboard_listener = KeyboardListener()
         self.keyboard_listener.shortcut.connect(self.shortcut_received)
@@ -443,15 +464,22 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.generalScale.valueChanged.connect(self.update_settings)
 
         self.idle_animation.activated.connect(self.update_settings)
-        self.talking_animation.activated.connect(self.update_settings)
         self.idle_animation_pacing.activated.connect(self.update_settings)
-        self.talking_animation_pacing.activated.connect(self.update_settings)
         self.idle_animation_direction.activated.connect(self.update_settings)
-        self.talking_animation_direction.activated.connect(self.update_settings)
         self.idle_speed.valueChanged.connect(self.update_settings)
-        self.talking_speed.valueChanged.connect(self.update_settings)
         self.idle_animation_iteration.valueChanged.connect(self.update_settings)
+
+        self.talking_animation.activated.connect(self.update_settings)
+        self.talking_animation_pacing.activated.connect(self.update_settings)
+        self.talking_animation_direction.activated.connect(self.update_settings)
+        self.talking_speed.valueChanged.connect(self.update_settings)
         self.talking_animation_iteration.valueChanged.connect(self.update_settings)
+
+        self.screaming_animation.activated.connect(self.update_settings)
+        self.screaming_animation_pacing.activated.connect(self.update_settings)
+        self.screaming_animation_direction.activated.connect(self.update_settings)
+        self.screaming_speed.valueChanged.connect(self.update_settings)
+        self.screaming_animation_iteration.valueChanged.connect(self.update_settings)
 
         self.load_settings()
 
@@ -460,6 +488,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.HideUI.toggled.connect(self.update_settings)
         self.windowAnimations.toggled.connect(self.update_settings)
         self.flipCanvasToggle.toggled.connect(self.flipCanvas)
+
+        self.track_mouse_x.toggled.connect(self.update_settings)
+        self.track_mouse_y.toggled.connect(self.update_settings)
+        self.invert_mouse_x.toggled.connect(self.update_settings)
+        self.invert_mouse_y.toggled.connect(self.update_settings)
 
         self.ImageGallery = ImageGallery(self.current_files, res_dir=res_dir, exe_dir=exe_dir)
         self.ImageGallery.selectionChanged.connect(self.update_viewer)
@@ -541,7 +574,7 @@ class MainWindow(QtWidgets.QMainWindow):
         QtCore.QTimer.singleShot(10000, self.check_for_update)
 
     def update_div_count(self, count):
-        self.div_count.setText(f"{count}")
+        self.div_count.setText(count)
 
     def being_edited(self):
         last = copy.deepcopy(self.edited)
@@ -615,7 +648,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def on_mouse_position_changed(self, position):
         if self.viewer.is_loaded:
-            self.viewer.page().runJavaScript(f"try{{cursorPosition({position['x']}, {position['y']});}}catch(e){{}}""")
+            x = (position['x'] * -1 if self.invert_mouse_x.isChecked() else position['x']) if self.track_mouse_x.isChecked() else 0
+            y = (position['y'] * -1 if self.invert_mouse_y.isChecked() else position['y']) if self.track_mouse_y.isChecked() else 0
+            self.viewer.page().runJavaScript(f"try{{cursorPosition({x}, {y});}}catch(e){{}}""")
 
     def on_zoom_delta_changed(self):
         if self.viewer.is_loaded:
@@ -630,28 +665,35 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.idle_animation.clear()
         self.talking_animation.clear()
+        self.screaming_animation.clear()
 
         for animation in self.animations_list:
             self.idle_animation.addItem(animation)
             self.talking_animation.addItem(animation)
+            self.screaming_animation.addItem(animation)
 
         self.load_animations(default)
 
     def load_animations(self, default=None):
         self.idle_animation.setCurrentText(default["idle"]["name"])
         self.talking_animation.setCurrentText(default["talking"]["name"])
+        self.screaming_animation.setCurrentText(default.get("screaming", default["talking"])["name"])
 
         self.idle_speed.setValue(default["idle"]["speed"])
         self.talking_speed.setValue(default["talking"]["speed"])
+        self.screaming_speed.setValue(default.get("screaming", default["talking"])["speed"])
 
         self.idle_animation_pacing.setCurrentText(default["idle"].get("pacing", "ease-in-out"))
         self.talking_animation_pacing.setCurrentText(default["talking"].get("pacing", "ease-in-out"))
+        self.screaming_animation_pacing.setCurrentText(default.get("screaming", default["talking"]).get("pacing", "ease-in-out"))
 
         self.idle_animation_direction.setCurrentText(default["idle"].get("direction", "normal"))
         self.talking_animation_direction.setCurrentText(default["talking"].get("direction", "normal"))
+        self.screaming_animation_direction.setCurrentText(default.get("screaming", default["talking"]).get("direction", "normal"))
 
         self.idle_animation_iteration.setValue(default["idle"].get("iteration", 0))
         self.talking_animation_iteration.setValue(default["talking"].get("iteration", 0))
+        self.screaming_animation_iteration.setValue(default.get("screaming", default["talking"]).get("iteration", 0))
 
         if default is not None:
             self.update_settings()
@@ -768,13 +810,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def toggle_editor(self):
         if self.editor.isHidden():
+            self.hideUI_(True)
             self.editor.show()
-            self.stackedWidget.setCurrentIndex(2)
-            self.donationBtnURL.hide()
         else:
             self.editor.hide()
-            self.stackedWidget.setCurrentIndex(0)
-            self.donationBtnURL.show()
+            self.showUI(True)
+
 
     def change_settings_gallery(self, index):
         self.SettingsGallery.change_page(self.ImageGallery.itemText(index))
@@ -794,6 +835,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mouseTrackingToggle.setChecked(self.settings.get("mouse tracking", True))
         self.hw_acceleration.setChecked(self.settings.get("hardware acceleration", True))
         # self.reference_volume.setChecked(self.settings["max_reference_volume"])
+        self.track_mouse_x.setChecked(self.settings.get("track_mouse_x", True))
+        self.track_mouse_y.setChecked(self.settings.get("track_mouse_y", True))
+        self.invert_mouse_x.setChecked(self.settings.get("invert_mouse_x", True))
+        self.invert_mouse_y.setChecked(self.settings.get("invert_mouse_y", True))
 
     def update_settings(self):
         settings_worker = Worker(self.update_settings_thread)
@@ -827,11 +872,22 @@ class MainWindow(QtWidgets.QMainWindow):
                     "iteration": self.talking_animation_iteration.value(),
                     "pacing": self.talking_animation_pacing.currentText(),
                     "direction": self.talking_animation_direction.currentText()
+                },
+                "screaming": {
+                    "name": self.screaming_animation.currentText(),
+                    "speed": self.screaming_speed.value(),
+                    "iteration": self.screaming_animation_iteration.value(),
+                    "pacing": self.screaming_animation_pacing.currentText(),
+                    "direction": self.screaming_animation_direction.currentText()
                 }
             },
             "audio engine": self.audio_engine.currentText(),
             "mouse tracking": self.mouseTrackingToggle.isChecked(),
-            "hardware acceleration": self.hw_acceleration.isChecked()
+            "hardware acceleration": self.hw_acceleration.isChecked(),
+            "track_mouse_x": self.track_mouse_x.isChecked(),
+            "track_mouse_y": self.track_mouse_y.isChecked(),
+            "invert_mouse_x": self.invert_mouse_x.isChecked(),
+            "invert_mouse_y": self.invert_mouse_y.isChecked()
         }
         self.save_parameters_to_json()
 
@@ -1231,6 +1287,13 @@ class MainWindow(QtWidgets.QMainWindow):
                     "iteration": self.talking_animation_iteration.value(),
                     "pacing": self.talking_animation_pacing.currentText(),
                     "direction": self.talking_animation_direction.currentText()
+                },
+                "screaming": {
+                    "name": self.screaming_animation.currentText(),
+                    "speed": self.screaming_speed.value(),
+                    "iteration": self.screaming_animation_iteration.value(),
+                    "pacing": self.screaming_animation_pacing.currentText(),
+                    "direction": self.screaming_animation_direction.currentText()
                 }
             }
             json.dump(data, file, indent=4, ensure_ascii=False)
@@ -1256,16 +1319,12 @@ class MainWindow(QtWidgets.QMainWindow):
     def audioStatus(self, status=0):
         try:
             if self.viewer.is_loaded:
-                animation = self.talking_animation.currentText() \
-                    if status > 0 else self.idle_animation.currentText()
-                speed = self.talking_speed.value() \
-                    if status > 0 else self.idle_speed.value()
-                direction = self.talking_animation_direction.currentText() \
-                    if status > 0 else self.idle_animation_direction.currentText()
-                pacing = self.talking_animation_pacing.currentText() \
-                    if status > 0 else self.idle_animation_pacing.currentText()
-                iteration = self.talking_animation_iteration.value() \
-                    if status > 0 else self.idle_animation_iteration.value()
+                animation = self.selected_animations[status]["animation"].currentText()
+                speed = self.selected_animations[status]["speed"].value()
+                direction = self.selected_animations[status]["direction"].currentText()
+                pacing = self.selected_animations[status]["pacing"].currentText()
+                iteration = self.selected_animations[status]["iteration"].value()
+
                 self.viewer.page().runJavaScript(
                     f'try{{update_mic({status}, "{animation}", {speed}, "{direction}", "{pacing}", {iteration})}}catch{{}}'
                 )
@@ -1487,50 +1546,79 @@ class MainWindow(QtWidgets.QMainWindow):
             pass
         return super().event(event)
 
-    def showUI(self):
+    def showUI(self, force=False):
         if self.HideUI.isChecked():
             self.hidden_ui = False
             if self.windowAnimations.isChecked():
+                self.group = QtCore.QParallelAnimationGroup()
+
                 easingCurve = QEasingCurve.Type.OutCubic
                 speed = 500
 
-                animation_1 = QtCore.QVariantAnimation()
-                animation_1.setEasingCurve(easingCurve)
-                animation_1.setDuration(speed)
-                animation_1.valueChanged.connect(lambda value: self.animateGeometry(self.frame_4, value))
-                animation_1.setStartValue(self.frame_4.geometry())
-                animation_1.setEndValue(self.get_positions("frame_4"))
+                if self.editor.isHidden():
+                    animation_1 = QtCore.QVariantAnimation()
+                    animation_1.setEasingCurve(easingCurve)
+                    animation_1.setDuration(speed)
+                    animation_1.valueChanged.connect(lambda value: self.animateGeometry(self.frame_4, value))
+                    animation_1.setStartValue(self.frame_4.geometry())
+                    animation_1.setEndValue(self.get_positions("frame_4"))
+                    self.group.addAnimation(animation_1)
 
-                animation_2 = QtCore.QVariantAnimation()
-                animation_2.setEasingCurve(easingCurve)
-                animation_2.setDuration(speed)
-                animation_2.valueChanged.connect(lambda value: self.animateGeometry(self.frame_3, value))
-                animation_2.setStartValue(self.frame_3.geometry())
-                animation_2.setEndValue(self.get_positions("frame_3"))
+                    animation_2 = QtCore.QVariantAnimation()
+                    animation_2.setEasingCurve(easingCurve)
+                    animation_2.setDuration(speed)
+                    animation_2.valueChanged.connect(lambda value: self.animateGeometry(self.frame_3, value))
+                    animation_2.setStartValue(self.frame_3.geometry())
+                    animation_2.setEndValue(self.get_positions("frame_3"))
+                    self.group.addAnimation(animation_2)
 
-                animation_3 = QtCore.QVariantAnimation()
-                animation_3.setEasingCurve(easingCurve)
-                animation_3.setDuration(speed)
-                animation_3.valueChanged.connect(lambda value: self.animateGeometry(self.donationBtnURL, value))
-                animation_3.setStartValue(self.donationBtnURL.geometry())
-                animation_3.setEndValue(self.get_positions("donationBtnURL"))
+                    animation_3 = QtCore.QVariantAnimation()
+                    animation_3.setEasingCurve(easingCurve)
+                    animation_3.setDuration(speed)
+                    animation_3.valueChanged.connect(lambda value: self.animateGeometry(self.donationBtnURL, value))
+                    animation_3.setStartValue(self.donationBtnURL.geometry())
+                    animation_3.setEndValue(self.get_positions("donationBtnURL"))
+                    self.group.addAnimation(animation_3)
 
-                self.group = QtCore.QParallelAnimationGroup()
+                    animation_4 = QtCore.QVariantAnimation()
+                    animation_4.setEasingCurve(easingCurve)
+                    animation_4.setDuration(speed)
+                    animation_4.valueChanged.connect(lambda value: self.animateGeometry(self.editorFrame, value))
+                    animation_4.setStartValue(self.editorFrame.geometry())
+                    animation_4.setEndValue(self.get_positions("frame_3", True))
+                    self.group.addAnimation(animation_4)
 
-                self.group.addAnimation(animation_1)
-                self.group.addAnimation(animation_2)
-                self.group.addAnimation(animation_3)
+                if not self.editor.isHidden() or force:
+                    self.editorFrame.show()
+                    animation_4 = QtCore.QVariantAnimation()
+                    animation_4.setEasingCurve(easingCurve)
+                    animation_4.setDuration(speed)
+                    animation_4.valueChanged.connect(lambda value: self.animateGeometry(self.editorFrame, value))
+                    animation_4.setStartValue(self.editorFrame.geometry())
+                    if force:
+                        animation_4.setEndValue(self.get_positions("frame_3", True))
+                    else:
+                        animation_4.setEndValue(self.get_positions("frame_3"))
+                    self.group.addAnimation(animation_4)
 
                 self.group.start()
             else:
-                self.frame_4.show()
-                self.frame_3.show()
-                self.donationBtnURL.show()
+                self.editorFrame.setGeometry(self.get_positions("frame_3", self.hidden_ui))
+                if self.editor.isHidden():
+                    self.frame_4.show()
+                    self.frame_3.show()
+                    self.donationBtnURL.show()
+                if not self.editor.isHidden() or force:
+                    if force:
+                        self.editorFrame.hide()
+                    else:
+                        self.editorFrame.show()
 
-    def hideUI_(self):
-        if self.HideUI.isChecked() and self.tabWidget_2.currentIndex() != 1:
+    def hideUI_(self, force=False):
+        if self.HideUI.isChecked() and self.tabWidget_2.currentIndex() != 1 or force:
             self.hidden_ui = True
             if self.windowAnimations.isChecked():
+                self.group = QtCore.QParallelAnimationGroup()
 
                 easingCurve = QEasingCurve.Type.InCubic
                 speed = 500
@@ -1541,6 +1629,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 animation_1.valueChanged.connect(lambda value: self.animateGeometry(self.frame_4, value))
                 animation_1.setStartValue(self.frame_4.geometry())
                 animation_1.setEndValue(self.get_positions("frame_4", True))
+                self.group.addAnimation(animation_1)
 
                 animation_2 = QtCore.QVariantAnimation()
                 animation_2.setEasingCurve(easingCurve)
@@ -1548,6 +1637,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 animation_2.valueChanged.connect(lambda value: self.animateGeometry(self.frame_3, value))
                 animation_2.setStartValue(self.frame_3.geometry())
                 animation_2.setEndValue(self.get_positions("frame_3", True))
+                self.group.addAnimation(animation_2)
 
                 animation_3 = QtCore.QVariantAnimation()
                 animation_3.setEasingCurve(easingCurve)
@@ -1555,18 +1645,32 @@ class MainWindow(QtWidgets.QMainWindow):
                 animation_3.valueChanged.connect(lambda value: self.animateGeometry(self.donationBtnURL, value))
                 animation_3.setStartValue(self.donationBtnURL.geometry())
                 animation_3.setEndValue(self.get_positions("donationBtnURL", True))
-
-                self.group = QtCore.QParallelAnimationGroup()
-
-                self.group.addAnimation(animation_1)
-                self.group.addAnimation(animation_2)
                 self.group.addAnimation(animation_3)
+
+                if not self.editor.isHidden() or force:
+                    self.editorFrame.show()
+                    animation_4 = QtCore.QVariantAnimation()
+                    animation_4.setEasingCurve(easingCurve)
+                    animation_4.setDuration(speed)
+                    animation_4.valueChanged.connect(lambda value: self.animateGeometry(self.editorFrame, value))
+                    animation_4.setStartValue(self.editorFrame.geometry())
+                    if force:
+                        animation_4.setEndValue(self.get_positions("frame_3"))
+                    else:
+                        animation_4.setEndValue(self.get_positions("frame_3", True))
+                    self.group.addAnimation(animation_4)
 
                 self.group.start()
             else:
+                self.editorFrame.setGeometry(self.get_positions("frame_3", self.hidden_ui))
                 self.frame_4.hide()
                 self.frame_3.hide()
                 self.donationBtnURL.hide()
+                if self.editor.isHidden() or force:
+                    if force:
+                        self.editorFrame.show()
+                    else:
+                        self.editorFrame.hide()
         else:
             self.showUI()
 
@@ -1612,6 +1716,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.frame_3.setGeometry(self.get_positions("frame_3", self.hidden_ui))
         self.frame_4.setGeometry(self.get_positions("frame_4", self.hidden_ui))
         self.donationBtnURL.setGeometry(self.get_positions("donationBtnURL", self.hidden_ui))
+        if self.editor.isHidden:
+            self.editorFrame.setGeometry(self.get_positions("frame_3", True))
+        else:
+            self.editorFrame.setGeometry(self.get_positions("frame_3", self.hidden_ui))
 
     def get_positions(self, widget, hide=False) -> QtCore.QRect:
         match widget:
@@ -1620,14 +1728,12 @@ class MainWindow(QtWidgets.QMainWindow):
                 if hide:
                     return QtCore.QRect(
                         int(self.width() / 2) - int(donationsSize.width() / 2), -donationsSize.height(),
-                        donationsSize.width(),
-                        donationsSize.height()
+                        donationsSize.width(), donationsSize.height()
                     )
                 else:
                     return QtCore.QRect(
                         int(self.width()/2) - int(donationsSize.width()/2), 0,
-                        donationsSize.width(),
-                        donationsSize.height()
+                        donationsSize.width(), donationsSize.height()
                     )
 
             case "frame_4":

@@ -1905,6 +1905,262 @@ QTabBar::tab:hover {
                      </item>
                     </layout>
                    </widget>
+                   <widget class="QWidget" name="tab_17">
+                    <attribute name="title">
+                     <string> Screaming </string>
+                    </attribute>
+                    <layout class="QVBoxLayout" name="verticalLayout_29">
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QFrame" name="frame_27">
+                       <property name="styleSheet">
+                        <string notr="true">#frame_27{
+	border-radius: 0px;
+	background-color: rgb(0, 157, 235);
+}</string>
+                       </property>
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Raised</enum>
+                       </property>
+                       <layout class="QGridLayout" name="gridLayout_19">
+                        <property name="leftMargin">
+                         <number>6</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>6</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>6</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>6</number>
+                        </property>
+                        <item row="1" column="2">
+                         <widget class="QComboBox" name="screaming_animation_pacing">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="minimumSize">
+                           <size>
+                            <width>0</width>
+                            <height>0</height>
+                           </size>
+                          </property>
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>25</height>
+                           </size>
+                          </property>
+                          <property name="toolTip">
+                           <string>Pacing</string>
+                          </property>
+                          <property name="whatsThis">
+                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          </property>
+                          <property name="maxVisibleItems">
+                           <number>10</number>
+                          </property>
+                          <property name="sizeAdjustPolicy">
+                           <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+                          </property>
+                          <item>
+                           <property name="text">
+                            <string>ease</string>
+                           </property>
+                          </item>
+                          <item>
+                           <property name="text">
+                            <string>ease-in</string>
+                           </property>
+                          </item>
+                          <item>
+                           <property name="text">
+                            <string>ease-out</string>
+                           </property>
+                          </item>
+                          <item>
+                           <property name="text">
+                            <string>ease-in-out</string>
+                           </property>
+                          </item>
+                          <item>
+                           <property name="text">
+                            <string>linear</string>
+                           </property>
+                          </item>
+                          <item>
+                           <property name="text">
+                            <string>step-start</string>
+                           </property>
+                          </item>
+                          <item>
+                           <property name="text">
+                            <string>step-end</string>
+                           </property>
+                          </item>
+                         </widget>
+                        </item>
+                        <item row="1" column="0">
+                         <widget class="QDoubleSpinBox" name="screaming_speed">
+                          <property name="minimumSize">
+                           <size>
+                            <width>0</width>
+                            <height>0</height>
+                           </size>
+                          </property>
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>25</height>
+                           </size>
+                          </property>
+                          <property name="toolTip">
+                           <string>Speed</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                          <property name="prefix">
+                           <string/>
+                          </property>
+                          <property name="suffix">
+                           <string>s</string>
+                          </property>
+                          <property name="decimals">
+                           <number>3</number>
+                          </property>
+                          <property name="minimum">
+                           <double>0.000000000000000</double>
+                          </property>
+                          <property name="singleStep">
+                           <double>0.100000000000000</double>
+                          </property>
+                          <property name="value">
+                           <double>0.500000000000000</double>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="0" column="2">
+                         <widget class="QComboBox" name="screaming_animation_direction">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="minimumSize">
+                           <size>
+                            <width>0</width>
+                            <height>0</height>
+                           </size>
+                          </property>
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>25</height>
+                           </size>
+                          </property>
+                          <property name="toolTip">
+                           <string>Direction</string>
+                          </property>
+                          <property name="whatsThis">
+                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          </property>
+                          <property name="maxVisibleItems">
+                           <number>10</number>
+                          </property>
+                          <property name="sizeAdjustPolicy">
+                           <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+                          </property>
+                          <item>
+                           <property name="text">
+                            <string>normal</string>
+                           </property>
+                          </item>
+                          <item>
+                           <property name="text">
+                            <string>reverse</string>
+                           </property>
+                          </item>
+                          <item>
+                           <property name="text">
+                            <string>alternate</string>
+                           </property>
+                          </item>
+                          <item>
+                           <property name="text">
+                            <string>alternate-reverse</string>
+                           </property>
+                          </item>
+                         </widget>
+                        </item>
+                        <item row="1" column="1">
+                         <widget class="QSpinBox" name="screaming_animation_iteration">
+                          <property name="toolTip">
+                           <string>Iterations (0=∞)</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignCenter</set>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="0" column="0" colspan="2">
+                         <widget class="QComboBox" name="screaming_animation">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="minimumSize">
+                           <size>
+                            <width>0</width>
+                            <height>0</height>
+                           </size>
+                          </property>
+                          <property name="maximumSize">
+                           <size>
+                            <width>16777215</width>
+                            <height>25</height>
+                           </size>
+                          </property>
+                          <property name="toolTip">
+                           <string>Animation</string>
+                          </property>
+                          <property name="whatsThis">
+                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite:&lt;/span&gt; Best for images with some transparency but it can't do different size images.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pillow Paste:&lt;/span&gt; Best for images with different sizes and positions, but it struggles with transparency.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Alpha Composite + Pillow Paste:&lt;/span&gt; Tries to combine the two for a better image, won't make promises.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot:&lt;/span&gt; Just takes a screenshot of the model.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Screenshot + Chroma Key:&lt;/span&gt; Just takes a screenshot of the model and tries to remove the background.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          </property>
+                          <property name="maxVisibleItems">
+                           <number>10</number>
+                          </property>
+                          <property name="sizeAdjustPolicy">
+                           <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
                   </widget>
                  </item>
                 </layout>
@@ -2017,6 +2273,9 @@ QTabBar::tab:hover {
               </property>
               <item>
                <widget class="QFrame" name="frameCursor">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -2050,7 +2309,7 @@ QTabBar::tab:hover {
                  <item row="1" column="0">
                   <widget class="QTabWidget" name="tabWidget_4">
                    <property name="enabled">
-                    <bool>false</bool>
+                    <bool>true</bool>
                    </property>
                    <property name="styleSheet">
                     <string notr="true">QTabBar{  
@@ -2449,7 +2708,7 @@ QCheckBox::indicator:unchecked {
               <item>
                <widget class="QFrame" name="frame_6">
                 <property name="enabled">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                 <property name="styleSheet">
                  <string notr="true">QLabel{
@@ -2561,7 +2820,7 @@ QCheckBox::indicator:unchecked {
                  <item>
                   <widget class="QFrame" name="frame_8">
                    <property name="enabled">
-                    <bool>true</bool>
+                    <bool>false</bool>
                    </property>
                    <property name="styleSheet">
                     <string notr="true">#frame_8 {
@@ -3368,7 +3627,7 @@ QTabBar::tab:hover {
                       <item>
                        <widget class="QFrame" name="frame_11">
                         <property name="enabled">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -3429,7 +3688,7 @@ QTabBar::tab:hover {
                            <item>
                             <widget class="QPushButton" name="guitarNote_None">
                              <property name="enabled">
-                              <bool>true</bool>
+                              <bool>false</bool>
                              </property>
                              <property name="sizePolicy">
                               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -3460,7 +3719,7 @@ QTabBar::tab:hover {
                            <item>
                             <widget class="QPushButton" name="guitarNote_Green">
                              <property name="enabled">
-                              <bool>true</bool>
+                              <bool>false</bool>
                              </property>
                              <property name="sizePolicy">
                               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -3495,7 +3754,7 @@ QTabBar::tab:hover {
                            <item>
                             <widget class="QPushButton" name="guitarNote_Red">
                              <property name="enabled">
-                              <bool>true</bool>
+                              <bool>false</bool>
                              </property>
                              <property name="sizePolicy">
                               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -3530,7 +3789,7 @@ QTabBar::tab:hover {
                            <item>
                             <widget class="QPushButton" name="guitarNote_Yellow">
                              <property name="enabled">
-                              <bool>true</bool>
+                              <bool>false</bool>
                              </property>
                              <property name="sizePolicy">
                               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -3565,7 +3824,7 @@ QTabBar::tab:hover {
                            <item>
                             <widget class="QPushButton" name="guitarNote_Blue">
                              <property name="enabled">
-                              <bool>true</bool>
+                              <bool>false</bool>
                              </property>
                              <property name="sizePolicy">
                               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -3600,7 +3859,7 @@ QTabBar::tab:hover {
                            <item>
                             <widget class="QPushButton" name="guitarNote_Orange">
                              <property name="enabled">
-                              <bool>true</bool>
+                              <bool>false</bool>
                              </property>
                              <property name="sizePolicy">
                               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
