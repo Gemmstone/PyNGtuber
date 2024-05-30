@@ -2700,7 +2700,7 @@ QFrame{
                        <property name="geometry">
                         <rect>
                          <x>0</x>
-                         <y>0</y>
+                         <y>-176</y>
                          <width>288</width>
                          <height>887</height>
                         </rect>
@@ -3183,7 +3183,7 @@ QFrame{
                            <string>Follow mouse cursor</string>
                           </property>
                           <property name="title">
-                           <string>Follow Cursor</string>
+                           <string>Cursor Tracking</string>
                           </property>
                           <property name="flat">
                            <bool>false</bool>
@@ -3410,7 +3410,7 @@ QCheckBox::indicator:unchecked {
                                         <string>Invert</string>
                                        </property>
                                        <property name="checked">
-                                        <bool>true</bool>
+                                        <bool>false</bool>
                                        </property>
                                       </widget>
                                      </item>
@@ -3559,7 +3559,7 @@ QCheckBox::indicator:unchecked {
                                         <string>Invert</string>
                                        </property>
                                        <property name="checked">
-                                        <bool>true</bool>
+                                        <bool>false</bool>
                                        </property>
                                       </widget>
                                      </item>
@@ -4463,8 +4463,8 @@ background-color: rgba(0, 0, 0, 40);
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>302</width>
-                 <height>613</height>
+                 <width>100</width>
+                 <height>30</height>
                 </rect>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_4">

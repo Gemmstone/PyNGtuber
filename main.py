@@ -489,6 +489,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.windowAnimations.toggled.connect(self.update_settings)
         self.flipCanvasToggle.toggled.connect(self.flipCanvas)
 
+        self.track_mouse_x.toggled.connect(self.update_settings)
+        self.track_mouse_y.toggled.connect(self.update_settings)
+        self.invert_mouse_x.toggled.connect(self.update_settings)
+        self.invert_mouse_y.toggled.connect(self.update_settings)
+
         self.ImageGallery = ImageGallery(self.current_files, res_dir=res_dir, exe_dir=exe_dir)
         self.ImageGallery.selectionChanged.connect(self.update_viewer)
         self.ImageGallery.currentChanged.connect(self.change_settings_gallery)
@@ -643,7 +648,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def on_mouse_position_changed(self, position):
         if self.viewer.is_loaded:
-            self.viewer.page().runJavaScript(f"try{{cursorPosition({position['x']}, {position['y']});}}catch(e){{}}""")
+            x = (position['x'] * -1 if self.invert_mouse_x.isChecked() else position['x']) if self.track_mouse_x.isChecked() else 0
+            y = (position['y'] * -1 if self.invert_mouse_y.isChecked() else position['y']) if self.track_mouse_y.isChecked() else 0
+            self.viewer.page().runJavaScript(f"try{{cursorPosition({x}, {y});}}catch(e){{}}""")
 
     def on_zoom_delta_changed(self):
         if self.viewer.is_loaded:
@@ -828,6 +835,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mouseTrackingToggle.setChecked(self.settings.get("mouse tracking", True))
         self.hw_acceleration.setChecked(self.settings.get("hardware acceleration", True))
         # self.reference_volume.setChecked(self.settings["max_reference_volume"])
+        self.track_mouse_x.setChecked(self.settings.get("track_mouse_x", True))
+        self.track_mouse_y.setChecked(self.settings.get("track_mouse_y", True))
+        self.invert_mouse_x.setChecked(self.settings.get("invert_mouse_x", True))
+        self.invert_mouse_y.setChecked(self.settings.get("invert_mouse_y", True))
 
     def update_settings(self):
         settings_worker = Worker(self.update_settings_thread)
@@ -872,7 +883,11 @@ class MainWindow(QtWidgets.QMainWindow):
             },
             "audio engine": self.audio_engine.currentText(),
             "mouse tracking": self.mouseTrackingToggle.isChecked(),
-            "hardware acceleration": self.hw_acceleration.isChecked()
+            "hardware acceleration": self.hw_acceleration.isChecked(),
+            "track_mouse_x": self.track_mouse_x.isChecked(),
+            "track_mouse_y": self.track_mouse_y.isChecked(),
+            "invert_mouse_x": self.invert_mouse_x.isChecked(),
+            "invert_mouse_y": self.invert_mouse_y.isChecked()
         }
         self.save_parameters_to_json()
 

@@ -35,5 +35,9 @@
     },
     "audio engine": "pyaudio",
     "mouse tracking": true,
-    "hardware acceleration": true
+    "hardware acceleration": true,
+    "track_mouse_x": true,
+    "track_mouse_y": true,
+    "invert_mouse_x": false,
+    "invert_mouse_y": false
 }
