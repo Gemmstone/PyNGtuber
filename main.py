@@ -309,9 +309,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.edited = self.edited = None
         self.color = "limegreen"
         self.viewerFrame_2.setStyleSheet(f"background-color: {self.color}")
-        self.frame_3.setStyleSheet("#frame_3 {border-radius: 10px}")
-        self.frame_4.setStyleSheet("#frame_4 {border-radius: 10px}")
-        self.editor.setStyleSheet("#editor {border-radius: 10px}")
 
         self.setWindowTitle("PyNGTuber")
 
@@ -572,7 +569,7 @@ class MainWindow(QtWidgets.QMainWindow):
         QtCore.QTimer.singleShot(10000, self.check_for_update)
 
     def update_div_count(self, count):
-        self.div_count.setText(f"{count}")
+        self.div_count.setText(count)
 
     def being_edited(self):
         last = copy.deepcopy(self.edited)
@@ -806,13 +803,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def toggle_editor(self):
         if self.editor.isHidden():
+            self.hideUI_(True)
             self.editor.show()
-            self.stackedWidget.setCurrentIndex(2)
-            self.donationBtnURL.hide()
         else:
             self.editor.hide()
-            self.stackedWidget.setCurrentIndex(0)
-            self.donationBtnURL.show()
+            self.showUI(True)
+
 
     def change_settings_gallery(self, index):
         self.SettingsGallery.change_page(self.ImageGallery.itemText(index))
@@ -1535,50 +1531,79 @@ class MainWindow(QtWidgets.QMainWindow):
             pass
         return super().event(event)
 
-    def showUI(self):
+    def showUI(self, force=False):
         if self.HideUI.isChecked():
             self.hidden_ui = False
             if self.windowAnimations.isChecked():
+                self.group = QtCore.QParallelAnimationGroup()
+
                 easingCurve = QEasingCurve.Type.OutCubic
                 speed = 500
 
-                animation_1 = QtCore.QVariantAnimation()
-                animation_1.setEasingCurve(easingCurve)
-                animation_1.setDuration(speed)
-                animation_1.valueChanged.connect(lambda value: self.animateGeometry(self.frame_4, value))
-                animation_1.setStartValue(self.frame_4.geometry())
-                animation_1.setEndValue(self.get_positions("frame_4"))
+                if self.editor.isHidden():
+                    animation_1 = QtCore.QVariantAnimation()
+                    animation_1.setEasingCurve(easingCurve)
+                    animation_1.setDuration(speed)
+                    animation_1.valueChanged.connect(lambda value: self.animateGeometry(self.frame_4, value))
+                    animation_1.setStartValue(self.frame_4.geometry())
+                    animation_1.setEndValue(self.get_positions("frame_4"))
+                    self.group.addAnimation(animation_1)
 
-                animation_2 = QtCore.QVariantAnimation()
-                animation_2.setEasingCurve(easingCurve)
-                animation_2.setDuration(speed)
-                animation_2.valueChanged.connect(lambda value: self.animateGeometry(self.frame_3, value))
-                animation_2.setStartValue(self.frame_3.geometry())
-                animation_2.setEndValue(self.get_positions("frame_3"))
+                    animation_2 = QtCore.QVariantAnimation()
+                    animation_2.setEasingCurve(easingCurve)
+                    animation_2.setDuration(speed)
+                    animation_2.valueChanged.connect(lambda value: self.animateGeometry(self.frame_3, value))
+                    animation_2.setStartValue(self.frame_3.geometry())
+                    animation_2.setEndValue(self.get_positions("frame_3"))
+                    self.group.addAnimation(animation_2)
 
-                animation_3 = QtCore.QVariantAnimation()
-                animation_3.setEasingCurve(easingCurve)
-                animation_3.setDuration(speed)
-                animation_3.valueChanged.connect(lambda value: self.animateGeometry(self.donationBtnURL, value))
-                animation_3.setStartValue(self.donationBtnURL.geometry())
-                animation_3.setEndValue(self.get_positions("donationBtnURL"))
+                    animation_3 = QtCore.QVariantAnimation()
+                    animation_3.setEasingCurve(easingCurve)
+                    animation_3.setDuration(speed)
+                    animation_3.valueChanged.connect(lambda value: self.animateGeometry(self.donationBtnURL, value))
+                    animation_3.setStartValue(self.donationBtnURL.geometry())
+                    animation_3.setEndValue(self.get_positions("donationBtnURL"))
+                    self.group.addAnimation(animation_3)
 
-                self.group = QtCore.QParallelAnimationGroup()
+                    animation_4 = QtCore.QVariantAnimation()
+                    animation_4.setEasingCurve(easingCurve)
+                    animation_4.setDuration(speed)
+                    animation_4.valueChanged.connect(lambda value: self.animateGeometry(self.editorFrame, value))
+                    animation_4.setStartValue(self.editorFrame.geometry())
+                    animation_4.setEndValue(self.get_positions("frame_3", True))
+                    self.group.addAnimation(animation_4)
 
-                self.group.addAnimation(animation_1)
-                self.group.addAnimation(animation_2)
-                self.group.addAnimation(animation_3)
+                if not self.editor.isHidden() or force:
+                    self.editorFrame.show()
+                    animation_4 = QtCore.QVariantAnimation()
+                    animation_4.setEasingCurve(easingCurve)
+                    animation_4.setDuration(speed)
+                    animation_4.valueChanged.connect(lambda value: self.animateGeometry(self.editorFrame, value))
+                    animation_4.setStartValue(self.editorFrame.geometry())
+                    if force:
+                        animation_4.setEndValue(self.get_positions("frame_3", True))
+                    else:
+                        animation_4.setEndValue(self.get_positions("frame_3"))
+                    self.group.addAnimation(animation_4)
 
                 self.group.start()
             else:
-                self.frame_4.show()
-                self.frame_3.show()
-                self.donationBtnURL.show()
+                self.editorFrame.setGeometry(self.get_positions("frame_3", self.hidden_ui))
+                if self.editor.isHidden():
+                    self.frame_4.show()
+                    self.frame_3.show()
+                    self.donationBtnURL.show()
+                if not self.editor.isHidden() or force:
+                    if force:
+                        self.editorFrame.hide()
+                    else:
+                        self.editorFrame.show()
 
-    def hideUI_(self):
-        if self.HideUI.isChecked() and self.tabWidget_2.currentIndex() != 1:
+    def hideUI_(self, force=False):
+        if self.HideUI.isChecked() and self.tabWidget_2.currentIndex() != 1 or force:
             self.hidden_ui = True
             if self.windowAnimations.isChecked():
+                self.group = QtCore.QParallelAnimationGroup()
 
                 easingCurve = QEasingCurve.Type.InCubic
                 speed = 500
@@ -1589,6 +1614,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 animation_1.valueChanged.connect(lambda value: self.animateGeometry(self.frame_4, value))
                 animation_1.setStartValue(self.frame_4.geometry())
                 animation_1.setEndValue(self.get_positions("frame_4", True))
+                self.group.addAnimation(animation_1)
 
                 animation_2 = QtCore.QVariantAnimation()
                 animation_2.setEasingCurve(easingCurve)
@@ -1596,6 +1622,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 animation_2.valueChanged.connect(lambda value: self.animateGeometry(self.frame_3, value))
                 animation_2.setStartValue(self.frame_3.geometry())
                 animation_2.setEndValue(self.get_positions("frame_3", True))
+                self.group.addAnimation(animation_2)
 
                 animation_3 = QtCore.QVariantAnimation()
                 animation_3.setEasingCurve(easingCurve)
@@ -1603,18 +1630,32 @@ class MainWindow(QtWidgets.QMainWindow):
                 animation_3.valueChanged.connect(lambda value: self.animateGeometry(self.donationBtnURL, value))
                 animation_3.setStartValue(self.donationBtnURL.geometry())
                 animation_3.setEndValue(self.get_positions("donationBtnURL", True))
-
-                self.group = QtCore.QParallelAnimationGroup()
-
-                self.group.addAnimation(animation_1)
-                self.group.addAnimation(animation_2)
                 self.group.addAnimation(animation_3)
+
+                if not self.editor.isHidden() or force:
+                    self.editorFrame.show()
+                    animation_4 = QtCore.QVariantAnimation()
+                    animation_4.setEasingCurve(easingCurve)
+                    animation_4.setDuration(speed)
+                    animation_4.valueChanged.connect(lambda value: self.animateGeometry(self.editorFrame, value))
+                    animation_4.setStartValue(self.editorFrame.geometry())
+                    if force:
+                        animation_4.setEndValue(self.get_positions("frame_3"))
+                    else:
+                        animation_4.setEndValue(self.get_positions("frame_3", True))
+                    self.group.addAnimation(animation_4)
 
                 self.group.start()
             else:
+                self.editorFrame.setGeometry(self.get_positions("frame_3", self.hidden_ui))
                 self.frame_4.hide()
                 self.frame_3.hide()
                 self.donationBtnURL.hide()
+                if self.editor.isHidden() or force:
+                    if force:
+                        self.editorFrame.show()
+                    else:
+                        self.editorFrame.hide()
         else:
             self.showUI()
 
@@ -1660,6 +1701,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.frame_3.setGeometry(self.get_positions("frame_3", self.hidden_ui))
         self.frame_4.setGeometry(self.get_positions("frame_4", self.hidden_ui))
         self.donationBtnURL.setGeometry(self.get_positions("donationBtnURL", self.hidden_ui))
+        if self.editor.isHidden:
+            self.editorFrame.setGeometry(self.get_positions("frame_3", True))
+        else:
+            self.editorFrame.setGeometry(self.get_positions("frame_3", self.hidden_ui))
 
     def get_positions(self, widget, hide=False) -> QtCore.QRect:
         match widget:
@@ -1668,14 +1713,12 @@ class MainWindow(QtWidgets.QMainWindow):
                 if hide:
                     return QtCore.QRect(
                         int(self.width() / 2) - int(donationsSize.width() / 2), -donationsSize.height(),
-                        donationsSize.width(),
-                        donationsSize.height()
+                        donationsSize.width(), donationsSize.height()
                     )
                 else:
                     return QtCore.QRect(
                         int(self.width()/2) - int(donationsSize.width()/2), 0,
-                        donationsSize.width(),
-                        donationsSize.height()
+                        donationsSize.width(), donationsSize.height()
                     )
 
             case "frame_4":
