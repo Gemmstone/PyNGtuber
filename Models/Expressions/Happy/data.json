@@ -1,0 +1,13 @@
+{
+    "shortcuts": [],
+    "animations": {
+        "idle": {
+            "name": "floaty",
+            "speed": 6.0
+        },
+        "talking": {
+            "name": "floaty",
+            "speed": 0.5
+        }
+    }
+}
