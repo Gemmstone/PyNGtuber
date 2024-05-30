@@ -340,6 +340,30 @@ class MainWindow(QtWidgets.QMainWindow):
         self.anim_file_default = os.path.join(exe_dir, "Viewer", "animations.css")
         self.html_file_default = os.path.join(exe_dir, "Viewer", "viewer.html")
 
+        self.selected_animations = {
+            0: {
+                "animation": self.idle_animation,
+                "speed": self.idle_speed,
+                "direction": self.idle_animation_direction,
+                "pacing": self.idle_animation_pacing,
+                "iteration": self.idle_animation_iteration
+            },
+            1: {
+                "animation": self.talking_animation,
+                "speed": self.talking_speed,
+                "direction": self.talking_animation_direction,
+                "pacing": self.talking_animation_pacing,
+                "iteration": self.talking_animation_iteration
+            },
+            2: {
+                "animation": self.screaming_animation,
+                "speed": self.screaming_speed,
+                "direction": self.screaming_animation_direction,
+                "pacing": self.screaming_animation_pacing,
+                "iteration": self.screaming_animation_iteration
+            }
+        }
+
         self.keyboard_listener = KeyboardListener()
         self.keyboard_listener.shortcut.connect(self.shortcut_received)
         self.keyboard_listener.start()
@@ -443,15 +467,22 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.generalScale.valueChanged.connect(self.update_settings)
 
         self.idle_animation.activated.connect(self.update_settings)
-        self.talking_animation.activated.connect(self.update_settings)
         self.idle_animation_pacing.activated.connect(self.update_settings)
-        self.talking_animation_pacing.activated.connect(self.update_settings)
         self.idle_animation_direction.activated.connect(self.update_settings)
-        self.talking_animation_direction.activated.connect(self.update_settings)
         self.idle_speed.valueChanged.connect(self.update_settings)
-        self.talking_speed.valueChanged.connect(self.update_settings)
         self.idle_animation_iteration.valueChanged.connect(self.update_settings)
+
+        self.talking_animation.activated.connect(self.update_settings)
+        self.talking_animation_pacing.activated.connect(self.update_settings)
+        self.talking_animation_direction.activated.connect(self.update_settings)
+        self.talking_speed.valueChanged.connect(self.update_settings)
         self.talking_animation_iteration.valueChanged.connect(self.update_settings)
+
+        self.screaming_animation.activated.connect(self.update_settings)
+        self.screaming_animation_pacing.activated.connect(self.update_settings)
+        self.screaming_animation_direction.activated.connect(self.update_settings)
+        self.screaming_speed.valueChanged.connect(self.update_settings)
+        self.screaming_animation_iteration.valueChanged.connect(self.update_settings)
 
         self.load_settings()
 
@@ -630,28 +661,35 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.idle_animation.clear()
         self.talking_animation.clear()
+        self.screaming_animation.clear()
 
         for animation in self.animations_list:
             self.idle_animation.addItem(animation)
             self.talking_animation.addItem(animation)
+            self.screaming_animation.addItem(animation)
 
         self.load_animations(default)
 
     def load_animations(self, default=None):
         self.idle_animation.setCurrentText(default["idle"]["name"])
         self.talking_animation.setCurrentText(default["talking"]["name"])
+        self.screaming_animation.setCurrentText(default.get("screaming", default["talking"])["name"])
 
         self.idle_speed.setValue(default["idle"]["speed"])
         self.talking_speed.setValue(default["talking"]["speed"])
+        self.screaming_speed.setValue(default.get("screaming", default["talking"])["speed"])
 
         self.idle_animation_pacing.setCurrentText(default["idle"].get("pacing", "ease-in-out"))
         self.talking_animation_pacing.setCurrentText(default["talking"].get("pacing", "ease-in-out"))
+        self.screaming_animation_pacing.setCurrentText(default.get("screaming", default["talking"]).get("pacing", "ease-in-out"))
 
         self.idle_animation_direction.setCurrentText(default["idle"].get("direction", "normal"))
         self.talking_animation_direction.setCurrentText(default["talking"].get("direction", "normal"))
+        self.screaming_animation_direction.setCurrentText(default.get("screaming", default["talking"]).get("direction", "normal"))
 
         self.idle_animation_iteration.setValue(default["idle"].get("iteration", 0))
         self.talking_animation_iteration.setValue(default["talking"].get("iteration", 0))
+        self.screaming_animation_iteration.setValue(default.get("screaming", default["talking"]).get("iteration", 0))
 
         if default is not None:
             self.update_settings()
@@ -827,6 +865,13 @@ class MainWindow(QtWidgets.QMainWindow):
                     "iteration": self.talking_animation_iteration.value(),
                     "pacing": self.talking_animation_pacing.currentText(),
                     "direction": self.talking_animation_direction.currentText()
+                },
+                "screaming": {
+                    "name": self.screaming_animation.currentText(),
+                    "speed": self.screaming_speed.value(),
+                    "iteration": self.screaming_animation_iteration.value(),
+                    "pacing": self.screaming_animation_pacing.currentText(),
+                    "direction": self.screaming_animation_direction.currentText()
                 }
             },
             "audio engine": self.audio_engine.currentText(),
@@ -1231,6 +1276,13 @@ class MainWindow(QtWidgets.QMainWindow):
                     "iteration": self.talking_animation_iteration.value(),
                     "pacing": self.talking_animation_pacing.currentText(),
                     "direction": self.talking_animation_direction.currentText()
+                },
+                "screaming": {
+                    "name": self.screaming_animation.currentText(),
+                    "speed": self.screaming_speed.value(),
+                    "iteration": self.screaming_animation_iteration.value(),
+                    "pacing": self.screaming_animation_pacing.currentText(),
+                    "direction": self.screaming_animation_direction.currentText()
                 }
             }
             json.dump(data, file, indent=4, ensure_ascii=False)
@@ -1256,16 +1308,12 @@ class MainWindow(QtWidgets.QMainWindow):
     def audioStatus(self, status=0):
         try:
             if self.viewer.is_loaded:
-                animation = self.talking_animation.currentText() \
-                    if status > 0 else self.idle_animation.currentText()
-                speed = self.talking_speed.value() \
-                    if status > 0 else self.idle_speed.value()
-                direction = self.talking_animation_direction.currentText() \
-                    if status > 0 else self.idle_animation_direction.currentText()
-                pacing = self.talking_animation_pacing.currentText() \
-                    if status > 0 else self.idle_animation_pacing.currentText()
-                iteration = self.talking_animation_iteration.value() \
-                    if status > 0 else self.idle_animation_iteration.value()
+                animation = self.selected_animations[status]["animation"].currentText()
+                speed = self.selected_animations[status]["speed"].value()
+                direction = self.selected_animations[status]["direction"].currentText()
+                pacing = self.selected_animations[status]["pacing"].currentText()
+                iteration = self.selected_animations[status]["iteration"].value()
+
                 self.viewer.page().runJavaScript(
                     f'try{{update_mic({status}, "{animation}", {speed}, "{direction}", "{pacing}", {iteration})}}catch{{}}'
                 )

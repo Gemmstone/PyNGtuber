@@ -115,7 +115,6 @@ class LayeredImageViewer(QWebEngineView):
 
         div_count = 0
         if image_list is not None:
-
             for layer in sorted(image_list, key=lambda x: x['posZ']):
                 editing = "not_in_editor"
                 if edited is not None:
@@ -150,18 +149,23 @@ class LayeredImageViewer(QWebEngineView):
                     animation_added_div['class'] = ["added_animation"]
                     animation_added_div['animation_name_idle'] = layer.get("animation_name_idle", "None")
                     animation_added_div['animation_name_talking'] = layer.get("animation_name_talking", "None")
+                    animation_added_div['animation_name_screaming'] = layer.get("animation_name_screaming", animation_added_div['animation_name_talking'])
 
                     animation_added_div['animation_speed_idle'] = layer.get("animation_speed_idle", 6)
                     animation_added_div['animation_speed_talking'] = layer.get("animation_speed_talking", 0.5)
+                    animation_added_div['animation_speed_screaming'] = layer.get("animation_speed_screaming", animation_added_div['animation_speed_talking'])
 
                     animation_added_div['animation_direction_idle'] = layer.get('animation_direction_idle',  "normal")
                     animation_added_div['animation_direction_talking'] = layer.get('animation_direction_talking',  "normal")
+                    animation_added_div['animation_direction_screaming'] = layer.get('animation_direction_screaming',  animation_added_div['animation_direction_talking'])
 
                     animation_added_div['animation_iteration_idle'] = layer.get("animation_iteration_idle", 0)
                     animation_added_div['animation_iteration_talking'] = layer.get("animation_iteration_talking", 0)
+                    animation_added_div['animation_iteration_screaming'] = layer.get("animation_iteration_screaming", animation_added_div['animation_iteration_talking'])
 
                     animation_added_div['animation_pacing_idle'] = layer.get('animation_pacing_idle',  "ease-in-out")
                     animation_added_div['animation_pacing_talking'] = layer.get('animation_pacing_talking',  "ease-in-out")
+                    animation_added_div['animation_pacing_screaming'] = layer.get('animation_pacing_screaming',  animation_added_div['animation_pacing_talking'])
 
                 cursor_div = None
                 if layer.get("cursor", False):

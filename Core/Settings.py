@@ -12,12 +12,13 @@ class Settings(QWidget):
     shortcut = pyqtSignal(dict)
     delete_shortcut = pyqtSignal(dict)
 
-    def __init__(self, parameters, exe_dir, viewer, anim_file):
+    def __init__(self, parameters, exe_dir, viewer, anim_file, animations):
         super().__init__()
         uic.loadUi(os.path.join(exe_dir, f"UI", "settingsWidget.ui"), self)
         self.parameters = parameters
         self.viewer = viewer
         self.anim_file = anim_file
+        self.animations = animations
 
         if self.parameters["route"] != "General Settings":
             self.warning.hide()
@@ -103,15 +104,22 @@ class Settings(QWidget):
         self.animation_idle.toggled.connect(self.save_current)
 
         self.idle_animation.currentIndexChanged.connect(self.save_current)
-        self.talking_animation.currentIndexChanged.connect(self.save_current)
-        self.idle_animation_direction.currentIndexChanged.connect(self.save_current)
-        self.talking_animation_direction.currentIndexChanged.connect(self.save_current)
         self.idle_speed.valueChanged.connect(self.save_current)
-        self.talking_speed.valueChanged.connect(self.save_current)
+        self.idle_animation_direction.currentIndexChanged.connect(self.save_current)
         self.idle_animation_pacing.currentIndexChanged.connect(self.save_current)
-        self.talking_animation_pacing.currentIndexChanged.connect(self.save_current)
         self.idle_animation_iteration.valueChanged.connect(self.save_current)
+
+        self.talking_animation_direction.currentIndexChanged.connect(self.save_current)
+        self.talking_animation.currentIndexChanged.connect(self.save_current)
+        self.talking_speed.valueChanged.connect(self.save_current)
+        self.talking_animation_pacing.currentIndexChanged.connect(self.save_current)
         self.talking_animation_iteration.valueChanged.connect(self.save_current)
+
+        self.screaming_animation_direction.currentIndexChanged.connect(self.save_current)
+        self.screaming_animation.currentIndexChanged.connect(self.save_current)
+        self.screaming_speed.valueChanged.connect(self.save_current)
+        self.screaming_animation_pacing.currentIndexChanged.connect(self.save_current)
+        self.screaming_animation_iteration.valueChanged.connect(self.save_current)
 
         self.display.toggled.connect(self.save_current)
         self.move.toggled.connect(self.save_current)
@@ -239,35 +247,43 @@ class Settings(QWidget):
 
     def load_animations(self, changed_keys, updating):
         if not updating:
-            animations = self.viewer.get_animations(self.anim_file, get_all=True)
-
             self.idle_animation.clear()
             self.talking_animation.clear()
+            self.screaming_animation.clear()
 
-            for animation in animations:
+            for animation in self.animations:
                 self.idle_animation.addItem(animation)
                 self.talking_animation.addItem(animation)
+                self.screaming_animation.addItem(animation)
         else:
             animations = []
 
         idle_animation = self.parameters.get("animation_name_idle", "None")
         talking_animation = self.parameters.get("animation_name_talking", "None")
+        screaming_animation = self.parameters.get("animation_name_screaming", talking_animation)
 
-        if idle_animation in animations or updating:
+        if idle_animation in self.animations or updating:
             self.update_value(changed_keys, updating, "animation_name_idle", "idle_animation.setCurrentText", idle_animation, "result_ready")
-        if talking_animation in animations or updating:
+        if talking_animation in self.animations or updating:
             self.update_value(changed_keys, updating, "animation_name_talking", "talking_animation.setCurrentText", talking_animation, "result_ready")
-        self.update_value(changed_keys, updating, "animation_direction_talking", "talking_animation_direction.setCurrentText", "normal")
-        self.update_value(changed_keys, updating, "animation_direction_idle", "idle_animation_direction.setCurrentText", "normal")
+        if screaming_animation in self.animations or updating:
+            self.update_value(changed_keys, updating, "animation_name_screaming", "talking_animation.setCurrentText", talking_animation, "result_ready")
 
-        self.update_value(changed_keys, updating, "animation_pacing_talking", "talking_animation_pacing.setCurrentText", "ease-in-out")
+        self.update_value(changed_keys, updating, "animation_direction_idle", "idle_animation_direction.setCurrentText", "normal")
+        self.update_value(changed_keys, updating, "animation_direction_talking", "talking_animation_direction.setCurrentText", "normal")
+        self.update_value(changed_keys, updating, "animation_direction_screaming", "screaming_animation_direction.setCurrentText", "normal")
+
         self.update_value(changed_keys, updating, "animation_pacing_idle", "idle_animation_pacing.setCurrentText", "ease-in-out")
+        self.update_value(changed_keys, updating, "animation_pacing_talking", "talking_animation_pacing.setCurrentText", "ease-in-out")
+        self.update_value(changed_keys, updating, "animation_pacing_screaming", "screaming_animation_pacing.setCurrentText", "ease-in-out")
 
         self.update_value(changed_keys, updating, "animation_speed_idle", "idle_speed.setValue", 6)
         self.update_value(changed_keys, updating, "animation_speed_talking", "talking_speed.setValue", 0.5)
+        self.update_value(changed_keys, updating, "animation_speed_screaming", "screaming_speed.setValue", 0.5)
 
         self.update_value(changed_keys, updating, "animation_iteration_idle", "idle_animation_iteration.setValue", 0)
         self.update_value(changed_keys, updating, "animation_iteration_talking", "talking_animation_iteration.setValue", 0)
+        self.update_value(changed_keys, updating, "animation_iteration_screaming", "screaming_animation_iteration.setValue", 0)
 
     def check_hotkeys(self):
         if self.parameters["hotkeys"]:
@@ -403,17 +419,26 @@ class Settings(QWidget):
         self.parameters['rotationGuitarDown'] = self.rotationGuitarDown.value()
 
         self.parameters['animation_idle'] = self.animation_idle.isChecked()
+
         self.parameters['animation_name_idle'] = self.idle_animation.currentText()
         self.parameters['animation_name_talking'] = self.talking_animation.currentText()
+        self.parameters['animation_name_screaming'] = self.screaming_animation.currentText()
+
         self.parameters['animation_speed_idle'] = self.idle_speed.value()
         self.parameters['animation_speed_talking'] = self.talking_speed.value()
+        self.parameters['animation_speed_screaming'] = self.screaming_speed.value()
+
         self.parameters['animation_direction_idle'] = self.idle_animation_direction.currentText()
         self.parameters['animation_direction_talking'] = self.talking_animation_direction.currentText()
+        self.parameters['animation_direction_screaming'] = self.screaming_animation_direction.currentText()
 
         self.parameters['animation_iteration_idle'] = self.idle_animation_iteration.value()
         self.parameters['animation_iteration_talking'] = self.talking_animation_iteration.value()
+        self.parameters['animation_iteration_screaming'] = self.screaming_animation_iteration.value()
+
         self.parameters['animation_pacing_idle'] = self.idle_animation_pacing.currentText()
         self.parameters['animation_pacing_talking'] = self.talking_animation_pacing.currentText()
+        self.parameters['animation_pacing_screaming'] = self.screaming_animation_pacing.currentText()
 
         self.parameters["use_css"] = True if self.cssGroup.isChecked() else False
         self.parameters["css"] = self.css.toPlainText()
@@ -519,6 +544,7 @@ class SettingsToolBox(QToolBox):
         self.exe_dir = exe_dir
         self.viewer = viewer
         self.anim_file = anim_file
+        self.animations = self.viewer.get_animations(self.anim_file, get_all=True)
         self.childs = {}
         self.general_settings_changed = False
 
@@ -699,7 +725,7 @@ class SettingsToolBox(QToolBox):
             if route in used_routes:
                 continue
 
-            settings_widget = Settings(item, exe_dir=self.exe_dir, viewer=self.viewer, anim_file=self.anim_file)
+            settings_widget = Settings(item, exe_dir=self.exe_dir, viewer=self.viewer, anim_file=self.anim_file, animations=self.animations)
             if route == "General Settings":
                 settings_widget.settings_changed.connect(self.update_childs)
                 settings_widget.settings_changed_default.connect(self.save_as_default_childs)

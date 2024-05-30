@@ -646,8 +646,9 @@ class ModelGallery(QWidget):
             row = idx // 2  # Calculate the row index
             col = idx % 2   # Calculate the column index
             self.add_model(model, row, col)
+            self.last_idx = idx
 
-    def add_model(self, model, row, col):
+    def add_model(self, model, row=None, col=None):
         model_item = ModelItem(model, self.models_type, self.exe_dir, self.res_dir)
 
         model_item.selected.connect(self.selected.emit)
@@ -655,7 +656,13 @@ class ModelGallery(QWidget):
         model_item.shortcut.connect(self.shortcut.emit)
         model_item.saving.connect(self.saving.emit)
 
-        self.layout().addWidget(model_item, row, col, 1, 1)
+        if row is None or col is None:
+            self.last_idx += 1
+            row = self.last_idx // 2  # Calculate the row index
+            col = self.last_idx % 2   # Calculate the column index
+
+        self.layout().addWidget(model_item,  row, col, 1, 1)
+
 
     def model_deleted(self):
         self.sender().setParent(None)
