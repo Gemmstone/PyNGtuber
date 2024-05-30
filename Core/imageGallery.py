@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import QWidget, QToolBox, QVBoxLayout, QPushButton, QFrame,
     QGridLayout, QCheckBox, QGroupBox, QMessageBox, QInputDialog, QLabel, QFileDialog, QDialog
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtGui import QIcon, QPixmap, QImage
-from PyQt6.QtCore import pyqtSignal, QSize, Qt, QUrl
+from PyQt6.QtCore import pyqtSignal, QSize, Qt, QUrl, QTimer
 from PyQt6 import uic
 from PIL import Image, ImageSequence
 import shutil
@@ -85,6 +85,8 @@ class ImageGallery(QToolBox):
 
     def __init__(self, load_model, res_dir, exe_dir):
         super().__init__()
+        self.selected_images = []
+        self.file_paths = []
         self.last_model = None
         self.res_dir = res_dir
         self.exe_dir = exe_dir
@@ -96,32 +98,23 @@ class ImageGallery(QToolBox):
         }
 
         QToolBox::tab {
-            background: #009deb;
             border-radius: 5px;
             text-align: center;
-            color: black;
+            color: white;
+            background-color: rgba(0, 0, 0, 50);
         }
-        
-        /* 
-        QToolBox::tab:first {
-            background: #4ade00;
-            border-radius: 5px;
-            color: black;
-        }
-
-        QToolBox::tab:last {
-            background: #f95300;
-            border-radius: 5px;
-            color: black;
-        }
-        */
 
         QToolBox::tab:selected { /* italicize selected tabs */
             font: italic;
             font-weight: bold;
-            background: pink;
+            background: black;
             text-align: center;
-            color: black;   
+            color: white;   
+        }
+        
+        QToolBox::tab:hover {  
+            color: white;
+            background-color: rgb(0, 157, 235);
         }
         
         @QScrollBar:vertical
@@ -240,6 +233,8 @@ class ImageGallery(QToolBox):
         return QIcon(pixmap)
 
     def set_buttons_checked(self, load_model):
+        self.selected_images = []
+        self.file_paths = []
         for index in range(self.count()):
             page_widget = self.widget(index)
             if page_widget and isinstance(page_widget, QFrame):
@@ -259,6 +254,8 @@ class ImageGallery(QToolBox):
                                     route = os.path.join(*directory.split(os.sep)[assets_index:], filename)
 
                                 child_widget.setChecked(button_name in load_model)
+                                if button_name in load_model:
+                                    self.list_selected(button_name, child_widget.toolTip())
                                 # print(button_name, load_model)
                                 # print(button_name in load_model)
 
@@ -281,6 +278,7 @@ class ImageGallery(QToolBox):
             page_widget = QFrame()
             page_layout = QVBoxLayout(page_widget)
             page_layout.setContentsMargins(0, 0, 6, 0)
+            page_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             page_layout.addWidget(QLabel("Assets Folder Not Found"))
             folder_name = os.path.basename("Assets Folder Not Found")
             self.addItem(page_widget, folder_name.title())
@@ -332,17 +330,20 @@ class ImageGallery(QToolBox):
                             item.setCheckable(True)
                             item.setStyleSheet("QPushButton:checked{background-color: red !important}")
                             if load_model is not None:
-                                item.setChecked(button_name in load_model)
+                                checked = button_name in load_model
+                                item.setChecked(checked)
+                                if checked:
+                                    self.list_selected(route, str(route))
 
                             item.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
                             item.customContextMenuRequested.connect(self.delete_file)
 
-                            item.clicked.connect(self.get_selected_files)
+                            item.clicked.connect(self.update_selected)
                             row_layout.addWidget(item)
                             column_count += 1
                             fileCount += 1
 
-                            if column_count == 4:
+                            if column_count == 6:
                                 row_layout = QHBoxLayout()
                                 page_layout.addLayout(row_layout)
                                 column_count = 0
@@ -362,18 +363,19 @@ class ImageGallery(QToolBox):
                                 item.setStyleSheet("QPushButton:checked{background-color: red !important}")
 
                                 if load_model is not None:
-                                    item.setChecked(
-                                        (
-                                            html_sources[html_source]["route"].replace("/file//", "/file/")
-                                            if route.startswith("$url") else
-                                            html_sources[html_source]
-                                         ) in load_model
-                                    )
+                                    checked = (
+                                                  html_sources[html_source]["route"].replace("/file//", "/file/")
+                                                  if route.startswith("$url") else
+                                                  html_sources[html_source]
+                                              ) in load_model
+                                    item.setChecked(checked)
+                                    if checked:
+                                        self.list_selected(route, route)
 
                                 item.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
                                 item.customContextMenuRequested.connect(self.delete_file)
 
-                                item.clicked.connect(self.get_selected_files)
+                                item.clicked.connect(self.update_selected)
                                 fileCount += 1
                                 page_layout.addWidget(item)
                     if fileCount > 0:
@@ -455,22 +457,43 @@ class ImageGallery(QToolBox):
         with open(os.path.join(self.folder_path, data["folder"], "html_sources.json"), "w") as file:
             json.dump(html_sources, file, indent=4, ensure_ascii=False)
 
+    def list_selected(self, value, tooltip):
+        self.selected_images.append(value)
+        self.file_paths.append(tooltip)
+
+    def update_selected(self):
+        sender = self.sender()
+        accessibleName = sender.accessibleName()
+        toolTip = sender.toolTip()
+        if sender.isChecked():
+            try:
+                self.selected_images.append(json.loads(accessibleName))
+            except BaseException:
+                self.selected_images.append(os.path.normpath(accessibleName))
+            self.file_paths.append(os.path.normpath(toolTip))
+        else:
+            try:
+                self.selected_images.remove(json.loads(accessibleName))
+            except BaseException:
+                self.selected_images.remove(os.path.normpath(accessibleName))
+            self.file_paths.remove(os.path.normpath(toolTip))
+        self.selectionChanged.emit(self.selected_images)
+
     def get_selected_files(self):
-        file_paths = []
-        selected_images = []
+        self.file_paths = []
+        self.selected_images = []
 
         for index in range(self.count()):
             page_widget = self.widget(index)
             for button in page_widget.findChildren(QPushButton):
                 if button.isChecked():
                     try:
-                        selected_images.append(json.loads(button.accessibleName()))
+                        self.selected_images.append(json.loads(button.accessibleName()))
                     except BaseException:
-                        selected_images.append(os.path.normpath(button.accessibleName()))
-                    file_paths.append(os.path.normpath(button.toolTip()))
-
-        self.selectionChanged.emit(selected_images)
-        return file_paths
+                        self.selected_images.append(os.path.normpath(button.accessibleName()))
+                    self.file_paths.append(os.path.normpath(button.toolTip()))
+        self.selectionChanged.emit(self.selected_images)
+        return self.file_paths
 
     def delete_file(self):
         confirmation = QMessageBox()
@@ -500,7 +523,10 @@ class ImageGallery(QToolBox):
                         json.dump(result, html_sources_file, indent=4, ensure_ascii=False)
                 else:
                     os.remove(os.path.join(self.res_dir, path))
+                index = self.currentIndex()
                 self.load_images(self.last_model)
+                self.setCurrentIndex(index)
+                self.get_selected_files()
             except Exception as e:
                 print(f"Error deleting file: {str(e)}")
 
@@ -531,7 +557,6 @@ class ModelItem(QGroupBox):
         self.setup()
         self.frame_3.hide()
         self.frame_2.hide()
-        self.shortcutText.hide()
 
     def saveChanges(self):
         self.saving.emit(self.modelName)
@@ -545,13 +570,10 @@ class ModelItem(QGroupBox):
     def enterEvent(self, event):
         self.frame_3.show()
         self.frame_2.show()
-        if self.shortcutText.text():
-            self.shortcutText.show()
 
     def leaveEvent(self, event):
         self.frame_3.hide()
         self.frame_2.hide()
-        self.shortcutText.hide()
 
     def setup(self):
         self.setTitle(self.modelName)
@@ -564,19 +586,6 @@ class ModelItem(QGroupBox):
         with open(os.path.join(self.res_dir, "Models", self.modelType, self.modelName, "data.json"),
                   "r") as data_file:
             self.shortcuts = json.load(data_file)["shortcuts"]
-            if self.shortcuts:
-                shortcuts_text = []
-                for shortcut in self.shortcuts:
-                    if shortcut["type"] == "Midi":
-                        shortcuts_text.append(f"Midi: {shortcut['command']['note']}")
-                    elif shortcut["type"] == "Keyboard":
-                        shortcuts_text.append(f"Keyboard {shortcut['command']}")
-                    else:
-                        shortcuts_text.append(f"{shortcut['type']} {shortcut['command']}")
-                self.shortcutText.setText("\n".join(shortcuts_text))
-            else:
-                self.shortcutText.setText("")
-                self.shortcutText.hide()
 
     def delete_model(self):
         confirmation = QMessageBox()
@@ -614,7 +623,7 @@ class ModelGallery(QWidget):
         self.models_type = models_type
         self.exe_dir = exe_dir
         self.res_dir = res_dir
-        layout = QVBoxLayout()
+        layout = QGridLayout()
 
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(6)
@@ -625,15 +634,20 @@ class ModelGallery(QWidget):
 
     def reload_models(self, new_list):
         self.models_list = new_list
-        for _ in reversed(range(self.layout().count())):
-            self.layout().itemAt(_).widget().setParent(None)
+        self.clearLayout()  # Clear the layout before reloading models
         self.load_models()
 
-    def load_models(self):
-        for model in self.models_list:
-            self.add_model(model)
+    def clearLayout(self):
+        for _ in reversed(range(self.layout().count())):
+            self.layout().itemAt(_).widget().setParent(None)
 
-    def add_model(self, model):
+    def load_models(self):
+        for idx, model in enumerate(self.models_list):
+            row = idx // 2  # Calculate the row index
+            col = idx % 2   # Calculate the column index
+            self.add_model(model, row, col)
+
+    def add_model(self, model, row, col):
         model_item = ModelItem(model, self.models_type, self.exe_dir, self.res_dir)
 
         model_item.selected.connect(self.selected.emit)
@@ -641,7 +655,7 @@ class ModelGallery(QWidget):
         model_item.shortcut.connect(self.shortcut.emit)
         model_item.saving.connect(self.saving.emit)
 
-        self.layout().addWidget(model_item)
+        self.layout().addWidget(model_item, row, col, 1, 1)
 
     def model_deleted(self):
         self.sender().setParent(None)

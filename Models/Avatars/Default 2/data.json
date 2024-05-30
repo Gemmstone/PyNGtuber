@@ -2,12 +2,18 @@
     "shortcuts": [],
     "animations": {
         "idle": {
-            "name": "floatx",
-            "speed": 3.0
+            "name": "floaty",
+            "speed": 6.0,
+            "iteration": 0,
+            "pacing": "ease-in-out",
+            "direction": "normal"
         },
         "talking": {
-            "name": "floatx",
-            "speed": 0.3
+            "name": "floaty",
+            "speed": 0.5,
+            "iteration": 0,
+            "pacing": "ease-in-out",
+            "direction": "normal"
         }
     }
 }

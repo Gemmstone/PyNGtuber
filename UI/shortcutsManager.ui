@@ -106,23 +106,29 @@ QFrame{
     background-color: rgba(255, 255, 255, 0);
 }
 QTabBar::tab {  
-    background-color: rgba(255, 255, 255, 40);
-	background-color: rgb(0, 157, 235);
-    min-width: 70px; 
+	background-color: rgba(0, 0, 0, 50);
+    min-width: 50px; 
     min-height:22px;
     padding: 0px  2px; 
     color: white;
-	border-radius: 10px;
-    margin-left:2px;
-    margin-right:2px;
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 9px;
+	border-top-right-radius: 9px;
+    margin-left:0px;
+    margin-right:4px;
+  	margin-bottom: 3px; 
 }
 QTabBar::tab:selected {  
     color: white;
-	background-color: black;;
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+	background-color: rgb(0, 157, 235);; 
+  	margin-bottom: -1px; 
 }
 QTabBar::tab:hover {  
-    color: black;
-    background-color: rgba(255, 0, 0, 100);
+    color: white;
+    background-color: black;
 }</string>
      </property>
      <property name="currentIndex">
@@ -150,6 +156,12 @@ QTabBar::tab:hover {
        </property>
        <item>
         <widget class="QFrame" name="frame">
+         <property name="styleSheet">
+          <string notr="true">#frame{
+	border-radius: 0px;
+	background-color: rgb(0, 157, 235);
+}</string>
+         </property>
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
@@ -261,7 +273,7 @@ QTabBar::tab:hover {
             <x>0</x>
             <y>0</y>
             <width>1139</width>
-            <height>340</height>
+            <height>337</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -634,6 +646,12 @@ QTabBar::tab:hover {
        </property>
        <item>
         <widget class="QFrame" name="frame_11">
+         <property name="styleSheet">
+          <string notr="true">#frame_11{
+	border-radius: 0px;
+	background-color: rgb(0, 157, 235);
+}</string>
+         </property>
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
@@ -643,6 +661,12 @@ QTabBar::tab:hover {
          <layout class="QVBoxLayout" name="verticalLayout_14">
           <item>
            <widget class="QFrame" name="frame_16">
+            <property name="styleSheet">
+             <string notr="true">#frame_16{
+	border-radius: 0px;
+	background-color: rgb(0, 157, 235);
+}</string>
+            </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -664,6 +688,10 @@ QTabBar::tab:hover {
              </property>
              <item>
               <widget class="QLabel" name="label_16">
+               <property name="styleSheet">
+                <string notr="true">background-color: transparent;
+color: white</string>
+               </property>
                <property name="text">
                 <string>Type:</string>
                </property>
@@ -685,6 +713,10 @@ QTabBar::tab:hover {
              </item>
              <item>
               <widget class="QLabel" name="label_2">
+               <property name="styleSheet">
+                <string notr="true">background-color: transparent;
+color: white</string>
+               </property>
                <property name="text">
                 <string>Time:</string>
                </property>
@@ -711,6 +743,10 @@ QTabBar::tab:hover {
              </item>
              <item>
               <widget class="QLabel" name="label_17">
+               <property name="styleSheet">
+                <string notr="true">background-color: transparent;
+color: white</string>
+               </property>
                <property name="text">
                 <string>Note:</string>
                </property>
@@ -737,6 +773,10 @@ QTabBar::tab:hover {
              </item>
              <item>
               <widget class="QLabel" name="label_18">
+               <property name="styleSheet">
+                <string notr="true">background-color: transparent;
+color: white</string>
+               </property>
                <property name="text">
                 <string>Velocity:</string>
                </property>
@@ -763,6 +803,10 @@ QTabBar::tab:hover {
              </item>
              <item>
               <widget class="QLabel" name="label_19">
+               <property name="styleSheet">
+                <string notr="true">background-color: transparent;
+color: white</string>
+               </property>
                <property name="text">
                 <string>Channel:</string>
                </property>
@@ -792,6 +836,12 @@ QTabBar::tab:hover {
           </item>
           <item>
            <widget class="QFrame" name="frame_17">
+            <property name="styleSheet">
+             <string notr="true">#frame_17{
+	border-radius: 0px;
+	background-color: rgb(0, 157, 235);
+}</string>
+            </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -909,7 +959,7 @@ QTabBar::tab:hover {
             <x>0</x>
             <y>0</y>
             <width>1139</width>
-            <height>287</height>
+            <height>284</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -1282,6 +1332,12 @@ QTabBar::tab:hover {
        </property>
        <item>
         <widget class="QFrame" name="frame_6">
+         <property name="styleSheet">
+          <string notr="true">#frame_6{
+	border-radius: 0px;
+	background-color: rgb(0, 157, 235);
+}</string>
+         </property>
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
@@ -1376,6 +1432,12 @@ QTabBar::tab:hover {
           </item>
           <item>
            <widget class="QFrame" name="frameRangeTwitch">
+            <property name="styleSheet">
+             <string notr="true">#frameRangeTwitch{
+	border-radius: 0px;
+	background-color: rgb(0, 157, 235);
+}</string>
+            </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -1405,6 +1467,10 @@ QTabBar::tab:hover {
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: transparent;
+color: white</string>
                </property>
                <property name="text">
                 <string>From: </string>
@@ -1438,6 +1504,10 @@ QTabBar::tab:hover {
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: transparent;
+color: white</string>
+               </property>
                <property name="text">
                 <string> To: </string>
                </property>
@@ -1470,6 +1540,12 @@ QTabBar::tab:hover {
           </item>
           <item>
            <widget class="QFrame" name="frameTierTwitch">
+            <property name="styleSheet">
+             <string notr="true">#frameTierTwitch{
+	border-radius: 0px;
+	background-color: rgb(0, 157, 235);
+}</string>
+            </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -1499,6 +1575,10 @@ QTabBar::tab:hover {
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: transparent;
+color: white</string>
                </property>
                <property name="text">
                 <string>Tier: </string>
@@ -1532,6 +1612,12 @@ QTabBar::tab:hover {
           </item>
           <item>
            <widget class="QFrame" name="frameMessageTwitch">
+            <property name="styleSheet">
+             <string notr="true">#frameMessageTwitch{
+	border-radius: 0px;
+	background-color: rgb(0, 157, 235);
+}</string>
+            </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -1586,6 +1672,10 @@ QTabBar::tab:hover {
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: transparent;
+color: white</string>
+               </property>
                <property name="text">
                 <string>User: </string>
                </property>
@@ -1617,6 +1707,10 @@ QTabBar::tab:hover {
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: transparent;
+color: white</string>
                </property>
                <property name="text">
                 <string>Message: </string>
@@ -1756,7 +1850,7 @@ QTabBar::tab:hover {
             <x>0</x>
             <y>0</y>
             <width>1139</width>
-            <height>340</height>
+            <height>337</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_6">

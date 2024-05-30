@@ -1,7 +1,7 @@
 import os
 from PyQt6.QtGui import QIcon, QPixmap
 from PyQt6.QtWidgets import QToolBox, QWidget, QVBoxLayout, QLabel, QSizePolicy
-from PyQt6.QtCore import pyqtSignal, QTimer
+from PyQt6.QtCore import pyqtSignal, QTimer, Qt
 from PyQt6 import uic
 from copy import deepcopy
 
@@ -100,7 +100,7 @@ class Settings(QWidget):
         self.guitarNote_Blue.toggled.connect(self.save_current)
         self.guitarNote_Orange.toggled.connect(self.save_current)
 
-        self.animation_idle.toggled.connect(self.hide_animations)
+        self.animation_idle.toggled.connect(self.save_current)
 
         self.idle_animation.currentIndexChanged.connect(self.save_current)
         self.talking_animation.currentIndexChanged.connect(self.save_current)
@@ -126,7 +126,6 @@ class Settings(QWidget):
         self.hide_controller()
         self.hide_cursor()
         self.hide_css()
-        self.hide_animations()
 
     def update_value(self, changed_keys, updating, key, function, default, type="normal"):
         if (key in changed_keys) or (not updating):
@@ -218,7 +217,7 @@ class Settings(QWidget):
         self.update_value(changed_keys, updating, "animation_idle", "animation_idle.setChecked", True)
         self.update_value(changed_keys, updating, "blinking", "blinkingGroup.setChecked", "ignore", "is not ignore")
         self.update_value(changed_keys, updating, "talking", "talkingGroup.setChecked", "ignore", "is not ignore")
-        self.update_value(changed_keys, updating, "talking", "controllerGroup.setChecked", ["ignore"], "ignore not in")
+        self.update_value(changed_keys, updating, "controller", "controllerGroup.setChecked", ["ignore"], "ignore not in")
         self.update_value(changed_keys, updating, "use_css", "cssGroup.setChecked", False)
         self.update_value(changed_keys, updating, "invertAxis", "invertAxis.setChecked", False)
         self.update_value(changed_keys, updating, "cursor", "cursorGroup.setChecked", False)
@@ -229,11 +228,11 @@ class Settings(QWidget):
         self.update_value(changed_keys, updating, "talking", "talkOpen.setChecked", "ignore", "talking_open")
         self.update_value(changed_keys, updating, "talking", "talkClosed.setChecked", "ignore", "talking_closed")
         self.update_value(changed_keys, updating, "talking", "talkScreaming.setChecked", "ignore", "talking_screaming")
-        self.update_value(changed_keys, updating, "mode", "display.setChecked", "display", "talking_open")
-        self.update_value(changed_keys, updating, "mode", "move.setChecked", "display", "talking_closed")
-        self.update_value(changed_keys, updating, "mode", "guitar.setChecked", "display", "talking_screaming")
-        self.update_value(changed_keys, updating, "controller", "talkClosed.setChecked", ["ignore"], "controller_buttons")
-        self.update_value(changed_keys, updating, "controller", "talkScreaming.setChecked", ["ignore"], "controller_wheel")
+        self.update_value(changed_keys, updating, "mode", "display.setChecked", "display", "display")
+        self.update_value(changed_keys, updating, "mode", "move.setChecked", "display", "move")
+        self.update_value(changed_keys, updating, "mode", "guitar.setChecked", "display", "guitar")
+        self.update_value(changed_keys, updating, "controller", "controllerButtons.setChecked", ["ignore"], "controller_buttons")
+        self.update_value(changed_keys, updating, "controller", "controllerWheel.setChecked", ["ignore"], "controller_wheel")
         self.load_animations(changed_keys, updating)
         if not updating:
             self.check_hotkeys()
@@ -295,16 +294,6 @@ class Settings(QWidget):
         else:
             self.frame_3.hide()
             self.blinkingGroup.setStyleSheet(
-                "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
-        self.save_current()
-
-    def hide_animations(self):
-        if self.animation_idle.isChecked():
-            self.frameAnimations.show()
-            self.animation_idle.setStyleSheet("")
-        else:
-            self.frameAnimations.hide()
-            self.animation_idle.setStyleSheet(
                 "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
         self.save_current()
 
@@ -539,32 +528,23 @@ class SettingsToolBox(QToolBox):
                 }
 
                 QToolBox::tab {
-                    background: #009deb;
                     border-radius: 5px;
                     text-align: center;
-                    color: black;
+                    color: white;
+                    background-color: rgba(0, 0, 0, 50);
                 }
-
-                /* 
-                QToolBox::tab:first {
-                    background: #4ade00;
-                    border-radius: 5px;
-                    color: black;
-                }
-
-                QToolBox::tab:last {
-                    background: #f95300;
-                    border-radius: 5px;
-                    color: black;
-                }
-                */
 
                 QToolBox::tab:selected { /* italicize selected tabs */
                     font: italic;
                     font-weight: bold;
-                    background: pink;
+                    background: black;
                     text-align: center;
-                    color: black;   
+                    color: white;   
+                }
+                
+                QToolBox::tab:hover {  
+                    color: white;
+                    background-color: rgb(0, 157, 235);
                 }
 
                 @QScrollBar:vertical
@@ -682,6 +662,7 @@ class SettingsToolBox(QToolBox):
 
                 filtered_items_category.append(result)
 
+        use_index_0 = True
         if len(filtered_items_category) > 2:
             general_settings_data = deepcopy(filtered_items_category[0])
             general_settings_data["route"] = "General Settings"
@@ -690,6 +671,7 @@ class SettingsToolBox(QToolBox):
             general_settings_data["thumbnail_path"] = ""
             general_settings_data["title"] = "General Settings"
             filtered_items_category = [general_settings_data] + filtered_items_category
+            use_index_0 = False
 
         filtered_routes = [item["route"] for item in filtered_items_category]
 
@@ -708,6 +690,7 @@ class SettingsToolBox(QToolBox):
             else:
                 used_routes.append(route)
 
+        index = 0
         for item in filtered_items_category:
             route = item["route"]
             thumbnail_path = item["thumbnail_path"]
@@ -750,6 +733,7 @@ class SettingsToolBox(QToolBox):
 
                 self.setCurrentIndex(index)
                 self.childs[route] = settings_widget
+        self.setCurrentIndex(0)
 
     def update_childs(self, value):
         self.general_settings_changed = True

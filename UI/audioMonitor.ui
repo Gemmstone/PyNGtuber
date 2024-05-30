@@ -14,9 +14,9 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">
-* QToolTip {
+   <string notr="true">* QToolTip {
 	background-color: pink;
+	color: black;
 }</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">

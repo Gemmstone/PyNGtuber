@@ -1,12 +1,13 @@
 {
-    "volume threshold": 12,
+    "volume threshold": 6,
     "scream threshold": 85,
-    "delay threshold": 8,
-    "microphone selection": 3,
+    "delay threshold": 1,
+    "microphone selection": 2,
     "microphone mute": false,
     "background color": 0,
     "export mode": 0,
-    "hide UI": false,
+    "hide UI": true,
+    "animations UI": true,
     "max_reference_volume": 0.5,
     "general_scale": 100,
     "animations": {
@@ -27,5 +28,5 @@
     },
     "audio engine": "pyaudio",
     "mouse tracking": true,
-    "hardware acceleration": false
+    "hardware acceleration": true
 }

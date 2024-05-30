@@ -33,6 +33,35 @@
     }
 }
 
+.being_edited {
+  opacity: 1;
+  -webkit-animation: alternate-shadow 1s infinite;
+  animation: alternate-shadow 1s infinite;
+}
+
+.not_being_edited {
+  opacity: 0.5;
+}
+
+.not_in_editor {
+  opacity: 1;
+}
+
+@keyframes alternate-shadow {
+  0% {
+    -webkit-filter: drop-shadow(4px 4px 0 black) drop-shadow(-4px -4px 0 black);
+    filter: drop-shadow(4px 4px 0 black) drop-shadow(-4px -4px 0 black);
+  }
+  50% {
+    -webkit-filter: drop-shadow(4px 4px 0 white) drop-shadow(-4px -4px 0 white);
+    filter: drop-shadow(4px 4px 0 white) drop-shadow(-4px -4px 0 white);
+  }
+  100% {
+    -webkit-filter: drop-shadow(4px 4px 0 black) drop-shadow(-4px -4px 0 black);
+    filter: drop-shadow(4px 4px 0 black) drop-shadow(-4px -4px 0 black);
+  }
+}
+
  /* Define the blinking_closed and blinking_open classes for your images */
 .blinking_closed {
     animation: blinkClosed 20s infinite, showClosed 3s infinite;
@@ -41,6 +70,7 @@
 .blinking_open {
     animation: blinkOpen 20s infinite, hideOpen 3s infinite;
 }
+
 
 /* Define the keyframes for the blinking animation */
 @keyframes blinkOpen {
@@ -65,30 +95,130 @@
 @keyframes hideOpen {
     0% {
         opacity: 1;
-        display: block;
     }
     90% {
         opacity: 1;
-        display: block;
     }
     100% {
         opacity: 0;
-        display: none;
     }
 }
 
 @keyframes showClosed {
     0% {
         opacity: 0;
-        display: none;
     }
     90% {
         opacity: 0;
-        display: none;
     }
     100% {
         opacity: 1;
-        display: block;
+    }
+}
+
+.blinking_closed_not_being_edited {
+    animation: blinkClosed_not_being_edited 20s infinite, showClosed_not_being_edited 3s infinite;
+}
+
+.blinking_open_not_being_edited {
+    animation: blinkOpen_not_being_edited 20s infinite, hideOpen_not_being_edited 3s infinite;
+}
+
+
+/* Define the keyframes for the blinking animation */
+@keyframes blinkOpen_not_being_edited {
+    0%, 100% {
+        opacity: 0.7; /* Start and end with full opacity */
+    }
+    50% {
+        opacity: 0.3; /* Hide the open images at the halfway point */
+    }
+}
+
+@keyframes blinkClosed_not_being_edited {
+    0%, 100% {
+        opacity: 0.3; /* Start and end with zero opacity */
+    }
+    50% {
+        opacity: 0.7; /* Show the closed images at the halfway point */
+    }
+}
+
+/* Define keyframes to control the time the images are hidden and shown */
+@keyframes hideOpen_not_being_edited {
+    0% {
+        opacity: 0.7;
+    }
+    90% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 0.3;
+    }
+}
+
+@keyframes showClosed_not_being_edited {
+    0% {
+        opacity: 0.3;
+    }
+    90% {
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 0.7;
+    }
+}
+
+.blinking_closed_being_edited {
+    animation: blinkClosed_being_edited 20s infinite, showClosed_being_edited 3s infinite;
+}
+
+.blinking_open_being_edited {
+    animation: blinkOpen_being_edited 20s infinite, hideOpen_being_edited 3s infinite;
+}
+
+
+/* Define the keyframes for the blinking animation */
+@keyframes blinkOpen_being_edited {
+    0%, 100% {
+        opacity: 1; /* Start and end with full opacity */
+    }
+    50% {
+        opacity: 0.5; /* Hide the open images at the halfway point */
+    }
+}
+
+@keyframes blinkClosed_being_edited {
+    0%, 100% {
+        opacity: 0.5; /* Start and end with zero opacity */
+    }
+    50% {
+        opacity: 1; /* Show the closed images at the halfway point */
+    }
+}
+
+/* Define keyframes to control the time the images are hidden and shown */
+@keyframes hideOpen_being_edited {
+    0% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes showClosed_being_edited {
+    0% {
+        opacity: 0.5;
+    }
+    90% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
     }
 }
 
@@ -151,6 +281,11 @@
 @keyframes flash {
 	from { opacity: 1; }
 	to { opacity: 0; }
+}
+
+@keyframes flash_dim {
+	from { opacity: 0.7; }
+	to { opacity: 0.5; }
 }
 
 @keyframes hithere { /* Avatar Animation */
