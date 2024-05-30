@@ -4,6 +4,8 @@
 
 ### A highly customizable PNGtuber app.
 
+A higly customizable PNGtuber app, make your streams more dynamic with animations, gifs, controllers, mouse tracking and more.
+
 <div id="hot_icon">
   
 ![hot icon](https://raw.githubusercontent.com/Gemmstone/PyNGtuber/master/docs/icon.png)
@@ -27,37 +29,22 @@
 [![GitHub Issues](https://img.shields.io/github/issues/Gemmstone/PyNGtuber)](https://github.com/Gemmstone/PyNGtuber/issues)
 </div>
 
-## Introduction
-
-I've just started developing my own PNGtubing software, and I'm excited to make it open-source. This means it will be completely free, and I welcome contributions from the community to add new features and improve the codebase.
-
-## features
--   Lorem ipsum
-
 ## Demo
 
-<div align="center"><video width="100%" height="auto" src="https://github.com/Gemmstone/PyNGtuber/assets/31828821/fc5b1aa5-169c-4a53-8cef-9f7ddb45287b" controls="controls"></video></div>
+<div align="center"><video width="100%" height="auto" src="https://github.com/Gemmstone/PyNGtuber/assets/31828821/079787d9-89ff-4837-9928-531bbecd9d59" controls="controls"></video></div>
 
-## Python Native Instalation
-
-Requires `Python 3.11`
-- PyQt6
-- pyaudio
-- pillow
-- PyQt6-WebEngine
-- beautifulsoup4
-- mido
-- numpy
-- pynput
-- dateutils
-- twitchapi
-- sounddevice
-- pyautogui
-- psutil
-  
-  ```py
-  pip install pyqt6 pyqt6-webengine pillow pyaudio beautifulsoup4 mido numpy pynput dateutils twitchapi sounddevice pyautogui psutil
-  ```
+## features
+-   Store multiple faces and models separatelly so you can make a new avatar and keep all your expressions
+-   Editor mode with lots of settings and highlighting
+-   Change settings in bulk
+-   3 Talking states (not talking, talking and screaming)
+-   Animation customization, fine tune it however you like
+-   Mouse and controller tracking
+-   Keyboard and Midi Shortcuts
+-   Twitch integration (Keys must be provided)
+-   Per layer animations and settings
+-   HTML, CSS and JS Code editor 
+-   GIF support!
   
 ## Contributions
 
