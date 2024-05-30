@@ -1,28 +1,119 @@
-// Get the image container and the first image
-const imageContainer = document.getElementById("image-wrapper");
-const moveContainer = document.getElementById("move-wrapper");
-const container = document.getElementById("container");
+const container = document.getElementById("images_container");
 
 const leftButtons = [4,6,8,10,12,13,14,15];
 const rightButtons = [0,1,2,3,5,7,9,11];
 
-/*
-// Variables to track the mouse position and dragging state
-let isDragging = false;
-let initialMouseX;
-let initialMouseY;
-let initialImageX;
-let initialImageY;
-*/
-
-// Variables to store the current offset due to mouse movement
 let mouseMovementX = 0;
 let mouseMovementY = 0;
+
+async function update_images(htmlContent) {
+    document.getElementById('image-wrapper').innerHTML = htmlContent;
+}
+
+async function flip_canvas(value) {
+    var flippers = document.getElementsByClassName("flipper");
+    for (var i = 0; i < flippers.length; i++) {
+        flippers[i].style.transition = 'all 0.5s ease-in-out';
+        flippers[i].style.transform = `rotateY(${value}deg)`;
+    }
+}
+
+async function update_mic(status, animation, speed, direction, pacing, iteration) {
+    var elementsOpen = document.getElementsByClassName("talking_open");
+    var elementsClosed = document.getElementsByClassName("talking_closed");
+    var elementsScreaming = document.getElementsByClassName("talking_screaming");
+    var elementsOpen_not_being_edited = document.getElementsByClassName("talking_open_not_being_edited");
+    var elementsClosed_not_being_edited = document.getElementsByClassName("talking_closed_not_being_edited");
+    var elementsScreaming_not_being_edited = document.getElementsByClassName("talking_screaming_not_being_edited");
+    var elementsOpen_being_edited = document.getElementsByClassName("talking_open_being_edited");
+    var elementsClosed_being_edited = document.getElementsByClassName("talking_closed_being_edited");
+    var elementsScreaming_being_edited = document.getElementsByClassName("talking_screaming_being_edited");
+    var imageWrapper = document.querySelectorAll(".idle_animation");
+    var imageAddedWrapper = document.querySelectorAll(".added_animation");
+
+    var opacityOpen =  (status == 1) ? 1 : 0;
+    var opacityClosed = (status == 0) ? 1 : 0;
+    var opacityScreaming = (status == 2) ? 1 : 0;
+
+    for (var i = 0; i < elementsOpen.length; i++) {
+        elementsOpen[i].style.transition = "opacity 0.3s";
+        elementsOpen[i].style.opacity = opacityOpen;
+    }
+
+    for (var i = 0; i < elementsClosed.length; i++) {
+        elementsClosed[i].style.transition = "opacity 0.3s";
+        elementsClosed[i].style.opacity = opacityClosed;
+    }
+
+    for (var i = 0; i < elementsScreaming.length; i++) {
+        elementsScreaming[i].style.transition = "opacity 0.3s";
+        elementsScreaming[i].style.opacity = opacityScreaming;
+    }
+
+    for (var i = 0; i < elementsOpen_not_being_edited.length; i++) {
+        elementsOpen_not_being_edited[i].style.transition = "opacity 0.3s";
+        elementsOpen_not_being_edited[i].style.opacity = (opacityOpen == 1) ? 0.7 : 0.3;
+    }
+
+    for (var i = 0; i < elementsClosed_not_being_edited.length; i++) {
+        elementsClosed_not_being_edited[i].style.transition = "opacity 0.3s";
+        elementsClosed_not_being_edited[i].style.opacity = (opacityClosed == 1) ? 0.7 : 0.3;
+    }
+
+    for (var i = 0; i < elementsScreaming_not_being_edited.length; i++) {
+        elementsScreaming_not_being_edited[i].style.transition = "opacity 0.3s";
+        elementsScreaming_not_being_edited[i].style.opacity = (opacityScreaming == 1) ? 0.7 : 0.3;
+    }
+
+    for (var i = 0; i < elementsOpen_being_edited.length; i++) {
+        elementsOpen_not_being_edited[i].style.transition = "opacity 0.3s";
+        elementsOpen_not_being_edited[i].style.opacity = (opacityOpen == 1) ? 1 : 0.5;
+    }
+
+    for (var i = 0; i < elementsClosed_being_edited.length; i++) {
+        elementsClosed_being_edited[i].style.transition = "opacity 0.3s";
+        elementsClosed_being_edited[i].style.opacity = (opacityClosed == 1) ? 1 : 0.5;
+    }
+
+    for (var i = 0; i < elementsScreaming_being_edited.length; i++) {
+        elementsScreaming_being_edited[i].style.transition = "opacity 0.3s";
+        elementsScreaming_being_edited[i].style.opacity = (opacityScreaming == 1) ? 1 : 0.5;
+    }
+
+    if(imageWrapper.length > 0) {
+        imageWrapper.forEach(function(image) {
+            iteration = (iteration == 0) ? "infinite" : iteration;
+            image.style.animation = `${animation} ${speed}s  ${pacing} ${iteration}`;
+            image.style.animationDirection = direction;
+        });
+    }
+    if(imageAddedWrapper.length > 0) {
+        imageAddedWrapper.forEach(function(animation_div) {
+            if (status == 1 || status == 2) {
+                animation = animation_div.attributes.animation_name_talking.value;
+                speed = animation_div.attributes.animation_speed_talking.value;
+                direction = animation_div.attributes.animation_direction_talking.value;
+                pacing = animation_div.attributes.animation_pacing_talking.value;
+                iteration = animation_div.attributes.animation_iteration_talking.value;
+            } else {
+                animation = animation_div.attributes.animation_name_idle.value;
+                speed = animation_div.attributes.animation_speed_idle.value;
+                direction = animation_div.attributes.animation_direction_idle.value;
+                pacing = animation_div.attributes.animation_pacing_idle.value;
+                iteration = animation_div.attributes.animation_iteration_idle.value;
+            }
+            iteration = (iteration == 0) ? "infinite" : iteration;
+            animation_div.style.animation = `${animation} ${speed}s ${pacing} ${iteration}`;
+            animation_div.style.animationDirection = direction;
+        });
+    }
+}
 
 async function cursorPosition(X, Y){
     var cursor_divs = document.querySelectorAll(".cursor_div");
     if(cursor_divs.length > 0) {
         cursor_divs.forEach(function(cursor_div) {
+            cursor_div.style.transition = 'all 0.1s linear';
             if(cursor_div.attributes.track_mouse_x.value == 1){
                 if(cursor_div.attributes.invert_mouse_x.value == 1){
                     cursor_div.style.left = `calc(50% + ${X * cursor_div.attributes.cursorScaleX.value * -1}px)`;
@@ -206,6 +297,7 @@ async function pool(){
                             controllerButton.style.display = "none";
                         }
                     } else {
+                        controllerButton.style.transition = 'all 0.2s ease-in-out';
                         controllerButton.style.left = `calc(50% + ${controllerButton.attributes.posBothX.value}px)`;
                         controllerButton.style.top = `calc(50% + ${controllerButton.attributes.posBothY.value}px)`;
                         controllerButton.style.transform = `rotate(${controllerButton.attributes.rotationBoth.value}deg)`;
@@ -219,6 +311,7 @@ async function pool(){
                             controllerButton.style.display = "none";
                         }
                     } else {
+                        controllerButton.style.transition = 'all 0.2s ease-in-out';
                         controllerButton.style.left = `calc(50% + ${controllerButton.attributes.posLeftX.value}px)`;
                         controllerButton.style.top = `calc(50% + ${controllerButton.attributes.posLeftY.value}px)`;
                         controllerButton.style.transform = `rotate(${controllerButton.attributes.rotationLeft.value}deg)`;
@@ -232,6 +325,7 @@ async function pool(){
                             controllerButton.style.display = "none";
                         }
                     } else {
+                        controllerButton.style.transition = 'all 0.2s ease-in-out';
                         controllerButton.style.left = `calc(50% + ${controllerButton.attributes.posRightX.value}px)`;
                         controllerButton.style.top = `calc(50% + ${controllerButton.attributes.posRightY.value}px)`;
                         controllerButton.style.transform = `rotate(${controllerButton.attributes.rotationRight.value}deg)`;
@@ -245,6 +339,7 @@ async function pool(){
                             controllerButton.style.display = "none";
                         }
                     } else {
+                        controllerButton.style.transition = 'all 0.2s ease-in-out';
                         controllerButton.style.left = `calc(50% + 0px)`;
                         controllerButton.style.top = `calc(50% + 0px)`;
                         controllerButton.style.transform = `rotate(0deg)`;
@@ -419,15 +514,7 @@ function preventDefaultDrag(event) {
   event.preventDefault();
 }
 
-// Add event listeners for mouse events on the move-container
-/*
-document.addEventListener("mousedown", onMouseDown);
-document.addEventListener("mousemove", onMouseMove);
-document.addEventListener("mouseup", onMouseUp);
-*/
-
-// Add an event listener to prevent default drag behavior on the move-container
-moveContainer.addEventListener("dragstart", preventDefaultDrag);
+container.addEventListener("dragstart", preventDefaultDrag);
 
 // Control the listening for gamepads
 var controller1 = document.querySelectorAll(".controller_wheelX");
@@ -437,11 +524,18 @@ var controller4 = document.querySelectorAll(".controller_wheelZ");
 var controller5 = document.querySelectorAll(".controller_buttons");
 var controller6 = document.querySelectorAll(".guitar_buttons");
 
-var controllers = controller1.length + controller2.length + controller3.length + controller4.length + controller5.length + controller6.length
+// var controllers = controller1.length + controller2.length + controller3.length + controller4.length + controller5.length + controller6.length
 // console.log("controllers:" + controllers);
-if(controllers > 0){
-    window.addEventListener("gamepadconnected", (e) => {
-        // pool();
-        window.requestAnimationFrame(pool)
-    });
+//if(controllers > 0){
+window.addEventListener("gamepadconnected", (e) => {
+    // pool();
+    window.requestAnimationFrame(pool)
+});
+
+function resolveAfter(seconds) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve('resolved');
+    }, seconds * 1000);
+  });
 }

@@ -2,11 +2,11 @@ import shutil
 
 from Core.ShortcutsManager import MidiListener, KeyboardListener, TwitchAPI, ShortcutsDialog, MouseTracker
 from Core.imageGallery import ImageGallery, ExpressionSelector, ModelGallery
+from PyQt6.QtCore import QCoreApplication, QEasingCurve, QThreadPool
 from Core.audioManager import MicrophoneVolumeWidget
+from Core.Viewer import LayeredImageViewer, Worker
 from PIL import Image, ImageSequence, ImageOps
-from Core.Viewer import LayeredImageViewer
 from Core.Settings import SettingsToolBox
-from PyQt6.QtCore import QCoreApplication
 from PyQt6 import QtWidgets, uic, QtCore
 from shutil import copy as copy_file
 from collections import Counter
@@ -24,8 +24,7 @@ import sys
 import os
 import re
 
-
-current_version = "v1.7.0"
+current_version = "v1.8.1"
 repo_owner = "Gemmstone"
 repo_name = "PyNGtuber"
 
@@ -35,6 +34,12 @@ overwrite_files = ["script.js", "animations.css", "viewer.html"]
 
 os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = '4864'
 os.environ['QTWEBENGINE_CHROMIUM_FLAGS'] = '--no-sandbox'
+
+if os.name == 'nt':
+    from ctypes import windll
+    windll.shell32.SetCurrentProcessExplicitAppUserModelID(
+        f'gemmstone.vtubing.pyngtuber.{current_version.replace(".", "_")}'
+    )
 
 
 def compare_versions(current_version, latest_version):
@@ -206,8 +211,9 @@ class UpdateDialog(QtWidgets.QDialog):
 
         self.changelog.setPlainText(self.format_changelog(self.data["body"].split("Changelog")[-1].strip()))
 
+        self.title.setText(self.data["name"])
         self.label_2.setText(f"A new version of {repo_name} is available!")
-        self.label_3.setText(f"{latest_version}")
+        self.label_3.setText(f" {latest_version} ")
         self.label_5.setText(f"{self.data['published_at'].split('T')[0].replace('-', '/')}")
 
         self.update.clicked.connect(self.download)
@@ -295,7 +301,17 @@ class UpdateDialog(QtWidgets.QDialog):
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
+        self.hidden_ui = False
         uic.loadUi(os.path.join(exe_dir, f"UI", "main.ui"), self)
+
+        self.threadpool = QThreadPool()
+
+        self.edited = self.edited = None
+        self.color = "limegreen"
+        self.viewerFrame_2.setStyleSheet(f"background-color: {self.color}")
+        self.frame_3.setStyleSheet("#frame_3 {border-radius: 10px}")
+        self.frame_4.setStyleSheet("#frame_4 {border-radius: 10px}")
+        self.editor.setStyleSheet("#editor {border-radius: 10px}")
 
         self.setWindowTitle("PyNGTuber")
 
@@ -332,6 +348,18 @@ class MainWindow(QtWidgets.QMainWindow):
         self.midi_listener.start()
 
         try:
+            with open(self.settings_json_file, "r") as f:
+                self.settings = json.load(f)
+        except FileNotFoundError:
+            pass
+
+        self.viewer = LayeredImageViewer(exe_dir=res_dir, hw_acceleration=self.settings.get("hardware acceleration", False))
+        self.viewer.loadFinishedSignal.connect(self.reboot_audio)
+        self.viewer.div_count_signal.connect(self.update_div_count)
+        self.viewerFrame.layout().addWidget(self.viewer)
+        self.viewer.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
+
+        try:
             with open(self.json_file, "r") as f:
                 self.file_parameters_default = json.load(f)
         except FileNotFoundError:
@@ -360,13 +388,6 @@ class MainWindow(QtWidgets.QMainWindow):
             with open(self.current_expression_json_file, "r") as f:
                 self.current_expression = json.load(f)
                 self.last_expression = copy.deepcopy(self.current_expression)
-        except FileNotFoundError:
-            pass
-
-
-        try:
-            with open(self.settings_json_file, "r") as f:
-                self.settings = json.load(f)
         except FileNotFoundError:
             pass
 
@@ -433,9 +454,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.talking_animation_iteration.valueChanged.connect(self.update_settings)
 
         self.load_settings()
+
         self.comboBox.currentIndexChanged.connect(self.update_settings)
         self.PNGmethod.currentIndexChanged.connect(self.update_settings)
         self.HideUI.toggled.connect(self.update_settings)
+        self.windowAnimations.toggled.connect(self.update_settings)
         self.flipCanvasToggle.toggled.connect(self.flipCanvas)
 
         self.ImageGallery = ImageGallery(self.current_files, res_dir=res_dir, exe_dir=exe_dir)
@@ -445,19 +468,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.comboBox.currentIndexChanged.connect(self.setBGColor)
 
-        self.viewer = LayeredImageViewer(exe_dir=res_dir, hw_acceleration=self.settings.get("hardware acceleration", False))
-        self.viewer.loadFinishedSignal.connect(self.reboot_audio)
-        self.viewerFrame.layout().addWidget(self.viewer)
-        self.viewer.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
-
         self.SettingsGallery = SettingsToolBox(exe_dir=exe_dir, viewer=self.viewer, anim_file=self.anim_file)
         self.SettingsGallery.settings_changed.connect(self.saveSettings)
         self.SettingsGallery.settings_changed_list.connect(self.saveSettings_list)
+        self.SettingsGallery.currentChanged.connect(self.being_edited)
         self.SettingsGallery.shortcut.connect(self.dialog_shortcut)
         self.SettingsGallery.delete_shortcut.connect(self.delete_shortcut)
         self.scrollArea_2.setWidget(self.SettingsGallery)
 
-        self.load_animations(self.settings["animations"])
+        self.animations_list = []
+        self.update_animations(self.settings["animations"])
 
         self.expressionSelector = ExpressionSelector("Assets")
         self.scrollArea_5.setWidget(self.expressionSelector)
@@ -491,6 +511,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.tabWidget_2.currentChanged.connect(self.changePage)
 
         self.editorButton.clicked.connect(self.toggle_editor)
+        self.closeEditor.clicked.connect(self.toggle_editor)
 
         self.saveViewerBtn.clicked.connect(self.update_viewer_files)
 
@@ -506,16 +527,40 @@ class MainWindow(QtWidgets.QMainWindow):
         self.resetZoom.clicked.connect(lambda: self.generalScale.setValue(100))
 
         self.mouseTrackingToggle.toggled.connect(self.mouse_tracking_changed)
+        self.transparency.toggled.connect(self.being_edited)
 
         self.toggle_editor()
         self.change_audio_engine()
-        self.update_viewer(self.current_files, update_gallery=True)
+        self.being_edited()
 
         self.mouse_tracker = MouseTracker()
         self.mouse_tracker.mouse_position.connect(self.on_mouse_position_changed)
         self.mouse_tracking_changed()
 
-        QtCore.QTimer.singleShot(500, self.check_for_update)
+        QtCore.QTimer.singleShot(1500, lambda: self.update_viewer(self.current_files, update_gallery=True))
+        QtCore.QTimer.singleShot(10000, self.check_for_update)
+
+    def update_div_count(self, count):
+        self.div_count.setText(f"{count}")
+
+    def being_edited(self):
+        last = copy.deepcopy(self.edited)
+
+        if self.tabWidget_2.currentIndex() == 0 or not self.transparency.isChecked():
+            self.edited = None
+        else:
+            current = self.SettingsGallery.currentWidget()
+            if current is not None:
+                result = current.accessibleName()
+                if result == "General Settings":
+                    self.edited = {"type": "general", "value": self.SettingsGallery.page}
+                else:
+                    self.edited = {"type": "layer", "value": result}
+            else:
+                self.edited = {"type": "layer", "value": None}
+
+        if last != self.edited:
+            QtCore.QTimer.singleShot(500, lambda: self.update_viewer(self.current_files, update_gallery=False))
 
     def check_for_update(self):
         latest_tag, data = self.get_latest_release_tag(repo_owner, repo_name)
@@ -552,6 +597,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.mouse_tracker.start()
         else:
             self.mouse_tracker.stop()
+        self.on_mouse_position_changed({"x": 0, "y": 0})
         self.update_settings()
 
     def change_audio_engine(self):
@@ -569,33 +615,31 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def on_mouse_position_changed(self, position):
         if self.viewer.is_loaded:
-            self.viewer.page().runJavaScript(f"cursorPosition({position['x']}, {position['y']});""")
+            self.viewer.page().runJavaScript(f"try{{cursorPosition({position['x']}, {position['y']});}}catch(e){{}}""")
 
     def on_zoom_delta_changed(self):
         if self.viewer.is_loaded:
             self.viewer.page().runJavaScript(f"document.body.style.zoom = '{self.generalScale.value()}%';""")
         self.scaleValue.setText(f"{self.generalScale.value()}")
 
-    def load_animations(self, default=None):
+    def update_animations(self, default=None):
         if default is None:
             default = self.settings["animations"]
 
-        animations = self.viewer.get_animations(self.anim_file)
+        self.animations_list = self.viewer.get_animations(self.anim_file)
 
         self.idle_animation.clear()
         self.talking_animation.clear()
 
-        for animation in animations:
+        for animation in self.animations_list:
             self.idle_animation.addItem(animation)
             self.talking_animation.addItem(animation)
 
-        idle_animation = default["idle"]["name"]
-        talking_animation = default["talking"]["name"]
+        self.load_animations(default)
 
-        if idle_animation in animations:
-            self.idle_animation.setCurrentText(idle_animation)
-        if talking_animation in animations:
-            self.talking_animation.setCurrentText(talking_animation)
+    def load_animations(self, default=None):
+        self.idle_animation.setCurrentText(default["idle"]["name"])
+        self.talking_animation.setCurrentText(default["talking"]["name"])
 
         self.idle_speed.setValue(default["idle"]["speed"])
         self.talking_speed.setValue(default["talking"]["speed"])
@@ -617,10 +661,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.viewer.update_settings(hw_acceleration=self.settings.get("hardware acceleration", False))
 
     def flipCanvas(self):
-        if self.flipCanvasToggle.isChecked():
-            self.viewer.page().runJavaScript("document.body.style.transform = 'scaleX(-1)';")
-        else:
-            self.viewer.page().runJavaScript("document.body.style.transform = 'scaleX(1)';")
+        self.viewer.page().runJavaScript(f"flip_canvas({180 if self.flipCanvasToggle.isChecked() else 0})")
 
     def change_max_reference_volume(self):
         self.audio.change_max_reference_volume(new_value=self.reference_volume.value())
@@ -728,8 +769,12 @@ class MainWindow(QtWidgets.QMainWindow):
     def toggle_editor(self):
         if self.editor.isHidden():
             self.editor.show()
+            self.stackedWidget.setCurrentIndex(2)
+            self.donationBtnURL.hide()
         else:
             self.editor.hide()
+            self.stackedWidget.setCurrentIndex(0)
+            self.donationBtnURL.show()
 
     def change_settings_gallery(self, index):
         self.SettingsGallery.change_page(self.ImageGallery.itemText(index))
@@ -739,17 +784,23 @@ class MainWindow(QtWidgets.QMainWindow):
         self.update_viewer(self.current_files, update_gallery=True, update_settings=True)
 
     def load_settings(self):
-        self.comboBox.setCurrentIndex(self.settings["background color"])
-        self.PNGmethod.setCurrentIndex(self.settings["export mode"])
-        self.HideUI.setChecked(self.settings["hide UI"])
-        self.generalScale.setValue(self.settings["general_scale"])
+        self.comboBox.setCurrentIndex(self.settings.get("background color", 0))
+        self.PNGmethod.setCurrentIndex(self.settings.get("export mode", 0))
+        self.HideUI.setChecked(self.settings.get("hide UI", True))
+        self.windowAnimations.setChecked(self.settings.get("animations UI", True))
+        self.generalScale.setValue(self.settings.get("general_scale", 100))
         self.scaleValue.setText(f"{self.generalScale.value()}")
-        self.audio_engine.setCurrentText(self.settings["audio engine"])
+        self.audio_engine.setCurrentText(self.settings.get("audio engine", "pyaudio"))
         self.mouseTrackingToggle.setChecked(self.settings.get("mouse tracking", True))
-        self.hw_acceleration.setCurrentIndex(1 if self.settings.get("hardware acceleration", False) else 0)
+        self.hw_acceleration.setChecked(self.settings.get("hardware acceleration", True))
         # self.reference_volume.setChecked(self.settings["max_reference_volume"])
 
     def update_settings(self):
+        settings_worker = Worker(self.update_settings_thread)
+        self.threadpool.start(settings_worker)
+        self.audioStatus(0)
+
+    def update_settings_thread(self):
         self.settings = {
             "volume threshold": self.audio.volume.value(),
             "scream threshold": self.audio.volume_scream.value(),
@@ -759,6 +810,7 @@ class MainWindow(QtWidgets.QMainWindow):
             "background color": self.comboBox.currentIndex(),
             "export mode": self.PNGmethod.currentIndex(),
             "hide UI": self.HideUI.isChecked(),
+            "animations UI": self.windowAnimations.isChecked(),
             "max_reference_volume": self.reference_volume.value(),
             "general_scale": self.generalScale.value(),
             "animations": {
@@ -779,10 +831,9 @@ class MainWindow(QtWidgets.QMainWindow):
             },
             "audio engine": self.audio_engine.currentText(),
             "mouse tracking": self.mouseTrackingToggle.isChecked(),
-            "hardware acceleration": False if self.hw_acceleration.currentIndex() == 0 else True
+            "hardware acceleration": self.hw_acceleration.isChecked()
         }
         self.save_parameters_to_json()
-        self.audioStatus(0)
 
     def delete_shortcut(self, value):
         self.file_parameters_default[value['route']]["hotkeys"] = copy.deepcopy(value["hotkeys"])
@@ -864,6 +915,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.tabWidget.setCurrentIndex(index)
         if self.tabWidget_2.currentIndex() == 1:
             self.update_viewer(self.current_files, update_settings=True)
+        self.being_edited()
 
     def deselect_every_asset(self):
         self.current_files = []
@@ -1201,69 +1253,22 @@ class MainWindow(QtWidgets.QMainWindow):
     def reboot_audio(self):
         self.audio.active_audio_signal = -1
 
-    def audioStatus(self, status):
+    def audioStatus(self, status=0):
         try:
             if self.viewer.is_loaded:
-                js_code = (f'''
-                    var elementsOpen = document.getElementsByClassName("talking_open");
-                    var elementsClosed = document.getElementsByClassName("talking_closed");
-                    var elementsScreaming = document.getElementsByClassName("talking_screaming");
-                    var imageWrapper = document.querySelectorAll(".idle_animation");
-                    var imageAddedWrapper = document.querySelectorAll(".added_animation");
-            
-                    var opacityOpen = {str(1 if status == 1 else 0)};
-                    var opacityClosed = {str(1 if status <= 0 else 0)};
-                    var opacityScreaming = {str(1 if status == 2 else 0)};
-            
-                    for (var i = 0; i < elementsOpen.length; i++) {{
-                        elementsOpen[i].style.transition = "opacity 0.3s";
-                        elementsOpen[i].style.opacity = opacityOpen;
-                    }}
-            
-                    for (var i = 0; i < elementsClosed.length; i++) {{
-                        elementsClosed[i].style.transition = "opacity 0.3s";
-                        elementsClosed[i].style.opacity = opacityClosed;
-                    }}
-            
-                    for (var i = 0; i < elementsScreaming.length; i++) {{
-                        elementsScreaming[i].style.transition = "opacity 0.3s";
-                        elementsScreaming[i].style.opacity = opacityScreaming;
-                    }}
-            
-                    if(imageWrapper.length > 0) {{
-                        imageWrapper.forEach(function(image) {{
-                            var animation = "{self.talking_animation.currentText() if status > 0 else self.idle_animation.currentText()}";
-                            var speed = {self.talking_speed.value() if status > 0 else self.idle_speed.value()};
-                            var direction = "{self.talking_animation_direction.currentText() if status > 0 else self.idle_animation_direction.currentText()}";
-                            var pacing = "{self.talking_animation_pacing.currentText() if status > 0 else self.idle_animation_pacing.currentText()}";
-                            var iteration = {self.talking_animation_iteration.value() if status > 0 else self.idle_animation_iteration.value()};
-                            iteration = (iteration == 0) ? "infinite" : iteration;
-                            image.style.animation = `${{animation}} ${{speed}}s  ${{pacing}} ${{iteration}}`;
-                            image.style.animationDirection = "{self.idle_animation_direction.currentText()}";
-                        }});
-                    }}
-                    if(imageAddedWrapper.length > 0) {{
-                        imageAddedWrapper.forEach(function(animation_div) {{
-                            if ({status} == 1 || {status} == 2) {{
-                                var animation = animation_div.attributes.animation_name_talking.value;
-                                var speed = animation_div.attributes.animation_speed_talking.value;
-                                var direction = animation_div.attributes.animation_direction_talking.value;
-                                var pacing = animation_div.attributes.animation_pacing_talking.value;
-                                var iteration = animation_div.attributes.animation_iteration_talking.value;
-                            }} else {{
-                                var animation = animation_div.attributes.animation_name_idle.value;
-                                var speed = animation_div.attributes.animation_speed_idle.value;
-                                var direction = animation_div.attributes.animation_direction_idle.value;
-                                var pacing = animation_div.attributes.animation_pacing_idle.value;
-                                var iteration = animation_div.attributes.animation_iteration_idle.value;
-                            }}
-                            iteration = (iteration == 0) ? "infinite" : iteration;
-                            animation_div.style.animation = `${{animation}} ${{speed}}s ${{pacing}} ${{iteration}}`;
-                            animation_div.style.animationDirection = direction;
-                        }});
-                    }}
-                ''')
-                self.viewer.page().runJavaScript(js_code)
+                animation = self.talking_animation.currentText() \
+                    if status > 0 else self.idle_animation.currentText()
+                speed = self.talking_speed.value() \
+                    if status > 0 else self.idle_speed.value()
+                direction = self.talking_animation_direction.currentText() \
+                    if status > 0 else self.idle_animation_direction.currentText()
+                pacing = self.talking_animation_pacing.currentText() \
+                    if status > 0 else self.idle_animation_pacing.currentText()
+                iteration = self.talking_animation_iteration.value() \
+                    if status > 0 else self.idle_animation_iteration.value()
+                self.viewer.page().runJavaScript(
+                    f'try{{update_mic({status}, "{animation}", {speed}, "{direction}", "{pacing}", {iteration})}}catch{{}}'
+                )
         except AttributeError:
             pass
 
@@ -1451,7 +1456,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def update_viewer(self, files=None, update_gallery=False, update_settings=False):
         images_list = self.getFiles(files)
 
-        self.viewer.updateImages(images_list, self.color, self.generalScale.value())
+        if not update_settings:
+            self.viewer.updateImages(images_list, self.color, self.generalScale.value(), self.edited)
         if self.tabWidget_2.currentIndex() == 1:
             if self.current_files != files or update_settings:
                 self.SettingsGallery.set_items(
@@ -1467,6 +1473,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.current_files = files
         self.htmlCode.setPlainText(self.viewer.html_code)
         self.save_parameters_to_json()
+        QtCore.QTimer.singleShot(500, self.audioStatus)
 
     def event(self, event):
         try:
@@ -1481,25 +1488,87 @@ class MainWindow(QtWidgets.QMainWindow):
         return super().event(event)
 
     def showUI(self):
-        self.frame_4.show()
-        self.frame_5.show()
-        self.frame_3.show()
-        self.frame_8.show()
+        if self.HideUI.isChecked():
+            self.hidden_ui = False
+            if self.windowAnimations.isChecked():
+                easingCurve = QEasingCurve.Type.OutCubic
+                speed = 500
 
-        self.scaleFrame.show()
-        if self.editorButton.isChecked():
-            self.editor.show()
-        self.viewerFrame_2.setStyleSheet(f"border-radius: 20px; background-color: {self.color}")
+                animation_1 = QtCore.QVariantAnimation()
+                animation_1.setEasingCurve(easingCurve)
+                animation_1.setDuration(speed)
+                animation_1.valueChanged.connect(lambda value: self.animateGeometry(self.frame_4, value))
+                animation_1.setStartValue(self.frame_4.geometry())
+                animation_1.setEndValue(self.get_positions("frame_4"))
+
+                animation_2 = QtCore.QVariantAnimation()
+                animation_2.setEasingCurve(easingCurve)
+                animation_2.setDuration(speed)
+                animation_2.valueChanged.connect(lambda value: self.animateGeometry(self.frame_3, value))
+                animation_2.setStartValue(self.frame_3.geometry())
+                animation_2.setEndValue(self.get_positions("frame_3"))
+
+                animation_3 = QtCore.QVariantAnimation()
+                animation_3.setEasingCurve(easingCurve)
+                animation_3.setDuration(speed)
+                animation_3.valueChanged.connect(lambda value: self.animateGeometry(self.donationBtnURL, value))
+                animation_3.setStartValue(self.donationBtnURL.geometry())
+                animation_3.setEndValue(self.get_positions("donationBtnURL"))
+
+                self.group = QtCore.QParallelAnimationGroup()
+
+                self.group.addAnimation(animation_1)
+                self.group.addAnimation(animation_2)
+                self.group.addAnimation(animation_3)
+
+                self.group.start()
+            else:
+                self.frame_4.show()
+                self.frame_3.show()
+                self.donationBtnURL.show()
 
     def hideUI_(self):
-        if self.HideUI.isChecked():
-            self.frame_4.hide()
-            self.frame_5.hide()
-            self.frame_3.hide()
-            self.frame_8.hide()
-            self.editor.hide()
-            self.scaleFrame.hide()
-            self.viewerFrame_2.setStyleSheet(f"background-color: {self.color}")
+        if self.HideUI.isChecked() and self.tabWidget_2.currentIndex() != 1:
+            self.hidden_ui = True
+            if self.windowAnimations.isChecked():
+
+                easingCurve = QEasingCurve.Type.InCubic
+                speed = 500
+
+                animation_1 = QtCore.QVariantAnimation()
+                animation_1.setEasingCurve(easingCurve)
+                animation_1.setDuration(speed)
+                animation_1.valueChanged.connect(lambda value: self.animateGeometry(self.frame_4, value))
+                animation_1.setStartValue(self.frame_4.geometry())
+                animation_1.setEndValue(self.get_positions("frame_4", True))
+
+                animation_2 = QtCore.QVariantAnimation()
+                animation_2.setEasingCurve(easingCurve)
+                animation_2.setDuration(speed)
+                animation_2.valueChanged.connect(lambda value: self.animateGeometry(self.frame_3, value))
+                animation_2.setStartValue(self.frame_3.geometry())
+                animation_2.setEndValue(self.get_positions("frame_3", True))
+
+                animation_3 = QtCore.QVariantAnimation()
+                animation_3.setEasingCurve(easingCurve)
+                animation_3.setDuration(speed)
+                animation_3.valueChanged.connect(lambda value: self.animateGeometry(self.donationBtnURL, value))
+                animation_3.setStartValue(self.donationBtnURL.geometry())
+                animation_3.setEndValue(self.get_positions("donationBtnURL", True))
+
+                self.group = QtCore.QParallelAnimationGroup()
+
+                self.group.addAnimation(animation_1)
+                self.group.addAnimation(animation_2)
+                self.group.addAnimation(animation_3)
+
+                self.group.start()
+            else:
+                self.frame_4.hide()
+                self.frame_3.hide()
+                self.donationBtnURL.hide()
+        else:
+            self.showUI()
 
     def setBGColor(self):
         match self.comboBox.currentIndex():
@@ -1522,7 +1591,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.update_settings()
 
     def closeEvent(self, event):
-        self.update_settings()
+        self.update_settings_thread()
         self.audio.audio_thread.stop_stream()
         self.midi_listener.terminate()
         self.keyboard_listener.terminate()
@@ -1530,6 +1599,51 @@ class MainWindow(QtWidgets.QMainWindow):
             self.TwitchAPI.terminate()
         event.accept()
 
+    def animateGeometry(self, widget, rect):
+        widget.setGeometry(rect)
+
+    def resizeEvent(self, event):
+        videoRect = QtCore.QRect(
+            QtCore.QPoint(),
+            self.mainFrame.sizeHint().scaled(self.size(), QtCore.Qt.AspectRatioMode.IgnoreAspectRatio))
+        videoRect.moveCenter(self.rect().center())
+        self.mainFrame.setGeometry(videoRect)
+
+        self.frame_3.setGeometry(self.get_positions("frame_3", self.hidden_ui))
+        self.frame_4.setGeometry(self.get_positions("frame_4", self.hidden_ui))
+        self.donationBtnURL.setGeometry(self.get_positions("donationBtnURL", self.hidden_ui))
+
+    def get_positions(self, widget, hide=False) -> QtCore.QRect:
+        match widget:
+            case "donationBtnURL":
+                donationsSize = self.donationBtnURL.size()
+                if hide:
+                    return QtCore.QRect(
+                        int(self.width() / 2) - int(donationsSize.width() / 2), -donationsSize.height(),
+                        donationsSize.width(),
+                        donationsSize.height()
+                    )
+                else:
+                    return QtCore.QRect(
+                        int(self.width()/2) - int(donationsSize.width()/2), 0,
+                        donationsSize.width(),
+                        donationsSize.height()
+                    )
+
+            case "frame_4":
+                assetsWidth = self.frame_3.maximumWidth()
+                if hide:
+                    return QtCore.QRect(-20 - assetsWidth, 10, assetsWidth, self.height() - 20)
+                else:
+                    return QtCore.QRect(10, 10, assetsWidth, self.height() - 20)
+            case "frame_3":
+                controlWidth = self.frame_3.maximumWidth()
+                if hide:
+                    return QtCore.QRect(self.width() + 10, 10, controlWidth, self.height() - 20)
+                else:
+                    return QtCore.QRect(self.width() - controlWidth - 10, 10, controlWidth, self.height() - 20)
+            case _:
+                return QtCore.QRect(0, 0, 100, 100)
 
 def main():
     app = QtWidgets.QApplication(sys.argv)

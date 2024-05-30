@@ -13,6 +13,44 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget{
+	background: #b8cdee;
+	color: black;
+}
+* QToolTip {
+	background-color: pink;
+}
+*{
+	color: black;
+}
+
+QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	border-top-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}
+
+#creditsFrame{
+	background-color: rgba(255, 255, 255, 0);
+}</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -20,19 +58,81 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QFrame" name="frame_2">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="text">
-        <string>There's a new version of PyNGtuber available!</string>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
        </property>
-       <property name="wordWrap">
-        <bool>true</bool>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
        </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>6</number>
+        </property>
+        <property name="topMargin">
+         <number>6</number>
+        </property>
+        <property name="rightMargin">
+         <number>6</number>
+        </property>
+        <property name="bottomMargin">
+         <number>6</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font-size: 10px;</string>
+          </property>
+          <property name="text">
+           <string>There's a new version of PyNGtuber available!</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="title">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font-size: 20px;
+font-weight: bold;</string>
+          </property>
+          <property name="text">
+           <string>UPDATE TITLE</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
      <item>
@@ -47,7 +147,7 @@
         <string notr="true">font: 87 20pt &quot;Noto Sans Myanmar Black&quot;;</string>
        </property>
        <property name="text">
-        <string>v1.3.0</string>
+        <string> v1.3.0 </string>
        </property>
        <property name="alignment">
         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
@@ -128,7 +228,7 @@
          <string>Changelog</string>
         </property>
         <property name="lineWrapMode">
-         <enum>QTextEdit::NoWrap</enum>
+         <enum>QTextEdit::WidgetWidth</enum>
         </property>
         <property name="readOnly">
          <bool>true</bool>

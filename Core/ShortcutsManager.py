@@ -1,10 +1,10 @@
 from twitchAPI.object.eventsub import ChannelPointsCustomRewardRedemptionAddEvent, \
     ChannelFollowEvent, ChannelCheerEvent, ChannelRaidEvent, ChannelSubscribeEvent, \
     ChannelSubscriptionGiftEvent
-from twitchAPI.chat import Chat, EventData, ChatMessage, ChatSub, ChatCommand
+from twitchAPI.chat import Chat, EventData, ChatMessage
 from twitchAPI.oauth import UserAuthenticationStorageHelper
 from twitchAPI.eventsub.websocket import EventSubWebsocket
-from PyQt6.QtCore import QThread, pyqtSignal, pyqtSlot, QPoint
+from PyQt6.QtCore import QThread, pyqtSignal, pyqtSlot
 from aiohttp.client_exceptions import ClientConnectionError
 from PyQt6 import QtWidgets, QtCore, uic
 from PyQt6.QtGui import QIcon
@@ -312,31 +312,52 @@ class KeyboardListener(QThread):
 class MouseTracker(QThread):
     mouse_position = pyqtSignal(dict)
 
-    def __init__(self, target_fps=30):
+    def __init__(self, target_fps=20):
         super().__init__()
         self.target_fps = target_fps
         self._running = False
 
     def run(self):
         interval = 1.0 / self.target_fps
+        screen_width, screen_height = pyautogui.size()
+        center_x, center_y = screen_width // 2, screen_height // 2
         self._running = True
+        error_count = 0  # Initialize the error counter
+        max_errors = 10  # Set the maximum number of allowed errors
+
         while self._running:
             start_time = time.time()
 
             if pyautogui is not None:
                 position = pyautogui.position()
+                adjusted_position = (position[0] - center_x, position[1] - center_y)
             else:
-                position = (0, 0)
+                adjusted_position = (0, 0)
             try:
                 self.mouse_position.emit({
-                    "x": position[0], "y": position[1]
+                    "x": adjusted_position[0], "y": adjusted_position[1]
                 })
             except AttributeError:
                 pass
 
             elapsed = time.time() - start_time
             if elapsed < interval:
-                time.sleep(interval - elapsed)
+                result = interval - elapsed
+                try:
+                    time.sleep(result)
+                except SystemError:
+                    error_count += 1
+                    print("Failed to sleep mouse timer, ShortcutsManager.py 344")
+                    if error_count >= max_errors:
+                        print("Maximum error count reached. Breaking the loop.")
+                        adjusted_position = (0, 0)
+                        try:
+                            self.mouse_position.emit({
+                                "x": adjusted_position[0], "y": adjusted_position[1]
+                            })
+                        except AttributeError:
+                            pass
+                        break
 
     def stop(self):
         self._running = False
