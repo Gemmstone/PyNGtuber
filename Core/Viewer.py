@@ -41,18 +41,32 @@ class Worker(QRunnable):
 
 
 class WebEnginePage(QWebEnginePage):
+    failed_to_load_images = pyqtSignal()
+
     def javaScriptConsoleMessage(self, level, message, lineNumber, sourceID):
-        print("javaScriptConsoleMessage: ", level, message, lineNumber, sourceID)
+        if "update_images is not defined" in message:
+            self.failed_to_load_images.emit()
+        else:
+            print(
+                f"javaScriptConsoleMessage: "
+                f"level: '{level}' "
+                f"message: '{message}' "
+                f"lineNumber:  '{lineNumber}' "
+                f"sourceID: '{sourceID}'"
+            )
 
 
 class LayeredImageViewer(QWebEngineView):
     loadFinishedSignal = pyqtSignal(bool)
     div_count_signal = pyqtSignal(str)
+    failed_to_load_images = pyqtSignal()
 
     def __init__(self, exe_dir, hw_acceleration=False, parent=None):
         super(LayeredImageViewer, self).__init__(parent)
         self.res_dir = exe_dir
-        self.setPage(WebEnginePage(self))
+        page = WebEnginePage(self)
+        page.failed_to_load_images.connect(self.failed_to_load_images.emit)
+        self.setPage(page)
         self.html_code = ""
         self.setColor("#b8cdee")
         self.is_loaded = False
@@ -68,8 +82,6 @@ class LayeredImageViewer(QWebEngineView):
         self.file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), self.file)
 
         self.reload()
-
-        self.updateImages()
 
     def update_settings(self, hw_acceleration=False):
         settings = self.page().settings()
