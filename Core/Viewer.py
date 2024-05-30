@@ -47,7 +47,7 @@ class WebEnginePage(QWebEnginePage):
 
 class LayeredImageViewer(QWebEngineView):
     loadFinishedSignal = pyqtSignal(bool)
-    div_count_signal = pyqtSignal(int)
+    div_count_signal = pyqtSignal(str)
 
     def __init__(self, exe_dir, hw_acceleration=False, parent=None):
         super(LayeredImageViewer, self).__init__(parent)
@@ -113,6 +113,13 @@ class LayeredImageViewer(QWebEngineView):
         soup = BeautifulSoup('<div id="image-wrapper"></div>', 'html.parser')
         image_wrapper = soup.find(id="image-wrapper")
 
+        flipper_div = soup.new_tag("div", style=f"""
+            position: absolute !important;
+            animation-direction: normal;
+            transition = 'all 0.5s ease-in-out';
+        """)
+        flipper_div['class'] = ["flipper"]
+
         div_count = 0
         if image_list is not None:
             for layer in sorted(image_list, key=lambda x: x['posZ']):
@@ -122,13 +129,6 @@ class LayeredImageViewer(QWebEngineView):
                         editing = "being_edited" if f'assets/{edited["value"].lower()}/' in layer['route'].replace("\\", "/").lower() else "not_being_edited"
                     else:
                         editing = "being_edited" if layer['route'] == edited["value"] else "not_being_edited"
-
-                flipper_div = soup.new_tag("div", style=f"""
-                    position: absolute !important;
-                    animation-direction: normal;
-                    transition = 'all 0.5s ease-in-out';
-                """)
-                flipper_div['class'] = ["flipper"]
 
                 animation_idle_div = None
                 if layer.get("animation_idle", True):
@@ -184,109 +184,113 @@ class LayeredImageViewer(QWebEngineView):
                     cursor_div['track_mouse_y'] = layer.get("track_mouse_y", 1)
 
                 controller_buttons_div = None
-                if "controller_buttons" in layer.get('controller', ["ignore"]):
-                    controller_buttons_div = soup.new_tag('div', style=f"""
-                                    position: absolute !important; 
-                                    z-index: {layer['posZ']};
-                                    left: calc(50% + {layer.get('posIdleX', 0)}px);
-                                    top: calc(50% + {layer.get('posIdleY', 0)}px);
-                                    transform: rotate({layer.get('rotationIdle', 0)}deg);
-                                    display: {("block" if layer.get("buttons", 0) == 0 else "none") if layer.get("mode", 'display') else "block"};
-                                """)
-                    controller_buttons_div['class'] = ["controller_buttons"]
-                    controller_buttons_div['player'] = layer.get("player", 1) - 1
-
-                    controller_buttons_div['mode'] = layer.get("mode", 'display')
-                    controller_buttons_div['buttons'] = layer.get("buttons", 0)
-
-                    controller_buttons_div['posBothX'] = layer.get("posBothX", 0)
-                    controller_buttons_div['posBothY'] = layer.get("posBothY", 0)
-                    controller_buttons_div['rotationBoth'] = layer.get("rotationBoth", 0)
-
-                    controller_buttons_div['posLeftX'] = layer.get("posLeftX", 0)
-                    controller_buttons_div['posLeftY'] = layer.get("posLeftY", 0)
-                    controller_buttons_div['rotationLeft'] = layer.get("rotationLeft", 0)
-
-                    controller_buttons_div['posRightX'] = layer.get("posRightX", 0)
-                    controller_buttons_div['posRightY'] = layer.get("posRightY", 0)
-                    controller_buttons_div['rotationRight'] = layer.get("rotationRight", 0)
-
                 guitar_buttons_div = None
-                if "controller_buttons" in layer.get('controller', ["ignore"]):
-                    guitar_buttons_div = soup.new_tag('div', style=f"""
-                                    position: absolute !important; 
-                                    z-index: {layer['posZ']};
-                                    left: calc(50% + {layer.get('posIdleX', 0)}px);
-                                    top: calc(50% + {layer.get('posIdleY', 0)}px);
-                                    transform: rotate({layer.get('rotationIdle', 0)}deg);
-                                    display: {("block" if "None" in layer.get("chords", []) else "none") if layer.get("chords", []) != [] else "block"};
-                                """)
-                    guitar_buttons_div['class'] = ["guitar_buttons"]
-                    guitar_buttons_div['player'] = layer.get("player", 1) - 1
-                    guitar_buttons_div['chords'] = layer.get("chords", [])
-
-                    guitar_buttons_div['posGuitarUpX'] = layer.get("posGuitarUpX", 0)
-                    guitar_buttons_div['posGuitarUpY'] = layer.get("posGuitarUpY", 0)
-                    guitar_buttons_div['rotationGuitarUp'] = layer.get("rotationGuitarUp", 0)
-                    guitar_buttons_div['posGuitarDownX'] = layer.get("posGuitarDownX", 0)
-                    guitar_buttons_div['posGuitarDownY'] = layer.get("posGuitarDownY", 0)
-                    guitar_buttons_div['rotationGuitarDown'] = layer.get("rotationGuitarDown", 0)
-
                 controller_wheelX_div = None
-                if "controller_wheel" in layer.get('controller', ["ignore"]):
-                    controller_wheelX_div = soup.new_tag('div', style=f"""
-                        position: absolute !important; 
-                        z-index: {layer['posZ']};
-                        transform-origin: calc(50% + {layer.get('originX', 0)}px) calc(50% + {layer.get('originY', 0)}px);
-                        transform: rotateZ(0deg);
-                    """)
-                    controller_wheelX_div['class'] = ["controller_wheelX"]
-                    controller_wheelX_div['player'] = layer.get("player2", 1) - 1
-                    controller_wheelX_div['deg'] = layer.get('deg', -90)
-                    controller_wheelX_div['invertAxis'] = layer.get('invertAxis', 0)
-                    controller_wheelX_div['deadzone'] = layer.get("deadzone", 0.0550)
-
                 controller_wheelY_div = None
-                if "controller_wheel" in layer.get('controller', ["ignore"]):
-                    controller_wheelY_div = soup.new_tag('div', style=f"""
-                        position: absolute !important; 
-                        z-index: {layer['posZ']};
-                        transform-origin: calc(50% + {layer.get('originXzoom', layer.get('originX', 0))}px) calc(50% + {layer.get('originYzoom', layer.get('originY', 0))}px);
-                        transform: rotateX(0deg) scale(100%);
-                    """)
-                    controller_wheelY_div['class'] = ["controller_wheelY"]
-                    controller_wheelY_div['player'] = layer.get("player2", 1) - 1
-                    controller_wheelY_div['deg'] = layer.get('degZoom', layer.get('deg', -90))
-                    controller_wheelY_div['invertAxis'] = layer.get('invertAxis', 0)
-                    controller_wheelY_div['deadzone'] = layer.get("deadzone", 0.0550)
-
                 controller_wheelZ_div = None
-                if "controller_wheel" in layer.get('controller', ["ignore"]):
-                    controller_wheelZ_div = soup.new_tag('div', style=f"""
-                    position: absolute !important; 
-                    z-index: {layer['posZ']};
-                    transform-origin: calc(50% + {layer.get('originXright', layer.get('originX', 0))}px) calc(50% + {layer.get('originYright', layer.get('originY', 0))}px);
-                    transform: rotateY(0deg) rotateX(0deg);
-                """)
-                    controller_wheelZ_div['class'] = ["controller_wheelZ"]
-                    controller_wheelZ_div['player'] = layer.get("player", 1) - 1
-                    controller_wheelZ_div['deg'] = layer.get('degRight', layer.get('deg', -90))
-                    controller_wheelZ_div['invertAxis'] = layer.get('invertAxis', 0)
-                    controller_wheelZ_div['deadzone'] = layer.get("deadzone", 0.0550)
-
                 controller_wheelWhammy_div = None
-                if "controller_wheel" in layer.get('controller', ["ignore"]):
-                    controller_wheelWhammy_div = soup.new_tag('div', style=f"""
+
+                controller = layer.get('controller', ["ignore"])
+                if controller != ["ignore"]:
+
+                    if "controller_buttons" in controller:
+                        controller_buttons_div = soup.new_tag('div', style=f"""
+                                        position: absolute !important; 
+                                        z-index: {layer['posZ']};
+                                        left: calc(50% + {layer.get('posIdleX', 0)}px);
+                                        top: calc(50% + {layer.get('posIdleY', 0)}px);
+                                        transform: rotate({layer.get('rotationIdle', 0)}deg);
+                                        display: {("block" if layer.get("buttons", 0) == 0 else "none") if layer.get("mode", 'display') else "block"};
+                                    """)
+                        controller_buttons_div['class'] = ["controller_buttons"]
+                        controller_buttons_div['player'] = layer.get("player", 1) - 1
+
+                        controller_buttons_div['mode'] = layer.get("mode", 'display')
+                        controller_buttons_div['buttons'] = layer.get("buttons", 0)
+
+                        controller_buttons_div['posBothX'] = layer.get("posBothX", 0)
+                        controller_buttons_div['posBothY'] = layer.get("posBothY", 0)
+                        controller_buttons_div['rotationBoth'] = layer.get("rotationBoth", 0)
+
+                        controller_buttons_div['posLeftX'] = layer.get("posLeftX", 0)
+                        controller_buttons_div['posLeftY'] = layer.get("posLeftY", 0)
+                        controller_buttons_div['rotationLeft'] = layer.get("rotationLeft", 0)
+
+                        controller_buttons_div['posRightX'] = layer.get("posRightX", 0)
+                        controller_buttons_div['posRightY'] = layer.get("posRightY", 0)
+                        controller_buttons_div['rotationRight'] = layer.get("rotationRight", 0)
+
+                    if "controller_buttons" in controller:
+                        guitar_buttons_div = soup.new_tag('div', style=f"""
+                                        position: absolute !important; 
+                                        z-index: {layer['posZ']};
+                                        left: calc(50% + {layer.get('posIdleX', 0)}px);
+                                        top: calc(50% + {layer.get('posIdleY', 0)}px);
+                                        transform: rotate({layer.get('rotationIdle', 0)}deg);
+                                        display: {("block" if "None" in layer.get("chords", []) else "none") if layer.get("chords", []) != [] else "block"};
+                                    """)
+                        guitar_buttons_div['class'] = ["guitar_buttons"]
+                        guitar_buttons_div['player'] = layer.get("player", 1) - 1
+                        guitar_buttons_div['chords'] = layer.get("chords", [])
+
+                        guitar_buttons_div['posGuitarUpX'] = layer.get("posGuitarUpX", 0)
+                        guitar_buttons_div['posGuitarUpY'] = layer.get("posGuitarUpY", 0)
+                        guitar_buttons_div['rotationGuitarUp'] = layer.get("rotationGuitarUp", 0)
+                        guitar_buttons_div['posGuitarDownX'] = layer.get("posGuitarDownX", 0)
+                        guitar_buttons_div['posGuitarDownY'] = layer.get("posGuitarDownY", 0)
+                        guitar_buttons_div['rotationGuitarDown'] = layer.get("rotationGuitarDown", 0)
+
+                    if "controller_wheel" in controller:
+                        controller_wheelX_div = soup.new_tag('div', style=f"""
+                            position: absolute !important; 
+                            z-index: {layer['posZ']};
+                            transform-origin: calc(50% + {layer.get('originX', 0)}px) calc(50% + {layer.get('originY', 0)}px);
+                            transform: rotateZ(0deg);
+                        """)
+                        controller_wheelX_div['class'] = ["controller_wheelX"]
+                        controller_wheelX_div['player'] = layer.get("player2", 1) - 1
+                        controller_wheelX_div['deg'] = layer.get('deg', -90)
+                        controller_wheelX_div['invertAxis'] = layer.get('invertAxis', 0)
+                        controller_wheelX_div['deadzone'] = layer.get("deadzone", 0.0550)
+
+                    if "controller_wheel" in controller:
+                        controller_wheelY_div = soup.new_tag('div', style=f"""
+                            position: absolute !important; 
+                            z-index: {layer['posZ']};
+                            transform-origin: calc(50% + {layer.get('originXzoom', layer.get('originX', 0))}px) calc(50% + {layer.get('originYzoom', layer.get('originY', 0))}px);
+                            transform: rotateX(0deg) scale(100%);
+                        """)
+                        controller_wheelY_div['class'] = ["controller_wheelY"]
+                        controller_wheelY_div['player'] = layer.get("player2", 1) - 1
+                        controller_wheelY_div['deg'] = layer.get('degZoom', layer.get('deg', -90))
+                        controller_wheelY_div['invertAxis'] = layer.get('invertAxis', 0)
+                        controller_wheelY_div['deadzone'] = layer.get("deadzone", 0.0550)
+
+                    if "controller_wheel" in controller:
+                        controller_wheelZ_div = soup.new_tag('div', style=f"""
                         position: absolute !important; 
                         z-index: {layer['posZ']};
-                        transform-origin: calc(50% + {layer.get('originXwhammy', 0)}px) calc(50% + {layer.get('originYwhammy', 0)}px);
-                        transform: rotateZ(0deg);
+                        transform-origin: calc(50% + {layer.get('originXright', layer.get('originX', 0))}px) calc(50% + {layer.get('originYright', layer.get('originY', 0))}px);
+                        transform: rotateY(0deg) rotateX(0deg);
                     """)
-                    controller_wheelWhammy_div['class'] = ["Whammywheel"]
-                    controller_wheelWhammy_div['player'] = layer.get("player", 1) - 1
-                    controller_wheelWhammy_div['deg'] = layer.get('degWhammy', 0)
-                    controller_wheelWhammy_div['invertAxis'] = layer.get('invertAxis', 0)
-                    controller_wheelWhammy_div['deadzone'] = layer.get("deadzone", 0.0550)
+                        controller_wheelZ_div['class'] = ["controller_wheelZ"]
+                        controller_wheelZ_div['player'] = layer.get("player", 1) - 1
+                        controller_wheelZ_div['deg'] = layer.get('degRight', layer.get('deg', -90))
+                        controller_wheelZ_div['invertAxis'] = layer.get('invertAxis', 0)
+                        controller_wheelZ_div['deadzone'] = layer.get("deadzone", 0.0550)
+
+                    if "controller_wheel" in controller:
+                        controller_wheelWhammy_div = soup.new_tag('div', style=f"""
+                            position: absolute !important; 
+                            z-index: {layer['posZ']};
+                            transform-origin: calc(50% + {layer.get('originXwhammy', 0)}px) calc(50% + {layer.get('originYwhammy', 0)}px);
+                            transform: rotateZ(0deg);
+                        """)
+                        controller_wheelWhammy_div['class'] = ["Whammywheel"]
+                        controller_wheelWhammy_div['player'] = layer.get("player", 1) - 1
+                        controller_wheelWhammy_div['deg'] = layer.get('degWhammy', 0)
+                        controller_wheelWhammy_div['invertAxis'] = layer.get('invertAxis', 0)
+                        controller_wheelWhammy_div['deadzone'] = layer.get("deadzone", 0.0550)
 
                 animation_blinking_div = None
                 if str(layer.get("blinking", "ignore")) != "ignore":
@@ -305,8 +309,8 @@ class LayeredImageViewer(QWebEngineView):
                     """)
                     talking = str(layer.get("talking", "ignore"))
                     animation_talking_div['class'] = [
-                    talking + ("" if editing == "not_in_editor" else f"_{editing}")
-                ]
+                        talking + ("" if editing == "not_in_editor" else f"_{editing}")
+                    ]
 
                 if layer['route'].startswith("$url/"):
 
@@ -368,10 +372,17 @@ class LayeredImageViewer(QWebEngineView):
                     if element is not None:
                         if next_parent is not None:
                             next_parent.append(element)
-                            div_count += 1
                         next_parent = element
 
-                image_wrapper.append(flipper_div)
+                for element in elements_in_order[1:]:
+                    if element is not None:
+                        div_count += 1
+
+        try:
+            div_count = f"{div_count} | {div_count / len(image_list if image_list is not None else []):.2}avrg."
+        except ZeroDivisionError:
+            div_count = "No Layers"
+        image_wrapper.append(flipper_div)
 
         html_content = str(image_wrapper.prettify())
         return {"bg_color": bg_color, "scale": scale, "html_content": html_content, "div_count": div_count}
