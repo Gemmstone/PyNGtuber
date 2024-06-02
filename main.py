@@ -1,8 +1,10 @@
 import shutil
+import time
 
 from Core.ShortcutsManager import MidiListener, KeyboardListener, TwitchAPI, ShortcutsDialog, MouseTracker
 from Core.imageGallery import ImageGallery, ExpressionSelector, ModelGallery
 from PyQt6.QtCore import QCoreApplication, QEasingCurve, QThreadPool
+from PyQt6.QtGui import QIcon, QSyntaxHighlighter, QTextCharFormat, QColor
 from Core.audioManager import MicrophoneVolumeWidget
 from Core.Viewer import LayeredImageViewer, Worker
 from PIL import Image, ImageSequence, ImageOps
@@ -10,7 +12,6 @@ from Core.Settings import SettingsToolBox
 from PyQt6 import QtWidgets, uic, QtCore
 from shutil import copy as copy_file
 from collections import Counter
-from PyQt6.QtGui import QIcon
 from pathlib import Path
 import subprocess
 import webbrowser
@@ -24,13 +25,13 @@ import sys
 import os
 import re
 
-current_version = "v1.8.1"
+current_version = "v1.9.0"
 repo_owner = "Gemmstone"
 repo_name = "PyNGtuber"
 
 directories = ["Data", "Models", "Assets", "Viewer"]
 directories_skip = ["Models"]
-overwrite_files = ["script.js", "animations.css", "viewer.html"]
+overwrite_files = ["script.js", "animations.css", "viewer.html", "parameters.json"]
 
 os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = '4864'
 os.environ['QTWEBENGINE_CHROMIUM_FLAGS'] = '--no-sandbox'
@@ -158,6 +159,37 @@ if not os.path.isfile(os.path.join(exe_dir, ".gitignore")):
 
     if not os.path.exists(res_dir):
         os.makedirs(res_dir)
+
+    dest_path = os.path.join(res_dir, "Assets")
+    if not os.path.exists(os.path.join(dest_path, "Chereverie")):
+        res_dir = exe_dir
+        shutil.rmtree(dest_path)
+        avatars = [folder for folder in os.listdir(os.path.join(res_dir, "Models", "Avatars")) if "." not in folder]
+        expressions = [folder for folder in os.listdir(os.path.join(res_dir, "Models", "Expressions")) if "." not in folder]
+
+        for avatar in avatars:
+            file = os.path.join(res_dir, "Models", "Avatars", avatar, "model,json")
+            with open(file, "r") as load_file:
+                assets = json.load(load_file)
+            result = []
+            for asset in assets:
+                asset = copy.deepcopy(asset)
+                asset["route"] = asset["route"].replace("Assets/", "Assets/Chereverie/")
+                result.append(asset)
+            with open(file, "w") as json_file:
+                json.dump(result, json_file, indent=4)
+
+        for expression in expressions:
+            file = os.path.join(res_dir, "Models", "Expressions", expression, "model,json")
+            with open(file, "r") as load_file:
+                assets = json.load(load_file)
+            result = []
+            for asset in assets:
+                asset = copy.deepcopy(asset)
+                asset["route"] = asset["route"].replace("Assets/", "Assets/Chereverie/")
+                result.append(asset)
+            with open(file, "w") as json_file:
+                json.dump(result, json_file, indent=4)
 
     for directory in directories:
         src_path = os.path.join(exe_dir, directory)
@@ -298,6 +330,71 @@ class UpdateDialog(QtWidgets.QDialog):
         self.reject()
 
 
+class SyntaxHighlighter(QSyntaxHighlighter):
+    def __init__(self, document, document_type):
+        super().__init__(document)
+        self.highlightingRules = []
+        match document_type:
+            case "htmlCode":
+                # HTML tag format
+                tag_format = QTextCharFormat()
+                tag_format.setForeground(QColor("#0000FF"))
+                tag_pattern = QtCore.QRegularExpression(r"</?[\w\s]*>")
+                self.highlightingRules.append((tag_pattern, tag_format))
+
+                # HTML attribute format
+                attribute_format = QTextCharFormat()
+                attribute_format.setForeground(QColor("#FF0000"))
+                attribute_pattern = QtCore.QRegularExpression(r'\b\w+="[^"]*"')
+                self.highlightingRules.append((attribute_pattern, attribute_format))
+
+            case "jsCode":
+                # JS keyword format
+                js_keyword_format = QTextCharFormat()
+                js_keyword_format.setForeground(QColor("#0000FF"))
+                js_keywords = ["var", "let", "const", "function", "if", "else", "for", "while", "return"]
+                for keyword in js_keywords:
+                    pattern = QtCore.QRegularExpression(f"\\b{keyword}\\b")
+                    self.highlightingRules.append((pattern, js_keyword_format))
+
+                # JS string format
+                string_format = QTextCharFormat()
+                string_format.setForeground(QColor("#FF00FF"))
+                string_patterns = [r'"[^"]*"', r"'[^']*'"]
+                for pattern in string_patterns:
+                    string_pattern = QtCore.QRegularExpression(pattern)
+                    self.highlightingRules.append((string_pattern, string_format))
+
+                # JS comment format
+                comment_format = QTextCharFormat()
+                comment_format.setForeground(QColor("#808080"))
+                comment_patterns = [r'//[^\n]*', r'/\*.*\*/']
+                for pattern in comment_patterns:
+                    comment_pattern = QtCore.QRegularExpression(pattern)
+                    self.highlightingRules.append((comment_pattern, comment_format))
+
+            case "cssCode":
+                # CSS selector format
+                css_selector_format = QTextCharFormat()
+                css_selector_format.setForeground(QColor("#800080"))
+                css_selector_pattern = QtCore.QRegularExpression(r'\b[\w-]+\s*{')
+                self.highlightingRules.append((css_selector_pattern, css_selector_format))
+
+                # CSS property format
+                css_property_format = QTextCharFormat()
+                css_property_format.setForeground(QColor("#008000"))
+                css_property_pattern = QtCore.QRegularExpression(r'\b[\w-]+\s*:')
+                self.highlightingRules.append((css_property_pattern, css_property_format))
+
+    def highlightBlock(self, text):
+        for pattern, fmt in self.highlightingRules:
+            match_iterator = pattern.globalMatch(text)
+            while match_iterator.hasNext():
+                match = match_iterator.next()
+                self.setFormat(match.capturedStart(), match.capturedLength(), fmt)
+        self.setCurrentBlockState(0)
+
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -310,6 +407,18 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.settings = json.load(f)
         except FileNotFoundError:
             pass
+
+        assets_folder = os.path.join(res_dir, "Assets")
+        self.collections = [
+            entry for entry in os.listdir(assets_folder) if os.path.isdir(os.path.join(assets_folder, entry))
+        ]
+        for collection in self.collections:
+            self.collection.addItem(collection)
+
+        self.htmlCode_highlighter = SyntaxHighlighter(self.htmlCode.document(), "htmlCode")
+        self.jsCode_highlighter = SyntaxHighlighter(self.jsCode.document(), "jsCode")
+        self.cssCode_highlighter = SyntaxHighlighter(self.cssCode.document(), "cssCode")
+        self.animCode_highlighter = SyntaxHighlighter(self.animCode.document(), "cssCode")
 
         self.viewer = LayeredImageViewer(exe_dir=res_dir, hw_acceleration=self.settings.get("hardware acceleration", False))
         self.viewer.failed_to_load_images.connect(self.retry_load)
@@ -461,8 +570,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.audio.activeAudio.connect(self.audioStatus)
         self.audioFrame.layout().addWidget(self.audio)
         self.audio.load_settings(settings=self.settings)
-        self.audio.settingsChanged.connect(self.update_settings)
-        # self.generalScale.valueChanged.connect(self.update_settings)
 
         self.idle_animation.activated.connect(self.update_settings)
         self.idle_animation_pacing.activated.connect(self.update_settings)
@@ -495,7 +602,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.invert_mouse_x.toggled.connect(self.update_settings)
         self.invert_mouse_y.toggled.connect(self.update_settings)
 
-        self.ImageGallery = ImageGallery(self.current_files, res_dir=res_dir, exe_dir=exe_dir)
+        self.ImageGallery = ImageGallery(
+            self.current_files, res_dir=res_dir, exe_dir=exe_dir,
+            collection=self.collection.currentText()
+        )
         self.ImageGallery.selectionChanged.connect(self.update_viewer)
         self.ImageGallery.currentChanged.connect(self.change_settings_gallery)
         self.scrollArea.setWidget(self.ImageGallery)
@@ -539,6 +649,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.saveExpression.clicked.connect(self.save_expression)
 
         self.createCategory.clicked.connect(self.CreateCategory)
+        self.createCollection.clicked.connect(self.CreateCollection)
         self.openFolder.clicked.connect(self.OpenAssetsFolder)
         self.clear.clicked.connect(self.clearSelection)
 
@@ -554,6 +665,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.twitchApiBtn.clicked.connect(self.update_keys)
 
         self.audio_engine.currentIndexChanged.connect(self.change_audio_engine)
+        self.collection.currentIndexChanged.connect(self.change_collection)
 
         self.reference_volume.valueChanged.connect(self.change_max_reference_volume)
 
@@ -562,6 +674,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.mouseTrackingToggle.toggled.connect(self.mouse_tracking_changed)
         self.transparency.toggled.connect(self.being_edited)
+        self.performance.toggled.connect(lambda: self.update_viewer(self.current_files, update_gallery=True))
 
         self.toggle_editor()
         self.change_audio_engine()
@@ -574,8 +687,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.check_for_update()
         self.update_viewer(self.current_files, update_gallery=True)
 
+    def change_collection(self):
+        self.ImageGallery.blockSignals(True)
+        self.ImageGallery.change_collection(self.collection.currentText())
+        self.update_viewer(self.current_files, update_gallery=True)
+        self.ImageGallery.blockSignals(False)
+        # print(self.ImageGallery.currentIndex())
+        if self.ImageGallery.currentIndex() > -1:
+            self.change_settings_gallery(self.ImageGallery.currentIndex())
+
     def retry_load(self):
-        QtCore.QTimer.singleShot(500, lambda: self.update_viewer(self.current_files, update_gallery=True))
+        QtCore.QTimer.singleShot(500, lambda: self.update_viewer(self.current_files))
         # self.update_viewer(self.current_files, update_gallery=True)
 
     def update_div_count(self, count):
@@ -591,14 +713,19 @@ class MainWindow(QtWidgets.QMainWindow):
             if current is not None:
                 result = current.accessibleName()
                 if result == "General Settings":
-                    self.edited = {"type": "general", "value": self.SettingsGallery.page}
+                    self.edited = {
+                        "type": "general",
+                        "value": self.SettingsGallery.page,
+                        "collection": self.collection.currentText()
+                    }
                 else:
-                    self.edited = {"type": "layer", "value": result}
+                    self.edited = {"type": "layer", "value": result, "collection": None}
             else:
-                self.edited = {"type": "layer", "value": None}
+                self.edited = {"type": "layer", "value": None, "collection": None}
 
         if last != self.edited:
             QtCore.QTimer.singleShot(500, lambda: self.update_viewer(self.current_files, update_gallery=False))
+        self.showUI()
 
     def check_for_update(self):
         latest_tag, data = self.get_latest_release_tag(repo_owner, repo_name)
@@ -761,6 +888,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.get_shortcuts()
 
     def update_viewer_files(self):
+        settings_worker = Worker(self.update_settings_thread)
+        settings_worker.signals.finished.connect(self.reload_page)
+        self.threadpool.start(settings_worker)
+
+    def reload_page(self):
+        self.viewer.reload()
+        self.update_viewer(self.current_files, update_gallery=True)
+        self.audioStatus(0)
+
+    def update_viewer_files_thread(self):
         try:
             with open(self.js_file, "w") as f:
                 f.write(self.jsCode.toPlainText())
@@ -784,8 +921,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 f.write(self.htmlCode.toPlainText())
         except FileNotFoundError:
             pass
-
-        self.update_viewer(self.current_files, update_gallery=True)
 
     def restore_defaults(self):
         copy_file(self.js_file_default, self.js_file)
@@ -821,7 +956,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.editor.hide()
             self.showUI(True)
 
-
     def change_settings_gallery(self, index):
         self.SettingsGallery.change_page(self.ImageGallery.itemText(index))
 
@@ -844,6 +978,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.track_mouse_y.setChecked(self.settings.get("track_mouse_y", True))
         self.invert_mouse_x.setChecked(self.settings.get("invert_mouse_x", True))
         self.invert_mouse_y.setChecked(self.settings.get("invert_mouse_y", True))
+        self.performance.setChecked(self.settings.get("performance", False))
+
+        collection = self.settings.get("collection", None)
+        if collection is None:
+            self.collection.setCurrentIndex(0)
+        else:
+            if collection in self.collections:
+                self.collection.setCurrentText(collection)
+            else:
+                self.collection.setCurrentIndex(0)
 
     def update_settings(self):
         settings_worker = Worker(self.update_settings_thread)
@@ -892,7 +1036,9 @@ class MainWindow(QtWidgets.QMainWindow):
             "track_mouse_x": self.track_mouse_x.isChecked(),
             "track_mouse_y": self.track_mouse_y.isChecked(),
             "invert_mouse_x": self.invert_mouse_x.isChecked(),
-            "invert_mouse_y": self.invert_mouse_y.isChecked()
+            "invert_mouse_y": self.invert_mouse_y.isChecked(),
+            "performance": self.performance.isChecked(),
+            "collection": self.collection.currentText()
         }
         self.save_parameters_to_json()
 
@@ -973,6 +1119,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def changePage(self, index):
         self.stackedWidget.setCurrentIndex(index)
+        self.donationBtnURL.setCurrentIndex(index)
         self.tabWidget.setCurrentIndex(index)
         if self.tabWidget_2.currentIndex() == 1:
             self.update_viewer(self.current_files, update_settings=True)
@@ -1143,19 +1290,56 @@ class MainWindow(QtWidgets.QMainWindow):
                     return True
         return False
 
-    def CreateCategory(self):
-        text, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter new category name:')
+    def CreateCollection(self):
+        text, ok = QtWidgets.QInputDialog.getText(self, 'Input Dialog', 'Enter new collection name:')
 
         if ok:
-            if os.path.exists(os.path.join(res_dir, "Assets", text)):
+            if not text:
                 msg = QtWidgets.QMessageBox()
                 msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
-                msg.setText("Asset category with this name already exists.")
+                msg.setText(f"Name of category can't be empty.")
+                msg.setWindowTitle("Warning")
+                msg.exec()
+            elif os.path.exists(os.path.join(res_dir, "Assets", text.lower())):
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
+                msg.setText("Asset collection with this name already exists.")
                 msg.setWindowTitle("Warning")
                 msg.exec()
             else:
-                os.mkdir(os.path.join(res_dir, "Assets", text))
-        self.update_viewer(self.current_files, update_gallery=True)
+                os.mkdir(os.path.join(res_dir, "Assets", text.title()))
+                self.collection.addItem(text.title())
+                self.collection.setCurrentText(text.title())
+                self.update_viewer(self.current_files, update_gallery=True)
+
+    def CreateCategory(self):
+        text, ok = QtWidgets.QInputDialog.getText(
+            self, 'Input Dialog',
+            f'Enter new category name for "{self.collection.currentText()}":'
+        )
+
+        if ok:
+            if not text:
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
+                msg.setText(f"Name of category can't be empty.")
+                msg.setWindowTitle("Warning")
+                msg.exec()
+            elif os.path.exists(os.path.join(res_dir, "Assets", self.collection.currentText(), text.lower())):
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
+                msg.setText(f'Asset category with this name already exists in "{self.collection.currentText()}".')
+                msg.setWindowTitle("Warning")
+                msg.exec()
+            elif text.lower() in [i.lower() for i in self.collections]:
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
+                msg.setText(f"Asset can't be the same name as a collection.")
+                msg.setWindowTitle("Warning")
+                msg.exec()
+            else:
+                os.mkdir(os.path.join(res_dir, "Assets", self.collection.currentText(), text.title()))
+                self.update_viewer(self.current_files, update_gallery=True)
 
     def OpenAssetsFolder(self):
         path = os.path.join(res_dir, "Assets")
@@ -1206,6 +1390,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 else:
                     os.mkdir(directory)
             temp = "savingAvatar.png"
+
             files = [
                 file for file in self.getFiles(self.current_files)
                 if not any(route in file["route"] for route in self.expressionSelector.selected_folders)
@@ -1331,7 +1516,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 iteration = self.selected_animations[status]["iteration"].value()
 
                 self.viewer.page().runJavaScript(
-                    f'try{{update_mic({status}, "{animation}", {speed}, "{direction}", "{pacing}", {iteration})}}catch{{}}'
+                    f'try{{update_mic({status}, "{animation}", {speed}, "{direction}", "{pacing}", {iteration}, {"true" if self.performance.isChecked() else "false"})}}catch{{}}'
                 )
         except AttributeError:
             pass
@@ -1477,25 +1662,9 @@ class MainWindow(QtWidgets.QMainWindow):
             if file in self.file_parameters_current:
                 parameters = self.file_parameters_current[file]
             else:
-                if file.startswith('$url/'):
-                    parameters = {
-                        "sizeX": 600,
-                        "sizeY": 600,
-                        "posX": 0,
-                        "posY": 0,
-                        "posZ": 40,
-                        "blinking": "ignore",
-                        "talking": "ignore",
-                        "css": "",
-                        "use_css": False,
-                        "hotkeys": [],
-                        "animation": [],
-                        "rotation": 0,
-                    }
-                else:
-                    image = Image.open(os.path.join(res_dir, file))
-                    width, height = image.size
-                    parameters = {
+                image = Image.open(os.path.join(res_dir, file))
+                width, height = image.size
+                parameters = {
                         "sizeX": width,
                         "sizeY": height,
                         "posX": 0,
@@ -1521,7 +1690,9 @@ class MainWindow(QtWidgets.QMainWindow):
         images_list = self.getFiles(files)
 
         if not update_settings:
-            self.viewer.updateImages(images_list, self.color, self.generalScale.value(), self.edited)
+            self.viewer.updateImages(
+                images_list, self.color, self.generalScale.value(), self.edited, self.performance.isChecked()
+            )
         if self.tabWidget_2.currentIndex() == 1:
             if self.current_files != files or update_settings:
                 self.SettingsGallery.set_items(
@@ -1552,7 +1723,7 @@ class MainWindow(QtWidgets.QMainWindow):
         return super().event(event)
 
     def showUI(self, force=False):
-        if self.HideUI.isChecked():
+        if self.HideUI.isChecked() or force:
             self.hidden_ui = False
             if self.windowAnimations.isChecked():
                 self.group = QtCore.QParallelAnimationGroup()
@@ -1572,9 +1743,21 @@ class MainWindow(QtWidgets.QMainWindow):
                     animation_2 = QtCore.QVariantAnimation()
                     animation_2.setEasingCurve(easingCurve)
                     animation_2.setDuration(speed)
-                    animation_2.valueChanged.connect(lambda value: self.animateGeometry(self.frame_3, value))
-                    animation_2.setStartValue(self.frame_3.geometry())
-                    animation_2.setEndValue(self.get_positions("frame_3"))
+                    if self.tabWidget_2.currentIndex() == 1:
+                        if self.SettingsGallery.count() == 0:
+                            animation_2.valueChanged.connect(lambda value: self.animateGeometry(self.frame_3, value))
+                            animation_2.setStartValue(self.frame_3.geometry())
+                            animation_2.setEndValue(self.get_positions("frame_3", True))
+                            self.group.addAnimation(animation_2)
+                        else:
+                            animation_2.valueChanged.connect(lambda value: self.animateGeometry(self.frame_3, value))
+                            animation_2.setStartValue(self.frame_3.geometry())
+                            animation_2.setEndValue(self.get_positions("frame_3"))
+                            self.group.addAnimation(animation_2)
+                    else:
+                        animation_2.valueChanged.connect(lambda value: self.animateGeometry(self.frame_3, value))
+                        animation_2.setStartValue(self.frame_3.geometry())
+                        animation_2.setEndValue(self.get_positions("frame_3"))
                     self.group.addAnimation(animation_2)
 
                     animation_3 = QtCore.QVariantAnimation()
@@ -1601,30 +1784,36 @@ class MainWindow(QtWidgets.QMainWindow):
                     animation_4.valueChanged.connect(lambda value: self.animateGeometry(self.editorFrame, value))
                     animation_4.setStartValue(self.editorFrame.geometry())
                     if force:
-                        animation_4.setEndValue(self.get_positions("frame_3", True))
+                        animation_4.setEndValue(self.get_positions("editor", True))
                     else:
-                        animation_4.setEndValue(self.get_positions("frame_3"))
+                        animation_4.setEndValue(self.get_positions("editor"))
                     self.group.addAnimation(animation_4)
 
                 self.group.start()
             else:
-                self.editorFrame.setGeometry(self.get_positions("frame_3", self.hidden_ui))
+                self.editorFrame.setGeometry(self.get_positions("editor", self.hidden_ui))
                 if self.editor.isHidden():
                     self.frame_4.show()
-                    self.frame_3.show()
-                    self.donationBtnURL.show()
-                if not self.editor.isHidden() or force:
-                    if force:
-                        self.editorFrame.hide()
+                    if self.tabWidget_2.currentIndex() == 1:
+                        if self.edited is None or self.edited == {"type": "layer", "value": None}:
+                            self.frame_3.hide()
+                        else:
+                            self.frame_3.show()
                     else:
-                        self.editorFrame.show()
+                        self.frame_3.show()
+                    self.donationBtnURL.show()
+                if self.tabWidget_2.currentIndex() != 1:
+                    if not self.editor.isHidden() or force:
+                        if force:
+                            self.editorFrame.hide()
+                        else:
+                            self.editorFrame.show()
 
     def hideUI_(self, force=False):
         if self.HideUI.isChecked() and self.tabWidget_2.currentIndex() != 1 or force:
             self.hidden_ui = True
             if self.windowAnimations.isChecked():
                 self.group = QtCore.QParallelAnimationGroup()
-
                 easingCurve = QEasingCurve.Type.InCubic
                 speed = 500
 
@@ -1660,24 +1849,24 @@ class MainWindow(QtWidgets.QMainWindow):
                     animation_4.valueChanged.connect(lambda value: self.animateGeometry(self.editorFrame, value))
                     animation_4.setStartValue(self.editorFrame.geometry())
                     if force:
-                        animation_4.setEndValue(self.get_positions("frame_3"))
+                        animation_4.setEndValue(self.get_positions("editor"))
                     else:
-                        animation_4.setEndValue(self.get_positions("frame_3", True))
+                        animation_4.setEndValue(self.get_positions("editor", True))
                     self.group.addAnimation(animation_4)
-
                 self.group.start()
             else:
                 self.editorFrame.setGeometry(self.get_positions("frame_3", self.hidden_ui))
                 self.frame_4.hide()
                 self.frame_3.hide()
                 self.donationBtnURL.hide()
-                if self.editor.isHidden() or force:
-                    if force:
-                        self.editorFrame.show()
-                    else:
-                        self.editorFrame.hide()
+                if self.tabWidget_2.currentIndex() != 1:
+                    if self.editor.isHidden() or force:
+                        if force:
+                            self.editorFrame.show()
+                        else:
+                            self.editorFrame.hide()
         else:
-            self.showUI()
+            self.showUI(force)
 
     def setBGColor(self):
         match self.comboBox.currentIndex():
@@ -1713,8 +1902,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def resizeEvent(self, event):
         videoRect = QtCore.QRect(
-            QtCore.QPoint(),
-            self.mainFrame.sizeHint().scaled(self.size(), QtCore.Qt.AspectRatioMode.IgnoreAspectRatio))
+            QtCore.QPoint(),self.mainFrame.sizeHint().scaled(
+                self.size(), QtCore.Qt.AspectRatioMode.IgnoreAspectRatio
+            )
+        )
         videoRect.moveCenter(self.rect().center())
         self.mainFrame.setGeometry(videoRect)
 
@@ -1722,25 +1913,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.frame_4.setGeometry(self.get_positions("frame_4", self.hidden_ui))
         self.donationBtnURL.setGeometry(self.get_positions("donationBtnURL", self.hidden_ui))
         if self.editor.isHidden:
-            self.editorFrame.setGeometry(self.get_positions("frame_3", True))
+            self.editorFrame.setGeometry(self.get_positions("editor", True))
         else:
-            self.editorFrame.setGeometry(self.get_positions("frame_3", self.hidden_ui))
+            self.editorFrame.setGeometry(self.get_positions("editor", self.hidden_ui))
 
     def get_positions(self, widget, hide=False) -> QtCore.QRect:
         match widget:
             case "donationBtnURL":
-                donationsSize = self.donationBtnURL.size()
                 if hide:
-                    return QtCore.QRect(
-                        int(self.width() / 2) - int(donationsSize.width() / 2), -donationsSize.height(),
-                        donationsSize.width(), donationsSize.height()
-                    )
+                    return QtCore.QRect(int(self.width() / 2)-151, -41, 302, 31)
                 else:
-                    return QtCore.QRect(
-                        int(self.width()/2) - int(donationsSize.width()/2), 0,
-                        donationsSize.width(), donationsSize.height()
-                    )
-
+                    return QtCore.QRect(int(self.width()/2)-151, 0, 302, 31)
             case "frame_4":
                 assetsWidth = self.frame_3.maximumWidth()
                 if hide:
@@ -1753,6 +1936,12 @@ class MainWindow(QtWidgets.QMainWindow):
                     return QtCore.QRect(self.width() + 10, 10, controlWidth, self.height() - 20)
                 else:
                     return QtCore.QRect(self.width() - controlWidth - 10, 10, controlWidth, self.height() - 20)
+            case "editor":
+                editorWidth = self.frame_3.maximumWidth() * 2
+                if hide:
+                    return QtCore.QRect(self.width() + 10, 10, editorWidth, self.height() - 20)
+                else:
+                    return QtCore.QRect(self.width() - editorWidth - 10, 10, editorWidth, self.height() - 20)
             case _:
                 return QtCore.QRect(0, 0, 100, 100)
 

@@ -312,7 +312,7 @@ class KeyboardListener(QThread):
 class MouseTracker(QThread):
     mouse_position = pyqtSignal(dict)
 
-    def __init__(self, target_fps=20):
+    def __init__(self, target_fps=30):
         super().__init__()
         self.target_fps = target_fps
         self._running = False
@@ -322,12 +322,11 @@ class MouseTracker(QThread):
         screen_width, screen_height = pyautogui.size()
         center_x, center_y = screen_width // 2, screen_height // 2
         self._running = True
-        error_count = 0  # Initialize the error counter
-        max_errors = 10  # Set the maximum number of allowed errors
+        error_count = 0
+        max_errors = 10
 
         while self._running:
             start_time = time.time()
-
             if pyautogui is not None:
                 position = pyautogui.position()
                 adjusted_position = (position[0] - center_x, position[1] - center_y)

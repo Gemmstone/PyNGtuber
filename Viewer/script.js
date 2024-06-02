@@ -13,12 +13,12 @@ async function update_images(htmlContent) {
 async function flip_canvas(value) {
     var flippers = document.getElementsByClassName("flipper");
     for (var i = 0; i < flippers.length; i++) {
-        flippers[i].style.transition = 'all 0.5s ease-in-out';
+        // flippers[i].style.transition = 'all 0.5s step-end';
         flippers[i].style.transform = `rotateY(${value}deg)`;
     }
 }
 
-async function update_mic(status, animation, speed, direction, pacing, iteration) {
+async function update_mic(status, animation, speed, direction, pacing, iteration, performance) {
     var elementsOpen = document.getElementsByClassName("talking_open");
     var elementsClosed = document.getElementsByClassName("talking_closed");
     var elementsScreaming = document.getElementsByClassName("talking_screaming");
@@ -29,6 +29,7 @@ async function update_mic(status, animation, speed, direction, pacing, iteration
     var elementsClosed_being_edited = document.getElementsByClassName("talking_closed_being_edited");
     var elementsScreaming_being_edited = document.getElementsByClassName("talking_screaming_being_edited");
     var imageWrapper = document.querySelectorAll(".idle_animation");
+    var assets = document.getElementsByClassName("asset");
     var imageAddedWrapper = document.querySelectorAll(".added_animation");
 
     var opacityOpen =  (status == 1) ? 1 : 0;
@@ -66,8 +67,8 @@ async function update_mic(status, animation, speed, direction, pacing, iteration
     }
 
     for (var i = 0; i < elementsOpen_being_edited.length; i++) {
-        elementsOpen_not_being_edited[i].style.transition = "opacity 0.3s";
-        elementsOpen_not_being_edited[i].style.opacity = (opacityOpen == 1) ? 1 : 0.5;
+        elementsOpen_being_edited[i].style.transition = "opacity 0.3s";
+        elementsOpen_being_edited[i].style.opacity = (opacityOpen == 1) ? 1 : 0.5;
     }
 
     for (var i = 0; i < elementsClosed_being_edited.length; i++) {
@@ -87,35 +88,77 @@ async function update_mic(status, animation, speed, direction, pacing, iteration
             image.style.animationDirection = direction;
         });
     }
-    if(imageAddedWrapper.length > 0) {
-        imageAddedWrapper.forEach(function(animation_div) {
-            switch(status) {
-                case 2:
-                    animation = animation_div.attributes.animation_name_screaming.value;
-                    speed = animation_div.attributes.animation_speed_screaming.value;
-                    direction = animation_div.attributes.animation_direction_screaming.value;
-                    pacing = animation_div.attributes.animation_pacing_screaming.value;
-                    iteration = animation_div.attributes.animation_iteration_screaming.value;
-                    break;
-                case 1:
-                    animation = animation_div.attributes.animation_name_talking.value;
-                    speed = animation_div.attributes.animation_speed_talking.value;
-                    direction = animation_div.attributes.animation_direction_talking.value;
-                    pacing = animation_div.attributes.animation_pacing_talking.value;
-                    iteration = animation_div.attributes.animation_iteration_talking.value;
-                    break;
-                default:
-                    animation = animation_div.attributes.animation_name_idle.value;
-                    speed = animation_div.attributes.animation_speed_idle.value;
-                    direction = animation_div.attributes.animation_direction_idle.value;
-                    pacing = animation_div.attributes.animation_pacing_idle.value;
-                    iteration = animation_div.attributes.animation_iteration_idle.value;
-            }
 
-            iteration = (iteration == 0) ? "infinite" : iteration;
-            animation_div.style.animation = `${animation} ${speed}s ${pacing} ${iteration}`;
-            animation_div.style.animationDirection = direction;
-        });
+    if (!performance) {
+        if(imageAddedWrapper.length > 0) {
+            imageAddedWrapper.forEach(function(animation_div) {
+                switch(status) {
+                    case 2:
+                        animation = animation_div.attributes.animation_name_screaming.value;
+                        speed = animation_div.attributes.animation_speed_screaming.value;
+                        direction = animation_div.attributes.animation_direction_screaming.value;
+                        pacing = animation_div.attributes.animation_pacing_screaming.value;
+                        iteration = animation_div.attributes.animation_iteration_screaming.value;
+                        break;
+                    case 1:
+                        animation = animation_div.attributes.animation_name_talking.value;
+                        speed = animation_div.attributes.animation_speed_talking.value;
+                        direction = animation_div.attributes.animation_direction_talking.value;
+                        pacing = animation_div.attributes.animation_pacing_talking.value;
+                        iteration = animation_div.attributes.animation_iteration_talking.value;
+                        break;
+                    default:
+                        animation = animation_div.attributes.animation_name_idle.value;
+                        speed = animation_div.attributes.animation_speed_idle.value;
+                        direction = animation_div.attributes.animation_direction_idle.value;
+                        pacing = animation_div.attributes.animation_pacing_idle.value;
+                        iteration = animation_div.attributes.animation_iteration_idle.value;
+                }
+                iteration = (iteration == 0) ? "infinite" : iteration;
+                animation_div.style.animation = `${animation} ${speed}s ${pacing} ${iteration}`;
+                animation_div.style.animationDirection = direction;
+            });
+        }
+
+        if(assets.length > 0) {
+            for (var i = 0; i < assets.length; i++) {
+                switch(status) {
+                    case 2:
+                        sizeX = assets[i].attributes.sizeX_screaming.value;
+                        sizeY = assets[i].attributes.sizeY_screaming.value;
+                        posX = assets[i].attributes.posX_screaming.value;
+                        posY = assets[i].attributes.posY_screaming.value;
+                        rotation = assets[i].attributes.rotation_screaming.value;
+                        speed = assets[i].attributes.screaming_position_speed.value;
+                        pacing = assets[i].attributes.screaming_position_pacing.value;
+                        break;
+                    case 1:
+                        sizeX = assets[i].attributes.sizeX_talking.value;
+                        sizeY = assets[i].attributes.sizeY_talking.value;
+                        posX = assets[i].attributes.posX_talking.value;
+                        posY = assets[i].attributes.posY_talking.value;
+                        rotation = assets[i].attributes.rotation_talking.value;
+                        speed = assets[i].attributes.talking_position_speed.value;
+                        pacing = assets[i].attributes.talking_position_pacing.value;
+                        break;
+                    default:
+                        sizeX = assets[i].attributes.sizeX.value;
+                        sizeY = assets[i].attributes.sizeY.value;
+                        posX = assets[i].attributes.posX.value;
+                        posY = assets[i].attributes.posY.value;
+                        rotation = assets[i].attributes.rotation.value;
+                        speed = assets[i].attributes.idle_position_speed.value;
+                        pacing = assets[i].attributes.idle_position_pacing.value;
+                }
+                assets[i].style.transition = `all ${speed}s ${pacing}`;
+                assets[i].style.left = `calc(50% + ${posX}px)`;
+                assets[i].style.top = `calc(50% + ${posY}px)`;
+                assets[i].style.width = `calc(50% + ${sizeX}px)`;
+                assets[i].style.height = `calc(50% + ${sizeY}px)`;
+                assets[i].style.transition = `all ${speed}s ${pacing}`;
+                assets[i].style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+            }
+        }
     }
 }
 
@@ -144,7 +187,6 @@ async function cursorPosition(X, Y){
 
 async function pool(){
     // while(true){
-
     // Wheel / stick control X
     var controllerWheels = document.querySelectorAll(".controller_wheelX");
     if(controllerWheels.length > 0) {

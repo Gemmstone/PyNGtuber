@@ -3,11 +3,24 @@
     "animations": {
         "idle": {
             "name": "floaty",
-            "speed": 6.0
+            "speed": 6.0,
+            "iteration": 0,
+            "pacing": "ease-in-out",
+            "direction": "normal"
         },
         "talking": {
             "name": "floaty",
-            "speed": 0.5
+            "speed": 0.5,
+            "iteration": 0,
+            "pacing": "ease-in-out",
+            "direction": "normal"
+        },
+        "screaming": {
+            "name": "shake",
+            "speed": 0.5,
+            "iteration": 0,
+            "pacing": "ease-in-out",
+            "direction": "normal"
         }
     }
 }

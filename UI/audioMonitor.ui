@@ -62,7 +62,8 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../Icons/mobile-podcast-ui-svgrepo-com.svg</normaloff>../Icons/mobile-podcast-ui-svgrepo-com.svg</iconset>
+         <normaloff>../Icons/mobile-podcast-ui-svgrepo-com.svg</normaloff>
+         <normalon>../Icons/mobile-mute-ui-svgrepo-com.svg</normalon>../Icons/mobile-podcast-ui-svgrepo-com.svg</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -72,6 +73,9 @@
        </property>
        <property name="checkable">
         <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -263,6 +267,8 @@ unidentified problems</string>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../icons.qrc"/>
+ </resources>
  <connections/>
 </ui>
