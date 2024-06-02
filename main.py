@@ -162,15 +162,13 @@ if not os.path.isfile(os.path.join(exe_dir, ".gitignore")):
 
     dest_path = os.path.join(res_dir, "Assets")
     if not os.path.exists(os.path.join(dest_path, "Chereverie")):
-        res_dir = exe_dir
-
         if os.path.exists(dest_path):
             shutil.rmtree(dest_path)
         avatars = [folder for folder in os.listdir(os.path.join(res_dir, "Models", "Avatars")) if "." not in folder]
         expressions = [folder for folder in os.listdir(os.path.join(res_dir, "Models", "Expressions")) if "." not in folder]
 
         for avatar in avatars:
-            file = os.path.join(res_dir, "Models", "Avatars", avatar, "model,json")
+            file = os.path.join(res_dir, "Models", "Avatars", avatar, "model.json")
             with open(file, "r") as load_file:
                 assets = json.load(load_file)
             result = []
@@ -182,7 +180,7 @@ if not os.path.isfile(os.path.join(exe_dir, ".gitignore")):
                 json.dump(result, json_file, indent=4)
 
         for expression in expressions:
-            file = os.path.join(res_dir, "Models", "Expressions", expression, "model,json")
+            file = os.path.join(res_dir, "Models", "Expressions", expression, "model.json")
             with open(file, "r") as load_file:
                 assets = json.load(load_file)
             result = []
@@ -192,6 +190,15 @@ if not os.path.isfile(os.path.join(exe_dir, ".gitignore")):
                 result.append(asset)
             with open(file, "w") as json_file:
                 json.dump(result, json_file, indent=4)
+
+        file = os.path.join(res_dir, "Data", "current.json")
+        with open(file, "r") as load_file:
+            assets = json.load(load_file)
+        result = []
+        for asset in assets:
+            result.append(asset.replace("Assets/", "Assets/Chereverie/"))
+        with open(file, "w") as json_file:
+            json.dump(result, json_file, indent=4)
 
     for directory in directories:
         src_path = os.path.join(exe_dir, directory)
