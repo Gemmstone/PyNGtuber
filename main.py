@@ -163,7 +163,9 @@ if not os.path.isfile(os.path.join(exe_dir, ".gitignore")):
     dest_path = os.path.join(res_dir, "Assets")
     if not os.path.exists(os.path.join(dest_path, "Chereverie")):
         res_dir = exe_dir
-        shutil.rmtree(dest_path)
+
+        if os.path.exists(dest_path):
+            shutil.rmtree(dest_path)
         avatars = [folder for folder in os.listdir(os.path.join(res_dir, "Models", "Avatars")) if "." not in folder]
         expressions = [folder for folder in os.listdir(os.path.join(res_dir, "Models", "Expressions")) if "." not in folder]
 
