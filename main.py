@@ -198,7 +198,7 @@ if not os.path.isfile(os.path.join(exe_dir, ".gitignore")):
             assets = json.load(load_file)
         result = []
         for asset in assets:
-            if "Chereverie/" not in asset["route"]:
+            if "Chereverie/" not in asset:
                 asset = asset.replace("Assets/", "Assets/Chereverie/")
             result.append(asset)
         with open(file, "w") as json_file:
@@ -1687,7 +1687,7 @@ class MainWindow(QtWidgets.QMainWindow):
             if file in self.file_parameters_current:
                 parameters = self.file_parameters_current[file]
             else:
-                image = Image.open(os.path.join(res_dir, self.collection.currentText(), file))
+                image = Image.open(os.path.join(res_dir, file))
                 width, height = image.size
                 parameters = {
                         "sizeX": width,
