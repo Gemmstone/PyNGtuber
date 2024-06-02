@@ -1,6 +1,6 @@
 [
     {
-        "route": "Assets/ahoge/ahoge_027.png",
+        "route": "Assets/Chereverie/ahoge/ahoge_027.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -66,7 +66,7 @@
         "animation_direction_talking": "reverse"
     },
     {
-        "route": "Assets/bangs/bangs_189.png",
+        "route": "Assets/Chereverie/bangs/bangs_189.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -132,7 +132,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/glasses/glasses_064.png",
+        "route": "Assets/Chereverie/glasses/glasses_064.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -198,7 +198,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/short bangs/short bangs_063.png",
+        "route": "Assets/Chereverie/short bangs/short bangs_063.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -264,7 +264,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/face assc/face assc_162.png",
+        "route": "Assets/Chereverie/face assc/face assc_162.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -330,7 +330,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/nose/[nose]_005.PNG",
+        "route": "Assets/Chereverie/nose/[nose]_005.PNG",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -396,7 +396,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/undershirt style/undershirt style_015.png",
+        "route": "Assets/Chereverie/undershirt style/undershirt style_015.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -462,7 +462,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/undershirts/undershirts_118.png",
+        "route": "Assets/Chereverie/undershirts/undershirts_118.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -528,7 +528,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/freckles/freckles_001.png",
+        "route": "Assets/Chereverie/freckles/freckles_001.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -594,7 +594,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/freckles/freckles_002.png",
+        "route": "Assets/Chereverie/freckles/freckles_002.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -660,7 +660,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/body/body_068.png",
+        "route": "Assets/Chereverie/body/body_068.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -726,7 +726,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/hairback/hairback_315.png",
+        "route": "Assets/Chereverie/hairback/hairback_315.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -792,7 +792,7 @@
         "animation_direction_talking": "reverse"
     },
     {
-        "route": "Assets/Controllers/Pen_005.png",
+        "route": "Assets/Chereverie/Controllers/Pen_005.png",
         "sizeX": 40,
         "sizeY": 270,
         "posX": 40,
@@ -853,7 +853,7 @@
         "track_mouse_y": 1
     },
     {
-        "route": "Assets/Controllers/tabletwhite.png",
+        "route": "Assets/Chereverie/Controllers/tabletwhite.png",
         "sizeX": 523,
         "sizeY": 400,
         "posX": 0,

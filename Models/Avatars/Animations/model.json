@@ -1,6 +1,6 @@
 [
     {
-        "route": "Assets/ears/ears_197.png",
+        "route": "Assets/Chereverie/ears/ears_197.png",
         "animation": [],
         "animation_direction_idle": "normal",
         "animation_direction_talking": "normal",
@@ -67,7 +67,7 @@
         "sizeX": 600,
         "sizeY": 600,
         "talking": "ignore",
-        "thumbnail_path": "Assets/ears/thumbs/ears_197.png",
+        "thumbnail_path": "Assets/Chereverie/ears/thumbs/ears_197.png",
         "title": "ears_197.png",
         "track_mouse_x": 1,
         "track_mouse_y": 1,
@@ -79,7 +79,7 @@
         "animation_pacing_screaming": "ease-in-out"
     },
     {
-        "route": "Assets/ears/ears_198.png",
+        "route": "Assets/Chereverie/ears/ears_198.png",
         "animation": [],
         "animation_direction_idle": "reverse",
         "animation_direction_talking": "reverse",
@@ -146,7 +146,7 @@
         "sizeX": 600,
         "sizeY": 600,
         "talking": "ignore",
-        "thumbnail_path": "Assets/ears/thumbs/ears_198.png",
+        "thumbnail_path": "Assets/Chereverie/ears/thumbs/ears_198.png",
         "title": "ears_198.png",
         "track_mouse_x": 1,
         "track_mouse_y": 1,
@@ -158,7 +158,7 @@
         "animation_pacing_screaming": "ease-in-out"
     },
     {
-        "route": "Assets/ahoge/ahoge_117.png",
+        "route": "Assets/Chereverie/ahoge/ahoge_117.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -224,7 +224,7 @@
         "animation_direction_talking": "normal",
         "filename": "ahoge_117.png",
         "parent_folder": "ahoge",
-        "thumbnail_path": "Assets/ahoge/thumbs/ahoge_117.png",
+        "thumbnail_path": "Assets/Chereverie/ahoge/thumbs/ahoge_117.png",
         "title": "ahoge_117.png",
         "animation_name_screaming": "None",
         "animation_speed_screaming": 0.5,
@@ -237,7 +237,7 @@
         "animation_pacing_screaming": "ease-in-out"
     },
     {
-        "route": "Assets/glasses/glasses_064.png",
+        "route": "Assets/Chereverie/glasses/glasses_064.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -303,7 +303,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/short bangs/short bangs_081.png",
+        "route": "Assets/Chereverie/short bangs/short bangs_081.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -369,7 +369,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/face assc/face assc_143.png",
+        "route": "Assets/Chereverie/face assc/face assc_143.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -435,7 +435,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/nose/[nose]_005.PNG",
+        "route": "Assets/Chereverie/nose/[nose]_005.PNG",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -501,7 +501,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/undershirts/undershirts_144.png",
+        "route": "Assets/Chereverie/undershirts/undershirts_144.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -567,7 +567,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/bald/bald_017.png",
+        "route": "Assets/Chereverie/bald/bald_017.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -633,7 +633,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/body/body_068.png",
+        "route": "Assets/Chereverie/body/body_068.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -699,7 +699,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/wings/wings_011.png",
+        "route": "Assets/Chereverie/wings/wings_011.png",
         "animation": [],
         "animation_direction_idle": "normal",
         "animation_direction_screaming": "normal",
@@ -771,14 +771,14 @@
         "sizeX": 600,
         "sizeY": 600,
         "talking": "ignore",
-        "thumbnail_path": "Assets/wings/thumbs/wings_011.png",
+        "thumbnail_path": "Assets/Chereverie/wings/thumbs/wings_011.png",
         "title": "wings_011.png",
         "track_mouse_x": 1,
         "track_mouse_y": 1,
         "use_css": false
     },
     {
-        "route": "Assets/wings/wings_012.png",
+        "route": "Assets/Chereverie/wings/wings_012.png",
         "animation": [],
         "animation_direction_idle": "normal",
         "animation_direction_screaming": "normal",
@@ -850,14 +850,14 @@
         "sizeX": 600,
         "sizeY": 600,
         "talking": "ignore",
-        "thumbnail_path": "Assets/wings/thumbs/wings_012.png",
+        "thumbnail_path": "Assets/Chereverie/wings/thumbs/wings_012.png",
         "title": "wings_012.png",
         "track_mouse_x": 1,
         "track_mouse_y": 1,
         "use_css": false
     },
     {
-        "route": "Assets/tails/tails_009.png",
+        "route": "Assets/Chereverie/tails/tails_009.png",
         "animation": [],
         "animation_direction_idle": "alternate",
         "animation_direction_screaming": "normal",
@@ -929,14 +929,14 @@
         "sizeX": 600,
         "sizeY": 600,
         "talking": "ignore",
-        "thumbnail_path": "Assets/tails/thumbs/tails_009.png",
+        "thumbnail_path": "Assets/Chereverie/tails/thumbs/tails_009.png",
         "title": "tails_009.png",
         "track_mouse_x": 1,
         "track_mouse_y": 1,
         "use_css": false
     },
     {
-        "route": "Assets/Memes/742591944605040712.png",
+        "route": "Assets/Chereverie/Memes/742591944605040712.png",
         "sizeX": 50,
         "sizeY": 50,
         "posX": 160,
@@ -951,7 +951,7 @@
         "rotation": 0,
         "filename": "742591944605040712.png",
         "parent_folder": "Memes",
-        "thumbnail_path": "Assets/Memes/thumbs/742591944605040712.png",
+        "thumbnail_path": "Assets/Chereverie/Memes/thumbs/742591944605040712.png",
         "title": "742591944605040712.png",
         "originX": 0,
         "originY": 0,
@@ -1015,7 +1015,7 @@
         ]
     },
     {
-        "route": "Assets/overshirts/overshirts_099.png",
+        "route": "Assets/Chereverie/overshirts/overshirts_099.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,

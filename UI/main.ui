@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1148</width>
-    <height>631</height>
+    <width>1151</width>
+    <height>629</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -62,7 +62,7 @@
         <rect>
          <x>10</x>
          <y>10</y>
-         <width>321</width>
+         <width>331</width>
          <height>611</height>
         </rect>
        </property>
@@ -132,8 +132,9 @@ QTabBar::tab:selected {
 }
 QTabBar::tab:hover {  
     color: white;
-    background-color: black;
-}</string>
+    background-color: rgb(0, 177, 235);
+}
+QTabWidget::pane { border: 0; }</string>
           </property>
           <property name="currentIndex">
            <number>0</number>
@@ -148,7 +149,7 @@ QTabBar::tab:hover {
            <bool>false</bool>
           </property>
           <property name="documentMode">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
           <widget class="QWidget" name="tab_5">
            <attribute name="icon">
@@ -191,14 +192,14 @@ QTabBar::tab:hover {
                 QToolBox::tab:selected { /* italicize selected tabs */
                     font: italic;
                     font-weight: bold;
-                    background: black;
+    				background-color: black;
                     text-align: center;
                     color: white;   
                 }
 				
 				QToolBox::tab:hover {  
-    				color: white;
     				background-color: rgb(0, 157, 235);
+    				color: white;
 				}
 
                 /* 
@@ -287,7 +288,7 @@ QTabBar::tab:hover {
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>303</width>
+                 <width>313</width>
                  <height>501</height>
                 </rect>
                </property>
@@ -311,7 +312,7 @@ QTabBar::tab:hover {
                 <property name="bottomMargin">
                  <number>0</number>
                 </property>
-                <item>
+                <item alignment="Qt::AlignLeft">
                  <widget class="QPushButton" name="saveExpression">
                   <property name="cursor">
                    <cursorShape>PointingHandCursor</cursorShape>
@@ -321,12 +322,12 @@ QTabBar::tab:hover {
                   </property>
                   <property name="icon">
                    <iconset>
-                    <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
+                    <normaloff>../Icons/save-left-svgrepo-com.svg</normaloff>../Icons/save-left-svgrepo-com.svg</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
-                    <width>25</width>
-                    <height>25</height>
+                    <width>20</width>
+                    <height>20</height>
                    </size>
                   </property>
                  </widget>
@@ -350,8 +351,8 @@ QTabBar::tab:hover {
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>303</width>
-                     <height>464</height>
+                     <width>313</width>
+                     <height>469</height>
                     </rect>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_33">
@@ -415,7 +416,7 @@ QTabBar::tab:hover {
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>303</width>
+                 <width>313</width>
                  <height>501</height>
                 </rect>
                </property>
@@ -439,7 +440,7 @@ QTabBar::tab:hover {
                 <property name="bottomMargin">
                  <number>0</number>
                 </property>
-                <item>
+                <item alignment="Qt::AlignLeft">
                  <widget class="QPushButton" name="saveAvatar">
                   <property name="cursor">
                    <cursorShape>PointingHandCursor</cursorShape>
@@ -449,12 +450,12 @@ QTabBar::tab:hover {
                   </property>
                   <property name="icon">
                    <iconset>
-                    <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
+                    <normaloff>../Icons/save-left-svgrepo-com.svg</normaloff>../Icons/save-left-svgrepo-com.svg</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
-                    <width>25</width>
-                    <height>25</height>
+                    <width>20</width>
+                    <height>20</height>
                    </size>
                   </property>
                  </widget>
@@ -478,8 +479,8 @@ QTabBar::tab:hover {
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>303</width>
-                     <height>464</height>
+                     <width>313</width>
+                     <height>469</height>
                     </rect>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_30">
@@ -545,23 +546,23 @@ QTabBar::tab:hover {
           <widget class="QWidget" name="tab_4">
            <attribute name="icon">
             <iconset>
-             <normaloff>../Icons/mobile-ui-ux-4-svgrepo-com.svg</normaloff>../Icons/mobile-ui-ux-4-svgrepo-com.svg</iconset>
+             <normaloff>../Icons/duplicate-mobile-ui-svgrepo-com.svg</normaloff>../Icons/duplicate-mobile-ui-svgrepo-com.svg</iconset>
            </attribute>
            <attribute name="title">
             <string>Editor</string>
            </attribute>
            <attribute name="toolTip">
-            <string>Assets List</string>
+            <string>Edit Mode</string>
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_17">
             <property name="spacing">
-             <number>6</number>
+             <number>3</number>
             </property>
             <property name="leftMargin">
              <number>0</number>
             </property>
             <property name="topMargin">
-             <number>6</number>
+             <number>3</number>
             </property>
             <property name="rightMargin">
              <number>0</number>
@@ -569,6 +570,201 @@ QTabBar::tab:hover {
             <property name="bottomMargin">
              <number>0</number>
             </property>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_13">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QPushButton" name="openFolder">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="cursor">
+                 <cursorShape>PointingHandCursor</cursorShape>
+                </property>
+                <property name="toolTip">
+                 <string>Open Assets Folder</string>
+                </property>
+                <property name="statusTip">
+                 <string/>
+                </property>
+                <property name="whatsThis">
+                 <string/>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">*{
+	background-color: darkorange;
+	color: rgb(0, 0, 0);
+}
+* QToolTip {
+	background-color: pink;
+	color: black;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>../Icons/folder-mobile-ui-svgrepo-com.svg</normaloff>../Icons/folder-mobile-ui-svgrepo-com.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>16</width>
+                  <height>16</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="collection"/>
+              </item>
+              <item>
+               <widget class="QPushButton" name="createCollection">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="cursor">
+                 <cursorShape>PointingHandCursor</cursorShape>
+                </property>
+                <property name="toolTip">
+                 <string>Create new collection</string>
+                </property>
+                <property name="statusTip">
+                 <string/>
+                </property>
+                <property name="whatsThis">
+                 <string/>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">*{
+	background-color: blue;
+	color: rgb(0, 0, 0);
+}
+* QToolTip {
+	background-color: pink;
+	color: black;
+}</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>../Icons/favorit-mobile-ui-svgrepo-com.svg</normaloff>../Icons/favorit-mobile-ui-svgrepo-com.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>16</width>
+                  <height>16</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="createCategory">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="cursor">
+                 <cursorShape>PointingHandCursor</cursorShape>
+                </property>
+                <property name="toolTip">
+                 <string>Create new asset category</string>
+                </property>
+                <property name="statusTip">
+                 <string/>
+                </property>
+                <property name="whatsThis">
+                 <string/>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">*{
+	background-color: green;
+	color: white;
+	font-size: 10px;
+}
+* QToolTip {
+	background-color: pink;
+	color: black;
+}</string>
+                </property>
+                <property name="text">
+                 <string>New category</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>../Icons/label-mobile-ui-svgrepo-com.svg</normaloff>../Icons/label-mobile-ui-svgrepo-com.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>16</width>
+                  <height>16</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
             <item>
              <widget class="QScrollArea" name="scrollArea">
               <property name="sizePolicy">
@@ -663,8 +859,8 @@ QFrame{
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>303</width>
-                 <height>534</height>
+                 <width>313</width>
+                 <height>536</height>
                 </rect>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout">
@@ -672,7 +868,7 @@ QFrame{
                  <number>0</number>
                 </property>
                 <property name="leftMargin">
-                 <number>0</number>
+                 <number>9</number>
                 </property>
                 <property name="topMargin">
                  <number>0</number>
@@ -686,225 +882,6 @@ QFrame{
                </layout>
               </widget>
              </widget>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_13">
-              <property name="spacing">
-               <number>3</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QPushButton" name="openFolder">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>21</height>
-                 </size>
-                </property>
-                <property name="cursor">
-                 <cursorShape>PointingHandCursor</cursorShape>
-                </property>
-                <property name="toolTip">
-                 <string>Open Assets Folder</string>
-                </property>
-                <property name="statusTip">
-                 <string/>
-                </property>
-                <property name="whatsThis">
-                 <string/>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">*{
-	background-color: rgb(77, 77, 77);
-	color: rgb(0, 0, 0);
-}
-* QToolTip {
-	background-color: pink;
-	color: black;
-}</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="icon">
-                 <iconset>
-                  <normaloff>../Icons/folder-mobile-ui-svgrepo-com.svg</normaloff>../Icons/folder-mobile-ui-svgrepo-com.svg</iconset>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>25</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="createCategory">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>21</height>
-                 </size>
-                </property>
-                <property name="cursor">
-                 <cursorShape>PointingHandCursor</cursorShape>
-                </property>
-                <property name="toolTip">
-                 <string>Create new asset category</string>
-                </property>
-                <property name="statusTip">
-                 <string/>
-                </property>
-                <property name="whatsThis">
-                 <string/>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">*{
-	background-color: rgb(77, 77, 77);
-	color: rgb(0, 0, 0);
-}
-* QToolTip {
-	background-color: pink;
-	color: black;
-}</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="icon">
-                 <iconset>
-                  <normaloff>../Icons/label-mobile-ui-svgrepo-com.svg</normaloff>../Icons/label-mobile-ui-svgrepo-com.svg</iconset>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>25</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="clear">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>21</height>
-                 </size>
-                </property>
-                <property name="cursor">
-                 <cursorShape>PointingHandCursor</cursorShape>
-                </property>
-                <property name="toolTip">
-                 <string>Deselect all assets</string>
-                </property>
-                <property name="statusTip">
-                 <string/>
-                </property>
-                <property name="whatsThis">
-                 <string/>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">*{
-	background-color: rgb(77, 77, 77);
-	color: rgb(0, 0, 0);
-}
-* QToolTip {
-	background-color: pink;
-	color: black;
-}</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="icon">
-                 <iconset>
-                  <normaloff>../Icons/close-mobile-ui-svgrepo-com.svg</normaloff>../Icons/close-mobile-ui-svgrepo-com.svg</iconset>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>25</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="transparency">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="cursor">
-                 <cursorShape>PointingHandCursor</cursorShape>
-                </property>
-                <property name="toolTip">
-                 <string>Hide the UI when the cursor is out</string>
-                </property>
-                <property name="layoutDirection">
-                 <enum>Qt::LeftToRight</enum>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">* QCheckBox, * QRadioButton {
-    background: transparent;
-}
-* QCheckBox::indicator, * QRadioButton::indicator {
-    width: 20px;
-    height: 20px;
-}
-* QCheckBox::indicator:unchecked {
-	image: url(./Icons/checkbox-svgrepo-com.svg);
-}
-* QCheckBox::indicator:checked {
-	image: url(./Icons/checked-checkbox-svgrepo-com.svg);
-}</string>
-                </property>
-                <property name="text">
-                 <string>Enable Transparency</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-                <property name="tristate">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-             </layout>
             </item>
            </layout>
           </widget>
@@ -1129,7 +1106,7 @@ QTabBar::tab:selected {
 }
 QTabBar::tab:hover {  
     color: white;
-    background-color: black;
+    background-color: rgb(0, 177, 235);
 }
 *{
 	color: black;
@@ -1178,7 +1155,8 @@ QFrame{
 }
 * QRadioButton::indicator:checked {
 	border-image: url(./Icons/checked-radio-svgrepo-com.svg);
-}</string>
+}
+QTabWidget::pane { border: 0; }</string>
               </property>
               <property name="currentIndex">
                <number>0</number>
@@ -1193,7 +1171,7 @@ QFrame{
                <bool>false</bool>
               </property>
               <property name="documentMode">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
               <widget class="QWidget" name="tab">
                <attribute name="icon">
@@ -1239,14 +1217,14 @@ QFrame{
                 QToolBox::tab:selected { /* italicize selected tabs */
                     font: italic;
                     font-weight: bold;
-                    background: black;
+    				background-color: black;
                     text-align: center;
                     color: white;   
                 }
 				
 				QToolBox::tab:hover {  
-    				color: white;
     				background-color: rgb(0, 157, 235);
+    				color: white;
 				}
 
                 /* 
@@ -1525,7 +1503,10 @@ QFrame{
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true">QTabBar{  
+                                 <string notr="true">#tabWidget_3{  
+    background-color: rgba(255, 255, 255, 0);
+}
+QTabBar{  
     background-color: rgba(255, 255, 255, 0);
 }
 QTabBar::tab {  
@@ -1551,14 +1532,14 @@ QTabBar::tab:selected {
 }
 QTabBar::tab:hover {  
     color: white;
-    background-color: black;
+    background-color: rgb(0, 177, 235);
 }</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
                                 </property>
                                 <property name="documentMode">
-                                 <bool>true</bool>
+                                 <bool>false</bool>
                                 </property>
                                 <widget class="QWidget" name="tab_11">
                                  <attribute name="title">
@@ -1586,6 +1567,10 @@ QTabBar::tab:hover {
                                      <string notr="true">#frame_20{
 	border-radius: 0px;
 	background-color: rgb(0, 157, 235);
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 9px;
 }</string>
                                     </property>
                                     <property name="frameShape">
@@ -1848,6 +1833,10 @@ QTabBar::tab:hover {
                                      <string notr="true">#frame_21{
 	border-radius: 0px;
 	background-color: rgb(0, 157, 235);
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 9px;
+	border-top-right-radius: 9px;
 }</string>
                                     </property>
                                     <property name="frameShape">
@@ -2105,8 +2094,11 @@ QTabBar::tab:hover {
                                    <widget class="QFrame" name="frame_24">
                                     <property name="styleSheet">
                                      <string notr="true">#frame_24{
-	border-radius: 0px;
 	background-color: rgb(0, 157, 235);
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 9px;
+	border-top-right-radius: 9px;
 }</string>
                                     </property>
                                     <property name="frameShape">
@@ -2361,6 +2353,9 @@ QTabBar::tab:hover {
                           </property>
                           <property name="title">
                            <string>Canvas</string>
+                          </property>
+                          <property name="flat">
+                           <bool>false</bool>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_13">
                            <property name="leftMargin">
@@ -2700,9 +2695,9 @@ QFrame{
                        <property name="geometry">
                         <rect>
                          <x>0</x>
-                         <y>-176</y>
+                         <y>0</y>
                          <width>288</width>
-                         <height>887</height>
+                         <height>866</height>
                         </rect>
                        </property>
                        <layout class="QVBoxLayout" name="verticalLayout_34">
@@ -2840,20 +2835,23 @@ QFrame{
                               <enum>QFrame::Raised</enum>
                              </property>
                              <layout class="QGridLayout" name="gridLayout_3">
-                              <item row="0" column="0">
-                               <widget class="QLabel" name="label_20">
+                              <item row="1" column="1">
+                               <widget class="QLabel" name="div_count">
                                 <property name="sizePolicy">
-                                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
                                   <verstretch>0</verstretch>
                                  </sizepolicy>
                                 </property>
                                 <property name="text">
-                                 <string>HTML Tags Count:</string>
+                                 <string>0</string>
+                                </property>
+                                <property name="alignment">
+                                 <set>Qt::AlignCenter</set>
                                 </property>
                                </widget>
                               </item>
-                              <item row="2" column="1">
+                              <item row="4" column="0" colspan="2">
                                <widget class="QCheckBox" name="hw_acceleration">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -2874,7 +2872,7 @@ QFrame{
                                  <string notr="true"/>
                                 </property>
                                 <property name="text">
-                                 <string/>
+                                 <string>Hardware Acceleration:</string>
                                 </property>
                                 <property name="checked">
                                  <bool>true</bool>
@@ -2884,37 +2882,40 @@ QFrame{
                                 </property>
                                </widget>
                               </item>
-                              <item row="0" column="1">
-                               <widget class="QLabel" name="div_count">
+                              <item row="2" column="0" colspan="2">
+                               <widget class="QCheckBox" name="performance">
                                 <property name="sizePolicy">
-                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                                   <horstretch>0</horstretch>
                                   <verstretch>0</verstretch>
                                  </sizepolicy>
                                 </property>
-                                <property name="text">
-                                 <string>0</string>
+                                <property name="cursor">
+                                 <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
-                                <property name="alignment">
-                                 <set>Qt::AlignCenter</set>
+                                <property name="toolTip">
+                                 <string>Disable individual animations and integrations
+for less use of resources</string>
                                 </property>
-                               </widget>
-                              </item>
-                              <item row="2" column="0">
-                               <widget class="QLabel" name="label_18">
-                                <property name="sizePolicy">
-                                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                                  <horstretch>0</horstretch>
-                                  <verstretch>0</verstretch>
-                                 </sizepolicy>
+                                <property name="layoutDirection">
+                                 <enum>Qt::LeftToRight</enum>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true"/>
                                 </property>
                                 <property name="text">
-                                 <string>Hardware Acceleration:</string>
+                                 <string>Performance Mode</string>
+                                </property>
+                                <property name="checked">
+                                 <bool>false</bool>
+                                </property>
+                                <property name="tristate">
+                                 <bool>false</bool>
                                 </property>
                                </widget>
                               </item>
                               <item row="1" column="0">
-                               <widget class="QLabel" name="label_19">
+                               <widget class="QLabel" name="label_20">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -2922,11 +2923,31 @@ QFrame{
                                  </sizepolicy>
                                 </property>
                                 <property name="text">
-                                 <string>Window Animations:</string>
+                                 <string>HTML Tags Count:</string>
                                 </property>
                                </widget>
                               </item>
-                              <item row="1" column="1">
+                              <item row="5" column="0" colspan="2">
+                               <widget class="QLabel" name="label_21">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">font-size: 8px;
+color: red</string>
+                                </property>
+                                <property name="text">
+                                 <string>!!! Re-start the app after changing the Hardware Acceleration setting</string>
+                                </property>
+                                <property name="alignment">
+                                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="3" column="0" colspan="2">
                                <widget class="QCheckBox" name="windowAnimations">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -2947,7 +2968,7 @@ QFrame{
                                  <string notr="true"/>
                                 </property>
                                 <property name="text">
-                                 <string/>
+                                 <string>Window Animations:</string>
                                 </property>
                                 <property name="checked">
                                  <bool>true</bool>
@@ -2957,87 +2978,7 @@ QFrame{
                                 </property>
                                </widget>
                               </item>
-                              <item row="3" column="0" colspan="2">
-                               <widget class="QLabel" name="label_21">
-                                <property name="sizePolicy">
-                                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                                  <horstretch>0</horstretch>
-                                  <verstretch>0</verstretch>
-                                 </sizepolicy>
-                                </property>
-                                <property name="styleSheet">
-                                 <string notr="true">font-size: 8px;
-color: red</string>
-                                </property>
-                                <property name="text">
-                                 <string>!!! Re-start the app after changing the Hardware Acceleration setting</string>
-                                </property>
-                                <property name="alignment">
-                                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                                </property>
-                               </widget>
-                              </item>
-                             </layout>
-                            </widget>
-                           </item>
-                          </layout>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QGroupBox" name="groupBox_11">
-                          <property name="styleSheet">
-                           <string notr="true">*{
-	color: black;
-}
-
-QGroupBox {
-border-color: #FF17365D;
-font-size: 14px;
-border-radius: 15px;
-}
-
-QGroupBox::title {
-border-top-left-radius: 9px;
-border-top-right-radius: 9px;
-padding: 2px 20px;
-background-color: #FF17365D;
-color: rgb(255, 255, 255);
-}
-
-QFrame{
-	border-top-right-radius: 9px;
-	border-bottom-right-radius: 9px;
-	border-bottom-left-radius: 9px;
-	background-color: rgb(255, 255, 255);
-}
-</string>
-                          </property>
-                          <property name="title">
-                           <string>Edit Canvas Files</string>
-                          </property>
-                          <layout class="QVBoxLayout" name="verticalLayout_21">
-                           <property name="leftMargin">
-                            <number>0</number>
-                           </property>
-                           <property name="topMargin">
-                            <number>23</number>
-                           </property>
-                           <property name="rightMargin">
-                            <number>0</number>
-                           </property>
-                           <property name="bottomMargin">
-                            <number>0</number>
-                           </property>
-                           <item>
-                            <widget class="QFrame" name="frame_12">
-                             <property name="frameShape">
-                              <enum>QFrame::StyledPanel</enum>
-                             </property>
-                             <property name="frameShadow">
-                              <enum>QFrame::Raised</enum>
-                             </property>
-                             <layout class="QVBoxLayout" name="verticalLayout_49">
-                              <item>
+                              <item row="0" column="0" colspan="2">
                                <widget class="QPushButton" name="editorButton">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -3055,7 +2996,7 @@ QFrame{
                                  <cursorShape>PointingHandCursor</cursorShape>
                                 </property>
                                 <property name="text">
-                                 <string>Toggle editor</string>
+                                 <string>Enter Canvas Editor</string>
                                 </property>
                                 <property name="iconSize">
                                  <size>
@@ -3109,7 +3050,7 @@ QFrame{
 }</string>
                           </property>
                           <property name="title">
-                           <string>Integration</string>
+                           <string>Integrations</string>
                           </property>
                           <property name="flat">
                            <bool>false</bool>
@@ -3156,10 +3097,6 @@ QFrame{
                                 <property name="text">
                                  <string>Set Twitch API keys</string>
                                 </property>
-                                <property name="icon">
-                                 <iconset>
-                                  <normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</normaloff>../Icons/allowed-mobile-ui-svgrepo-com.svg</iconset>
-                                </property>
                                 <property name="iconSize">
                                  <size>
                                   <width>25</width>
@@ -3192,7 +3129,7 @@ QFrame{
                            <bool>true</bool>
                           </property>
                           <property name="checked">
-                           <bool>false</bool>
+                           <bool>true</bool>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_37">
                            <property name="spacing">
@@ -3277,16 +3214,20 @@ QTabBar::tab:selected {
 }
 QTabBar::tab:hover {  
     color: white;
-    background-color: black;
+    background-color: rgb(0, 177, 235);
 }</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
                                 </property>
                                 <property name="documentMode">
-                                 <bool>true</bool>
+                                 <bool>false</bool>
                                 </property>
                                 <widget class="QWidget" name="tab_13">
+                                 <attribute name="icon">
+                                  <iconset>
+                                   <normaloff>:/Icons/Icons/461824-left-right-arrow-2.svg</normaloff>:/Icons/Icons/461824-left-right-arrow-2.svg</iconset>
+                                 </attribute>
                                  <attribute name="title">
                                   <string> Horizontal Axis </string>
                                  </attribute>
@@ -3310,8 +3251,12 @@ QTabBar::tab:hover {
                                    <widget class="QFrame" name="frame_22">
                                     <property name="styleSheet">
                                      <string notr="true">#frame_22{
-	border-radius: 0px;
 	background-color: rgb(0, 157, 235);
+
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 9px;
 }</string>
                                     </property>
                                     <property name="frameShape">
@@ -3433,6 +3378,10 @@ QCheckBox::indicator:unchecked {
                                  </layout>
                                 </widget>
                                 <widget class="QWidget" name="tab_2">
+                                 <attribute name="icon">
+                                  <iconset>
+                                   <normaloff>:/Icons/Icons/462745-up-down-arrow-2.svg</normaloff>:/Icons/Icons/462745-up-down-arrow-2.svg</iconset>
+                                 </attribute>
                                  <attribute name="title">
                                   <string>Vertical Axis</string>
                                  </attribute>
@@ -3459,8 +3408,11 @@ QCheckBox::indicator:unchecked {
                                    <widget class="QFrame" name="frame_23">
                                     <property name="styleSheet">
                                      <string notr="true">#frame_23{
-	border-radius: 0px;
 	background-color: rgb(0, 157, 235);
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 9px;
+	border-top-right-radius: 9px;
 }</string>
                                     </property>
                                     <property name="frameShape">
@@ -4489,64 +4441,17 @@ background-color: rgba(0, 0, 0, 40);
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="page_5">
-           <layout class="QVBoxLayout" name="verticalLayout_36">
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-           </layout>
-          </widget>
          </widget>
         </item>
        </layout>
-      </widget>
-      <widget class="QLabel" name="donationBtnURL">
-       <property name="geometry">
-        <rect>
-         <x>430</x>
-         <y>0</y>
-         <width>302</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="toolTip">
-        <string>Go to donations page</string>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">*{background-color: rgba(255, 255, 255, 155);
-border-bottom-left-radius: 9px;
-border-bottom-right-radius: 9px;}
-* QToolTip {
-	background-color: pink;
-	color: black;
-}</string>
-       </property>
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://streamlabs.com/agemmstone/tip&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#e93a9a;&quot;&gt;💖 Donate to support this project! &lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-       <property name="openExternalLinks">
-        <bool>true</bool>
-       </property>
       </widget>
       <widget class="QFrame" name="editorFrame">
        <property name="geometry">
         <rect>
          <x>500</x>
-         <y>10</y>
-         <width>311</width>
-         <height>611</height>
+         <y>50</y>
+         <width>314</width>
+         <height>571</height>
         </rect>
        </property>
        <property name="styleSheet">
@@ -4700,19 +4605,22 @@ QTabBar::tab {
 	border-bottom-right-radius: 9px;
 	border-top-left-radius: 9px;
 	border-top-right-radius: 9px;
-    margin-top:2px;
-    margin-bottom:2px;
+    margin-top:0px;
+    margin-bottom:4px;
+    margin-right:2px;
 }
 QTabBar::tab:selected {  
     color: white;
 	border-top-right-radius: 0px;
 	border-bottom-right-radius: 0px;
 	background-color: rgb(0, 157, 235);;
+    margin-right:-1px;
 }
 QTabBar::tab:hover {  
     color: white;
-    background-color: black;
-}</string>
+    background-color: rgb(0, 177, 235);
+}
+QTabWidget::pane { border: 0; }</string>
              </property>
              <property name="tabPosition">
               <enum>QTabWidget::West</enum>
@@ -4721,7 +4629,7 @@ QTabBar::tab:hover {
               <number>0</number>
              </property>
              <property name="documentMode">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="tabBarAutoHide">
               <bool>true</bool>
@@ -4747,11 +4655,32 @@ QTabBar::tab:hover {
                 <number>0</number>
                </property>
                <item>
-                <widget class="QPlainTextEdit" name="htmlCode">
+                <widget class="QFrame" name="frame_5">
                  <property name="styleSheet">
-                  <string notr="true">background-color: rgb(255, 255, 255);
-color: rgb(0, 0, 0);</string>
+                  <string notr="true">#frame_5{
+	background-color: rgb(0, 157, 235);;
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 9px;
+}</string>
                  </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_21">
+                  <item>
+                   <widget class="QPlainTextEdit" name="htmlCode">
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
               </layout>
@@ -4777,11 +4706,32 @@ color: rgb(0, 0, 0);</string>
                 <number>0</number>
                </property>
                <item>
-                <widget class="QPlainTextEdit" name="jsCode">
+                <widget class="QFrame" name="frame_7">
                  <property name="styleSheet">
-                  <string notr="true">background-color: rgb(255, 255, 255);
-color: rgb(0, 0, 0);</string>
+                  <string notr="true">#frame_7{
+	background-color: rgb(0, 157, 235);;
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 9px;
+	border-top-right-radius: 9px;
+}</string>
                  </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_64">
+                  <item>
+                   <widget class="QPlainTextEdit" name="jsCode">
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
               </layout>
@@ -4807,11 +4757,32 @@ color: rgb(0, 0, 0);</string>
                 <number>0</number>
                </property>
                <item>
-                <widget class="QPlainTextEdit" name="cssCode">
+                <widget class="QFrame" name="frame_8">
                  <property name="styleSheet">
-                  <string notr="true">background-color: rgb(255, 255, 255);
-color: rgb(0, 0, 0);</string>
+                  <string notr="true">#frame_8{
+	background-color: rgb(0, 157, 235);;
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 9px;
+	border-top-right-radius: 9px;
+}</string>
                  </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_66">
+                  <item>
+                   <widget class="QPlainTextEdit" name="cssCode">
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
               </layout>
@@ -4837,11 +4808,32 @@ color: rgb(0, 0, 0);</string>
                 <number>0</number>
                </property>
                <item>
-                <widget class="QPlainTextEdit" name="animCode">
+                <widget class="QFrame" name="frame_15">
                  <property name="styleSheet">
-                  <string notr="true">background-color: rgb(255, 255, 255);
-color: rgb(0, 0, 0);</string>
+                  <string notr="true">#frame_15{
+	background-color: rgb(0, 157, 235);;
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 9px;
+	border-top-right-radius: 9px;
+}</string>
                  </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_65">
+                  <item>
+                   <widget class="QPlainTextEdit" name="animCode">
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
               </layout>
@@ -4867,8 +4859,11 @@ color: rgb(0, 0, 0);</string>
                <property name="toolTip">
                 <string>restore default files</string>
                </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 128, 0);</string>
+               </property>
                <property name="text">
-                <string>Restore Default</string>
+                <string>Restore Defaults</string>
                </property>
                <property name="icon">
                 <iconset>
@@ -4919,11 +4914,218 @@ color: rgb(0, 0, 0);</string>
         </item>
        </layout>
       </widget>
+      <widget class="QStackedWidget" name="donationBtnURL">
+       <property name="geometry">
+        <rect>
+         <x>430</x>
+         <y>0</y>
+         <width>311</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="page_6">
+        <layout class="QHBoxLayout" name="horizontalLayout_14">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="donationBtnURLlabel">
+           <property name="toolTip">
+            <string>Go to donations page</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">*{background-color: rgba(255, 255, 255, 155);
+border-bottom-left-radius: 9px;
+border-bottom-right-radius: 9px;}
+* QToolTip {
+	background-color: pink;
+	color: black;
+}</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://streamlabs.com/agemmstone/tip&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#e93a9a;&quot;&gt;💖 Donate to support this project! &lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+           <property name="openExternalLinks">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="page_7">
+        <layout class="QHBoxLayout" name="horizontalLayout_15">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QFrame" name="frame_2">
+           <property name="styleSheet">
+            <string notr="true">#frame_2{background-color: rgba(255, 255, 255, 155);
+border-bottom-left-radius: 9px;
+border-bottom-right-radius: 9px;}
+* QToolTip {
+	background-color: pink;
+	color: black;
+}</string>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <property name="leftMargin">
+             <number>6</number>
+            </property>
+            <property name="topMargin">
+             <number>6</number>
+            </property>
+            <property name="rightMargin">
+             <number>6</number>
+            </property>
+            <property name="bottomMargin">
+             <number>6</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="clear">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
+              </property>
+              <property name="toolTip">
+               <string>Deselect all assets</string>
+              </property>
+              <property name="statusTip">
+               <string/>
+              </property>
+              <property name="whatsThis">
+               <string/>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">*{
+	background-color: red;
+	color: white;
+	font-size: 10px;
+}
+* QToolTip {
+	background-color: pink;
+	color: black;
+}</string>
+              </property>
+              <property name="text">
+               <string>Deselect All</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../Icons/close-mobile-ui-svgrepo-com.svg</normaloff>../Icons/close-mobile-ui-svgrepo-com.svg</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>16</width>
+                <height>16</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="transparency">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
+              </property>
+              <property name="toolTip">
+               <string>Hide the UI when the cursor is out</string>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::RightToLeft</enum>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">*{
+    background: transparent;
+}
+* QCheckBox::indicator, * QRadioButton::indicator {
+    width: 20px;
+    height: 20px;
+}
+* QCheckBox::indicator:unchecked {
+	image: url(./Icons/checkbox-svgrepo-com.svg);
+}
+* QCheckBox::indicator:checked {
+	image: url(./Icons/checked-checkbox-svgrepo-com.svg);
+}</string>
+              </property>
+              <property name="text">
+               <string>Transparency</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+              <property name="tristate">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
       <zorder>mainFrame</zorder>
       <zorder>frame_4</zorder>
-      <zorder>donationBtnURL</zorder>
       <zorder>editorFrame</zorder>
       <zorder>frame_3</zorder>
+      <zorder>donationBtnURL</zorder>
      </widget>
     </item>
    </layout>
@@ -5025,6 +5227,8 @@ color: rgb(0, 0, 0);</string>
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

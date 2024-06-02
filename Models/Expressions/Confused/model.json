@@ -1,6 +1,6 @@
 [
     {
-        "route": "Assets/right eye/right eye_001.png",
+        "route": "Assets/Chereverie/right eye/right eye_001.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -66,7 +66,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/right eye/right eye_025.png",
+        "route": "Assets/Chereverie/right eye/right eye_025.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -132,7 +132,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/left eye/left eye_001.png",
+        "route": "Assets/Chereverie/left eye/left eye_001.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -198,7 +198,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/eyebrows/eyebrows_003.png",
+        "route": "Assets/Chereverie/eyebrows/eyebrows_003.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -264,7 +264,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/eyebrows/eyebrows_004.png",
+        "route": "Assets/Chereverie/eyebrows/eyebrows_004.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -330,7 +330,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/mouth/[mouth]_016.PNG",
+        "route": "Assets/Chereverie/mouth/[mouth]_016.PNG",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -396,7 +396,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/mouth/[mouth]_011.PNG",
+        "route": "Assets/Chereverie/mouth/[mouth]_011.PNG",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -462,7 +462,7 @@
         "animation_direction_talking": "normal"
     },
     {
-        "route": "Assets/mouth/[mouth]_010.PNG",
+        "route": "Assets/Chereverie/mouth/[mouth]_010.PNG",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,
@@ -528,7 +528,7 @@
         "animation_direction_talking": "normal",
         "filename": "[mouth]_010.PNG",
         "parent_folder": "mouth",
-        "thumbnail_path": "Assets/mouth/thumbs/[mouth]_010.PNG",
+        "thumbnail_path": "Assets/Chereverie/mouth/thumbs/[mouth]_010.PNG",
         "title": "[mouth]_010.PNG",
         "animation_name_screaming": "None",
         "animation_speed_screaming": 0.5,
@@ -541,7 +541,7 @@
         "animation_pacing_screaming": "ease-in-out"
     },
     {
-        "route": "Assets/left eye/left eye_025.png",
+        "route": "Assets/Chereverie/left eye/left eye_025.png",
         "sizeX": 600,
         "sizeY": 600,
         "posX": 0,

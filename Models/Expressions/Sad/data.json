@@ -16,7 +16,7 @@
             "direction": "alternate"
         },
         "screaming": {
-            "name": "gelatine2",
+            "name": "shake",
             "speed": 0.1,
             "iteration": 0,
             "pacing": "ease-in-out",

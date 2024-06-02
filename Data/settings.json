@@ -1,8 +1,8 @@
 {
     "volume threshold": 10,
-    "scream threshold": 84,
+    "scream threshold": 97,
     "delay threshold": 3,
-    "microphone selection": 2,
+    "microphone selection": 1,
     "microphone mute": false,
     "background color": 0,
     "export mode": 0,
@@ -26,7 +26,7 @@
             "direction": "normal"
         },
         "screaming": {
-            "name": "floaty",
+            "name": "shake",
             "speed": 0.5,
             "iteration": 0,
             "pacing": "ease-in-out",
@@ -39,5 +39,7 @@
     "track_mouse_x": true,
     "track_mouse_y": true,
     "invert_mouse_x": false,
-    "invert_mouse_y": false
+    "invert_mouse_y": false,
+    "performance": false,
+    "collection": "Chereverie"
 }

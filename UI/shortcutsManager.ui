@@ -128,14 +128,16 @@ QTabBar::tab:selected {
 }
 QTabBar::tab:hover {  
     color: white;
-    background-color: black;
-}</string>
+    background-color: rgb(0, 177, 235);
+}
+
+QTabWidget::pane { border: 0; }</string>
      </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
      <property name="documentMode">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -958,8 +960,8 @@ color: white</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1139</width>
-            <height>284</height>
+            <width>214</width>
+            <height>210</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -1849,8 +1851,8 @@ color: white</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1139</width>
-            <height>337</height>
+            <width>214</width>
+            <height>210</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_6">
