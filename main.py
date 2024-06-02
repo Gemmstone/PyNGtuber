@@ -31,7 +31,7 @@ repo_name = "PyNGtuber"
 
 directories = ["Data", "Models", "Assets", "Viewer"]
 directories_skip = ["Models"]
-overwrite_files = ["script.js", "animations.css", "viewer.html", "parameters.json"]
+overwrite_files = ["script.js", "animations.css", "viewer.html"]
 
 os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = '4864'
 os.environ['QTWEBENGINE_CHROMIUM_FLAGS'] = '--no-sandbox'
@@ -174,7 +174,8 @@ if not os.path.isfile(os.path.join(exe_dir, ".gitignore")):
             result = []
             for asset in assets:
                 asset = copy.deepcopy(asset)
-                asset["route"] = asset["route"].replace("Assets/", "Assets/Chereverie/")
+                if "Chereverie/" not in asset["route"]:
+                    asset["route"] = asset["route"].replace("Assets/", "Assets/Chereverie/")
                 result.append(asset)
             with open(file, "w") as json_file:
                 json.dump(result, json_file, indent=4)
@@ -186,7 +187,8 @@ if not os.path.isfile(os.path.join(exe_dir, ".gitignore")):
             result = []
             for asset in assets:
                 asset = copy.deepcopy(asset)
-                asset["route"] = asset["route"].replace("Assets/", "Assets/Chereverie/")
+                if "Chereverie/" not in asset["route"]:
+                    asset["route"] = asset["route"].replace("Assets/", "Assets/Chereverie/")
                 result.append(asset)
             with open(file, "w") as json_file:
                 json.dump(result, json_file, indent=4)
@@ -196,7 +198,21 @@ if not os.path.isfile(os.path.join(exe_dir, ".gitignore")):
             assets = json.load(load_file)
         result = []
         for asset in assets:
-            result.append(asset.replace("Assets/", "Assets/Chereverie/"))
+            if "Chereverie/" not in asset["route"]:
+                asset = asset.replace("Assets/", "Assets/Chereverie/")
+            result.append(asset)
+        with open(file, "w") as json_file:
+            json.dump(result, json_file, indent=4)
+
+        file = os.path.join(res_dir, "Data", "parameters.json")
+        with open(file, "r") as load_file:
+            assets = json.load(load_file)
+        result = {}
+        for key, value in assets.items():
+            if "Chereverie/" not in key:
+                result[key.replace("Assets/", "Assets/Chereverie/")] = value
+            else:
+                result[key] = value
         with open(file, "w") as json_file:
             json.dump(result, json_file, indent=4)
 
@@ -1671,7 +1687,7 @@ class MainWindow(QtWidgets.QMainWindow):
             if file in self.file_parameters_current:
                 parameters = self.file_parameters_current[file]
             else:
-                image = Image.open(os.path.join(res_dir, file))
+                image = Image.open(os.path.join(res_dir, self.collection.currentText(), file))
                 width, height = image.size
                 parameters = {
                         "sizeX": width,
