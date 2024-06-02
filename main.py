@@ -31,7 +31,7 @@ repo_name = "PyNGtuber"
 
 directories = ["Data", "Models", "Assets", "Viewer"]
 directories_skip = ["Models"]
-overwrite_files = ["script.js", "animations.css", "viewer.html", "parameters.json"]
+overwrite_files = ["script.js", "animations.css", "viewer.html"]
 
 os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = '4864'
 os.environ['QTWEBENGINE_CHROMIUM_FLAGS'] = '--no-sandbox'
@@ -162,34 +162,59 @@ if not os.path.isfile(os.path.join(exe_dir, ".gitignore")):
 
     dest_path = os.path.join(res_dir, "Assets")
     if not os.path.exists(os.path.join(dest_path, "Chereverie")):
-        res_dir = exe_dir
-        shutil.rmtree(dest_path)
+        if os.path.exists(dest_path):
+            shutil.rmtree(dest_path)
         avatars = [folder for folder in os.listdir(os.path.join(res_dir, "Models", "Avatars")) if "." not in folder]
         expressions = [folder for folder in os.listdir(os.path.join(res_dir, "Models", "Expressions")) if "." not in folder]
 
         for avatar in avatars:
-            file = os.path.join(res_dir, "Models", "Avatars", avatar, "model,json")
+            file = os.path.join(res_dir, "Models", "Avatars", avatar, "model.json")
             with open(file, "r") as load_file:
                 assets = json.load(load_file)
             result = []
             for asset in assets:
                 asset = copy.deepcopy(asset)
-                asset["route"] = asset["route"].replace("Assets/", "Assets/Chereverie/")
+                if "Chereverie/" not in asset["route"]:
+                    asset["route"] = asset["route"].replace("Assets/", "Assets/Chereverie/")
                 result.append(asset)
             with open(file, "w") as json_file:
                 json.dump(result, json_file, indent=4)
 
         for expression in expressions:
-            file = os.path.join(res_dir, "Models", "Expressions", expression, "model,json")
+            file = os.path.join(res_dir, "Models", "Expressions", expression, "model.json")
             with open(file, "r") as load_file:
                 assets = json.load(load_file)
             result = []
             for asset in assets:
                 asset = copy.deepcopy(asset)
-                asset["route"] = asset["route"].replace("Assets/", "Assets/Chereverie/")
+                if "Chereverie/" not in asset["route"]:
+                    asset["route"] = asset["route"].replace("Assets/", "Assets/Chereverie/")
                 result.append(asset)
             with open(file, "w") as json_file:
                 json.dump(result, json_file, indent=4)
+
+        file = os.path.join(res_dir, "Data", "current.json")
+        with open(file, "r") as load_file:
+            assets = json.load(load_file)
+        result = []
+        for asset in assets:
+            if "Chereverie/" not in asset:
+                asset = asset.replace("Assets/", "Assets/Chereverie/")
+            result.append(asset)
+        with open(file, "w") as json_file:
+            json.dump(result, json_file, indent=4)
+
+        file = os.path.join(res_dir, "Data", "parameters.json")
+        with open(file, "r") as load_file:
+            assets = json.load(load_file)
+        result = {}
+        for key, value in assets.items():
+            if "Chereverie/" not in key:
+                result[key.replace("Assets/", "Assets/Chereverie/")] = value
+            else:
+                result[key] = value
+        with open(file, "w") as json_file:
+            json.dump(result, json_file, indent=4)
 
     for directory in directories:
         src_path = os.path.join(exe_dir, directory)
