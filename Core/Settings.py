@@ -112,7 +112,7 @@ class Settings(QWidget):
         self.setShortcut.clicked.connect(self.request_shortcut)
 
         self.blinkingGroup.toggled.connect(self.hide_blinking)
-        self.talkingGroup.toggled.connect(self.hide_talking)
+        # self.talkingGroup.toggled.connect(self.hide_talking)
         self.controllerGroup.toggled.connect(self.hide_controller)
         self.cursorGroup.toggled.connect(self.hide_cursor)
         self.cssGroup.toggled.connect(self.hide_css)
@@ -122,6 +122,11 @@ class Settings(QWidget):
         self.talkOpen.toggled.connect(self.save_current)
         self.talkClosed.toggled.connect(self.save_current)
         self.talkScreaming.toggled.connect(self.save_current)
+
+        self.talkOpen.toggled.connect(self.show_animations)
+        self.talkClosed.toggled.connect(self.show_animations)
+        self.talkScreaming.toggled.connect(self.show_animations)
+
         self.controllerButtons.toggled.connect(self.save_current)
         self.controllerWheel.toggled.connect(self.save_current)
         self.invertAxis.toggled.connect(self.save_current)
@@ -161,7 +166,7 @@ class Settings(QWidget):
         self.saveDefault.clicked.connect(self.save_default)
 
         self.hide_blinking()
-        self.hide_talking()
+        self.show_animations()
         self.hide_controller()
         self.hide_cursor()
         self.hide_css()
@@ -190,8 +195,15 @@ class Settings(QWidget):
                     method("ignore" not in self.parameters.get(key, default))
                 case "controller_buttons" | "controller_wheel":
                     method(type in self.parameters.get(key, default))
-                case "blinking_open" | "blinking_closed" | "talking_open" | "talking_closed" | "talking_screaming" | "display" | "move" | "guitar":
+                case "blinking_open" | "blinking_closed" | "display" | "move" | "guitar":
                     method(type == self.parameters.get(key, default))
+                case "talking_open" | "talking_closed" | "talking_screaming":
+                    method(
+                        type in self.parameters.get(key, default)
+                        or self.parameters.get(key, default) == ["ignore"]
+                        or self.parameters.get(key, default) == "ignore"
+                        or type == self.parameters.get(key, default)
+                    )
                 case _:
                     method(self.parameters.get(key, default))
 
@@ -199,6 +211,20 @@ class Settings(QWidget):
                 obj.blockSignals(False)
             return True
         return False
+
+    def show_animations(self):
+        if not self.talkClosed.isChecked() and not self.talkOpen.isChecked() and not self.talkScreaming.isChecked():
+            sender = self.sender()
+            sender.setChecked(True)
+        self.tabWidget_6.setTabVisible(0, False)
+        self.tabWidget_6.setTabVisible(1, False)
+        self.tabWidget_6.setTabVisible(2, False)
+        if self.talkClosed.isChecked():
+            self.tabWidget_6.setTabVisible(0, True)
+        if self.talkOpen.isChecked():
+            self.tabWidget_6.setTabVisible(1, True)
+        if self.talkScreaming.isChecked():
+            self.tabWidget_6.setTabVisible(2, True)
 
     def set_data(self, changed_keys, updating=False):
         if self.update_value(changed_keys, updating, "sizeX", "sizeX.setValue", 600):
@@ -291,9 +317,11 @@ class Settings(QWidget):
         self.update_value(changed_keys, updating, "cursor", "cursorGroup.setChecked", False)
         self.update_value(changed_keys, updating, "blinking", "blinkOpen.setChecked", "ignore", "blinking_open")
         self.update_value(changed_keys, updating, "blinking", "blinkClosed.setChecked", "ignore", "blinking_closed")
+
         self.update_value(changed_keys, updating, "talking", "talkOpen.setChecked", "ignore", "talking_open")
         self.update_value(changed_keys, updating, "talking", "talkClosed.setChecked", "ignore", "talking_closed")
         self.update_value(changed_keys, updating, "talking", "talkScreaming.setChecked", "ignore", "talking_screaming")
+
         self.update_value(changed_keys, updating, "mode", "display.setChecked", "display", "display")
         self.update_value(changed_keys, updating, "mode", "move.setChecked", "display", "move")
         self.update_value(changed_keys, updating, "mode", "guitar.setChecked", "display", "guitar")
@@ -368,16 +396,6 @@ class Settings(QWidget):
         else:
             self.frame_3.hide()
             self.blinkingGroup.setStyleSheet(
-                "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
-        self.save_current()
-
-    def hide_talking(self):
-        if self.talkingGroup.isChecked():
-            self.frame_4.show()
-            self.talkingGroup.setStyleSheet("")
-        else:
-            self.frame_4.hide()
-            self.talkingGroup.setStyleSheet(
                 "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
         self.save_current()
 
@@ -524,7 +542,7 @@ class Settings(QWidget):
         self.parameters["use_css"] = True if self.cssGroup.isChecked() else False
         self.parameters["css"] = self.css.toPlainText()
         self.parameters["blinking"] = self.getBlinking() if self.blinkingGroup.isChecked() else "ignore"
-        self.parameters["talking"] = self.getTalking() if self.talkingGroup.isChecked() else "ignore"
+        self.parameters["talking"] = self.getTalking()
         self.parameters["controller"] = self.getController() if self.controllerGroup.isChecked() else ["ignore"]
 
     def get_chords(self):
@@ -564,12 +582,17 @@ class Settings(QWidget):
         return checked if checked else ["ignore"]
 
     def getTalking(self):
+        talking = []
+        if self.talkClosed.isChecked():
+            talking.append("talking_closed")
         if self.talkOpen.isChecked():
-            return "talking_open"
-        elif self.talkScreaming.isChecked():
-            return "talking_screaming"
-        else:
-            return "talking_closed"
+            talking.append("talking_open")
+        if self.talkScreaming.isChecked():
+            talking.append("talking_screaming")
+
+        if len(talking) == 3:
+            talking = ["ignore"]
+        return talking if talking else ["ignore"]
 
     def css_finished_edit(self):
         self.parameters["css"] = self.css.toPlainText()

@@ -325,7 +325,7 @@ class LayeredImageViewer(QWebEngineView):
                             controller_wheelWhammy_div['invertAxis'] = layer.get('invertAxis', 0)
                             controller_wheelWhammy_div['deadzone'] = layer.get("deadzone", 0.0550)
 
-                if str(layer.get("blinking", "ignore")) != "ignore":
+                if str(layer.get("blinking", ["ignore"])) != "ignore":
                     animation_blinking_div = soup.new_tag(
                         'div', style=f"position: absolute !important; z-index: {layer['posZ']}0;"
                     )
@@ -334,20 +334,34 @@ class LayeredImageViewer(QWebEngineView):
                         blinking + ("" if editing == "not_in_editor" else f"_{editing}")
                     ]
 
-                if str(layer.get("talking", "ignore")) != "ignore":
+                talking = layer.get("talking", ["ignore"])
+                if type(talking) == str:
+                    talking = [talking]
+                if talking != ["ignore"]:
                     animation_talking_div = soup.new_tag('div', style=f"""
                         position: absolute !important;
                         z-index: {layer['posZ']}0;
-                        {"opacity: 0" if layer['talking'] not in ['ignore', 'talking_closed'] else ""};
+                        {"opacity: 0" if 'talking_closed' not in talking else ""};
                     """)
-                    talking = str(layer.get("talking", "ignore"))
+
                     animation_talking_div['class'] = [
-                        talking + ("" if editing == "not_in_editor" else f"_{editing}")
+                        "talking" + ("" if editing == "not_in_editor" else f"_{editing}")
                     ]
+
+                    animation_talking_div["talking"] = " ".join(talking)
+
+                path_webp = os.path.basename(layer['route'])
+                path_webp, uncompressed_extension = os.path.splitext(path_webp)
+                path_webp = os.path.join(os.path.dirname(layer['route']), "webp", path_webp + ".webp")
+                path_webp = str(os.path.join(self.res_dir, path_webp)).replace("\\", "/")
+                if not os.path.isfile(path_webp):
+                    path_webp = str(os.path.join(self.res_dir, layer["route"]))
+                # print(path_webp)
 
                 img_tag = soup.new_tag(
                     'img',
-                    src=str(os.path.join(self.res_dir, layer['route'])).replace("\\", "/"),
+                    src=f"{path_webp}",
+                    # type="image/webp",
                     style=f"""
                         position: absolute !important;
                         left: calc(50% + {layer['posX']}px);
