@@ -125,7 +125,20 @@ class ImageGallery(QToolBox):
         thumbnail_folder = os.path.join(directory, "thumbs")
         os.makedirs(thumbnail_folder, exist_ok=True)
 
-        thumbnail_path = os.path.join(thumbnail_folder, file_name.replace("gif", "png").replace("webp", "png"))
+        extension_less, extension = os.path.splitext(file_name)
+        thumbnail_path = os.path.join(thumbnail_folder, extension_less + ".png")
+
+        webp_folder = os.path.join(directory, "webp")
+        os.makedirs(webp_folder, exist_ok=True)
+
+        uncompressed_file, uncompressed_extension = os.path.splitext(file_name)
+        webp_path = os.path.join(webp_folder, uncompressed_file + ".webp")
+        if not os.path.exists(webp_path) and "gif" not in extension.lower():
+            image = Image.open(input_path)
+            image = image.convert('RGBA')
+            image.save(webp_path, 'webp', optimize=True, quality=85, save_all=True)
+            print(webp_path)
+
         if os.path.exists(thumbnail_path):
             return QIcon(thumbnail_path)
         try:
@@ -157,7 +170,6 @@ class ImageGallery(QToolBox):
             else:
                 new_height = max_height
                 new_width = int(max_height * aspect_ratio)
-
             img_copy = img_copy.resize((new_width, new_height), Image.LANCZOS)
         pixmap = QPixmap.fromImage(QImage(img_copy.tobytes("raw", "RGBA"), img_copy.size[0], img_copy.size[1], QImage.Format.Format_RGBA8888))
         pixmap.save(thumbnail_path if custom_name is None else custom_name, quality=quality)
@@ -218,7 +230,7 @@ class ImageGallery(QToolBox):
         for subdir, dirs, files in os.walk(self.folder_path):
             if "thumb" not in subdir.lower():
                 folder_name = os.path.basename(subdir)
-                if folder_name.lower() not in ["Assets", self.collection.lower()]:
+                if folder_name.lower() not in ["Assets", self.collection.lower(), "webp"]:
                     dirs_.append([folder_name.lower(), folder_name, subdir, dirs, files])
 
         for i, folder_name, subdir, dir, files in sorted(dirs_, key=lambda x: x[0]):

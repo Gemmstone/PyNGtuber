@@ -19,66 +19,35 @@ async function flip_canvas(value) {
 }
 
 async function update_mic(status, animation, speed, direction, pacing, iteration, performance) {
-    var elementsOpen = document.getElementsByClassName("talking_open");
-    var elementsClosed = document.getElementsByClassName("talking_closed");
-    var elementsScreaming = document.getElementsByClassName("talking_screaming");
-    var elementsOpen_not_being_edited = document.getElementsByClassName("talking_open_not_being_edited");
-    var elementsClosed_not_being_edited = document.getElementsByClassName("talking_closed_not_being_edited");
-    var elementsScreaming_not_being_edited = document.getElementsByClassName("talking_screaming_not_being_edited");
-    var elementsOpen_being_edited = document.getElementsByClassName("talking_open_being_edited");
-    var elementsClosed_being_edited = document.getElementsByClassName("talking_closed_being_edited");
-    var elementsScreaming_being_edited = document.getElementsByClassName("talking_screaming_being_edited");
+    var elements = document.getElementsByClassName("talking");
+    var elements_not_being_edited = document.getElementsByClassName("talking_not_being_edited");
+    var elements_being_edited = document.getElementsByClassName("talking_being_edited");
     var imageWrapper = document.querySelectorAll(".idle_animation");
     var assets = document.getElementsByClassName("asset");
     var imageAddedWrapper = document.querySelectorAll(".added_animation");
 
-    var opacityOpen =  (status == 1) ? 1 : 0;
-    var opacityClosed = (status == 0) ? 1 : 0;
-    var opacityScreaming = (status == 2) ? 1 : 0;
+    var stateMap = {
+        0: "talking_closed",
+        1: "talking_open",
+        2: "talking_screaming"
+    };
 
-    for (var i = 0; i < elementsOpen.length; i++) {
-        elementsOpen[i].style.transition = "opacity 0.3s";
-        elementsOpen[i].style.opacity = opacityOpen;
+    for (var i = 0; i < elements.length; i++) {
+        var states = elements[i].attributes.talking.value.split(" ");
+        elements[i].style.transition = "opacity 0.2s";
+        elements[i].style.opacity = (states.includes(stateMap[status])) ? 1 : 0;
     }
 
-    for (var i = 0; i < elementsClosed.length; i++) {
-        elementsClosed[i].style.transition = "opacity 0.3s";
-        elementsClosed[i].style.opacity = opacityClosed;
+    for (var i = 0; i < elements_not_being_edited.length; i++) {
+        var states = elements_not_being_edited[i].attributes.talking.value.split(" ");
+        elements_not_being_edited[i].style.transition = "opacity 0.2s";
+        elements_not_being_edited[i].style.opacity = (states.includes(stateMap[status])) ? 0.7 : 0.3;
     }
 
-    for (var i = 0; i < elementsScreaming.length; i++) {
-        elementsScreaming[i].style.transition = "opacity 0.3s";
-        elementsScreaming[i].style.opacity = opacityScreaming;
-    }
-
-    for (var i = 0; i < elementsOpen_not_being_edited.length; i++) {
-        elementsOpen_not_being_edited[i].style.transition = "opacity 0.3s";
-        elementsOpen_not_being_edited[i].style.opacity = (opacityOpen == 1) ? 0.7 : 0.3;
-    }
-
-    for (var i = 0; i < elementsClosed_not_being_edited.length; i++) {
-        elementsClosed_not_being_edited[i].style.transition = "opacity 0.3s";
-        elementsClosed_not_being_edited[i].style.opacity = (opacityClosed == 1) ? 0.7 : 0.3;
-    }
-
-    for (var i = 0; i < elementsScreaming_not_being_edited.length; i++) {
-        elementsScreaming_not_being_edited[i].style.transition = "opacity 0.3s";
-        elementsScreaming_not_being_edited[i].style.opacity = (opacityScreaming == 1) ? 0.7 : 0.3;
-    }
-
-    for (var i = 0; i < elementsOpen_being_edited.length; i++) {
-        elementsOpen_being_edited[i].style.transition = "opacity 0.3s";
-        elementsOpen_being_edited[i].style.opacity = (opacityOpen == 1) ? 1 : 0.5;
-    }
-
-    for (var i = 0; i < elementsClosed_being_edited.length; i++) {
-        elementsClosed_being_edited[i].style.transition = "opacity 0.3s";
-        elementsClosed_being_edited[i].style.opacity = (opacityClosed == 1) ? 1 : 0.5;
-    }
-
-    for (var i = 0; i < elementsScreaming_being_edited.length; i++) {
-        elementsScreaming_being_edited[i].style.transition = "opacity 0.3s";
-        elementsScreaming_being_edited[i].style.opacity = (opacityScreaming == 1) ? 1 : 0.5;
+    for (var i = 0; i < elements_being_edited.length; i++) {
+        var states = elements_being_edited[i].attributes.talking.value.split(" ");
+        elements_being_edited[i].style.transition = "opacity 0.2s";
+        elements_being_edited[i].style.opacity = (states.includes(stateMap[status])) ? 1 : 0.5;
     }
 
     if(imageWrapper.length > 0) {

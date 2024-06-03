@@ -2,22 +2,22 @@
     "shortcuts": [],
     "animations": {
         "idle": {
-            "name": "floaty",
-            "speed": 6.0,
+            "name": "shake",
+            "speed": 4.2,
             "iteration": 0,
             "pacing": "ease-in-out",
             "direction": "normal"
         },
         "talking": {
-            "name": "floaty",
-            "speed": 0.5,
+            "name": "shake",
+            "speed": 2.0,
             "iteration": 0,
             "pacing": "ease-in-out",
-            "direction": "normal"
+            "direction": "reverse"
         },
         "screaming": {
-            "name": "floaty",
-            "speed": 0.5,
+            "name": "shake",
+            "speed": 1.0,
             "iteration": 0,
             "pacing": "ease-in-out",
             "direction": "normal"
