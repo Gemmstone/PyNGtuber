@@ -196,7 +196,7 @@ class ImageGallery(QToolBox):
                                 button_name = child_widget.accessibleName()
                                 child_widget.setChecked(button_name in load_model)
                                 if button_name in load_model:
-                                    icon = self.create_thumbnail(button_name)
+                                    icon = self.create_thumbnail(os.path.join(self.res_dir, button_name))
                                     self.list_selected(button_name, child_widget.toolTip())
                                     icon_selected = icon
             if icon_selected is not None:
