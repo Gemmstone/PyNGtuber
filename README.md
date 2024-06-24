@@ -4,7 +4,7 @@
 
 ### A highly customizable PNGtuber app.
 
-A higly customizable PNGtuber app, make your streams more dynamic with animations, gifs, controllers, mouse tracking and more.
+Make your streams more dynamic with animations, GIFs, controllers, mouse tracking and more.
 
 <div id="hot_icon">
   
@@ -34,7 +34,7 @@ A higly customizable PNGtuber app, make your streams more dynamic with animation
 <div align="center"><video width="100%" height="auto" src="https://github.com/Gemmstone/PyNGtuber/assets/31828821/079787d9-89ff-4837-9928-531bbecd9d59" controls="controls"></video></div>
 
 ## features
--   Store multiple faces and models separatelly so you can make a new avatar and keep all your expressions
+-   Store multiple faces and models separately so you can make a new avatar and keep all your expressions
 -   Editor mode with lots of settings and highlighting
 -   Change settings in bulk
 -   3 Talking states (not talking, talking and screaming)
