@@ -1,9 +1,12 @@
-import os
-from PyQt6.QtGui import QIcon, QPixmap
-from PyQt6.QtWidgets import QToolBox, QWidget, QVBoxLayout, QLabel, QSizePolicy
+import copy
+
+from PyQt6.QtWidgets import QToolBox, QWidget, QVBoxLayout, QLabel, QSizePolicy, QColorDialog
 from PyQt6.QtCore import pyqtSignal, QTimer, Qt
-from PyQt6 import uic
+from PyQt6.QtGui import QIcon, QPixmap
 from copy import deepcopy
+from PyQt6 import uic
+import json
+import os
 
 
 class Settings(QWidget):
@@ -12,7 +15,7 @@ class Settings(QWidget):
     shortcut = pyqtSignal(dict)
     delete_shortcut = pyqtSignal(dict)
 
-    def __init__(self, parameters, exe_dir, viewer, anim_file, animations):
+    def __init__(self, parameters, exe_dir, res_dir, viewer, anim_file, animations):
         super().__init__()
         self.og_height_screaming = 600
         self.og_width_screaming = 600
@@ -21,6 +24,8 @@ class Settings(QWidget):
         self.og_height = 600
         self.og_width = 600
         uic.loadUi(os.path.join(exe_dir, f"UI", "settingsWidget.ui"), self)
+        self.res_dir = res_dir
+        self.exe_dir = exe_dir
         self.parameters = parameters
         self.viewer = viewer
         self.anim_file = anim_file
@@ -114,8 +119,10 @@ class Settings(QWidget):
         self.blinkingGroup.toggled.connect(self.hide_blinking)
         # self.talkingGroup.toggled.connect(self.hide_talking)
         self.controllerGroup.toggled.connect(self.hide_controller)
+        self.positionGroup.toggled.connect(self.hide_position)
         self.cursorGroup.toggled.connect(self.hide_cursor)
-        self.cssGroup.toggled.connect(self.hide_css)
+        self.forced_mouse_tracking.toggled.connect(self.save_current)
+        # self.cssGroup.toggled.connect(self.hide_css)
 
         self.blinkOpen.toggled.connect(self.save_current)
         self.blinkClosed.toggled.connect(self.save_current)
@@ -141,44 +148,101 @@ class Settings(QWidget):
 
         self.idle_animation.currentIndexChanged.connect(self.save_current)
         self.idle_speed.valueChanged.connect(self.save_current)
-        self.idle_animation_pacing.currentIndexChanged.connect(self.save_current)
+        self.idle_animation_easing.currentIndexChanged.connect(self.save_current)
         self.idle_animation_direction.currentIndexChanged.connect(self.save_current)
         self.idle_animation_iteration.valueChanged.connect(self.save_current)
 
         self.talking_animation_direction.currentIndexChanged.connect(self.save_current)
         self.talking_animation.currentIndexChanged.connect(self.save_current)
         self.talking_speed.valueChanged.connect(self.save_current)
-        self.talking_animation_pacing.currentIndexChanged.connect(self.save_current)
+        self.talking_animation_easing.currentIndexChanged.connect(self.save_current)
         self.talking_animation_iteration.valueChanged.connect(self.save_current)
 
         self.screaming_animation_direction.currentIndexChanged.connect(self.save_current)
         self.screaming_animation.currentIndexChanged.connect(self.save_current)
         self.screaming_speed.valueChanged.connect(self.save_current)
-        self.screaming_animation_pacing.currentIndexChanged.connect(self.save_current)
+        self.screaming_animation_easing.currentIndexChanged.connect(self.save_current)
         self.screaming_animation_iteration.valueChanged.connect(self.save_current)
 
         self.display.toggled.connect(self.save_current)
         self.move.toggled.connect(self.save_current)
         self.guitar.toggled.connect(self.save_current)
 
-        self.css.textChanged.connect(self.css_finished_edit)
+        self.shadowGroup.toggled.connect(self.hide_shadow)
+
+        self.shadowBlur.valueChanged.connect(self.save_current)
+        self.color.textChanged.connect(self.change_color)
+        self.shadowOpacity.valueChanged.connect(self.save_current)
+        self.shadowX.valueChanged.connect(self.save_current)
+        self.shadowY.valueChanged.connect(self.save_current)
+
+        self.filtersGroup.toggled.connect(self.hide_filters)
+
+        self.blend.currentIndexChanged.connect(self.save_current)
+        self.grayscale.toggled.connect(self.save_current)
+        self.invert.toggled.connect(self.save_current)
+
+        self.sliders = {
+            self.hue: self.hueValue,
+            self.saturation: self.saturationValue,
+            self.brightness: self.brightnessValue,
+            self.contrast: self.contrastValue,
+            self.opacity: self.opacityValue,
+            self.blur: self.blurValue,
+            self.pixelate: self.pixelateValue
+        }
+
+        # Connect the signals to a generic update method
+        for slider, label in self.sliders.items():
+            slider.valueChanged.connect(lambda value, lbl=label: self.bar_update(value, lbl))
+            self.bar_update(slider.value(), label)
+
+        # self.css.textChanged.connect(self.css_finished_edit)
 
         self.saveDefault.clicked.connect(self.save_default)
 
+        self.setColor.clicked.connect(self.showColorDialog)
+
         self.hide_blinking()
+        self.hide_shadow()
+        self.hide_filters()
         self.show_animations()
         self.hide_controller()
+        self.hide_position()
         self.hide_cursor()
-        self.hide_css()
+        self.change_color()
+        # self.hide_css()
+
+    def showColorDialog(self):
+        color = QColorDialog.getColor()
+
+        if color.isValid():
+            hex_value = color.name()
+            self.color.setText(hex_value)
+
+    def change_color(self):
+        self.colorFrame.setStyleSheet(f"""
+        QFrame{{
+            background-color: {self.color.text()};
+            border-bottom-left-radius: 9px;
+            border-bottom-right-radius: 5px;
+            border-top-left-radius: 9px;
+            border-top-right-radius: 5px;
+            border-style: outset;
+            border-width: 1px;
+            border-color: black;
+        }}
+        """)
+        self.save_current()
 
     def update_value(self, changed_keys, updating, key, function, default, type="normal"):
         if (key in changed_keys) or (not updating):
             obj_name, method_name = function.rsplit('.', 1)
-            obj = getattr(self, obj_name)  # Get the object
-            method = getattr(obj, method_name)  # Get the method
+            obj = getattr(self, obj_name)
+            method = getattr(obj, method_name)
 
-            if hasattr(obj, 'blockSignals'):  # Check if the object has blockSignals method
-                obj.blockSignals(True)  # Block signals for the object
+            if hasattr(obj, 'blockSignals'):
+                obj.blockSignals(True)
 
             match type:
                 case "result_ready":
@@ -194,7 +258,7 @@ class Settings(QWidget):
                 case "ignore not in":
                     method("ignore" not in self.parameters.get(key, default))
                 case "controller_buttons" | "controller_wheel":
-                    method(type in self.parameters.get(key, default))
+                    method(type in self.parameters.get(key, default) or "guitar_buttons" in self.parameters.get(key, default))
                 case "blinking_open" | "blinking_closed" | "display" | "move" | "guitar":
                     method(type == self.parameters.get(key, default))
                 case "talking_open" | "talking_closed" | "talking_screaming":
@@ -237,8 +301,13 @@ class Settings(QWidget):
         self.update_value(changed_keys, updating, "posY", "posY.setValue", 0, "invert")
         self.update_value(changed_keys, updating, "posZ", "posZ.setValue", 0)
         self.update_value(changed_keys, updating, "rotation", "rotation.setValue", 0)
-        self.update_value(changed_keys, updating, "idle_position_pacing", "idle_position_pacing.setCurrentText", "ease-in-out")
+        self.update_value(changed_keys, updating, "idle_position_pacing", "idle_position_pacing.setCurrentText", "EaseInOut")
         self.update_value(changed_keys, updating, "idle_position_speed", "idle_position_speed.setValue", 0.2)
+
+        self.update_value(changed_keys, updating, "move", "positionGroup.setChecked", False)
+        # self.update_value(changed_keys, updating, "moveToIDLE", "talkClosed.setChecked", True)
+        # self.update_value(changed_keys, updating, "moveToTALKING", "talkOpen.setChecked", True)
+        # self.update_value(changed_keys, updating, "moveToSCREAMING", "talkScreaming.setChecked", True)
 
         if self.update_value(changed_keys, updating, "sizeX_talking", "sizeX_talking.setValue", self.parameters["sizeX"]):
             if not updating:
@@ -249,7 +318,7 @@ class Settings(QWidget):
         self.update_value(changed_keys, updating, "posX_talking", "posX_talking.setValue", self.parameters["posX"])
         self.update_value(changed_keys, updating, "posY_talking", "posY_talking.setValue", self.parameters["posY"], "invert")
         self.update_value(changed_keys, updating, "rotation_talking", "rotation_talking.setValue", self.parameters["rotation"])
-        self.update_value(changed_keys, updating, "talking_position_pacing", "talking_position_pacing.setCurrentText", self.parameters.get("idle_position_pacing", "ease-in-out"))
+        self.update_value(changed_keys, updating, "talking_position_pacing", "talking_position_pacing.setCurrentText", self.parameters.get("idle_position_pacing", "EaseInOut"))
         self.update_value(changed_keys, updating, "talking_position_speed", "talking_position_speed.setValue", self.parameters.get("idle_position_speed", 0.2))
 
         if self.update_value(changed_keys, updating, "sizeX_screaming", "sizeX_screaming.setValue", self.parameters.get("sizeX_talking", self.parameters["sizeX"])):
@@ -261,7 +330,7 @@ class Settings(QWidget):
         self.update_value(changed_keys, updating, "posX_screaming", "posX_screaming.setValue", self.parameters.get("posX_talking", self.parameters["posX"]))
         self.update_value(changed_keys, updating, "posY_screaming", "posY_screaming.setValue", self.parameters.get("posY_talking", self.parameters["posY"]), "invert")
         self.update_value(changed_keys, updating, "rotation_screaming", "rotation_screaming.setValue", self.parameters.get("rotation_talking", self.parameters["rotation"]))
-        self.update_value(changed_keys, updating, "screaming_position_pacing", "screaming_position_pacing.setCurrentText", self.parameters.get("talking_position_pacing", self.parameters.get("idle_position_pacing", "ease-in-out")))
+        self.update_value(changed_keys, updating, "screaming_position_pacing", "screaming_position_pacing.setCurrentText", self.parameters.get("talking_position_pacing", self.parameters.get("idle_position_pacing", "EaseInOut")))
         self.update_value(changed_keys, updating, "screaming_position_speed", "screaming_position_speed.setValue", self.parameters.get("talking_position_speed", self.parameters.get("idle_position_speed", 0.2)))
 
         self.update_value(changed_keys, updating, "originX", "originX.setValue", 0)
@@ -273,8 +342,8 @@ class Settings(QWidget):
         self.update_value(changed_keys, updating, "originXzoom", "originXzoom.setValue", self.parameters.get("originX", 0))
         self.update_value(changed_keys, updating, "originYzoom", "originYzoom.setValue", self.parameters.get("originY", 0), "invert")
         self.update_value(changed_keys, updating, "degZoom", "degZoom.setValue", self.parameters.get("deg", 90))
-        self.update_value(changed_keys, updating, "originYwhammy", "originXwhammy.setValue", 0)
-        self.update_value(changed_keys, updating, "originXwhammy", "originYwhammy.setValue", 0, "invert")
+        self.update_value(changed_keys, updating, "originXwhammy", "originXwhammy.setValue", 0)
+        self.update_value(changed_keys, updating, "originYwhammy", "originYwhammy.setValue", 0, "invert")
         self.update_value(changed_keys, updating, "degWhammy", "degWhammy.setValue", 0)
         self.update_value(changed_keys, updating, "cursorScaleX", "cursorScaleX.setValue", self.parameters.get("cursorScale", 0.003))
         self.update_value(changed_keys, updating, "cursorScaleY", "cursorScaleY.setValue", self.parameters.get("cursorScale", 0.004))
@@ -282,6 +351,7 @@ class Settings(QWidget):
         self.update_value(changed_keys, updating, "invert_mouse_y", "invert_mouse_y.setChecked", 1, "compare to 1")
         self.update_value(changed_keys, updating, "track_mouse_x", "track_mouse_x.setChecked", 1, "compare to 1")
         self.update_value(changed_keys, updating, "track_mouse_y", "track_mouse_y.setChecked", 1, "compare to 1")
+        self.update_value(changed_keys, updating, "forced_mouse_tracking", "forced_mouse_tracking.setChecked", 0, "compare to 1")
         self.update_value(changed_keys, updating, "deadzone", "deadzone.setValue", 0.0550)
         self.update_value(changed_keys, updating, "player", "player.setValue", 0)
         self.update_value(changed_keys, updating, "player2", "player2.setValue", 0)
@@ -310,10 +380,10 @@ class Settings(QWidget):
         self.update_value(changed_keys, updating, "blinking", "blinkingGroup.setChecked", "ignore", "is not ignore")
         self.update_value(changed_keys, updating, "talking", "talkingGroup.setChecked", "ignore", "is not ignore")
         self.update_value(changed_keys, updating, "controller", "controllerGroup.setChecked", ["ignore"], "ignore not in")
-        self.update_value(changed_keys, updating, "use_css", "cssGroup.setChecked", False)
+        # self.update_value(changed_keys, updating, "use_css", "cssGroup.setChecked", False)
         self.update_value(changed_keys, updating, "invertAxis", "invertAxis.setChecked", False)
         self.update_value(changed_keys, updating, "cursor", "cursorGroup.setChecked", False)
-        self.update_value(changed_keys, updating, "css", "css.setPlainText", "")
+        # self.update_value(changed_keys, updating, "css", "css.setPlainText", "")
         self.update_value(changed_keys, updating, "cursor", "cursorGroup.setChecked", False)
         self.update_value(changed_keys, updating, "blinking", "blinkOpen.setChecked", "ignore", "blinking_open")
         self.update_value(changed_keys, updating, "blinking", "blinkClosed.setChecked", "ignore", "blinking_closed")
@@ -327,9 +397,35 @@ class Settings(QWidget):
         self.update_value(changed_keys, updating, "mode", "guitar.setChecked", "display", "guitar")
         self.update_value(changed_keys, updating, "controller", "controllerButtons.setChecked", ["ignore"], "controller_buttons")
         self.update_value(changed_keys, updating, "controller", "controllerWheel.setChecked", ["ignore"], "controller_wheel")
+
+        self.update_value(changed_keys, updating, "shadow", "shadowGroup.setChecked", False)
+
+        self.update_value(changed_keys, updating, "color", "color.setText", "#000000")
+        self.update_value(changed_keys, updating, "shadowBlur", "shadowBlur.setValue", 20)
+        self.update_value(changed_keys, updating, "shadowOpacity", "shadowOpacity.setValue", 100)
+        self.update_value(changed_keys, updating, "shadowX", "shadowX.setValue", 0)
+        self.update_value(changed_keys, updating, "shadowY", "shadowY.setValue", 0)
+
+        self.update_value(changed_keys, updating, "filters", "filtersGroup.setChecked", False)
+
+        self.update_value(changed_keys, updating, "blend", "blend.setCurrentText", "source-over")
+        self.update_value(changed_keys, updating, "hue", "hue.setValue", 0)
+        self.update_value(changed_keys, updating, "saturation", "saturation.setValue", 0)
+        self.update_value(changed_keys, updating, "brightness", "brightness.setValue", 0)
+        self.update_value(changed_keys, updating, "contrast", "contrast.setValue", 0)
+        self.update_value(changed_keys, updating, "opacity", "opacity.setValue", 100)
+        self.update_value(changed_keys, updating, "blur", "blur.setValue", 0)
+        self.update_value(changed_keys, updating, "pixelate", "pixelate.setValue", 0)
+
+        self.update_value(changed_keys, updating, "grayscale", "grayscale.setChecked", False)
+        self.update_value(changed_keys, updating, "invert", "invert.setChecked", False)
         self.load_animations(changed_keys, updating)
         if not updating:
             self.check_hotkeys()
+
+    def bar_update(self, value, label):
+        label.setText(f"{value}")
+        self.save_current()
 
     def load_animations(self, changed_keys, updating):
         if not updating:
@@ -359,9 +455,9 @@ class Settings(QWidget):
         self.update_value(changed_keys, updating, "animation_direction_talking", "talking_animation_direction.setCurrentText", "normal")
         self.update_value(changed_keys, updating, "animation_direction_screaming", "screaming_animation_direction.setCurrentText", "normal")
 
-        self.update_value(changed_keys, updating, "animation_pacing_idle", "idle_animation_pacing.setCurrentText", "ease-in-out")
-        self.update_value(changed_keys, updating, "animation_pacing_talking", "talking_animation_pacing.setCurrentText", "ease-in-out")
-        self.update_value(changed_keys, updating, "animation_pacing_screaming", "screaming_animation_pacing.setCurrentText", "ease-in-out")
+        self.update_value(changed_keys, updating, "animation_pacing_idle", "idle_animation_easing.setCurrentText", "EaseInOut")
+        self.update_value(changed_keys, updating, "animation_pacing_talking", "talking_animation_easing.setCurrentText", "EaseInOut")
+        self.update_value(changed_keys, updating, "animation_pacing_screaming", "screaming_animation_easing.setCurrentText", "EaseInOut")
 
         self.update_value(changed_keys, updating, "animation_speed_idle", "idle_speed.setValue", 6)
         self.update_value(changed_keys, updating, "animation_speed_talking", "talking_speed.setValue", 0.5)
@@ -399,6 +495,26 @@ class Settings(QWidget):
                 "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
         self.save_current()
 
+    def hide_shadow(self):
+        if self.shadowGroup.isChecked():
+            self.frame_28.show()
+            self.shadowGroup.setStyleSheet("")
+        else:
+            self.frame_28.hide()
+            self.shadowGroup.setStyleSheet(
+                "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
+        self.save_current()
+
+    def hide_filters(self):
+        if self.filtersGroup.isChecked():
+            self.frame_31.show()
+            self.filtersGroup.setStyleSheet("")
+        else:
+            self.frame_31.hide()
+            self.filtersGroup.setStyleSheet(
+                "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
+        self.save_current()
+
     def hide_cursor(self):
         if self.cursorGroup.isChecked():
             self.frameCursor.show()
@@ -419,15 +535,13 @@ class Settings(QWidget):
                 "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
         self.save_current()
 
-    def hide_css(self):
-        if self.cssGroup.isChecked():
-            self.frame_5.show()
-            self.spacer.hide()
-            self.cssGroup.setStyleSheet("")
+    def hide_position(self):
+        if self.positionGroup.isChecked():
+            self.frame_25.show()
+            self.positionGroup.setStyleSheet("")
         else:
-            self.frame_5.hide()
-            self.spacer.show()
-            self.cssGroup.setStyleSheet(
+            self.frame_25.hide()
+            self.positionGroup.setStyleSheet(
                 "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
         self.save_current()
 
@@ -438,6 +552,11 @@ class Settings(QWidget):
         self.parameters["posY"] = self.posY.value() * -1
         self.parameters["posZ"] = self.posZ.value()
         self.parameters["rotation"] = self.rotation.value()
+
+        self.parameters['move'] = self.positionGroup.isChecked()
+        self.parameters['moveToIDLE'] = self.talkClosed.isChecked()
+        self.parameters['moveToTALKING'] = self.talkOpen.isChecked()
+        self.parameters['moveToSCREAMING'] = self.talkScreaming.isChecked()
 
         self.parameters['idle_position_speed'] = self.idle_position_speed.value()
         self.parameters['idle_position_pacing'] = self.idle_position_pacing.currentText()
@@ -535,15 +654,39 @@ class Settings(QWidget):
         self.parameters['animation_iteration_talking'] = self.talking_animation_iteration.value()
         self.parameters['animation_iteration_screaming'] = self.screaming_animation_iteration.value()
 
-        self.parameters['animation_pacing_idle'] = self.idle_animation_pacing.currentText()
-        self.parameters['animation_pacing_talking'] = self.talking_animation_pacing.currentText()
-        self.parameters['animation_pacing_screaming'] = self.screaming_animation_pacing.currentText()
+        self.parameters['animation_pacing_idle'] = self.idle_animation_easing.currentText()
+        self.parameters['animation_pacing_talking'] = self.talking_animation_easing.currentText()
+        self.parameters['animation_pacing_screaming'] = self.screaming_animation_easing.currentText()
 
-        self.parameters["use_css"] = True if self.cssGroup.isChecked() else False
-        self.parameters["css"] = self.css.toPlainText()
+        # self.parameters["use_css"] = True if self.cssGroup.isChecked() else False
+        # self.parameters["css"] = self.css.toPlainText()
         self.parameters["blinking"] = self.getBlinking() if self.blinkingGroup.isChecked() else "ignore"
         self.parameters["talking"] = self.getTalking()
         self.parameters["controller"] = self.getController() if self.controllerGroup.isChecked() else ["ignore"]
+
+        self.parameters["shadow"] = self.shadowGroup.isChecked()
+
+        self.parameters["color"] = self.color.text()
+        self.parameters["shadowBlur"] = self.shadowBlur.value()
+        self.parameters["shadowOpacity"] = self.shadowOpacity.value()
+        self.parameters["shadowX"] = self.shadowX.value()
+        self.parameters["shadowY"] = self.shadowY.value()
+
+        self.parameters["filters"] = self.filtersGroup.isChecked()
+
+        self.parameters["blend"] = self.blend.currentText()
+        self.parameters["hue"] = self.hue.value()
+        self.parameters["saturation"] = self.saturation.value()
+        self.parameters["brightness"] = self.brightness.value()
+        self.parameters["contrast"] = self.contrast.value()
+        self.parameters["opacity"] = self.opacity.value()
+        self.parameters["blur"] = self.blur.value()
+        self.parameters["pixelate"] = self.pixelate.value()
+
+        self.parameters["grayscale"] = self.grayscale.isChecked()
+        self.parameters["invert"] = self.invert.isChecked()
+
+        self.parameters["forced_mouse_tracking"] = 1 if self.forced_mouse_tracking.isChecked() else 0
 
     def get_chords(self):
         chords = []
@@ -562,6 +705,12 @@ class Settings(QWidget):
         self.save()
         self.settings_changed_default.emit(self.parameters)
 
+        if self.parameters["route"] != "General Settings":
+            with open(f'{os.path.join(self.res_dir, self.parameters["route"])}.json', "w") as f:
+                save_data = copy.deepcopy(self.parameters)
+                save_data.pop("route")
+                json.dump(save_data, f, indent=4, ensure_ascii=False)
+
     def getBlinking(self):
         if self.blinkOpen.isChecked():
             return "blinking_open"
@@ -570,8 +719,11 @@ class Settings(QWidget):
     def getController(self):
         checked = []
         if self.controllerButtons.isChecked():
+            if self.display.isChecked() or self.move.isChecked():
+                checked.append("controller_buttons")
+            if self.guitar.isChecked():
+                checked.append("guitar_buttons")
             self.frame_8.show()
-            checked.append("controller_buttons")
         else:
             self.frame_8.hide()
         if self.controllerWheel.isChecked():
@@ -593,10 +745,6 @@ class Settings(QWidget):
         if len(talking) == 3:
             talking = ["ignore"]
         return talking if talking else ["ignore"]
-
-    def css_finished_edit(self):
-        self.parameters["css"] = self.css.toPlainText()
-        self.save_current()
 
     def maintain_aspect_ratio(self, value, aspect_ratio, size, og_size):
         if aspect_ratio.isChecked():
@@ -646,7 +794,6 @@ class Settings(QWidget):
                 if self.parameters.get(key) != val:
                     self.parameters[key] = deepcopy(val)
                     changed_keys.append(key)
-        # print(self.parameters)
         self.set_data(changed_keys, True)
         if default:
             self.settings_changed_default.emit(self.parameters)
@@ -660,13 +807,14 @@ class SettingsToolBox(QToolBox):
     shortcut = pyqtSignal(dict)
     delete_shortcut = pyqtSignal(dict)
 
-    def __init__(self, exe_dir, viewer, anim_file):
+    def __init__(self, exe_dir, res_dir, viewer, anim_file):
         super().__init__()
 
         self.items = []
         self.values = []
         self.page = None
         self.exe_dir = exe_dir
+        self.res_dir = res_dir
         self.viewer = viewer
         self.anim_file = anim_file
         self.animations = self.viewer.get_animations(self.anim_file, get_all=True)
@@ -848,7 +996,7 @@ class SettingsToolBox(QToolBox):
             if route in used_routes:
                 continue
 
-            settings_widget = Settings(item, exe_dir=self.exe_dir, viewer=self.viewer, anim_file=self.anim_file, animations=self.animations)
+            settings_widget = Settings(item, exe_dir=self.exe_dir, res_dir=self.res_dir, viewer=self.viewer, anim_file=self.anim_file, animations=self.animations)
             if route == "General Settings":
                 settings_widget.settings_changed.connect(self.update_childs)
                 settings_widget.settings_changed_default.connect(self.save_as_default_childs)
@@ -882,9 +1030,9 @@ class SettingsToolBox(QToolBox):
 
                 self.setCurrentIndex(index)
                 self.childs[route] = settings_widget
-        self.setCurrentIndex(0)
+        self.setCurrentIndex(index)
         self.blockSignals(False)
-        self.currentChanged.emit(0)
+        self.currentChanged.emit(index)
 
     def update_childs(self, value):
         self.general_settings_changed = True

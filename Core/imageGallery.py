@@ -14,13 +14,14 @@ import os
 class ImageGallery(QToolBox):
     selectionChanged = pyqtSignal(list)
 
-    def __init__(self, load_model, res_dir, exe_dir, collection):
+    def __init__(self, load_model, res_dir, exe_dir, collection, memory=None):
         super().__init__()
         self.selected_images = []
         self.file_paths = []
         self.last_model = None
         self.res_dir = res_dir
         self.exe_dir = exe_dir
+        self.memory = memory
         self.collection = collection
 
         StyleSheet = """

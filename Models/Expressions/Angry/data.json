@@ -3,10 +3,10 @@
     "animations": {
         "idle": {
             "name": "shake",
-            "speed": 4.200000000000006,
+            "speed": 4.2,
             "iteration": 0,
             "pacing": "ease-in-out",
-            "direction": "normal"
+            "direction": "reverse"
         },
         "talking": {
             "name": "shake",
