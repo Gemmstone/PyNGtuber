@@ -1,6 +1,7 @@
 from PyQt6.QtCore import QThread, pyqtSignal, QTimer
 from PyQt6.QtWidgets import QWidget
 import sounddevice as sd
+import noisereduce as nr
 from PyQt6 import uic
 import numpy as np
 import traceback
@@ -12,13 +13,21 @@ class AudioThread(QThread):
     audio_stream_signal = pyqtSignal(int)
     audio_stream_error = pyqtSignal(str)
 
-    def __init__(self, max_reference_volume=0.5, engine="pyaudio", parent=None):
+    def __init__(
+            self, max_reference_volume=0.5,
+            engine="pyaudio",
+            noise_reduction=True,
+            sample_rate_noise_reduction=44100,
+            parent=None
+    ):
         super().__init__(parent)
         self.p = pyaudio.PyAudio()
         self.audio_stream = None
         self.selected_microphone_index = None
         self.max_reference_volume = max_reference_volume
         self.engine = engine
+        self.noise_reduction = noise_reduction
+        self.sample_rate_noise_reduction = sample_rate_noise_reduction
 
     def run(self):
         if self.engine == "pyaudio":
@@ -79,11 +88,20 @@ class AudioThread(QThread):
     def change_max_reference_volume(self, new_value):
         self.max_reference_volume = new_value
 
+    def toggle_noise_reduction(self, value):
+        self.noise_reduction = value
+
+    def change_sample_rate_noise_reduction(self, new_value):
+        self.sample_rate_noise_reduction = new_value
+
     def callback_sounddevice(self, indata, outdata, frames, time):
-        volume = np.sqrt(np.mean(indata**2))
+        if self.noise_reduction:
+            reduced_noise = nr.reduce_noise(y=indata[:, 0], sr=self.sample_rate_noise_reduction)
+        else:
+            reduced_noise = indata
+        volume = np.sqrt(np.mean(reduced_noise ** 2))
         normalized_volume = int((volume / self.max_reference_volume) * 100)
         normalized_volume = min(100, max(0, normalized_volume))
-        # print(volume, normalized_volume)
         self.audio_stream_signal.emit(normalized_volume)
 
     def callback_pyaudio(self, in_data, frame_count, time_info, status):
@@ -96,14 +114,17 @@ class AudioThread(QThread):
             self.audio_stream_error.emit(f"{status}")
 
         audio_data = np.frombuffer(in_data, dtype=np.int16)
-        rms_volume = abs(np.max(audio_data))
+        if self.noise_reduction:
+            reduced_noise = nr.reduce_noise(y=audio_data, sr=self.sample_rate_noise_reduction)
+        else:
+            reduced_noise = audio_data
+        rms_volume = abs(np.max(reduced_noise))
         volume = int((rms_volume / 32768) * 100)
 
         try:
             self.audio_stream_signal.emit(volume)
         except RuntimeError:
             pass
-        # print(volume, frame_count, time_info, status)
 
         return None, pyaudio.paContinue
 
@@ -112,7 +133,13 @@ class MicrophoneVolumeWidget(QWidget):
     activeAudio = pyqtSignal(int)
     settingsChanged = pyqtSignal()
 
-    def __init__(self, exe_dir, max_reference_volume=0.5, engine="pyaudio"):
+    def __init__(
+            self, exe_dir,
+            max_reference_volume=0.5,
+            noise_reduction=True,
+            sample_rate_noise_reduction=44100,
+            engine="pyaudio"
+    ):
         super().__init__()
         uic.loadUi(os.path.join(exe_dir, f"UI", "audioMonitor.ui"), self)
         self.device_dict = {}
@@ -120,6 +147,8 @@ class MicrophoneVolumeWidget(QWidget):
         self.active_audio_signal = -1
         self.max_reference_volume = max_reference_volume
         self.engine = engine
+        self.noise_reduction = noise_reduction
+        self.sample_rate_noise_reduction = sample_rate_noise_reduction
         
         self.inactivity_timer = QTimer(self)
         self.inactivity_timer.timeout.connect(self.check_inactivity)
@@ -144,12 +173,23 @@ class MicrophoneVolumeWidget(QWidget):
         self.max_reference_volume = new_value
         self.audio_thread.change_max_reference_volume(new_value)
 
+    def toggle_noise_reduction(self, value):
+        self.noise_reduction = value
+        self.audio_thread.toggle_noise_reduction(value)
+
+    def change_sample_rate_noise_reduction(self, new_value):
+        self.sample_rate_noise_reduction = new_value
+        self.audio_thread.change_sample_rate_noise_reduction(new_value)
+
     def load_settings(self, settings):
         self.volume.setValue(settings["volume threshold"])
         self.volume_scream.setValue(settings["scream threshold"])
         self.delay.setValue(settings["delay threshold"])
         self.microphones.setCurrentIndex(settings["microphone selection"])
         self.mute.setChecked(settings["microphone mute"])
+
+        self.noise_reduction = settings.get("noise_reduction", True)
+        self.sample_rate_noise_reduction = settings.get("sample_rate", 44100)
 
     def loadStart(self):
         self.list_microphones()
@@ -160,7 +200,11 @@ class MicrophoneVolumeWidget(QWidget):
         self.mute.clicked.connect(self.update_audio_stream)
         self.microphones.currentIndexChanged.connect(self.update_audio_stream)
 
-        self.audio_thread = AudioThread(engine=self.engine)
+        self.audio_thread = AudioThread(
+            engine=self.engine,
+            noise_reduction=self.noise_reduction,
+            sample_rate_noise_reduction=self.sample_rate_noise_reduction
+        )
         self.audio_thread.audio_stream_signal.connect(self.update_volume)
         self.audio_thread.audio_stream_error.connect(self.error_handler)
 
@@ -206,7 +250,7 @@ class MicrophoneVolumeWidget(QWidget):
     def list_microphones_sounddevice(self):
         excluded = ["jack", "speex", "upmix", "vdownmix"]
 
-        devices = sd.query_devices()
+        devices = sd.query_devices(kind="input")
 
         # for device in devices:
         #     print()
@@ -217,6 +261,9 @@ class MicrophoneVolumeWidget(QWidget):
         #     print(f"Default Input Latency: {device['default_low_input_latency']} seconds")
         #     print(f"Default Output Latency: {device['default_low_output_latency']} seconds")
         #     print(f"Supports Full Duplex: {device['default_full_duplex']}")
+
+        if type(devices) is dict:
+            devices = [devices]
 
         microphone_devices = [device for device in devices if device['max_input_channels'] > 0]
 

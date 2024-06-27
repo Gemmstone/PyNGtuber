@@ -14,13 +14,14 @@ import os
 class ImageGallery(QToolBox):
     selectionChanged = pyqtSignal(list)
 
-    def __init__(self, load_model, res_dir, exe_dir, collection):
+    def __init__(self, load_model, res_dir, exe_dir, collection, memory=None):
         super().__init__()
         self.selected_images = []
         self.file_paths = []
         self.last_model = None
         self.res_dir = res_dir
         self.exe_dir = exe_dir
+        self.memory = memory
         self.collection = collection
 
         StyleSheet = """
@@ -196,7 +197,7 @@ class ImageGallery(QToolBox):
                                 button_name = child_widget.accessibleName()
                                 child_widget.setChecked(button_name in load_model)
                                 if button_name in load_model:
-                                    icon = self.create_thumbnail(button_name)
+                                    icon = self.create_thumbnail(os.path.join(self.res_dir, button_name))
                                     self.list_selected(button_name, child_widget.toolTip())
                                     icon_selected = icon
             if icon_selected is not None:
