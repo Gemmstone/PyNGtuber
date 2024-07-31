@@ -6,6 +6,7 @@ from PyQt6 import uic
 import numpy as np
 import traceback
 import pyaudio
+import asyncio
 import os
 
 
@@ -149,6 +150,7 @@ class MicrophoneVolumeWidget(QWidget):
         self.engine = engine
         self.noise_reduction = noise_reduction
         self.sample_rate_noise_reduction = sample_rate_noise_reduction
+        self.obs_websocket = None
         
         self.inactivity_timer = QTimer(self)
         self.inactivity_timer.timeout.connect(self.check_inactivity)
@@ -250,7 +252,7 @@ class MicrophoneVolumeWidget(QWidget):
     def list_microphones_sounddevice(self):
         excluded = ["jack", "speex", "upmix", "vdownmix"]
 
-        devices = sd.query_devices(kind="input")
+        devices = sd.query_devices()
 
         # for device in devices:
         #     print()

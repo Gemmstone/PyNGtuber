@@ -2,7 +2,8 @@ import copy
 
 from PyQt6.QtWidgets import QToolBox, QWidget, QVBoxLayout, QLabel, QSizePolicy, QColorDialog
 from PyQt6.QtCore import pyqtSignal, QTimer, Qt
-from PyQt6.QtGui import QIcon, QPixmap
+from PyQt6.QtGui import QIcon, QPixmap, QColor
+from Core.ShortcutsManager import ShortcutsDialog
 from copy import deepcopy
 from PyQt6 import uic
 import json
@@ -114,6 +115,7 @@ class Settings(QWidget):
         self.player.valueChanged.connect(self.save_current)
         self.player2.valueChanged.connect(self.save_current)
         self.buttonCombo.currentIndexChanged.connect(self.save_current)
+
         self.setShortcut.clicked.connect(self.request_shortcut)
 
         self.blinkingGroup.toggled.connect(self.hide_blinking)
@@ -122,7 +124,7 @@ class Settings(QWidget):
         self.positionGroup.toggled.connect(self.hide_position)
         self.cursorGroup.toggled.connect(self.hide_cursor)
         self.forced_mouse_tracking.toggled.connect(self.save_current)
-        # self.cssGroup.toggled.connect(self.hide_css)
+        self.cssGroup.toggled.connect(self.hide_css)
 
         self.blinkOpen.toggled.connect(self.save_current)
         self.blinkClosed.toggled.connect(self.save_current)
@@ -171,37 +173,28 @@ class Settings(QWidget):
         self.shadowGroup.toggled.connect(self.hide_shadow)
 
         self.shadowBlur.valueChanged.connect(self.save_current)
-        self.color.textChanged.connect(self.change_color)
-        self.shadowOpacity.valueChanged.connect(self.save_current)
+        # self.color.textChanged.connect(self.change_color)
+        # self.shadowOpacity.valueChanged.connect(self.save_current)
         self.shadowX.valueChanged.connect(self.save_current)
         self.shadowY.valueChanged.connect(self.save_current)
 
         self.filtersGroup.toggled.connect(self.hide_filters)
 
-        self.blend.currentIndexChanged.connect(self.save_current)
-        self.grayscale.toggled.connect(self.save_current)
-        self.invert.toggled.connect(self.save_current)
+        self.hue.valueChanged.connect(self.save_current)
+        self.saturation.valueChanged.connect(self.save_current)
+        self.brightness.valueChanged.connect(self.save_current)
+        self.contrast.valueChanged.connect(self.save_current)
+        self.opacity.valueChanged.connect(self.save_current)
+        self.blur.valueChanged.connect(self.save_current)
+        self.grayscale.valueChanged.connect(self.save_current)
+        self.invert.valueChanged.connect(self.save_current)
+        self.sepia.valueChanged.connect(self.save_current)
 
-        self.sliders = {
-            self.hue: self.hueValue,
-            self.saturation: self.saturationValue,
-            self.brightness: self.brightnessValue,
-            self.contrast: self.contrastValue,
-            self.opacity: self.opacityValue,
-            self.blur: self.blurValue,
-            self.pixelate: self.pixelateValue
-        }
-
-        # Connect the signals to a generic update method
-        for slider, label in self.sliders.items():
-            slider.valueChanged.connect(lambda value, lbl=label: self.bar_update(value, lbl))
-            self.bar_update(slider.value(), label)
-
-        # self.css.textChanged.connect(self.css_finished_edit)
+        self.css.textChanged.connect(self.css_finished_edit)
 
         self.saveDefault.clicked.connect(self.save_default)
 
-        self.setColor.clicked.connect(self.showColorDialog)
+        self.color.clicked.connect(self.showColorDialog)
 
         self.hide_blinking()
         self.hide_shadow()
@@ -211,19 +204,39 @@ class Settings(QWidget):
         self.hide_position()
         self.hide_cursor()
         self.change_color()
-        # self.hide_css()
+        self.hide_css()
 
     def showColorDialog(self):
-        color = QColorDialog.getColor()
+
+        initial = QColor()
+        try:
+            if "#" in self.color.text():
+                raise Exception
+            color = [int(i) for i in self.color.text().split(", ")]
+            initial.setRed(color[0])
+            initial.setGreen(color[1])
+            initial.setBlue(color[2])
+            initial.setAlpha(color[3])
+        except BaseException:
+            initial.setRed(0)
+            initial.setGreen(0)
+            initial.setBlue(0)
+            initial.setAlpha(255)
+
+        color = QColorDialog.getColor(
+            initial=initial,
+            options=QColorDialog.ColorDialogOption.ShowAlphaChannel
+        )
 
         if color.isValid():
-            hex_value = color.name()
-            self.color.setText(hex_value)
+            color = color.getRgb()
+            self.color.setText(", ".join([str(i) for i in color]))
+            self.change_color()
 
     def change_color(self):
         self.colorFrame.setStyleSheet(f"""
         QFrame{{
-            background-color: {self.color.text()};
+            background-color: rgba({self.color.text() if "#" not in self.color.text() else "0, 0, 0, 255"});
             border-bottom-left-radius: 9px;
             border-bottom-right-radius: 5px;
             border-top-left-radius: 9px;
@@ -380,10 +393,10 @@ class Settings(QWidget):
         self.update_value(changed_keys, updating, "blinking", "blinkingGroup.setChecked", "ignore", "is not ignore")
         self.update_value(changed_keys, updating, "talking", "talkingGroup.setChecked", "ignore", "is not ignore")
         self.update_value(changed_keys, updating, "controller", "controllerGroup.setChecked", ["ignore"], "ignore not in")
-        # self.update_value(changed_keys, updating, "use_css", "cssGroup.setChecked", False)
+        self.update_value(changed_keys, updating, "use_css", "cssGroup.setChecked", False)
         self.update_value(changed_keys, updating, "invertAxis", "invertAxis.setChecked", False)
         self.update_value(changed_keys, updating, "cursor", "cursorGroup.setChecked", False)
-        # self.update_value(changed_keys, updating, "css", "css.setPlainText", "")
+        self.update_value(changed_keys, updating, "css", "css.setPlainText", "")
         self.update_value(changed_keys, updating, "cursor", "cursorGroup.setChecked", False)
         self.update_value(changed_keys, updating, "blinking", "blinkOpen.setChecked", "ignore", "blinking_open")
         self.update_value(changed_keys, updating, "blinking", "blinkClosed.setChecked", "ignore", "blinking_closed")
@@ -400,32 +413,27 @@ class Settings(QWidget):
 
         self.update_value(changed_keys, updating, "shadow", "shadowGroup.setChecked", False)
 
-        self.update_value(changed_keys, updating, "color", "color.setText", "#000000")
-        self.update_value(changed_keys, updating, "shadowBlur", "shadowBlur.setValue", 20)
-        self.update_value(changed_keys, updating, "shadowOpacity", "shadowOpacity.setValue", 100)
-        self.update_value(changed_keys, updating, "shadowX", "shadowX.setValue", 0)
-        self.update_value(changed_keys, updating, "shadowY", "shadowY.setValue", 0)
+        self.update_value(changed_keys, updating, "shadowColor", "color.setText", "0, 0, 0, 255")
+        self.update_value(changed_keys, updating, "shadowBlur", "shadowBlur.setValue", 0)
+        # self.update_value(changed_keys, updating, "shadowOpacity", "shadowOpacity.setValue", 100)
+        self.update_value(changed_keys, updating, "shadowX", "shadowX.setValue", 5)
+        self.update_value(changed_keys, updating, "shadowY", "shadowY.setValue", -5)
 
         self.update_value(changed_keys, updating, "filters", "filtersGroup.setChecked", False)
 
-        self.update_value(changed_keys, updating, "blend", "blend.setCurrentText", "source-over")
-        self.update_value(changed_keys, updating, "hue", "hue.setValue", 0)
-        self.update_value(changed_keys, updating, "saturation", "saturation.setValue", 0)
-        self.update_value(changed_keys, updating, "brightness", "brightness.setValue", 0)
-        self.update_value(changed_keys, updating, "contrast", "contrast.setValue", 0)
-        self.update_value(changed_keys, updating, "opacity", "opacity.setValue", 100)
-        self.update_value(changed_keys, updating, "blur", "blur.setValue", 0)
-        self.update_value(changed_keys, updating, "pixelate", "pixelate.setValue", 0)
+        self.update_value(changed_keys, updating, "hue", "hue.setValue", 0.0)
+        self.update_value(changed_keys, updating, "saturation", "saturation.setValue", 100.0)
+        self.update_value(changed_keys, updating, "brightness", "brightness.setValue", 100.0)
+        self.update_value(changed_keys, updating, "contrast", "contrast.setValue", 100.0)
+        self.update_value(changed_keys, updating, "opacity", "opacity.setValue", 100.0)
+        self.update_value(changed_keys, updating, "blur", "blur.setValue", 0.0)
+        self.update_value(changed_keys, updating, "grayscale", "grayscale.setValue", 0.0)
+        self.update_value(changed_keys, updating, "invert", "invert.setValue", 0.0)
+        self.update_value(changed_keys, updating, "sepia", "sepia.setValue", 0.0)
 
-        self.update_value(changed_keys, updating, "grayscale", "grayscale.setChecked", False)
-        self.update_value(changed_keys, updating, "invert", "invert.setChecked", False)
         self.load_animations(changed_keys, updating)
         if not updating:
             self.check_hotkeys()
-
-    def bar_update(self, value, label):
-        label.setText(f"{value}")
-        self.save_current()
 
     def load_animations(self, changed_keys, updating):
         if not updating:
@@ -493,6 +501,20 @@ class Settings(QWidget):
             self.frame_3.hide()
             self.blinkingGroup.setStyleSheet(
                 "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
+        self.save_current()
+
+    def hide_css(self):
+        if self.cssGroup.isChecked():
+            self.frame_32.show()
+            self.cssGroup.setStyleSheet("")
+        else:
+            self.frame_32.hide()
+            self.cssGroup.setStyleSheet(
+                "QGroupBox::title{border-bottom-left-radius: 9px;border-bottom-right-radius: 9px;}")
+        self.save_current()
+
+    def css_finished_edit(self):
+        self.parameters["css"] = self.css.toPlainText()
         self.save_current()
 
     def hide_shadow(self):
@@ -658,33 +680,31 @@ class Settings(QWidget):
         self.parameters['animation_pacing_talking'] = self.talking_animation_easing.currentText()
         self.parameters['animation_pacing_screaming'] = self.screaming_animation_easing.currentText()
 
-        # self.parameters["use_css"] = True if self.cssGroup.isChecked() else False
-        # self.parameters["css"] = self.css.toPlainText()
+        self.parameters["use_css"] = True if self.cssGroup.isChecked() else False
+        self.parameters["css"] = self.css.toPlainText()
         self.parameters["blinking"] = self.getBlinking() if self.blinkingGroup.isChecked() else "ignore"
         self.parameters["talking"] = self.getTalking()
         self.parameters["controller"] = self.getController() if self.controllerGroup.isChecked() else ["ignore"]
 
         self.parameters["shadow"] = self.shadowGroup.isChecked()
 
-        self.parameters["color"] = self.color.text()
+        self.parameters["shadowColor"] = self.color.text()
         self.parameters["shadowBlur"] = self.shadowBlur.value()
-        self.parameters["shadowOpacity"] = self.shadowOpacity.value()
+        # self.parameters["shadowOpacity"] = self.shadowOpacity.value()
         self.parameters["shadowX"] = self.shadowX.value()
         self.parameters["shadowY"] = self.shadowY.value()
 
         self.parameters["filters"] = self.filtersGroup.isChecked()
 
-        self.parameters["blend"] = self.blend.currentText()
         self.parameters["hue"] = self.hue.value()
         self.parameters["saturation"] = self.saturation.value()
         self.parameters["brightness"] = self.brightness.value()
         self.parameters["contrast"] = self.contrast.value()
         self.parameters["opacity"] = self.opacity.value()
         self.parameters["blur"] = self.blur.value()
-        self.parameters["pixelate"] = self.pixelate.value()
-
-        self.parameters["grayscale"] = self.grayscale.isChecked()
-        self.parameters["invert"] = self.invert.isChecked()
+        self.parameters["grayscale"] = self.grayscale.value()
+        self.parameters["invert"] = self.invert.value()
+        self.parameters["sepia"] = self.sepia.value()
 
         self.parameters["forced_mouse_tracking"] = 1 if self.forced_mouse_tracking.isChecked() else 0
 

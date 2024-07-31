@@ -6,105 +6,26 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>275</width>
-    <height>461</height>
+    <width>270</width>
+    <height>371</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <property name="styleSheet">
-   <string notr="true">QWidget{
-	background: #b8cdee;
-	color: black;
-}
-* QToolTip {
-	background-color: pink;
-}
-*{
-	color: black;
-}
-
-QGroupBox {
-border-color: #FF17365D;
-font-size: 14px;
-border-radius: 15px;
-}
-
-QGroupBox::title {
-border-top-left-radius: 9px;
-border-top-right-radius: 9px;
-padding: 2px 20px;
-background-color: #FF17365D;
-color: rgb(255, 255, 255);
-}
-
-QFrame{
-	border-top-right-radius: 9px;
-	border-bottom-right-radius: 9px;
-	border-bottom-left-radius: 9px;
-	border-top-left-radius: 9px;
-	background-color: rgb(255, 255, 255);
-}
-
-#creditsFrame{
-	background-color: rgba(255, 255, 255, 0);
-}</string>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="leftMargin">
-    <number>9</number>
+    <number>0</number>
    </property>
    <property name="topMargin">
-    <number>9</number>
+    <number>0</number>
    </property>
    <property name="rightMargin">
-    <number>9</number>
+    <number>0</number>
    </property>
    <property name="bottomMargin">
-    <number>9</number>
+    <number>0</number>
    </property>
-   <item>
-    <widget class="QFrame" name="horizontalFrame">
-     <layout class="QHBoxLayout" name="horizontalLayout_55">
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
-      <item alignment="Qt::AlignLeft">
-       <widget class="QPushButton" name="title">
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>Assets/wings/wings_001.png</string>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>../Assets/wings/thumbs/wings_001.png</normaloff>../Assets/wings/thumbs/wings_001.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="flat">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item>
     <widget class="QTabWidget" name="tabWidget_7">
      <property name="toolTip">
@@ -192,6 +113,77 @@ QTabWidget::pane { border: 0; }</string>
           <property name="bottomMargin">
            <number>6</number>
           </property>
+          <item row="1" column="0">
+           <widget class="QComboBox" name="modeKeyboard">
+            <item>
+             <property name="text">
+              <string>Mode...</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Toggle</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Enable</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Disable</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Timer</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="keyboardTimer">
+            <property name="toolTip">
+             <string>1000 ms = 1 second</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="suffix">
+             <string> ms</string>
+            </property>
+            <property name="maximum">
+             <number>999999999</number>
+            </property>
+            <property name="singleStep">
+             <number>1000</number>
+            </property>
+            <property name="value">
+             <number>1000</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="2">
+           <widget class="QPushButton" name="savekeyboard">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="text">
+             <string>Save</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</iconset>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0" colspan="2">
            <widget class="QFrame" name="frame_3">
             <property name="styleSheet">
@@ -241,84 +233,6 @@ QTabWidget::pane { border: 0; }</string>
             </layout>
            </widget>
           </item>
-          <item row="1" column="0" colspan="2">
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QComboBox" name="modeKeyboard">
-              <item>
-               <property name="text">
-                <string>Mode...</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Toggle</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Enable</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Disable</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Timer</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="keyboardTimer">
-              <property name="toolTip">
-               <string>1000 ms = 1 second</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-              <property name="suffix">
-               <string> ms</string>
-              </property>
-              <property name="maximum">
-               <number>999999999</number>
-              </property>
-              <property name="singleStep">
-               <number>1000</number>
-              </property>
-              <property name="value">
-               <number>1000</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="savekeyboard">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="icon">
-               <iconset>
-                <normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</iconset>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
          </layout>
         </widget>
        </item>
@@ -332,8 +246,8 @@ QTabWidget::pane { border: 0; }</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>257</width>
-            <height>298</height>
+            <width>268</width>
+            <height>227</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_42">
@@ -463,6 +377,57 @@ QTabWidget::pane { border: 0; }</string>
           <property name="bottomMargin">
            <number>6</number>
           </property>
+          <item row="9" column="0">
+           <widget class="QComboBox" name="modeMidi">
+            <item>
+             <property name="text">
+              <string>Mode...</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Toggle</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Enable</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Disable</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Timer</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QSpinBox" name="midiTimer">
+            <property name="toolTip">
+             <string>1000 ms = 1 second</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="suffix">
+             <string> ms</string>
+            </property>
+            <property name="maximum">
+             <number>999999999</number>
+            </property>
+            <property name="singleStep">
+             <number>1000</number>
+            </property>
+            <property name="value">
+             <number>1000</number>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0" colspan="2">
            <widget class="QFrame" name="frame_2">
             <property name="minimumSize">
@@ -472,7 +437,7 @@ QTabWidget::pane { border: 0; }</string>
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">#frame_2{
+             <string notr="true">QFrame{
 	border-radius: 9px;
 	background-color: rgba(0, 0, 0, 44);
 }</string>
@@ -616,83 +581,25 @@ color: rgb(255, 255, 255);</string>
             </layout>
            </widget>
           </item>
-          <item row="9" column="0" colspan="2">
-           <layout class="QHBoxLayout" name="horizontalLayout_5">
-            <property name="topMargin">
-             <number>0</number>
+          <item row="10" column="0" colspan="2">
+           <widget class="QPushButton" name="saveMidi">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-            <item>
-             <widget class="QComboBox" name="modeMidi">
-              <item>
-               <property name="text">
-                <string>Mode...</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Toggle</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Enable</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Disable</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Timer</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="midiTimer">
-              <property name="toolTip">
-               <string>1000 ms = 1 second</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-              <property name="suffix">
-               <string> ms</string>
-              </property>
-              <property name="maximum">
-               <number>999999999</number>
-              </property>
-              <property name="singleStep">
-               <number>1000</number>
-              </property>
-              <property name="value">
-               <number>1000</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="saveMidi">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="icon">
-               <iconset>
-                <normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</iconset>
-              </property>
-             </widget>
-            </item>
-           </layout>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="text">
+             <string>Save</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</iconset>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -707,8 +614,8 @@ color: rgb(255, 255, 255);</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>257</width>
-            <height>214</height>
+            <width>268</width>
+            <height>143</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_47">
@@ -838,10 +745,61 @@ color: rgb(255, 255, 255);</string>
           <property name="bottomMargin">
            <number>6</number>
           </property>
+          <item row="6" column="0">
+           <widget class="QComboBox" name="modeTwitch">
+            <item>
+             <property name="text">
+              <string>Mode...</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Toggle</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Enable</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Disable</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Timer</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QSpinBox" name="twitchTimer">
+            <property name="toolTip">
+             <string>1000 ms = 1 second</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="suffix">
+             <string> ms</string>
+            </property>
+            <property name="maximum">
+             <number>999999999</number>
+            </property>
+            <property name="singleStep">
+             <number>1000</number>
+            </property>
+            <property name="value">
+             <number>1000</number>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0" colspan="2">
            <widget class="QFrame" name="frame">
             <property name="styleSheet">
-             <string notr="true">#frame{
+             <string notr="true">QFrame{
 	border-radius: 9px;
 	background-color: rgba(0, 0, 0, 44);
 }</string>
@@ -1001,7 +959,7 @@ color: rgb(255, 255, 255);</string>
                    <number>1</number>
                   </property>
                   <property name="maximum">
-                   <number>100000</number>
+                   <number>999999999</number>
                   </property>
                  </widget>
                 </item>
@@ -1023,10 +981,10 @@ color: rgb(255, 255, 255);</string>
                    <number>1</number>
                   </property>
                   <property name="maximum">
-                   <number>100000</number>
+                   <number>999999999</number>
                   </property>
                   <property name="value">
-                   <number>100000</number>
+                   <number>999999999</number>
                   </property>
                  </widget>
                 </item>
@@ -1094,7 +1052,7 @@ color: rgb(255, 255, 255);</string>
              <item>
               <widget class="QFrame" name="frameMessageTwitch">
                <property name="styleSheet">
-                <string notr="true">#frameMessageTwitch{
+                <string notr="true">QFrame{
 	border-radius: 9px;
 	background-color: rgba(0, 0, 0, 0);
 }</string>
@@ -1215,80 +1173,22 @@ color: rgb(255, 255, 255);</string>
             </layout>
            </widget>
           </item>
-          <item row="1" column="0" colspan="2">
-           <layout class="QHBoxLayout" name="horizontalLayout_4">
-            <property name="topMargin">
-             <number>0</number>
+          <item row="7" column="0" colspan="2">
+           <widget class="QPushButton" name="saveTwitch">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-            <item>
-             <widget class="QComboBox" name="modeTwitch">
-              <item>
-               <property name="text">
-                <string>Mode...</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Toggle</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Enable</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Disable</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Timer</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="twitchTimer">
-              <property name="toolTip">
-               <string>1000 ms = 1 second</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-              <property name="suffix">
-               <string> ms</string>
-              </property>
-              <property name="maximum">
-               <number>999999999</number>
-              </property>
-              <property name="singleStep">
-               <number>1000</number>
-              </property>
-              <property name="value">
-               <number>1000</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="saveTwitch">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="icon">
-               <iconset>
-                <normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</iconset>
-              </property>
-             </widget>
-            </item>
-           </layout>
+            <property name="text">
+             <string>Save</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</iconset>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -1303,8 +1203,8 @@ color: rgb(255, 255, 255);</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>257</width>
-            <height>143</height>
+            <width>268</width>
+            <height>72</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_51">

@@ -1,33 +1,32 @@
-try:
-    from Core.ShortcutsManager import MidiListener, KeyboardListener, TwitchAPI, ShortcutsDialog, MouseTracker, WebSocket
-    from PyQt6.QtGui import QIcon, QSyntaxHighlighter, QTextCharFormat, QColor, QImage, QPixmap
-    from PyQt6.QtCore import QCoreApplication, QEasingCurve, QThreadPool, pyqtSlot
-    from Core.imageGallery import ImageGallery, ExpressionSelector, ModelGallery
-    from Core.Viewer import LayeredImageViewer, Worker
-    from Core.audioManager import MicrophoneVolumeWidget
-    from PIL import Image, ImageSequence, ImageOps
-    from Core.Settings import SettingsToolBox
-    from PyQt6 import QtWidgets, uic, QtCore
-    from shutil import copy as copy_file
-    from collections import Counter
-    from pathlib import Path
-    import numpy as np
-    import subprocess
-    import webbrowser
-    import requests
-    import zipfile
-    import psutil
-    import shutil
-    import json
-    import copy
-    import mido
-    import sys
-    import os
-    import re
-except ModuleNotFoundError as e:
-    raise SystemExit(f"Requires {e.name} module. Run 'pip install {e.name}' and try again.")
+from Core.ShortcutsManager import (
+    MidiListener, KeyboardListener, TwitchAPI, ShortcutsDialog,
+    MouseTracker, WebSocket, HTTPServerThread
+)
+from PyQt6.QtGui import QIcon, QSyntaxHighlighter, QTextCharFormat, QColor, QImage, QPixmap
+from PyQt6.QtCore import QCoreApplication, QEasingCurve, QThreadPool, pyqtSlot
+from Core.imageGallery import ImageGallery, ExpressionSelector, ModelGallery
+from Core.Viewer import LayeredImageViewer, Worker
+from Core.audioManager import MicrophoneVolumeWidget
+from PIL import Image, ImageSequence, ImageOps
+from Core.Settings import SettingsToolBox
+from PyQt6 import QtWidgets, uic, QtCore
+from shutil import copy as copy_file
+from collections import Counter
+from pathlib import Path
+import subprocess
+import webbrowser
+import requests
+import zipfile
+import psutil
+import shutil
+import json
+import copy
+import mido
+import sys
+import os
+import re
 
-current_version = "v2.0.0"
+current_version = "v1.10.0"
 repo_owner = "Gemmstone"
 repo_name = "PyNGtuber"
 
@@ -146,7 +145,12 @@ def update_directory(source_dir, dest_dir):
 
 exe_dir = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
 res_dir = exe_dir
-if not os.path.isfile(os.path.join(exe_dir, ".gitignore")):
+prod = True if not os.path.isfile(os.path.join(exe_dir, ".gitignore")) else False
+
+os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = '4864' if prod else '4854'
+os.environ['QTWEBENGINE_CHROMIUM_FLAGS'] = '--no-sandbox'
+
+if prod:
     process = psutil.Process(os.getpid())
     if os.name == 'posix':
         if sys.platform == 'darwin':
@@ -498,16 +502,15 @@ class FileParametersDefault:
             "shadowX": 0,
             "shadowY": 0,
             "filters": False,
-            "blend": "source-over",
-            "hue": 0,
-            "saturation": 0,
-            "brightness": 0,
-            "contrast": 0,
-            "opacity": 100,
-            "blur": 0,
-            "pixelate": 0,
-            "grayscale": False,
-            "invert": False,
+            "hue": 0.0,
+            "saturation": 100.0,
+            "brightness": 100.0,
+            "contrast": 100.0,
+            "opacity": 100.0,
+            "blur": 0.0,
+            "grayscale": 0.0,
+            "invert": 0.0,
+            "sepia": 0.0,
             "forced_mouse_tracking": 0
         }
         self.memory_store = {}
@@ -551,6 +554,22 @@ class FileParametersDefault:
         if self.in_memory_only:
             return iter(self.memory_store)
 
+    def get_shortcuts(self):
+        for root, dirs, files in os.walk(os.path.join(res_dir, "Assets")):
+            for filename in files:
+                if filename.endswith(".json"):
+                    data_json_path = os.path.join(root, filename)
+                    with open(data_json_path, 'r') as json_file:
+                        data = json.load(json_file)
+                        shortcut = data.get("hotkeys", [])
+
+                        data_json_path = os.path.join(
+                            "Assets", copy.deepcopy(data_json_path).split(f"Assets{os.path.sep}")[-1]
+                        )
+
+                        for hotkey in shortcut:
+                            yield data_json_path.replace(".json", "", -1), hotkey
+
     def __len__(self):
         if self.in_memory_only:
             return len(self.memory_store)
@@ -567,6 +586,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.hidden_ui = False
         uic.loadUi(os.path.join(exe_dir, f"UI", "main.ui"), self)
         self.setWindowFlag(QtCore.Qt.WindowType.WindowMinimizeButtonHint)
+
+        self.tabWidget_2.setTabVisible(2, False)
 
         self.settings_json_file = os.path.join(res_dir, "Data", "settings.json")
         try:
@@ -587,7 +608,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.cssCode_highlighter = SyntaxHighlighter(self.cssCode.document(), "cssCode")
         self.animCode_highlighter = SyntaxHighlighter(self.animCode.document(), "cssCode")
 
-        self.viewer = LayeredImageViewer(exe_dir=res_dir, hw_acceleration=self.settings.get("hardware acceleration", False))
+        self.general_shadow = None
+        self.general_filters = None
+
+        self.viewer = LayeredImageViewer(
+            exe_dir=res_dir,
+            enabled=self.settings.get("local_canvas_source_toggle", True),
+            hw_acceleration=self.settings.get("hardware acceleration", False)
+        )
         self.viewer.failed_to_load_images.connect(self.retry_load)
         self.viewer.loadFinishedSignal.connect(self.reboot_audio)
         self.viewer.div_count_signal.connect(self.update_div_count)
@@ -619,7 +647,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.js_file = os.path.join(res_dir, "Viewer", "script.js")
         self.css_file = os.path.join(res_dir, "Viewer", "styles.css")
-        self.anim_file = os.path.join(res_dir, "Viewer", "animations.js")
+        self.anim_file = os.path.join(res_dir, "Viewer", "animations.css")
         self.html_file = os.path.join(res_dir, "Viewer", "viewer.html")
 
         self.js_file_default = os.path.join(exe_dir, "Viewer", "script.js")
@@ -767,13 +795,26 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.cameraSelector.valueChanged.connect(self.update_settings)
         self.alphaSelector.valueChanged.connect(self.update_settings)
+        self.speed_movement.valueChanged.connect(self.update_settings)
         self.scale_x.valueChanged.connect(self.update_settings)
         self.scale_camera_x.valueChanged.connect(self.update_settings)
         self.scale_y.valueChanged.connect(self.update_settings)
         self.scale_camera_y.valueChanged.connect(self.update_settings)
 
+        self.tracking_position_pacing.currentIndexChanged.connect(self.update_settings)
+
+        self.move_idle_random.toggled.connect(self.update_settings)
+        self.move_talking_random.toggled.connect(self.update_settings)
+        self.move_screaming_random.toggled.connect(self.update_settings)
+
+        self.scale_random_x.valueChanged.connect(self.update_settings)
+        self.scale_random_y.valueChanged.connect(self.update_settings)
+
         self.noise_reduction.toggled.connect(self.change_noise_reduction)
         self.sample_rate.valueChanged.connect(self.change_sample_rate)
+
+        self.local_obs_source_toggle.toggled.connect(self.hide_local_obs_source_toggle)
+        self.remote_obs_source_toggle.toggled.connect(self.hide_remote_obs_source_toggle)
 
         self.webSocketToggle.toggled.connect(self.hide_webSocket)
         self.auto_flip.toggled.connect(self.auto_flip_hide)
@@ -814,7 +855,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.update_animations(self.settings["animations"])
 
         self.expressionSelector = ExpressionSelector("Assets")
-        self.scrollArea_5.setWidget(self.expressionSelector)
+        self.frame_46.layout().addWidget(self.expressionSelector)
 
         self.savedAvatars = [folder for folder in os.listdir(os.path.join(res_dir, "Models", "Avatars")) if "." not in folder]
         self.modelGallery = ModelGallery(models_list=self.savedAvatars, models_type="Avatars", exe_dir=exe_dir, res_dir=res_dir)
@@ -846,6 +887,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.saveAvatar.clicked.connect(self.save_avatar)
         self.saveExpression.clicked.connect(self.save_expression)
 
+        self.color_selector.clicked.connect(self.showColorDialog)
+
         self.createCategory.clicked.connect(self.CreateCategory)
         self.createCollection.clicked.connect(self.CreateCollection)
         self.openFolder.clicked.connect(self.OpenAssetsFolder)
@@ -868,15 +911,47 @@ class MainWindow(QtWidgets.QMainWindow):
         self.generalScale.valueChanged.connect(self.on_zoom_delta_changed)
         self.resetZoom.clicked.connect(lambda: self.generalScale.setValue(100))
 
+        self.shadow_toggle.toggled.connect(self.hide_shadow)
+        self.shadowBlur.valueChanged.connect(self.update_shadow)
+        self.shadowX.valueChanged.connect(self.update_shadow)
+        self.shadowY.valueChanged.connect(self.update_shadow)
+
+        self.filters_toggle.toggled.connect(self.hide_filters)
+        self.hue.valueChanged.connect(self.update_filters)
+        self.saturation.valueChanged.connect(self.update_filters)
+        self.brightness.valueChanged.connect(self.update_filters)
+        self.contrast.valueChanged.connect(self.update_filters)
+        self.opacity.valueChanged.connect(self.update_filters)
+        self.blur.valueChanged.connect(self.update_filters)
+        self.grayscale.valueChanged.connect(self.update_filters)
+        self.invert.valueChanged.connect(self.update_filters)
+        self.sepia.valueChanged.connect(self.update_filters)
+
         self.mouseTrackingToggle.toggled.connect(self.mouse_tracking_changed)
+        self.randomTrackingToggle.toggled.connect(self.mouse_tracking_changed)
         self.faceTrackingToggle.toggled.connect(self.mouse_tracking_changed)
         self.disableTrackingToggle.toggled.connect(self.mouse_tracking_changed)
         self.transparency.toggled.connect(self.being_edited)
         self.performance.toggled.connect(lambda: self.update_viewer(self.current_files, update_gallery=True))
 
+        self.local_canvas_source_toggle.toggled.connect(self.toggle_viewer)
+
         self.toggle_editor()
         self.change_audio_engine()
         self.being_edited()
+
+        self.hide_webSocket()
+        self.auto_flip_hide()
+        self.change_noise_reduction()
+
+        self.hide_local_obs_source_toggle()
+        self.hide_remote_obs_source_toggle()
+
+        self.toggle_track_mouse_x()
+        self.toggle_track_mouse_y()
+
+        self.hide_shadow()
+        self.hide_filters()
 
         self.mouse_tracker = MouseTracker(
             camera=self.settings.get("camera", True),
@@ -890,7 +965,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.forced_mouse_tracker.mouse_position.connect(self.on_mouse_position_forced)
         self.mouse_tracking_changed()
 
-        self.web_socket = WebSocket(res_dir, self.webSocketPort.value())
+        self.web_socket = WebSocket(
+            res_dir,
+            self.webSocketPort.value() if prod else self.webSocketPort.value() + 10
+        )
         self.web_socket.model_command.connect(self.load_model)
         self.web_socket.reload_images.connect(self.reload_images)
         self.web_socket.asset_command.connect(self.shortcut_received)
@@ -898,16 +976,35 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.webSocketToggle.isChecked():
             self.web_socket.start()
 
-        self.web_socket_obs = WebSocket(res_dir, 4863)
+        self.web_socket_obs = WebSocket(res_dir, 4863 if prod else 4853)
         self.web_socket_obs.reload_images.connect(self.reload_images)
-        self.web_socket_obs.start()
+        if self.local_obs_source_toggle.isChecked():
+            self.web_socket_obs.start()
 
         self.obs_address.setAccessibleName(
             f"file:///{self.html_file}?server_address={self.web_socket_obs.ip_address}:{self.web_socket_obs.port}"
         )
+
+        self.web_socket_obs_remote = WebSocket(res_dir, False, 4861 if prod else 4851)
+        self.web_socket_obs_remote.reload_images.connect(self.reload_images)
+
+        self.html_server = HTTPServerThread(self.web_socket_obs_remote.ip_address, 4862 if prod else 4852, res_dir)
+        self.html_server.server_started.connect(lambda: self.obs_address_remote.setAccessibleName(
+            f"http://{self.web_socket_obs_remote.ip_address}:{self.html_server.port}/Viewer/viewer.html"
+            f"?server_address={self.web_socket_obs_remote.ip_address}:{self.web_socket_obs_remote.port}"
+        ))
+        if self.remote_obs_source_toggle.isChecked():
+            self.web_socket_obs_remote.start()
+            self.html_server.start()
+
         self.obs_address.clicked.connect(self.copyUrl)
+        self.obs_address_remote.clicked.connect(self.copyUrl)
 
         self.viewer.obs_websocket = self.web_socket_obs
+        self.viewer.obs_websocket_remote = self.web_socket_obs_remote
+
+        self.update_shadow(False)
+        self.update_filters(False)
 
         self.check_for_update()
         self.update_viewer(self.current_files, update_gallery=True)
@@ -915,11 +1012,75 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.second_window_toggle.isChecked():
             self.hidden_window.show()
 
+    def reboot_window(self):
+        pass
+
+    def update_shadow(self, update=True):
+        self.general_shadow = None
+        if self.shadow_toggle.isChecked():
+            self.general_shadow = {
+                "shadowColor": self.color_selector.text(),
+                "shadowBlur": self.shadowBlur.value(),
+                "shadowX": self.shadowX.value(),
+                "shadowY": self.shadowY.value()
+            }
+        if update:
+            self.update_settings()
+            self.update_viewer(self.current_files)
+
+    def update_filters(self, update=True):
+        self.general_filters = None
+        if self.filters_toggle.isChecked():
+            self.general_filters = {
+                "hue": self.hue.value(),
+                "saturation": self.saturation.value(),
+                "brightness": self.brightness.value(),
+                "contrast": self.contrast.value(),
+                "opacity": self.opacity.value(),
+                "blur": self.blur.value(),
+                "grayscale": self.grayscale.value(),
+                "invert": self.invert.value(),
+                "sepia": self.sepia.value()
+            }
+        if update:
+            self.update_settings()
+            self.update_viewer(self.current_files)
+
+    def toggle_viewer(self):
+        last = copy.deepcopy(self.viewer.enabled)
+        if self.local_canvas_source_toggle.isChecked():
+            self.viewer.enabled = True
+            if not last:
+                self.update_viewer(self.current_files)
+        else:
+            self.viewer.enabled = False
+            if last:
+                self.viewer.page().runJavaScript(f'document.body.style.zoom = "100%";')
+                self.viewer.page().runJavaScript(f'addImagesToCanvas({str([])}, null)')
+        self.update_settings()
+
+    def hide_local_obs_source_toggle(self):
+        if self.local_obs_source_toggle.isChecked():
+            self.obs_address.show()
+        else:
+            self.obs_address.hide()
+        self.update_settings()
+
+    def hide_remote_obs_source_toggle(self):
+        if self.remote_obs_source_toggle.isChecked():
+            self.obs_address_remote.show()
+            self.frame_71.show()
+        else:
+            self.obs_address_remote.hide()
+            self.frame_71.hide()
+        self.update_settings()
+
     def copyUrl(self):
         button = self.sender()
+        text = button.text()
         QtWidgets.QApplication.clipboard().setText(button.accessibleName())
         button.setText("Copied!")
-        QtCore.QTimer.singleShot(1500, lambda: button.setText("Copy URL"))
+        QtCore.QTimer.singleShot(1500, lambda: button.setText(text))
 
     def hide_webSocket(self):
         if self.webSocketToggle.isChecked():
@@ -994,7 +1155,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def being_edited(self):
         last = copy.deepcopy(self.edited)
 
-        if self.tabWidget_2.currentIndex() == 0 or not self.transparency.isChecked():
+        if self.tabWidget_2.currentIndex() != 1 or not self.transparency.isChecked():
             self.edited = None
         else:
             current = self.SettingsGallery.currentWidget()
@@ -1057,18 +1218,27 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.forced_mouse_tracker.start()
             self.frame_34.show()
             self.frame_25.show()
+            self.frame_42.hide()
+            self.frame_37.show()
             self.cameraFeedFrame.hide()
 
             self.scale_camera_x.hide()
             self.scale_x.show()
             self.scale_camera_y.hide()
+
+            self.scale_random_x.hide()
+            self.scale_random_y.hide()
+
             self.scale_y.show()
+            self.frame_56.hide()
         elif self.faceTrackingToggle.isChecked():
             self.mouse_tracker.set_tracking_mode("face")
             if not self.mouse_tracker._running:
                 self.mouse_tracker.start()
             if not self.forced_mouse_tracker._running:
                 self.forced_mouse_tracker.start()
+            self.frame_37.show()
+            self.frame_42.show()
             self.frame_34.show()
             self.frame_25.show()
             self.cameraFeedFrame.show()
@@ -1076,15 +1246,43 @@ class MainWindow(QtWidgets.QMainWindow):
             self.scale_camera_x.show()
             self.scale_x.hide()
             self.scale_camera_y.show()
+
+            self.scale_random_x.hide()
+            self.scale_random_y.hide()
+
             self.scale_y.hide()
+            self.frame_56.hide()
+        elif self.randomTrackingToggle.isChecked():
+            self.mouse_tracker.set_tracking_mode("random")
+            if not self.mouse_tracker._running:
+                self.mouse_tracker.start()
+            if not self.forced_mouse_tracker._running:
+                self.forced_mouse_tracker.start()
+            self.frame_34.show()
+            self.frame_25.show()
+            self.frame_42.hide()
+            self.frame_37.show()
+            self.cameraFeedFrame.hide()
+
+            self.scale_camera_x.hide()
+            self.scale_x.hide()
+            self.scale_camera_y.hide()
+
+            self.scale_random_x.show()
+            self.scale_random_y.show()
+            self.scale_y.hide()
+            self.frame_56.show()
         else:
             if self.mouse_tracker._running:
                 self.mouse_tracker.stop()
             if self.forced_mouse_tracker._running:
                 self.forced_mouse_tracker.stop()
+            self.frame_42.hide()
+            self.frame_37.hide()
             self.frame_34.hide()
             self.frame_25.hide()
             self.cameraFeedFrame.hide()
+            self.frame_56.hide()
         self.on_mouse_position_changed({"x": 0, "y": 0})
         self.update_settings()
 
@@ -1129,12 +1327,18 @@ class MainWindow(QtWidgets.QMainWindow):
             )
             # z = int(position.get('z', 0.0000))
 
-            scaled_x = x * (
-                self.scale_camera_x.value() if self.faceTrackingToggle.isChecked() else self.scale_x.value()
-            )
-            scaled_y = y * (
-                self.scale_camera_y.value() if self.faceTrackingToggle.isChecked() else self.scale_y.value()
-            )
+            if self.faceTrackingToggle.isChecked():
+                scale_x = self.scale_camera_x.value()
+                scale_y = self.scale_camera_y.value()
+            elif self.randomTrackingToggle.isChecked():
+                scale_x = self.scale_random_x.value()
+                scale_y = self.scale_random_y.value()
+            else:
+                scale_x = self.scale_x.value()
+                scale_y = self.scale_y.value()
+
+            scaled_x = x * scale_x
+            scaled_y = y * scale_y
 
             if self.faceTrackingToggle.isChecked():
                 if self.auto_flip.isChecked():
@@ -1144,12 +1348,30 @@ class MainWindow(QtWidgets.QMainWindow):
                     elif scaled_x <= -offset:
                         self.flipCanvasToggleH.setChecked(True)
 
+            if self.randomTrackingToggle.isChecked():
+                match self.status_audio:
+                    case 0:
+                        if not self.move_idle_random.isChecked():
+                            scaled_x = 0
+                            scaled_y = 0
+                    case 1:
+                        if not self.move_talking_random.isChecked():
+                            scaled_x = 0
+                            scaled_y = 0
+                    case 2:
+                        if not self.move_screaming_random.isChecked():
+                            scaled_x = 0
+                            scaled_y = 0
+
+            pacing = self.tracking_position_pacing.currentText()
+            speed = self.speed_movement.value()
+
             self.viewer.runJavaScript(
-                f"try{{cursorPosition({scaled_x}, {scaled_y}, 0);}}catch(e){{}}"""
+                f"try{{cursorPosition({scaled_x}, {scaled_y}, 0, '{pacing}', {speed});}}catch(e){{}}"""
             )
             if self.second_window_toggle.isChecked():
                 self.hidden_window.viewer.page().runJavaScript(
-                    f"try{{cursorPosition({scaled_x}, {scaled_y}, 0);}}catch(e){{}}"""
+                    f"try{{cursorPosition({scaled_x}, {scaled_y}, 0, '{pacing}', {speed});}}catch(e){{}}"""
                 )
 
             self.label_28.setText(f"X: {scaled_x}, Y: {scaled_y*-1} (Scaled)")
@@ -1163,12 +1385,15 @@ class MainWindow(QtWidgets.QMainWindow):
             scaled_x = x * self.scale_x.value()
             scaled_y = y * self.scale_y.value()
 
+            pacing = self.tracking_position_pacing.currentText()
+            speed = self.speed_movement.value()
+
             self.viewer.runJavaScript(
-                f"try{{cursorPosition({scaled_x}, {scaled_y}, 1);}}catch(e){{}}"""
+                f"try{{cursorPosition({scaled_x}, {scaled_y}, 1, '{pacing}', {speed});}}catch(e){{}}"""
             )
             if self.second_window_toggle.isChecked():
                 self.hidden_window.viewer.page().runJavaScript(
-                    f"try{{cursorPosition({scaled_x}, {scaled_y}, 1);}}catch(e){{}}"""
+                    f"try{{cursorPosition({scaled_x}, {scaled_y}, 1, '{pacing}', {speed});}}catch(e){{}}"""
                 )
 
     def on_zoom_delta_changed(self):
@@ -1370,6 +1595,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.audio_engine.setCurrentText(self.settings.get("audio engine", "pyaudio"))
         self.mouseTrackingToggle.setChecked(self.settings.get("mouse tracking", "mouse") == "mouse")
         self.faceTrackingToggle.setChecked(self.settings.get("mouse tracking", "mouse") == "face")
+        self.randomTrackingToggle.setChecked(self.settings.get("mouse tracking", "mouse") == "random")
         self.disableTrackingToggle.setChecked(self.settings.get("mouse tracking", "mouse") == "disable")
         self.hw_acceleration.setChecked(self.settings.get("hardware acceleration", True))
         self.track_mouse_x.setChecked(self.settings.get("track_mouse_x", True))
@@ -1377,28 +1603,80 @@ class MainWindow(QtWidgets.QMainWindow):
         self.invert_mouse_x.setChecked(self.settings.get("invert_mouse_x", True))
         self.invert_mouse_y.setChecked(self.settings.get("invert_mouse_y", True))
         self.performance.setChecked(self.settings.get("performance", False))
+        self.second_window_toggle.setChecked(self.settings.get("second_window_toggle", False))
         self.cameraSelector.setValue(self.settings.get("camera", 0))
         self.alphaSelector.setValue(self.settings.get("target_fps", 20))
+        self.speed_movement.setValue(self.settings.get("speed_movement", 0.1))
         self.privacy_mode.setChecked(self.settings.get("privacy", True))
         self.scale_x.setValue(self.settings.get("scale_x", 1))
         self.scale_camera_x.setValue(self.settings.get("scale_camera_x", 100))
         self.scale_y.setValue(self.settings.get("scale_y", 1))
+
+        self.general_shadow = self.settings.get("shadow", None)
+        if self.general_shadow is not None:
+            self.shadow_toggle.setChecked(True)
+            self.color_selector.setText(self.general_shadow["shadowColor"])
+            self.shadowBlur.setValue(self.general_shadow["shadowBlur"])
+            self.shadowX.setValue(self.general_shadow["shadowX"])
+            self.shadowY.setValue(self.general_shadow["shadowY"])
+        else:
+            self.shadow_toggle.setChecked(False)
+            self.color_selector.setText("0, 0, 0, 255")
+            self.shadowBlur.setValue(0)
+            self.shadowX.setValue(0)
+            self.shadowY.setValue(0)
+
+        self.general_filters = self.settings.get("shadow", None)
+        if self.general_filters is not None:
+            self.filters_toggle.setChecked(True)
+            self.hue.setValue(self.general_filters["hue"]),
+            self.saturation.setValue(self.general_filters["saturation"]),
+            self.brightness.setValue(self.general_filters["brightness"]),
+            self.contrast.setValue(self.general_filters["contrast"]),
+            self.opacity.setValue(self.general_filters["opacity"]),
+            self.blur.setValue(self.general_filters["blur"]),
+            self.grayscale.setValue(self.general_filters["grayscale"]),
+            self.invert.setValue(self.general_filters["invert"]),
+            self.sepia.setValue(self.general_filters["sepia"])
+        else:
+            self.filters_toggle.setChecked(False)
+            self.hue.setValue(0.0)
+            self.saturation.setValue(100.0)
+            self.brightness.setValue(100.0)
+            self.contrast.setValue(100.0)
+            self.opacity.setValue(100.0)
+            self.blur.setValue(0.0)
+            self.grayscale.setValue(0.0)
+            self.invert.setValue(0.0)
+            self.sepia.setValue(0.0)
+
+        self.tracking_position_pacing.setCurrentText(self.settings.get("tracking_position_pacing", "Linear"))
+
         self.scale_camera_y.setValue(self.settings.get("scale_camera_y", 5))
+        self.scale_random_x.setValue(self.settings.get("scale_random_x", 100))
+        self.scale_random_y.setValue(self.settings.get("scale_random_y", 100))
+
+        self.move_idle_random.setChecked(self.settings.get("move_idle_random", False))
+        self.move_talking_random.setChecked(self.settings.get("move_talking_random", True))
+        self.move_screaming_random.setChecked(self.settings.get("move_screaming_random", True))
+
         self.flip_animation_speed.setValue(self.settings.get("flip_animation_speed", 0.5000))
         self.flip_animation_pacing.setCurrentText(self.settings.get("flip_animation_pacing", "ease-in-out"))
 
+        self.local_obs_source_toggle.setChecked(self.settings.get("local_obs_source_toggle", False))
+        self.remote_obs_source_toggle.setChecked(self.settings.get("remote_obs_source_toggle", False))
+        self.remoteTalkDelay.setValue(self.settings.get("remoteTalkDelay", 0))
+
         self.webSocketToggle.setChecked(self.settings.get("websocket", False))
         self.webSocketPort.setValue(self.settings.get("websocket_port", 8765))
+
+        self.local_canvas_source_toggle.setChecked(self.settings.get("local_canvas_source_toggle", True))
 
         self.auto_flip.setChecked(self.settings.get("auto_flip", False))
         self.flip_camera_x.setValue(self.settings.get("flip_camera_x", 1000))
 
         self.noise_reduction.setChecked(self.settings.get("noise_reduction", True))
         self.sample_rate.setValue(self.settings.get("sample_rate", 44100))
-
-        self.hide_webSocket()
-        self.auto_flip_hide()
-        self.change_noise_reduction()
 
         collection = self.settings.get("collection", None)
         if collection is None:
@@ -1420,6 +1698,8 @@ class MainWindow(QtWidgets.QMainWindow):
             mouse_tracking = "mouse"
         elif self.faceTrackingToggle.isChecked():
             mouse_tracking = "face"
+        elif self.randomTrackingToggle.isChecked():
+            mouse_tracking = "random"
 
         self.settings = {
             "volume threshold": self.audio.volume.value(),
@@ -1464,23 +1744,43 @@ class MainWindow(QtWidgets.QMainWindow):
             "invert_mouse_x": self.invert_mouse_x.isChecked(),
             "invert_mouse_y": self.invert_mouse_y.isChecked(),
             "performance": self.performance.isChecked(),
+            "second_window_toggle": self.second_window_toggle.isChecked(),
             "collection": self.collection.currentText(),
             "flip_animation_speed": self.flip_animation_speed.value(),
             "flip_animation_pacing": self.flip_animation_pacing.currentText(),
 
             "camera": self.cameraSelector.value(),
             "target_fps": self.alphaSelector.value(),
+            "speed_movement": self.speed_movement.value(),
             "privacy": self.privacy_mode.isChecked(),
             "scale_x": self.scale_x.value(),
             "scale_camera_x": self.scale_camera_x.value(),
             "scale_y": self.scale_y.value(),
             "scale_camera_y": self.scale_camera_y.value(),
 
+            "tracking_position_pacing": self.tracking_position_pacing.currentText(),
+
+            "move_idle_random": self.move_idle_random.isChecked(),
+            "move_talking_random": self.move_talking_random.isChecked(),
+            "move_screaming_random": self.move_screaming_random.isChecked(),
+
+            "scale_random_x": self.scale_random_x.value(),
+            "scale_random_y": self.scale_random_y.value(),
+
             "noise_reduction": self.noise_reduction.isChecked(),
             "sample_rate": self.sample_rate.value(),
 
             "websocket": self.webSocketToggle.isChecked(),
             "websocket_port": self.webSocketPort.value(),
+
+            "local_canvas_source_toggle": self.local_canvas_source_toggle.isChecked(),
+
+            "local_obs_source_toggle": self.local_obs_source_toggle.isChecked(),
+            "remote_obs_source_toggle": self.remote_obs_source_toggle.isChecked(),
+            "remoteTalkDelay": self.remoteTalkDelay.value(),
+
+            "filters": self.general_filters,
+            "shadow": self.general_filters,
 
             "auto_flip": self.auto_flip.isChecked(),
             "flip_camera_x": self.flip_camera_x.value(),
@@ -1539,25 +1839,22 @@ class MainWindow(QtWidgets.QMainWindow):
                                     command["time"] = shortcut["time"]
                                 twitch[shortcut["type"]].append(command)
 
-        for route in self.file_parameters_current:
-            print(route)
-            if self.file_parameters_current[route]["hotkeys"]:
-                for shortcut in self.file_parameters_current[route]["hotkeys"]:
-                    if shortcut["type"] == "Keyboard":
-                        keyboard.append({
-                            "path": route, "type": "Asset", "mode": shortcut["mode"],
-                            "command": shortcut["command"]
-                        })
-                    elif shortcut["type"] == "Midi":
-                        midi.append(
-                            {"path": route, "type": "Asset", "mode": shortcut["mode"],
-                             "command": mido.Message.from_dict(shortcut["command"])}
-                        )
-                    else:
-                        twitch[shortcut["type"]].append({
-                            "path": route, "type": "Asset", "mode": shortcut["mode"],
-                            "command": shortcut
-                        })
+        for route, shortcut in self.file_parameters_current.get_shortcuts():
+            if shortcut["type"] == "Keyboard":
+                keyboard.append({
+                    "path": route, "type": "Asset", "mode": shortcut["mode"],
+                    "command": shortcut["command"]
+                })
+            elif shortcut["type"] == "Midi":
+                midi.append(
+                    {"path": route, "type": "Asset", "mode": shortcut["mode"],
+                     "command": mido.Message.from_dict(shortcut["command"])}
+                )
+            else:
+                twitch[shortcut["type"]].append({
+                    "path": route, "type": "Asset", "mode": shortcut["mode"],
+                    "command": shortcut
+                })
         self.midi_listener.update_shortcuts(midi)
         self.keyboard_listener.update_shortcuts(keyboard)
         if self.TwitchAPI is not None:
@@ -1574,6 +1871,32 @@ class MainWindow(QtWidgets.QMainWindow):
     def deselect_every_asset(self):
         self.current_files = []
         self.update_viewer(self.current_files, update_settings=self.tabWidget_2.currentIndex() == 1)
+
+    def handle_assets_command_disaable(self, command, shortcuts):
+        if command["mode"] in ["toggle", "disable"]:
+            self.current_files.remove(shortcuts["path"])
+
+        elif command["mode"] == "timer":
+            disable_shortcuts = copy.deepcopy(command)
+            disable_shortcuts["mode"] = "disable"
+            self.shortcut_received(disable_shortcuts)
+            enable_shortcuts = copy.deepcopy(command)
+            enable_shortcuts["mode"] = "enable"
+            QtCore.QTimer.singleShot(command["time"], lambda x=enable_shortcuts: self.shortcut_received(x))
+
+    def handle_assets_command_enable(self, command, shortcuts):
+        if command["mode"] in ["toggle", "enable"]:
+            self.current_files.append(shortcuts["path"])
+        elif command["mode"] == "timer":
+            enable_shortcuts = copy.deepcopy(command)
+            enable_shortcuts["mode"] = "enable"
+            self.shortcut_received(enable_shortcuts)
+            disable_shortcuts = copy.deepcopy(command)
+            disable_shortcuts["mode"] = "disable"
+            QtCore.QTimer.singleShot(
+                command["time"],
+                lambda x=disable_shortcuts: self.shortcut_received(x)
+            )
 
     def shortcut_received(self, shortcuts):
         if shortcuts["type"] == "Model":
@@ -1592,56 +1915,34 @@ class MainWindow(QtWidgets.QMainWindow):
         elif shortcuts["type"] == "Asset":
             if shortcuts["path"] in self.current_files:
                 if self.file_parameters_default[shortcuts["path"]]:
-                    for command in self.file_parameters_default[shortcuts["path"]]["hotkeys"] + ["WebSocket"]:
-                        if shortcuts["command"] == "WebSocket" or (
-                                "command" in shortcuts["command"]
-                                and command["command"] == shortcuts["command"]["command"]
-                                and command["type"] == shortcuts["source"]
-                        ) or (
-                                (isinstance(shortcuts["command"], str) or isinstance(shortcuts["command"], list))
-                                and command["command"] == shortcuts["command"]
-                                and command["type"] == shortcuts["source"]
-                        ):
-                            if shortcuts["command"] == "WebSocket":
-                                command = shortcuts
-
-                            if command["mode"] in ["toggle", "disable"]:
-                                self.current_files.remove(shortcuts["path"])
-
-                            elif command["mode"] == "timer":
-                                disable_shortcuts = copy.deepcopy(command)
-                                disable_shortcuts["mode"] = "disable"
-                                self.shortcut_received(disable_shortcuts)
-                                enable_shortcuts = copy.deepcopy(command)
-                                enable_shortcuts["mode"] = "enable"
-                                QtCore.QTimer.singleShot(command["time"], lambda x=enable_shortcuts: self.shortcut_received(x))
+                    for command in self.file_parameters_default[shortcuts["path"]]["hotkeys"]:
+                        print(command)
+                        if (
+                                (isinstance(shortcuts["command"], str) and shortcuts["command"] != "WebSocket")
+                                or isinstance(shortcuts["command"], list)
+                        ) and command["command"] == shortcuts["command"] and command["type"] == shortcuts["source"]:
+                            self.handle_assets_command_disaable(command, shortcuts)
+                        elif ("command" in shortcuts["command"] and command["command"] ==
+                              shortcuts["command"]["command"] and command["type"] == shortcuts["source"]):
+                            self.handle_assets_command_disaable(command, shortcuts)
+                        elif shortcuts["command"] == "WebSocket":
+                            command = shortcuts
+                            self.handle_assets_command_disaable(command, shortcuts)
+                        elif command["command"] == shortcuts["command"] and command["type"] == shortcuts["source"]:
+                            self.handle_assets_command_disaable(command, shortcuts)
             else:
                 if self.file_parameters_default[shortcuts["path"]]:
-                    for command in self.file_parameters_default[shortcuts["path"]]["hotkeys"] + ["WebSocket"]:
-                        if shortcuts["command"] == "WebSocket" or (
-                                "command" in shortcuts["command"]
-                                and command["command"] == shortcuts["command"]["command"]
-                                and command["type"] == shortcuts["source"]
-                        ) or (
-                                (isinstance(shortcuts["command"], str) or isinstance(shortcuts["command"], list))
-                                and command["command"] == shortcuts["command"]
-                                and command["type"] == shortcuts["source"]
-                        ):
-                            if shortcuts["command"] == "WebSocket":
-                                command = shortcuts
+                    for command in self.file_parameters_default[shortcuts["path"]]["hotkeys"]:
+                        if ((isinstance(shortcuts["command"], str) and shortcuts["command"] != "WebSocket") or isinstance(shortcuts["command"], list)) and command["command"] == shortcuts["command"] and command["type"] == shortcuts["source"]:
+                            self.handle_assets_command_enable(command, shortcuts)
+                        elif "command" in shortcuts["command"] and command["command"] == shortcuts["command"]["command"] and command["type"] == shortcuts["source"]:
+                            self.handle_assets_command_enable(command, shortcuts)
+                        elif shortcuts["command"] == "WebSocket":
+                            command = shortcuts
+                            self.handle_assets_command_enable(command, shortcuts)
+                        elif command["command"] == shortcuts["command"] and command["type"] == shortcuts["source"]:
+                            self.handle_assets_command_enable(command, shortcuts)
 
-                            if command["mode"] in ["toggle", "enable"]:
-                                self.current_files.append(shortcuts["path"])
-                            elif command["mode"] == "timer":
-                                enable_shortcuts = copy.deepcopy(command)
-                                enable_shortcuts["mode"] = "enable"
-                                self.shortcut_received(enable_shortcuts)
-                                disable_shortcuts = copy.deepcopy(command)
-                                disable_shortcuts["mode"] = "disable"
-                                QtCore.QTimer.singleShot(
-                                    command["time"],
-                                    lambda x=disable_shortcuts: self.shortcut_received(x)
-                                )
             self.update_viewer(self.current_files, update_settings=self.tabWidget_2.currentIndex() == 1)
         else:
             print(f"Received: {shortcuts} System")
@@ -1737,7 +2038,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def check_if_expression(self, file):
         with open(os.path.join(res_dir, "Data", "expressionFolders.json"), "r") as expressions_list:
             for expression in json.load(expressions_list):
-                if expression in file:
+                if os.path.normpath(expression) in os.path.normpath(file):
                     return True
         return False
 
@@ -1958,6 +2259,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.audio.active_audio_signal = -1
 
     def audioStatus(self, status=0):
+        self.status_audio = status
         try:
             if self.viewer.is_loaded:
                 animation = self.selected_animations[status]["animation"].currentText()
@@ -1994,17 +2296,21 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def saveSettings_list(self, settings_list):
         for settings in settings_list:
-            if settings['default']:
-                self.file_parameters_default[settings['value']['route']] = copy.deepcopy(settings["value"])
-                self.file_parameters_default[settings['value']['route']].pop("route")
-            self.file_parameters_current[settings['value']['route']] = copy.deepcopy(settings["value"])
-            self.file_parameters_current[settings['value']['route']].pop("route")
+            try:
+                if settings['default']:
+                    self.file_parameters_default[settings['value']['route']] = copy.deepcopy(settings["value"])
+                    self.file_parameters_default[settings['value']['route']].pop("route")
+                self.file_parameters_current[settings['value']['route']] = copy.deepcopy(settings["value"])
+                self.file_parameters_current[settings['value']['route']].pop("route")
+            except KeyError:
+                pass
         self.update_viewer(self.current_files)
 
     def saveSettings(self, settings):
         if settings['default']:
-            self.file_parameters_default[settings['value']['route']] = copy.deepcopy(settings["value"])
-            self.file_parameters_default[settings['value']['route']].pop("route")
+            # self.file_parameters_default[settings['value']['route']] = copy.deepcopy(settings["value"])
+            # self.file_parameters_default[settings['value']['route']].pop("route")
+            pass
         self.file_parameters_current[settings['value']['route']] = copy.deepcopy(settings["value"])
         self.file_parameters_current[settings['value']['route']].pop("route")
         self.update_viewer(self.current_files)
@@ -2026,8 +2332,9 @@ class MainWindow(QtWidgets.QMainWindow):
         files = self.getFiles(self.current_files) if custom_file_list is None else custom_file_list
         files = [
             i for i in files
-            if i["blinking"] in ["ignore", "blinking_open"] and
-               i["talking"] in ["ignore", "talking_closed"]
+            if i["blinking"] in ["ignore", "blinking_open"] and (
+                    "ignore" in i["talking"] or "talking_closed" in i["talking"]
+            )
         ]
 
         images = []
@@ -2162,7 +2469,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         if not update_settings:
             self.viewer.updateImages(
-                images_list, self.color, self.generalScale.value(), self.edited, self.performance.isChecked()
+                images_list, self.color, self.generalScale.value(), self.edited, self.performance.isChecked(),
+                filters=self.general_filters, shadow=self.general_shadow
             )
             if self.second_window_toggle.isChecked():
                 self.hidden_window.viewer.updateImages(
@@ -2367,6 +2675,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mouse_tracker.stop()
         if hasattr(self, 'hidden_window'):
             self.hidden_window.close()
+        self.html_server.shutdown()
         self.update_settings_thread()
         self.audio.audio_thread.stop_stream()
         self.midi_listener.terminate()
@@ -2380,7 +2689,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def resizeEvent(self, event):
         videoRect = QtCore.QRect(
-            QtCore.QPoint(),self.mainFrame.sizeHint().scaled(
+            QtCore.QPoint(), self.mainFrame.sizeHint().scaled(
                 self.size(), QtCore.Qt.AspectRatioMode.IgnoreAspectRatio
             )
         )
@@ -2390,6 +2699,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.frame_3.setGeometry(self.get_positions("frame_3", self.hidden_ui))
         self.frame_4.setGeometry(self.get_positions("frame_4", self.hidden_ui))
         self.donationBtnURL.setGeometry(self.get_positions("donationBtnURL", self.hidden_ui))
+
         if self.editor.isHidden:
             self.editorFrame.setGeometry(self.get_positions("editor", True))
         else:
@@ -2406,7 +2716,7 @@ class MainWindow(QtWidgets.QMainWindow):
             if self.second_window_toggle.isChecked():
                 self.hidden_window.setGeometry(self.geometry())
 
-    def get_positions(self, widget, hide=False) -> QtCore.QRect:
+    def get_positions(self, widget, hide=False) -> QtCore.QRect | list[QtCore.QRect]:
         match widget:
             case "donationBtnURL":
                 if hide:
@@ -2433,6 +2743,63 @@ class MainWindow(QtWidgets.QMainWindow):
                     return QtCore.QRect(self.width() - editorWidth - 10, 10, editorWidth, self.height() - 20)
             case _:
                 return QtCore.QRect(0, 0, 100, 100)
+
+    def showColorDialog(self):
+        initial = QColor()
+        try:
+            if "#" in self.color_selector.text():
+                raise Exception
+            color = [int(i) for i in self.color_selector.text().split(", ")]
+            initial.setRed(color[0])
+            initial.setGreen(color[1])
+            initial.setBlue(color[2])
+            initial.setAlpha(color[3])
+        except BaseException:
+            initial.setRed(0)
+            initial.setGreen(0)
+            initial.setBlue(0)
+            initial.setAlpha(255)
+
+        color = QtWidgets.QColorDialog.getColor(
+            initial=initial,
+            options=QtWidgets.QColorDialog.ColorDialogOption.ShowAlphaChannel
+        )
+
+        if color.isValid():
+            color = color.getRgb()
+            self.color_selector.setText(", ".join([str(i) for i in color]))
+            self.change_color()
+
+    def change_color(self):
+        self.colorFrame.setStyleSheet(f"""
+        QFrame{{
+            background-color: rgba({
+                self.color_selector.text() if "#" not in self.color_selector.text() else "0, 0, 0, 255"
+            });
+            border-bottom-left-radius: 9px;
+            border-bottom-right-radius: 5px;
+            border-top-left-radius: 9px;
+            border-top-right-radius: 5px;
+            border-style: outset;
+            border-width: 1px;
+            border-color: black;
+        }}
+        """)
+        self.update_shadow()
+
+    def hide_shadow(self):
+        if self.shadow_toggle.isChecked():
+            self.frame_65.show()
+        else:
+            self.frame_65.hide()
+        self.update_shadow()
+
+    def hide_filters(self):
+        if self.filters_toggle.isChecked():
+            self.frame_67.show()
+        else:
+            self.frame_67.hide()
+        self.update_filters()
 
 
 def main():

@@ -10,16 +10,7 @@
     "talking": [
         "ignore"
     ],
-    "hotkeys": [
-        {
-            "command": [
-                "Key.shift_r",
-                "A"
-            ],
-            "type": "Keyboard",
-            "mode": "toggle"
-        }
-    ],
+    "hotkeys": [],
     "rotation": 0,
     "use_css": false,
     "controller": [
@@ -78,21 +69,21 @@
     "thumbnail_path": "Assets/Chereverie/ahoge/thumbs/ahoge_027.png",
     "title": "ahoge_027.png",
     "idle_position_speed": 0.2,
-    "idle_position_pacing": "EaseInOut",
+    "idle_position_pacing": "ease-in-out",
     "sizeX_talking": 600,
     "sizeY_talking": 600,
     "posX_talking": 0,
     "posY_talking": 0,
     "rotation_talking": 0,
     "talking_position_speed": 0.2,
-    "talking_position_pacing": "EaseInOut",
+    "talking_position_pacing": "ease-in-out",
     "sizeX_screaming": 600,
     "sizeY_screaming": 600,
     "posX_screaming": 0,
     "posY_screaming": 0,
     "rotation_screaming": 0,
     "screaming_position_speed": 0.2,
-    "screaming_position_pacing": "EaseInOut",
+    "screaming_position_pacing": "ease-in-out",
     "animation_name_screaming": "None",
     "animation_speed_screaming": 0.5,
     "animation_direction_screaming": "normal",
@@ -108,20 +99,22 @@
     "moveToSCREAMING": true,
     "shadow": false,
     "color": "#000000",
-    "shadowBlur": 20,
+    "shadowBlur": 5,
     "shadowOpacity": 100,
     "shadowX": 0,
     "shadowY": 0,
     "filters": false,
     "blend": "source-over",
-    "hue": 0,
-    "saturation": 0,
-    "brightness": 0,
-    "contrast": 0,
-    "opacity": 100,
-    "blur": 0,
+    "hue": 0.0,
+    "saturation": 0.0,
+    "brightness": 0.0,
+    "contrast": 0.0,
+    "opacity": 100.0,
+    "blur": 0.0,
     "pixelate": 0,
-    "grayscale": false,
-    "invert": false,
-    "forced_mouse_tracking": 0
+    "grayscale": 0.0,
+    "invert": 0.0,
+    "forced_mouse_tracking": 0,
+    "shadowColor": "0, 0, 0, 255",
+    "sepia": 0.0
 }

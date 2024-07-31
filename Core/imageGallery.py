@@ -63,6 +63,7 @@ class ImageGallery(QToolBox):
         {
             background-color: white;
             min-height: 5px;
+            margin-left: 3px;
             border-radius: 5px;
         }
     
@@ -134,7 +135,7 @@ class ImageGallery(QToolBox):
 
         uncompressed_file, uncompressed_extension = os.path.splitext(file_name)
         webp_path = os.path.join(webp_folder, uncompressed_file + ".webp")
-        if not os.path.exists(webp_path) and "gif" not in extension.lower():
+        if not os.path.exists(webp_path) and "gif" not in extension.lower() and "svg" not in extension.lower():
             image = Image.open(input_path)
             image = image.convert('RGBA')
             image.save(webp_path, 'webp', optimize=True, quality=85, save_all=True)
@@ -142,6 +143,7 @@ class ImageGallery(QToolBox):
 
         if os.path.exists(thumbnail_path):
             return QIcon(thumbnail_path)
+        img = None
         try:
             if input_path.lower().endswith((".png", ".jpg", ".jpeg")):
                 img = Image.open(input_path).convert("RGBA")
@@ -157,24 +159,27 @@ class ImageGallery(QToolBox):
             print(f"Error opening image: {e}")
             return None
 
-        img_copy = img.copy()
-        img_copy = img_copy.crop(img_copy.getbbox())
+        if img is not None:
+            img_copy = img.copy()
+            img_copy = img_copy.crop(img_copy.getbbox())
 
-        width, height = img_copy.size
-        max_width, max_height = max_size
-        aspect_ratio = width / height
+            width, height = img_copy.size
+            max_width, max_height = max_size
+            aspect_ratio = width / height
 
-        if width > max_width or height > max_height:
-            if aspect_ratio >= 1:
-                new_width = max_width
-                new_height = int(max_width / aspect_ratio)
-            else:
-                new_height = max_height
-                new_width = int(max_height * aspect_ratio)
-            img_copy = img_copy.resize((new_width, new_height), Image.LANCZOS)
-        pixmap = QPixmap.fromImage(QImage(img_copy.tobytes("raw", "RGBA"), img_copy.size[0], img_copy.size[1], QImage.Format.Format_RGBA8888))
-        pixmap.save(thumbnail_path if custom_name is None else custom_name, quality=quality)
-        return QIcon(pixmap)
+            if width > max_width or height > max_height:
+                if aspect_ratio >= 1:
+                    new_width = max_width
+                    new_height = int(max_width / aspect_ratio)
+                else:
+                    new_height = max_height
+                    new_width = int(max_height * aspect_ratio)
+                img_copy = img_copy.resize((new_width, new_height), Image.LANCZOS)
+            pixmap = QPixmap.fromImage(QImage(img_copy.tobytes("raw", "RGBA"), img_copy.size[0], img_copy.size[1], QImage.Format.Format_RGBA8888))
+            pixmap.save(thumbnail_path if custom_name is None else custom_name, quality=quality)
+            return QIcon(pixmap)
+        else:
+            return QIcon(input_path)
 
     def change_collection(self, new_collection):
         self.collection = new_collection
@@ -220,7 +225,7 @@ class ImageGallery(QToolBox):
         if not os.path.exists(self.folder_path) and os.path.isdir(self.folder_path):
             page_widget = QFrame()
             page_layout = QVBoxLayout(page_widget)
-            page_layout.setContentsMargins(0, 0, 6, 0)
+            page_layout.setContentsMargins(0, 0, 0, 0)
             page_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
             page_layout.addWidget(QLabel("Assets Folder Not Found"))
             folder_name = os.path.basename("Assets Folder Not Found")
@@ -256,8 +261,8 @@ class ImageGallery(QToolBox):
             column_count = 0
             fileCount = 1
 
-            for file in files:
-                if file.lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".webp")):
+            for file in sorted(files):
+                if file.lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg")):
                     button_name = str(os.path.join(subdir, file)).split(f"{os.path.sep}..{os.path.sep}")[-1]
 
                     if button_name.startswith("Assets"):
@@ -270,7 +275,10 @@ class ImageGallery(QToolBox):
                     item = QPushButton()
                     item.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
                     icon = self.create_thumbnail(os.path.join(subdir, file))
-                    item.setIcon(icon)
+                    try:
+                        item.setIcon(icon)
+                    except TypeError:
+                        pass
                     item.setIconSize(QSize(20, 30) if os.name == 'nt' else QSize(30, 40))
                     item.setAccessibleName(route)
                     item.setToolTip(str(route))
@@ -321,8 +329,8 @@ class ImageGallery(QToolBox):
         folder = sender.accessibleName()
         file_dialog = QFileDialog()
         file_dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
-        file_dialog.setNameFilter("Images (*.png *.jpg *.jpeg *.gif *.webp)")
-        files, _ = file_dialog.getOpenFileNames(None, "Select Images", "", "Images (*.png *.jpg *.jpeg *.gif *.webp)")
+        file_dialog.setNameFilter("Images (*.png *.jpg *.jpeg *.gif *.webp *.svg)")
+        files, _ = file_dialog.getOpenFileNames(None, "Select Images", "", "Images (*.png *.jpg *.jpeg *.gif *.webp *.svg)")
         if files:
             for file in files:
                 extension = os.path.splitext(file)[1].lstrip('.').lower()
@@ -546,14 +554,16 @@ class ExpressionSelector(QWidget):
 
         folders = []
         for collection in collections:
-            folders += [f"{collection}/{folder}" for folder in os.listdir(os.path.join(folder_path, collection)) if "." not in folder]
+            folders += [
+                os.path.join(collection, folder) for folder in os.listdir(os.path.join(folder_path, collection)) if "." not in folder
+            ]
 
         self.checkboxes = {}
         row = 0
 
         for i, folder in enumerate(folders):
             checkbox = QCheckBox(folder)
-            checkbox.setStyleSheet("*{font-size: 8px}")
+            # checkbox.setStyleSheet("*{font-size: 8px}")
             checkbox.toggled.connect(self.save_to_json)
             self.checkboxes[folder] = checkbox
             layout.addWidget(checkbox)
@@ -570,13 +580,16 @@ class ExpressionSelector(QWidget):
                 self.selected_folders.remove(sender.text())
 
         if self.selected_folders:
-            with open("Data/expressionFolders.json", "w") as json_file:
+            with open(os.path.join("Data", "expressionFolders.json"), "w") as json_file:
                 json.dump(self.selected_folders, json_file, indent=4)
 
     def load_from_json(self):
         try:
-            with open("Data/expressionFolders.json", "r") as json_file:
-                self.selected_folders = json.load(json_file)
+            with open(os.path.join("Data", "expressionFolders.json"), "r") as json_file:
+                selected_folders_unormalized = json.load(json_file)
+                self.selected_folders = []
+                for i in range(len(selected_folders_unormalized)):
+                    self.selected_folders.append(os.path.normpath(selected_folders_unormalized[i]))
                 for folder, checkbox in self.checkboxes.items():
                     if folder in self.selected_folders:
                         checkbox.blockSignals(True)

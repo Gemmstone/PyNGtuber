@@ -1,25 +1,30 @@
+import random
+
 from twitchAPI.object.eventsub import ChannelPointsCustomRewardRedemptionAddEvent, \
     ChannelFollowEvent, ChannelCheerEvent, ChannelRaidEvent, ChannelSubscribeEvent, \
     ChannelSubscriptionGiftEvent
-from PyQt6.QtGui import QIcon, QImage
-from twitchAPI.chat import Chat, EventData, ChatMessage
 from twitchAPI.oauth import UserAuthenticationStorageHelper
-from twitchAPI.eventsub.websocket import EventSubWebsocket
-from PyQt6.QtCore import QThread, pyqtSignal, pyqtSlot
 from aiohttp.client_exceptions import ClientConnectionError
-from PyQt6 import QtWidgets, QtCore, uic
-from pynput.keyboard import Listener
+from twitchAPI.eventsub.websocket import EventSubWebsocket
+from twitchAPI.chat import Chat, EventData, ChatMessage
+from PyQt6.QtCore import QThread, pyqtSignal, pyqtSlot
+from netifaces import AF_INET, ifaddresses, interfaces
+from websockets.exceptions import ConnectionClosedOK, ConnectionClosedError
 from twitchAPI.type import AuthScope, ChatEvent
 from Core.faceTracking import process_frame
+from urllib.parse import urlparse, unquote
+from PyQt6 import QtWidgets, QtCore, uic
+from PyQt6.QtGui import QIcon, QImage
+from pynput.keyboard import Listener
 from websockets.server import serve
-from websockets.exceptions import ConnectionClosedOK
-from netifaces import AF_INET, ifaddresses, interfaces
 from twitchAPI.twitch import Twitch
 from twitchAPI.helper import first
-import websockets
+from random import randint
+from copy import deepcopy
+import socketserver
+import http.server
 import os.path
 import asyncio
-import socket
 import json
 import mido
 import time
@@ -250,9 +255,12 @@ class MidiListener(QThread):
                             self.new_shortcut.emit({"command": message.dict(), "type": "Midi", "mode": self.selected_mode})
                         else:
                             for command in self.commands:
+                                # print(f"{message} == {command["command"]} = {message == command["command"]}")
                                 if message == command["command"]:
-                                    command["source"] = "Midi"
-                                    self.shortcut.emit(command)
+                                    command_copy = deepcopy(command)
+                                    command_copy["source"] = "Midi"
+                                    command_copy["command"] = command_copy["command"].dict()
+                                    self.shortcut.emit(command_copy)
         except BaseException as err:
             print(f"Midi is not supported on this platform:\n{err}")
             self.warning = False
@@ -356,13 +364,19 @@ class MouseTracker(QThread):
                     adjusted_position = {
                         "x": position[0] - center_x,
                         "y": position[1] - center_y,
-                        "z": int(((position[0] - center_x) ** 2 + (position[1] - center_y) ** 2) ** 0.5)
+                        "z": 0
                     }
             elif self.tracking_mode == 'face':
                 ret, frame = self.cap.read()
                 if ret:
                     qt_image, adjusted_position = process_frame(frame, self.privacy_mode)
                     self.frame_received.emit(qt_image)
+            elif self.tracking_mode == 'random':
+                adjusted_position = {
+                    "x": randint(-10, 10),
+                    "y": randint(-10, 10),
+                    "z": 0
+                }
             self.mouse_position.emit(adjusted_position)
             elapsed = time.time() - start_time
             if elapsed < self.interval:
@@ -400,21 +414,23 @@ class WebSocket(QThread):
     asset_command = pyqtSignal(dict)
     reload_images = pyqtSignal()
 
-    def __init__(self, res_dir, port=8765):
+    def __init__(self, res_dir, local=True, port=8765):
         super().__init__()
         self.res_dir = res_dir
         self.port = port
+        self.local = local
         self.loop = None
         self.websocket = None
 
         self.ip_address = "127.0.0.1"
-        for iface in interfaces():
-            try:
-                ip_address = ifaddresses(iface)[AF_INET][0]['addr']
-                if ip_address and ip_address != '127.0.0.1':
-                    self.ip_address = ip_address
-            except (KeyError, ValueError):
-                pass
+        if not self.local:
+            for iface in interfaces():
+                try:
+                    ip_address = ifaddresses(iface)[AF_INET][0]['addr']
+                    if ip_address and ip_address != '127.0.0.1':
+                        self.ip_address = ip_address
+                except (KeyError, ValueError):
+                    pass
 
     async def handler(self, websocket, path):
         self.websocket = websocket
@@ -532,6 +548,8 @@ class WebSocket(QThread):
                 await self.websocket.send(js_code)
             except ConnectionClosedOK:
                 pass
+            except ConnectionClosedError:
+                pass
 
     async def run_server(self):
         async with serve(self.handler, self.ip_address, self.port):
@@ -541,6 +559,49 @@ class WebSocket(QThread):
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)
         self.loop.run_until_complete(self.run_server())
+
+
+class HTTPServerThread(QThread):
+    server_started = pyqtSignal(str)
+
+    def __init__(self, ip, port, res_dir):
+        super().__init__()
+        self.ip = ip
+        self.port = port
+        self.res_dir = res_dir
+        self.server_url = None
+        self.httpd = None
+
+    def run(self):
+        res_dir = self.res_dir
+
+        class Handler(http.server.SimpleHTTPRequestHandler):
+            def translate_path(self, path):
+                parsed_path = urlparse(path)
+                path = unquote(parsed_path.path)
+                # path = parsed_path.path.lstrip('/')
+                path = path.lstrip('/')
+                return os.path.join(res_dir, path)
+
+        while True:
+            try:
+                with socketserver.TCPServer((self.ip, self.port), Handler) as httpd:
+                    self.httpd = httpd
+                    self.server_url = f"http://{self.ip}:{self.port}"
+                    self.server_started.emit(self.server_url)
+                    print(f"Serving at: {self.server_url}")
+                    httpd.serve_forever()
+            except OSError as e:
+                if e.errno == 98:  # Address already in use
+                    print(f"Port {self.port} is already in use. Retrying in 5 seconds...")
+                    time.sleep(5)
+                else:
+                    raise e
+
+    def shutdown(self):
+        if self.httpd:
+            self.httpd.shutdown()
+            self.httpd.server_close()
 
 
 def find_shortcut_usages(main_folder, current_folder, new_shortcut):
@@ -559,7 +620,7 @@ def find_shortcut_usages(main_folder, current_folder, new_shortcut):
     return usages
 
 
-class ShortcutsDialog(QtWidgets.QDialog):
+class ShortcutsDialog(QtWidgets.QWidget):
     new_command = pyqtSignal(dict)
 
     modes = {

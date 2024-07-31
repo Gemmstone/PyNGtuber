@@ -64,6 +64,15 @@ connectWebSocket();
 
 async function update_images(htmlContent) {
     document.getElementById('image-wrapper').innerHTML = htmlContent;
+    var editing_divs = document.getElementsByClassName("editing_div");
+    for (var i = 0; i < editing_divs.length; i++) {
+        if (!serverAddress) {
+            var className = editing_divs[i].getAttribute('editing');
+        } else {
+            var className = editing_divs[i].getAttribute('default');
+        }
+        editing_divs[i].classList.add(className);
+    }
 }
 
 function get(object, key, defaultValue) {
@@ -73,7 +82,6 @@ function get(object, key, defaultValue) {
 async function flip_canvas(valueH, valueV, seg, timing) {
     document.body.style.transition = `all ${seg}s ${timing}`;
     document.body.style.transform = `rotateY(${valueH}deg) rotateX(${valueV}deg)`;
-    // document.body.style.transform = `rotateY(${valueH}deg) rotateZ(${valueV}deg)`;
 }
 
 function applyAnimation(animationName, image, config, destroy = false) {
@@ -117,464 +125,454 @@ function applyAnimation(animationName, image, config, destroy = false) {
     }
 }
 
-async function update_mic(status, animation, speed, direction, easing, iteration, performance) {
-    const stateMap = {
+async function update_mic(status, animation, speed, direction, pacing, iteration, performance) {
+    var elements = document.getElementsByClassName("talking");
+    var elements_not_being_edited = document.getElementsByClassName("talking_not_being_edited");
+    var elements_being_edited = document.getElementsByClassName("talking_being_edited");
+    var imageWrapper = document.querySelectorAll(".idle_animation");
+    var assets = document.getElementsByClassName("asset");
+    var imageAddedWrapper = document.querySelectorAll(".added_animation");
+
+    var stateMap = {
         0: "talking_closed",
         1: "talking_open",
         2: "talking_screaming"
     };
 
-    const elements = stage.find('.talking');
-    const imageWrapper = stage.find('.idle_animation');
-    const imageAddedWrapper = stage.find('.added_animation');
-    const assets = stage.find('Image');
+    for (var i = 0; i < elements.length; i++) {
+        var states = elements[i].attributes.talking.value.split(" ");
+        elements[i].style.transition = "opacity 0.2s";
+        elements[i].style.opacity = (states.includes(stateMap[status])) ? 1 : 0;
+    }
 
-    elements.forEach(function(group) {
-        const states = group.getAttr('talking').split(" ");
-        const targetOpacity = states.includes(stateMap[status]) ? 1 : 0;
-        new Konva.Tween({
-            node: group,
-            duration: 0.1,
-            opacity: targetOpacity
-        }).play();
-    });
+    for (var i = 0; i < elements_not_being_edited.length; i++) {
+        var states = elements_not_being_edited[i].attributes.talking.value.split(" ");
+        elements_not_being_edited[i].style.transition = "opacity 0.2s";
+        elements_not_being_edited[i].style.opacity = (states.includes(stateMap[status])) ? 0.7 : 0.3;
+    }
 
-    if (imageWrapper.length > 0) {
-        imageWrapper.forEach(function(image, index) {
-            let iterationCount = (iteration === 0) ? "infinite" : iteration;
+    for (var i = 0; i < elements_being_edited.length; i++) {
+        var states = elements_being_edited[i].attributes.talking.value.split(" ");
+        elements_being_edited[i].style.transition = "opacity 0.2s";
+        elements_being_edited[i].style.opacity = (states.includes(stateMap[status])) ? 1 : 0.5;
+    }
 
-            let anim = applyAnimation(animation, image, {
-                speed: speed,
-                iteration: iterationCount,
-                direction: direction,
-                center_x: window.innerWidth / 2,
-                center_y: window.innerHeight / 2,
-                easing: Konva.Easings[easing]
-            });
+    if(imageWrapper.length > 0) {
+        imageWrapper.forEach(function(image) {
+            iteration = (iteration == 0) ? "infinite" : iteration;
+            image.style.animation = `${animation} ${speed}s ${pacing} ${iteration}`;
+            image.style.animationDirection = direction;
         });
     }
 
-    if (assets.length > 0) {
-        assets.forEach(function(asset) {
-            if (asset.getAttr('move') == 1) {
-                var move, sizeX, sizeY, posX, posY, rotation, speed, pacing;
-                switch (status) {
+    if (!performance) {
+        if(imageAddedWrapper.length > 0) {
+            imageAddedWrapper.forEach(function(animation_div) {
+                switch(status) {
                     case 2:
-                        move = asset.getAttr('moveToSCREAMING');
-                        sizeX = asset.getAttr('sizeX_screaming');
-                        sizeY = asset.getAttr('sizeY_screaming');
-                        posX = asset.getAttr('posX_screaming');
-                        posY = asset.getAttr('posY_screaming');
-                        rotation = asset.getAttr('rotation_screaming');
-                        speed = asset.getAttr('screaming_position_speed');
-                        pacing = asset.getAttr('screaming_position_pacing');
+                        animation = animation_div.attributes.animation_name_screaming.value;
+                        speed = animation_div.attributes.animation_speed_screaming.value;
+                        direction = animation_div.attributes.animation_direction_screaming.value;
+                        pacing = animation_div.attributes.animation_pacing_screaming.value;
+                        iteration = animation_div.attributes.animation_iteration_screaming.value;
                         break;
                     case 1:
-                        move = asset.getAttr('moveToTALKING');
-                        sizeX = asset.getAttr('sizeX_talking');
-                        sizeY = asset.getAttr('sizeY_talking');
-                        posX = asset.getAttr('posX_talking');
-                        posY = asset.getAttr('posY_talking');
-                        rotation = asset.getAttr('rotation_talking');
-                        speed = asset.getAttr('talking_position_speed');
-                        pacing = asset.getAttr('talking_position_pacing');
+                        animation = animation_div.attributes.animation_name_talking.value;
+                        speed = animation_div.attributes.animation_speed_talking.value;
+                        direction = animation_div.attributes.animation_direction_talking.value;
+                        pacing = animation_div.attributes.animation_pacing_talking.value;
+                        iteration = animation_div.attributes.animation_iteration_talking.value;
                         break;
                     default:
-                        move = asset.getAttr('moveToIDLE');
-                        sizeX = asset.getAttr('sizeX');
-                        sizeY = asset.getAttr('sizeY');
-                        posX = asset.getAttr('posX');
-                        posY = asset.getAttr('posY');
-                        rotation = asset.getAttr('rotationIDLE');
-                        speed = asset.getAttr('idle_position_speed');
-                        pacing = asset.getAttr('idle_position_pacing');
+                        animation = animation_div.attributes.animation_name_idle.value;
+                        speed = animation_div.attributes.animation_speed_idle.value;
+                        direction = animation_div.attributes.animation_direction_idle.value;
+                        pacing = animation_div.attributes.animation_pacing_idle.value;
+                        iteration = animation_div.attributes.animation_iteration_idle.value;
                 }
-                if (move == 1) {
-                    new Konva.Tween({
-                        node: asset,
-                        duration: speed,
-                        easing: Konva.Easings[pacing],
-                        x: window.innerWidth / 2 + posX,
-                        y: window.innerHeight / 2 + posY,
-                        width: sizeX,
-                        height: sizeY,
-                        rotation: rotation
-                    }).play();
-                }
-            }
-        });
-    }
-
-
-    let animations_assets = [];
-    if(imageAddedWrapper.length > 0) {
-        imageAddedWrapper.forEach(function(image) {
-            switch(status) {
-                case 2:
-                    animation = image.getAttr('animation_name_screaming')
-                    speed = image.getAttr('animation_speed_screaming')
-                    direction = image.getAttr('animation_direction_screaming')
-                    easing = image.getAttr('animation_pacing_screaming')
-                    iteration = image.getAttr('animation_iteration_screaming')
-                    break;
-                case 1:
-                    animation = image.getAttr('animation_name_talking')
-                    speed = image.getAttr('animation_speed_talking')
-                    direction = image.getAttr('animation_direction_talking')
-                    easing = image.getAttr('animation_pacing_talking')
-                    iteration = image.getAttr('animation_iteration_talking')
-                    break;
-                default:
-                    animation = image.getAttr('animation_name_idle')
-                    speed = image.getAttr('animation_speed_idle')
-                    direction = image.getAttr('animation_direction_idle')
-                    easing = image.getAttr('animation_pacing_idle')
-                    iteration = image.getAttr('animation_iteration_idle')
-            }
-            let iterationCount = (iteration === 0) ? "infinite" : iteration;
-
-            let anim = applyAnimation(animation, image, {
-                speed: speed,
-                iteration: iterationCount,
-                direction: direction,
-                center_x: window.innerWidth / 2,
-                center_y: window.innerHeight / 2,
-                easing: Konva.Easings[easing]
+                iteration = (iteration == 0) ? "infinite" : iteration;
+                animation_div.style.animation = `${animation} ${speed}s ${pacing} ${iteration}`;
+                animation_div.style.animationDirection = direction;
             });
-        });
+        }
+
+        if(assets.length > 0) {
+            for (var i = 0; i < assets.length; i++) {
+                switch(status) {
+                    case 2:
+                        sizeX = assets[i].attributes.sizeX_screaming.value;
+                        sizeY = assets[i].attributes.sizeY_screaming.value;
+                        posX = assets[i].attributes.posX_screaming.value;
+                        posY = assets[i].attributes.posY_screaming.value;
+                        rotation = assets[i].attributes.rotation_screaming.value;
+                        speed = assets[i].attributes.screaming_position_speed.value;
+                        pacing = assets[i].attributes.screaming_position_pacing.value;
+                        break;
+                    case 1:
+                        sizeX = assets[i].attributes.sizeX_talking.value;
+                        sizeY = assets[i].attributes.sizeY_talking.value;
+                        posX = assets[i].attributes.posX_talking.value;
+                        posY = assets[i].attributes.posY_talking.value;
+                        rotation = assets[i].attributes.rotation_talking.value;
+                        speed = assets[i].attributes.talking_position_speed.value;
+                        pacing = assets[i].attributes.talking_position_pacing.value;
+                        break;
+                    default:
+                        sizeX = assets[i].attributes.sizeX.value;
+                        sizeY = assets[i].attributes.sizeY.value;
+                        posX = assets[i].attributes.posX.value;
+                        posY = assets[i].attributes.posY.value;
+                        rotation = assets[i].attributes.rotation.value;
+                        speed = assets[i].attributes.idle_position_speed.value;
+                        pacing = assets[i].attributes.idle_position_pacing.value;
+                }
+                assets[i].style.transition = `all ${speed}s ${pacing}`;
+                assets[i].style.left = `calc(50% + ${posX}px)`;
+                assets[i].style.top = `calc(50% + ${posY}px)`;
+                assets[i].style.width = `calc(50% + ${sizeX}px)`;
+                assets[i].style.height = `calc(50% + ${sizeY}px)`;
+                assets[i].style.transition = `all ${speed}s ${pacing}`;
+                assets[i].style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+            }
+        }
     }
 }
 
-async function cursorPosition(X, Y, forced) {
-    const cursorDivs = stage.find('.cursor_div');
-
-    if (cursorDivs.length > 0) {
-        cursorDivs.forEach(function(cursorDiv) {
-            // Use a Konva.Tween for smooth transitions
-            if (forced == cursorDiv.getAttr("forced_mouse_tracking")){
-                const tween = new Konva.Tween({
-                    node: cursorDiv,
-                    duration: 0.1,
-                    easing: Konva.Easings.Linear,
-                    x: window.innerWidth / 2 + calculateX(cursorDiv, X),
-                    y: window.innerHeight / 2 + calculateY(cursorDiv, Y) *-1
-                });
-
-                tween.play();
+async function cursorPosition(X, Y, forced, pacing, speed) {
+    var cursor_divs = document.querySelectorAll(".cursor_div");
+    if(cursor_divs.length > 0) {
+        cursor_divs.forEach(function(cursor_div) {
+            if (forced == cursor_div.attributes.forced_mouse_tracking.value) {
+                cursor_div.style.transition = `all ${speed}s ${pacing}`;
+                if(cursor_div.attributes.track_mouse_x.value == 1){
+                    if(cursor_div.attributes.invert_mouse_x.value == 1){
+                        cursor_div.style.left = `calc(50% + ${X * cursor_div.attributes.cursorScaleX.value * -1}px)`;
+                    } else {
+                        cursor_div.style.left = `calc(50% + ${X * cursor_div.attributes.cursorScaleX.value}px)`;
+                    }
+                }
+                cursor_div.style.transition = `all ${speed}s ${pacing}`;
+                if(cursor_div.attributes.track_mouse_y.value == 1){
+                    if(cursor_div.attributes.invert_mouse_y.value == 1){
+                        cursor_div.style.top = `calc(50% - ${Y * (cursor_div.attributes.cursorScaleY.value * 2)}px)`;
+                    } else {
+                        cursor_div.style.top = `calc(50% - ${Y * (cursor_div.attributes.cursorScaleY.value * 2) * -1}px)`;
+                    }
+                }
             }
         });
     }
-}
-
-function calculateX(cursorDiv, X) {
-    const trackMouseX = cursorDiv.getAttr('track_mouse_x') == 1;
-    const invertMouseX = cursorDiv.getAttr('invert_mouse_x') == 1;
-    const cursorScaleX = cursorDiv.getAttr('cursorScaleX');
-
-    if (trackMouseX) {
-        return (invertMouseX ? -1 : 1) * X * cursorScaleX;
-    }
-    return 0;
-}
-
-function calculateY(cursorDiv, Y) {
-    const trackMouseY = cursorDiv.getAttr('track_mouse_y') == 1;
-    const invertMouseY = cursorDiv.getAttr('invert_mouse_y') == 1;
-    const cursorScaleY = cursorDiv.getAttr('cursorScaleY');
-
-    if (trackMouseY) {
-        return (invertMouseY ? -1 : 1) * Y * cursorScaleY * -2;
-    }
-    return 0;
 }
 
 async function pool(){
+    // while(true){
     // Wheel / stick control X
-    var controllerWheels = stage.find('.controller_wheelX');
-    if (controllerWheels.length > 0) {
-        controllerWheels.forEach(function (controllerWheel) {
-            let player = controllerWheel.attrs.player;
-            let invertAxis = controllerWheel.attrs.invertAxis == 0 ? 0 : 1;
-            let deadzone = controllerWheel.attrs.deadzone;
-            let deg = controllerWheel.attrs.deg;
+    var controllerWheels = document.querySelectorAll(".controller_wheelX");
+    if(controllerWheels.length > 0) {
+        controllerWheels.forEach(function(controllerWheel) {
 
-            let rawx = navigator.getGamepads()[player].axes[invertAxis];
-            let x = 0;
-            if (rawx > deadzone) {
-                x = (rawx - deadzone) / (1 - deadzone);
-            } else if (rawx < -deadzone) {
-                x = (rawx + deadzone) / (1 - deadzone);
+            let rawx = navigator.getGamepads()[controllerWheel.attributes.player.value].axes[controllerWheel.attributes.invertAxis.value == 0 ? 0 : 1]
+            let x = 0
+            if(rawx > controllerWheel.attributes.deadzone.value)
+                x = rawx-controllerWheel.attributes.deadzone.value/(1-controllerWheel.attributes.deadzone.value)
+            else if(rawx < -controllerWheel.attributes.deadzone.value)
+                x = rawx-controllerWheel.attributes.player.value/(1-controllerWheel.attributes.deadzone.value)
+            // console.log(x, controllerWheel.attributes.deg.value);
+            let rotation = x * controllerWheel.attributes.deg.value;
+
+            var currentTransform = controllerWheel.style.transform;
+            var currentRotate = 0;
+            if(currentTransform && currentTransform.includes("rotateZ")) {
+                var rotateIndex = currentTransform.indexOf("rotateZ");
+                var endIndex = currentTransform.indexOf("deg", rotateIndex);
+                currentRotate = parseFloat(currentTransform.substring(rotateIndex + 8, endIndex));
             }
-            let rotation = x * deg;
-
-            controllerWheel.rotation(rotation);
+            controllerWheel.style.transform = currentTransform.replace(`rotateZ(${currentRotate}deg)`, `rotateZ(${rotation}deg)`);
         });
-    }
+    };
 
     // Wheel / stick control Y
-    var controllerWheelsY = stage.find('.controller_wheelY');
-    if (controllerWheelsY.length > 0) {
-        controllerWheelsY.forEach(function (controllerWheelY) {
-            let player = controllerWheelY.attrs.player;
-            let invertAxis = controllerWheelY.attrs.invertAxis == 0 ? 1 : 0;
-            let deadzone = controllerWheelY.attrs.deadzone;
-            let deg = controllerWheelY.attrs.deg;
+    var controllerWheelsY = document.querySelectorAll(".controller_wheelY");
+    if(controllerWheelsY.length > 0) {
+        controllerWheelsY.forEach(function(controllerWheelY) {
 
-            let rawy = navigator.getGamepads()[player].axes[invertAxis];
-            let x = 0;
-            if (rawy > deadzone) {
-                x = (rawy - deadzone) / (1 - deadzone);
-            } else if (rawy < -deadzone) {
-                x = (rawy + deadzone) / (1 - deadzone);
+            let rawy = navigator.getGamepads()[controllerWheelY.attributes.player.value].axes[controllerWheelY.attributes.invertAxis.value == 0 ? 1 : 0]
+            let x = 0
+            if(rawy > controllerWheelY.attributes.deadzone.value)
+                x = rawy-controllerWheelY.attributes.deadzone.value/(1-controllerWheelY.attributes.deadzone.value)
+            else if(rawy < -controllerWheelY.attributes.deadzone.value)
+                x = rawy-controllerWheelY.attributes.player.value/(1-controllerWheelY.attributes.deadzone.value)
+            let rotation = x * controllerWheelY.attributes.deg.value;
+
+            var currentTransform = controllerWheelY.style.transform;
+            var currentRotate = 0;
+
+            if (currentTransform && currentTransform.includes("rotateX")) {
+                var rotateIndex = currentTransform.indexOf("rotateX");
+                var endIndex = currentTransform.indexOf("deg", rotateIndex);
+                currentRotate = parseFloat(currentTransform.substring(rotateIndex + 8, endIndex));
             }
-            let rotation = x * deg;
 
-            controllerWheelY.scale({ x: 1, y: 1 + ((-Math.abs(rotation)) / 100) });
-            if (rotation > 0) {
-                controllerWheelY.y(controllerWheelY.attrs.offsetY_var + rotation * 2);
+            controllerWheelY.style.transform = currentTransform.replace(`rotateX(${currentRotate}deg)`, `rotateX(${rotation}deg)`);
+
+            var currentTransform = controllerWheelY.style.transform;
+            var currentScale = 1; // Assuming initial scale is 100%
+
+            if (currentTransform && currentTransform.includes("scale")) {
+                var scaleIndex = currentTransform.indexOf("scale");
+                var endIndex_scale = currentTransform.indexOf(")", scaleIndex) + 2;
+                currentScale = parseFloat(currentTransform.substring(scaleIndex + 6, endIndex_scale));
+            }
+
+            controllerWheelY.style.transform = controllerWheelY.style.transform.replace(
+                `scale(${currentScale})`, `scale(${100 + rotation}%)`
+            );
+
+            if (rotation > 0){
+                controllerWheelY.style.top = `calc(50% + ${rotation}px)`;
             } else {
-                controllerWheelY.y(controllerWheelY.attrs.offsetY_var + rotation * 3);
+                controllerWheelY.style.top = `calc(50% + ${rotation * -1}px)`;
             }
         });
-    }
+    };
 
     // Whammy / stick control X
-    var controllerWhammyWheels = stage.find('.Whammywheel');
-    if (controllerWhammyWheels.length > 0) {
-        controllerWhammyWheels.forEach(function (controllerWhammyWheel) {
-            let player = controllerWhammyWheel.attrs.player;
-            let invertAxis = controllerWhammyWheel.attrs.invertAxis == 0 ? 2 : 3;
-            let deadzone = controllerWhammyWheel.attrs.deadzone;
-            let deg = controllerWhammyWheel.attrs.deg;
+    var controllerWhammyWheels = document.querySelectorAll(".Whammywheel");
+    if(controllerWhammyWheels.length > 0) {
+        controllerWhammyWheels.forEach(function(controllerWhammyWheel) {
 
-            let rawx = navigator.getGamepads()[player].axes[invertAxis];
-            let x = 0;
-            if (rawx > deadzone) {
-                x = (rawx - deadzone) / (1 - deadzone);
-            } else if (rawx < -deadzone) {
-                x = (rawx + deadzone) / (1 - deadzone);
+            let rawx = navigator.getGamepads()[controllerWhammyWheel.attributes.player.value].axes[controllerWhammyWheel.attributes.invertAxis.value == 0 ? 2 : 3]
+            let x = 0
+            if(rawx > controllerWhammyWheel.attributes.deadzone.value)
+                x = rawx-controllerWhammyWheel.attributes.deadzone.value/(1-controllerWhammyWheel.attributes.deadzone.value)
+            else if(rawx < -controllerWhammyWheel.attributes.deadzone.value)
+                x = rawx-controllerWhammyWheel.attributes.player.value/(1-controllerWhammyWheel.attributes.deadzone.value)
+            let rotation = x * controllerWhammyWheel.attributes.deg.value;
+
+            var currentTransform = controllerWhammyWheel.style.transform;
+            var currentRotate = 0;
+            if(currentTransform && currentTransform.includes("rotateZ")) {
+                var rotateIndex = currentTransform.indexOf("rotateZ");
+                var endIndex = currentTransform.indexOf("deg", rotateIndex);
+                currentRotate = parseFloat(currentTransform.substring(rotateIndex + 8, endIndex));
             }
-            let rotation = x * deg;
-
-            controllerWhammyWheel.rotation(rotation);
+            controllerWhammyWheel.style.transform = currentTransform.replace(`rotateZ(${currentRotate}deg)`, `rotateZ(${rotation}deg)`);
         });
-    }
+    };
 
     // Wheel / stick 2 control X and Y
-    var controllerWheelsZ = stage.find('.controller_wheelZ');
-    if (controllerWheelsZ.length > 0) {
-        controllerWheelsZ.forEach(function (controllerWheelZ) {
-            let player = controllerWheelZ.attrs.player;
-            let deadzone = controllerWheelZ.attrs.deadzone;
-            let deg = controllerWheelZ.attrs.deg;
+    var controllerWheelsZ = document.querySelectorAll(".controller_wheelZ");
+    if(controllerWheelsZ.length > 0) {
+        controllerWheelsZ.forEach(function(controllerWheelZ) {
 
-            let rawx = navigator.getGamepads()[player].axes[2];
-            let x = 0;
-            if (rawx > deadzone) {
-                x = (rawx - deadzone) / (1 - deadzone);
-            } else if (rawx < -deadzone) {
-                x = (rawx + deadzone) / (1 - deadzone);
+            let rawx = navigator.getGamepads()[controllerWheelZ.attributes.player.value].axes[controllerWheelZ.attributes.invertAxis.value == 0 ? 2 : 3]
+
+            let x = 0
+            if(rawx > controllerWheelZ.attributes.deadzone.value)
+                x = rawx-controllerWheelZ.attributes.deadzone.value/(1-controllerWheelZ.attributes.deadzone.value)
+            else if(rawx < -controllerWheelZ.attributes.deadzone.value)
+                x = rawx-controllerWheelZ.attributes.player.value/(1-controllerWheelZ.attributes.deadzone.value)
+            let rotationx = x * controllerWheelZ.attributes.deg.value;
+
+            let rawy = navigator.getGamepads()[controllerWheelZ.attributes.player.value].axes[controllerWheelZ.attributes.invertAxis.value == 0 ? 3 : 2]
+            let y = 0
+            if(rawy > controllerWheelZ.attributes.deadzone.value)
+                y = rawy-controllerWheelZ.attributes.deadzone.value/(1-controllerWheelZ.attributes.deadzone.value)
+            else if(rawy < -controllerWheelZ.attributes.deadzone.value)
+                y = rawy-controllerWheelZ.attributes.player.value/(1-controllerWheelZ.attributes.deadzone.value)
+            let rotationy = y * controllerWheelZ.attributes.deg.value;
+
+            var currentTransform = controllerWheelZ.style.transform;
+            var currentRotate = 0;
+
+            if (currentTransform && currentTransform.includes("rotateY")) {
+                var rotateIndex = currentTransform.indexOf("rotateY");
+                var endIndex = currentTransform.indexOf("deg", rotateIndex);
+                currentRotate = parseFloat(currentTransform.substring(rotateIndex + 8, endIndex));
             }
-            let rotationx = x * deg;
 
-            let rawy = navigator.getGamepads()[player].axes[3];
-            let y = 0;
-            if (rawy > deadzone) {
-                y = (rawy - deadzone) / (1 - deadzone);
-            } else if (rawy < -deadzone) {
-                y = (rawy + deadzone) / (1 - deadzone);
-            }
-            let rotationy = y * deg;
+            controllerWheelZ.style.transform = currentTransform.replace(
+                `rotateY(${currentRotate}deg)`, `rotateY(${rotationx}deg)`
+            );
 
-            controllerWheelZ.scale({ x: 1 + ((-Math.abs(rotationx)) / 100 / 2), y: 1 + ((-Math.abs(rotationy)) / 100 / 2) });
+            controllerWheelZ.style.left = `calc(50% + ${rotationx}px)`;
+            controllerWheelZ.style.top = `calc(50% - ${rotationy}px)`;
 
-            controllerWheelZ.x(controllerWheelZ.attrs.offsetX_var - rotationx * 3);
-            if (rotationy > 0) {
-                controllerWheelZ.y(controllerWheelZ.attrs.offsetY_var - rotationy / 1.5);
-            } else {
-                controllerWheelZ.y(controllerWheelZ.attrs.offsetY_var - rotationy * 3);
-            }
         });
-    }
+    };
 
     // Button control
-    var controllerButtons = stage.find('.controller_buttons');
-    if (controllerButtons.length > 0) {
-        controllerButtons.forEach(function (controllerButton) {
-            let player = controllerButton.attrs.player;
-            let buttons = navigator.getGamepads()[player].buttons;
-            let left = false;
-            let right = false;
+    var controllerButtons = document.querySelectorAll(".controller_buttons");
+    if(controllerButtons.length > 0) {
+        controllerButtons.forEach(function(controllerButton) {
+            let buttons = navigator.getGamepads()[controllerButton.attributes.player.value].buttons
+            let left = false
+            let right = false
 
-            for (let i = 0; i < buttons.length; i++) {
-                if (buttons[i].pressed) {
-                    if (!left && leftButtons.indexOf(i) !== -1) {
-                        left = true;
-                    } else if (!right && rightButtons.indexOf(i) !== -1) {
-                        right = true;
+            for(let i = 0; i < buttons.length; i++){
+                if(buttons[i].pressed){
+                    if(!left && leftButtons.indexOf(i) !== -1){
+                        left = true
+                    }else if(!right && rightButtons.indexOf(i) !== -1){
+                        right = true
                     }
                 }
             }
 
-            let mode = controllerButton.attrs.mode;
-            let buttonsAttr = controllerButton.attrs.buttons;
-            let posLeftX = controllerButton.attrs.posLeftX;
-            let posLeftY = controllerButton.attrs.posLeftY;
-            let rotationLeft = controllerButton.attrs.rotationLeft;
-            let posRightX = controllerButton.attrs.posRightX;
-            let posRightY = controllerButton.attrs.posRightY;
-            let rotationRight = controllerButton.attrs.rotationRight;
-            let posBothX = controllerButton.attrs.posBothX;
-            let posBothY = controllerButton.attrs.posBothY;
-            let rotationBoth = controllerButton.attrs.rotationBoth;
-
-            let x = controllerButton.attrs.offsetX_var
-            let y = controllerButton.attrs.offsetY_var
-
-            switch (true) {
+            switch(true){
                 case left && right:
-                    if (mode == "display") {
-                        if (buttonsAttr == 3) {
-                            controllerButton.show();
+                    if (controllerButton.attributes.mode.value == "display") {
+                        if (controllerButton.attributes.buttons.value == 3){
+                            controllerButton.style.display = "block";
                         } else {
-                            controllerButton.hide();
+                            controllerButton.style.display = "none";
                         }
                     } else {
-                        controllerButton.to({
-                            x: x + posBothX,
-                            y: y + posBothY,
-                            rotation: rotationBoth,
-                            duration: 0.1,
-                        });
+                        controllerButton.style.transition = 'all 0.2s ease-in-out';
+                        controllerButton.style.left = `calc(50% + ${controllerButton.attributes.posBothX.value}px)`;
+                        controllerButton.style.top = `calc(50% + ${controllerButton.attributes.posBothY.value}px)`;
+                        controllerButton.style.transform = `rotate(${controllerButton.attributes.rotationBoth.value}deg)`;
                     }
                     break;
                 case left:
-                    if (mode == "display") {
-                        if (buttonsAttr == 1) {
-                            controllerButton.show();
+                    if (controllerButton.attributes.mode.value == "display") {
+                        if (controllerButton.attributes.buttons.value == 1){
+                            controllerButton.style.display = "block";
                         } else {
-                            controllerButton.hide();
+                            controllerButton.style.display = "none";
                         }
                     } else {
-                        controllerButton.to({
-                            x: x + posLeftX,
-                            y: y + posLeftY,
-                            rotation: rotationLeft,
-                            duration: 0.1,
-                        });
+                        controllerButton.style.transition = 'all 0.2s ease-in-out';
+                        controllerButton.style.left = `calc(50% + ${controllerButton.attributes.posLeftX.value}px)`;
+                        controllerButton.style.top = `calc(50% + ${controllerButton.attributes.posLeftY.value}px)`;
+                        controllerButton.style.transform = `rotate(${controllerButton.attributes.rotationLeft.value}deg)`;
                     }
                     break;
                 case right:
-                    if (mode == "display") {
-                        if (buttonsAttr == 2) {
-                            controllerButton.show();
+                    if (controllerButton.attributes.mode.value == "display") {
+                        if (controllerButton.attributes.buttons.value == 2){
+                            controllerButton.style.display = "block";
                         } else {
-                            controllerButton.hide();
+                            controllerButton.style.display = "none";
                         }
                     } else {
-                        controllerButton.to({
-                            x: x + posRightX,
-                            y: y + posRightY,
-                            rotation: rotationRight,
-                            duration: 0.1,
-                        });
+                        controllerButton.style.transition = 'all 0.2s ease-in-out';
+                        controllerButton.style.left = `calc(50% + ${controllerButton.attributes.posRightX.value}px)`;
+                        controllerButton.style.top = `calc(50% + ${controllerButton.attributes.posRightY.value}px)`;
+                        controllerButton.style.transform = `rotate(${controllerButton.attributes.rotationRight.value}deg)`;
                     }
                     break;
                 default:
-                    if (mode == "display") {
-                        if (buttonsAttr == 0) {
-                            controllerButton.show();
+                    if (controllerButton.attributes.mode.value == "display") {
+                        if (controllerButton.attributes.buttons.value == 0){
+                            controllerButton.style.display = "block";
                         } else {
-                            controllerButton.hide();
+                            controllerButton.style.display = "none";
                         }
                     } else {
-                        controllerButton.to({
-                            x: x + 0,
-                            y: y + 0,
-                            rotation: 0,
-                            duration: 0.1,
-                        });
+                        controllerButton.style.transition = 'all 0.2s ease-in-out';
+                        controllerButton.style.left = `calc(50% + 0px)`;
+                        controllerButton.style.top = `calc(50% + 0px)`;
+                        controllerButton.style.transform = `rotate(0deg)`;
                     }
                     break;
             }
+
         });
     }
 
     // Guitar control
-    var guitarButtons = stage.find('.guitar_buttons');
-    if (guitarButtons.length > 0) {
-        guitarButtons.forEach(function (guitarButton) {
-            let player = guitarButton.attrs.player;
-            let buttons = navigator.getGamepads()[player].buttons;
+    var guitarButtons = document.querySelectorAll(".guitar_buttons");
+    // console.log(guitarButtons.length);
+    if(guitarButtons.length > 0) {
+        guitarButtons.forEach(function(guitarButton) {
+            let buttons = navigator.getGamepads()[guitarButton.attributes.player.value].buttons
 
-            let up = false;
-            let down = false;
+            let up = false
+            let down = false
 
-            let green = false;
-            let red = false;
-            let yellow = false;
-            let blue = false;
-            let orange = false;
+            let green = false
+            let red = false
+            let yellow = false
+            let blue = false
+            let orange = false
 
-            let rawx = navigator.getGamepads()[player].axes[9];
+            /* This was made for the PS4 controller
 
-            if (!up && parseInt(rawx) == -1) {
-                up = true;
-            } else if (!down && parseInt(rawx) == 0) {
-                down = true;
-            }
-
-            for (let i = 0; i < buttons.length; i++) {
-                if (buttons[i].pressed) {
-                    if (!green && i == 1) {
-                        green = true;
-                    } else if (!red && i == 2) {
-                        red = true;
-                    } else if (!yellow && i == 0) {
-                        yellow = true;
-                    } else if (!blue && i == 3) {
-                        blue = true;
-                    } else if (!orange && i == 4) {
-                        orange = true;
+            for(let i = 0; i < buttons.length; i++){
+                if(buttons[i].pressed){
+                    if(!up && i == 12){
+                        up = true
+                    }else if(!down && i == 13){
+                        down = true
+                    }else if(!green && i == 5){
+                        green = true
+                    }else if(!red && i == 1){
+                        red = true
+                    }else if(!yellow && i == 3){
+                        yellow = true
+                    }else if(!blue && i == 0){
+                        blue = true
+                    }else if(!orange && i == 2){
+                        orange = true
                     }
                 }
             }
 
-            let posGuitarUpX = guitarButton.attrs.offsetX_var + guitarButton.attrs.posGuitarUpX;
-            let posGuitarUpY = guitarButton.attrs.offsetY_var + guitarButton.attrs.posGuitarUpY;
-            let rotationGuitarUp = guitarButton.attrs.rotationGuitarUp;
-            let posGuitarDownX = guitarButton.attrs.offsetX_var + guitarButton.attrs.posGuitarDownX;
-            let posGuitarDownY = guitarButton.attrs.offsetY_var + guitarButton.attrs.posGuitarDownY;
-            let rotationGuitarDown = guitarButton.attrs.rotationGuitarDown;
+            */
+            let rawx = navigator.getGamepads()[guitarButton.attributes.player.value].axes[9]
 
-            switch (true) {
+            if(!up && parseInt(rawx) == -1){
+                up = true
+            }else if(!down && parseInt(rawx) == 0){
+                down = true
+            }
+
+            for(let i = 0; i < buttons.length; i++){
+                if(buttons[i].pressed){
+                    if(!green && i == 1){
+                        green = true
+                    }else if(!red && i == 2){
+                        red = true
+                    }else if(!yellow && i == 0){
+                        yellow = true
+                    }else if(!blue && i == 3){
+                        blue = true
+                    }else if(!orange && i == 4){
+                        orange = true
+                    }
+                }
+            }
+
+            switch(true){
                 case up:
-                    guitarButton.x(posGuitarUpX);
-                    guitarButton.y(posGuitarUpY);
-                    guitarButton.rotation(rotationGuitarUp);
+                    guitarButton.style.left = `calc(50% + ${guitarButton.attributes.posGuitarUpX.value}px)`;
+                    guitarButton.style.top = `calc(50% + ${guitarButton.attributes.posGuitarUpY.value}px)`;
+                    guitarButton.style.transform = `rotate(${guitarButton.attributes.rotationGuitarUp.value}deg)`;
                     break;
                 case down:
-                    guitarButton.x(posGuitarDownX);
-                    guitarButton.y(posGuitarDownY);
-                    guitarButton.rotation(rotationGuitarDown);
+                    guitarButton.style.left = `calc(50% + ${guitarButton.attributes.posGuitarDownX.value}px)`;
+                    guitarButton.style.top = `calc(50% + ${guitarButton.attributes.posGuitarDownY.value}px)`;
+                    guitarButton.style.transform = `rotate(${guitarButton.attributes.rotationGuitarDown.value}deg)`;
                     break;
                 default:
-                    guitarButton.x(guitarButton.attrs.offsetX_var + 0);
-                    guitarButton.y(guitarButton.attrs.offsetY_var + 0);
-                    guitarButton.rotation(0);
+                    guitarButton.style.left = `calc(50% + 0px)`;
+                    guitarButton.style.top = `calc(50% + 0px)`;
+                    guitarButton.style.transform = `rotate(0deg)`;
                     break;
             }
 
-            let chordsString = guitarButton.attrs.chords;
+            let chordsString = guitarButton.attributes.chords.value;
 
+            // Check if the chordsString is empty
             if (chordsString) {
                 let colorsList = chordsString.split(',').map(color => color.trim());
 
                 if (colorsList.includes("None")) {
                     if (green || red || yellow || blue || orange) {
-                        guitarButton.hide();
+                        guitarButton.style.display = "none";
                     } else {
-                        guitarButton.show();
+                        guitarButton.style.display = "block";
                     }
                 } else {
                     let allColorsTrue = colorsList.every(color => {
@@ -583,104 +581,17 @@ async function pool(){
                     });
 
                     if (allColorsTrue) {
-                        guitarButton.show();
+                        guitarButton.style.display = "block";
                     } else {
-                        guitarButton.hide();
+                        guitarButton.style.display = "none";
                     }
                 }
             }
+
         });
     }
-
-    window.requestAnimationFrame(pool);
-    // }
+    window.requestAnimationFrame(pool)
 }
-
-function animateBlinkOpen(group) {
-    return new Konva.Animation(function(frame) {
-        var opacity = (frame.time % 3000) < 250 ? 0 : 1;
-        group.opacity(opacity);
-    }, group.getLayer());
-}
-
-function animateBlinkClosed(group) {
-    return new Konva.Animation(function(frame) {
-        var opacity = (frame.time % 3000) < 250 ? 1 : 0;
-        group.opacity(opacity);
-    }, group.getLayer());
-}
-
-function animateShadowColor(image) {
-    var colors = ['black','white'];
-    var currentIndex = 0;
-    var lastColorChangeTime = 0;
-    var interval = 200;
-
-    return new Konva.Animation(function(frame) {
-        // Calculate time elapsed since the last color change
-        var elapsedTime = frame.time - lastColorChangeTime;
-
-        // Check if enough time has passed to change color
-        if (elapsedTime > interval) {
-            var currentColor = colors[currentIndex % colors.length];
-            image.shadowColor(currentColor);
-            currentIndex = (currentIndex + 1) % colors.length;
-            lastColorChangeTime = frame.time;
-        }
-    }, image.getLayer());
-}
-
-function startAnimations() {
-    var blinkingOpenGroups = stage.find('.blinking_open');
-    var blinkingClosedGroups = stage.find('.blinking_closed');
-    var being_editedImages = stage.find('.being_edited');
-
-    blinkingOpenGroups.forEach(function(group) {
-        animateBlinkOpen(group).start();
-    });
-
-    blinkingClosedGroups.forEach(function(group) {
-        animateBlinkClosed(group).start();
-    });
-
-    being_editedImages.forEach(function(image) {
-        animateShadowColor(image).start();
-    });
-}
-
-function destroy_animations() {
-    const imageWrapper = stage.find('.idle_animation');
-    const imageAddedWrapper = stage.find('.added_animation');
-
-    if (imageWrapper.length > 0) {
-        imageWrapper.forEach(function(image, index) {
-            let anim = applyAnimation("None", image, {
-                speed: 6.0,
-                iteration: "infinite",
-                direction: "normal",
-                center_x: window.innerWidth / 2,
-                center_y: window.innerHeight / 2,
-                easing: Konva.Easings["Linear"]
-            }, True);
-        });
-    }
-
-    let animations_assets = [];
-    if(imageAddedWrapper.length > 0) {
-        imageAddedWrapper.forEach(function(image) {
-
-            let anim = applyAnimation("None", image, {
-                speed: 6.0,
-                iteration: "infinite",
-                direction: "normal",
-                center_x: window.innerWidth / 2,
-                center_y: window.innerHeight / 2,
-                easing: Konva.Easings["linear"]
-            }, True);
-        });
-    }
-}
-
 
 function addImagesToCanvas(imageDataList, edited) {
     stage.width(window.innerWidth);
@@ -937,6 +848,7 @@ function addImagesToCanvas(imageDataList, edited) {
                 name: blinking,
                 x: center_x,
                 y: center_y,
+                opacity: blinking.includes("blinking_closed") ? 1 : 0
             });
             blinkingDiv.offsetX(center_x);
             blinkingDiv.offsetY(center_y);
@@ -955,8 +867,7 @@ function addImagesToCanvas(imageDataList, edited) {
                 x: center_x,
                 y: center_y,
                 talking: talking.join(" "),
-                opacity: "talking_closed" in talking ? 1 : 0
-
+                opacity: talking.includes("talking_closed") ? 1 : 0
             });
             talkingDiv.offsetX(center_x);
             talkingDiv.offsetY(center_y);
@@ -1004,7 +915,7 @@ function addImagesToCanvas(imageDataList, edited) {
         if (imageData.route.endsWith('.gif')) {
             var imageObj = document.createElement('canvas');
 
-            gifler(imageData.route).frames(imageObj, (ctx, frame) => {
+            gifler( window.location.protocol === "file:" ? imageData.route : imageData.routeRemote ).frames(imageObj, (ctx, frame) => {
                 imageObj.width = frame.width;
                 imageObj.height = frame.height;
                 ctx.drawImage(frame.buffer, 0, 0);
@@ -1013,7 +924,7 @@ function addImagesToCanvas(imageDataList, edited) {
         } else {
             // Handle regular images
             var imageObj = new Image();
-            imageObj.src = imageData.route;
+            imageObj.src = window.location.protocol === "file:" ? imageData.route : imageData.routeRemote;
         }
 
         let shadowProperties = {};
@@ -1125,14 +1036,6 @@ function addImagesToCanvas(imageDataList, edited) {
 
         konvaImage.offsetX(konvaImage.width() / 2);
         konvaImage.offsetY(konvaImage.height() / 2);
-
-        //konvaImage.on('mouseenter', function () {
-        //    stage.container().style.cursor = 'move';
-        //});
-
-        //konvaImage.on('mouseleave', function () {
-        //    stage.container().style.cursor = 'default';
-        //});
 
         parentElement.add(konvaImage);
         konvaImage.animationData = imageData;

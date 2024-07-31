@@ -5,6 +5,7 @@ import pandas as pd
 import pickle
 import warnings
 from PyQt6.QtGui import QImage
+from collections import deque
 
 
 """
@@ -16,10 +17,8 @@ Modifications and additional functionalities have been added to suit the specifi
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
-
 # Load the model
 model = pickle.load(open('Core/model.pkl', 'rb'))
-
 
 # Define columns for DataFrame
 cols = []
@@ -28,6 +27,12 @@ for pos in ['nose_', 'forehead_', 'left_eye_', 'mouth_left_', 'chin_', 'right_ey
         cols.append(pos + dim)
 
 face_mesh = mp.solutions.face_mesh.FaceMesh(min_detection_confidence=0.5, min_tracking_confidence=0.5)
+
+# Initialize buffers for smoothing
+buffer_size = 3  # Adjust the buffer size as needed
+pitch_buffer = deque(maxlen=buffer_size)
+yaw_buffer = deque(maxlen=buffer_size)
+roll_buffer = deque(maxlen=buffer_size)
 
 
 def extract_features(img, face_mesh):
@@ -124,16 +129,26 @@ def process_frame(img, privacy_mode=True):
         nose_x = face_features_df['nose_x'].values[0] * img_w
         nose_y = face_features_df['nose_y'].values[0] * img_h
 
+        # Update buffers with new predictions
+        pitch_buffer.append(pitch_pred)
+        yaw_buffer.append(yaw_pred)
+        roll_buffer.append(roll_pred)
+
+        # Compute the average of the buffers
+        smoothed_pitch = np.mean(pitch_buffer)
+        smoothed_yaw = np.mean(yaw_buffer)
+        smoothed_roll = np.mean(roll_buffer)
+
         if privacy_mode:
             blank_image = np.full((img_h, img_w, img_c), 255, dtype=np.uint8)
-            img = draw_axes(blank_image, pitch_pred, yaw_pred, roll_pred, img_w/2, img_h/2, size=200)
+            img = draw_axes(blank_image, smoothed_pitch, smoothed_yaw, smoothed_roll, img_w/2, img_h/2, size=200)
         else:
-            img = draw_axes(img, pitch_pred, yaw_pred, roll_pred, nose_x, nose_y)
+            img = draw_axes(img, smoothed_pitch, smoothed_yaw, smoothed_roll, nose_x, nose_y)
 
         adjusted_position = {
-            "x": int(yaw_pred * 100),
-            "y": int(pitch_pred * 100) * -1,
-            "z": int(roll_pred * 100)
+            "x": int(smoothed_yaw * 100),
+            "y": int(smoothed_pitch * 100) * -1,
+            "z": int(smoothed_roll * 100)
         }
     else:
         adjusted_position = {"x": 0, "y": 0, "z": 0}
