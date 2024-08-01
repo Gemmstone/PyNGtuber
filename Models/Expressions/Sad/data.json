@@ -1,5 +1,17 @@
 {
-    "shortcuts": [],
+    "shortcuts": [
+        {
+            "command": {
+                "type": "note_on",
+                "time": 0,
+                "note": 2,
+                "velocity": 0,
+                "channel": 0
+            },
+            "type": "Midi",
+            "mode": "enable"
+        }
+    ],
     "animations": {
         "idle": {
             "name": "gelatine2",

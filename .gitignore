@@ -1,5 +1,6 @@
 /Assets/Memes/
 /venv/
+/.venv/
 /Builds/
 /.idea/
 /Data/user_token.json
