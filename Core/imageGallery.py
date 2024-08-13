@@ -473,7 +473,7 @@ class ModelItem(QGroupBox):
         if ok:
             os.rename(
                 os.path.join(self.res_dir, "Models", self.modelType, self.modelName),
-                os.path.join(self.res_dir, "Models", self.modelType, modelName)
+                os.path.join(self.res_dir, "Models", self.modelType, modelName.replace(".", "_"))
             )
             self.setTitle(modelName)
             self.modelName = modelName
