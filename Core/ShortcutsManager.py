@@ -621,7 +621,7 @@ def find_shortcut_usages(main_folder, current_folder, new_shortcut):
     return usages
 
 
-class ShortcutsDialog(QtWidgets.QWidget):
+class ShortcutsDialog(QtWidgets.QDialog):
     new_command = pyqtSignal(dict)
 
     modes = {
