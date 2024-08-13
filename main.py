@@ -36,6 +36,8 @@ overwrite_files = ["script.js", "animations.js", "viewer.html"]
 
 os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = '4864'
 os.environ['QTWEBENGINE_CHROMIUM_FLAGS'] = '--no-sandbox'
+os.environ["QT_SCALE_FACTOR"] = "1.0"
+
 
 if os.name == 'nt':
     from ctypes import windll
