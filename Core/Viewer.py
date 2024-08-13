@@ -474,7 +474,8 @@ class LayeredImageViewer(QWebEngineView):
 
                 img_tag = soup.new_tag(
                     'img',
-                    src=f"{layer['route']}",
+                    src=f"{os.path.join(self.res_dir, layer['route']).replace("\\", "/")}",
+                    # type="image/webp",
                     style=f"""
                         position: absolute !important;
                         left: calc(50% + {layer['posX']}px);
