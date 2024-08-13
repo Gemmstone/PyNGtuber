@@ -2,7 +2,7 @@
     "volume threshold": 17,
     "scream threshold": 65,
     "delay threshold": 4,
-    "microphone selection": 6,
+    "microphone selection": 4,
     "microphone mute": false,
     "background color": 0,
     "export mode": 0,
