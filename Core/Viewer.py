@@ -472,18 +472,9 @@ class LayeredImageViewer(QWebEngineView):
                               f"rgba{color if '#' not in color else '(0, 0, 0, 255)'});"
                     )
 
-                path_webp = os.path.basename(layer['route'])
-                path_webp, uncompressed_extension = os.path.splitext(path_webp)
-                path_webp = os.path.join(os.path.dirname(layer['route']), "webp", path_webp + ".webp")
-                path_webp = str(os.path.join(self.res_dir, path_webp)).replace("\\", "/")
-                if not os.path.isfile(path_webp):
-                    path_webp = str(os.path.join(self.res_dir, layer["route"]))
-                # print(path_webp)
-
                 img_tag = soup.new_tag(
                     'img',
-                    src=f"{path_webp}",
-                    # type="image/webp",
+                    src=f"{layer['route']}",
                     style=f"""
                         position: absolute !important;
                         left: calc(50% + {layer['posX']}px);
