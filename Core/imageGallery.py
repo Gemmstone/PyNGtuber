@@ -134,12 +134,6 @@ class ImageGallery(QToolBox):
         os.makedirs(webp_folder, exist_ok=True)
 
         uncompressed_file, uncompressed_extension = os.path.splitext(file_name)
-        webp_path = os.path.join(webp_folder, uncompressed_file + ".webp")
-        if not os.path.exists(webp_path) and "gif" not in extension.lower() and "svg" not in extension.lower():
-            image = Image.open(input_path)
-            image = image.convert('RGBA')
-            image.save(webp_path, 'webp', optimize=True, quality=85, save_all=True)
-            print(webp_path)
 
         if os.path.exists(thumbnail_path):
             return QIcon(thumbnail_path)
