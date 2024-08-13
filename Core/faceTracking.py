@@ -15,24 +15,36 @@ Original repository: https://github.com/Mostafa-Nafie/Head-Pose-Estimation
 Modifications and additional functionalities have been added to suit the specific needs of this project.
 """
 
-warnings.filterwarnings("ignore", category=UserWarning)
+model = None
+face_mesh = None
+buffer_size = None
+pitch_buffer = None
+yaw_buffer = None
+roll_buffer = None
+cols = None
 
-# Load the model
-model = pickle.load(open('Core/model.pkl', 'rb'))
 
-# Define columns for DataFrame
-cols = []
-for pos in ['nose_', 'forehead_', 'left_eye_', 'mouth_left_', 'chin_', 'right_eye_', 'mouth_right_']:
-    for dim in ('x', 'y'):
-        cols.append(pos + dim)
+def load_data_face_tracking():
+    global model, face_mesh, buffer_size, pitch_buffer, yaw_buffer, roll_buffer, cols
 
-face_mesh = mp.solutions.face_mesh.FaceMesh(min_detection_confidence=0.5, min_tracking_confidence=0.5)
+    warnings.filterwarnings("ignore", category=UserWarning)
 
-# Initialize buffers for smoothing
-buffer_size = 3  # Adjust the buffer size as needed
-pitch_buffer = deque(maxlen=buffer_size)
-yaw_buffer = deque(maxlen=buffer_size)
-roll_buffer = deque(maxlen=buffer_size)
+    # Load the model
+    model = pickle.load(open('Core/model.pkl', 'rb'))
+
+    # Define columns for DataFrame
+    cols = []
+    for pos in ['nose_', 'forehead_', 'left_eye_', 'mouth_left_', 'chin_', 'right_eye_', 'mouth_right_']:
+        for dim in ('x', 'y'):
+            cols.append(pos + dim)
+
+    face_mesh = mp.solutions.face_mesh.FaceMesh(min_detection_confidence=0.5, min_tracking_confidence=0.5)
+
+    # Initialize buffers for smoothing
+    buffer_size = 3  # Adjust the buffer size as needed
+    pitch_buffer = deque(maxlen=buffer_size)
+    yaw_buffer = deque(maxlen=buffer_size)
+    roll_buffer = deque(maxlen=buffer_size)
 
 
 def extract_features(img, face_mesh):

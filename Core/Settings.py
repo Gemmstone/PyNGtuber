@@ -967,7 +967,7 @@ class SettingsToolBox(QToolBox):
                 title = f"{filename}"
 
                 thumbnail_path = os.path.join(
-                    os.path.dirname(route), "thumbs", os.path.basename(
+                    self.res_dir, os.path.dirname(route), "thumbs", os.path.basename(
                         route.replace(".gif", ".png").replace(".webp", ".png")
                     )
                 ) if route != "General Settings" else None
