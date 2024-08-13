@@ -42,15 +42,20 @@ class AudioThread(QThread):
                 device_info = sd.query_devices(self.selected_microphone_index)
                 # print(device_info)
                 supported_sample_rate = device_info['default_samplerate']
+
             except BaseException as e:
                 self.handle_error(e)
                 return
 
-            with sd.InputStream(
-                    channels=1, device=self.selected_microphone_index, callback=self.callback_sounddevice,
-                    samplerate=supported_sample_rate
-            ):
-                self.exec()
+            try:
+                with sd.InputStream(
+                        channels=1, device=self.selected_microphone_index, callback=self.callback_sounddevice,
+                        samplerate=supported_sample_rate
+                ):
+                    self.exec()
+            except BaseException as e:
+                self.stop_stream()
+                self.handle_error(e)
 
     def run_pyaudio(self):
         if self.selected_microphone_index is not None:

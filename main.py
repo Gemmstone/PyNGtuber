@@ -1596,7 +1596,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mouseTrackingToggle.setChecked(self.settings.get("mouse tracking", "mouse") == "mouse")
         self.faceTrackingToggle.setChecked(self.settings.get("mouse tracking", "mouse") == "face")
         self.randomTrackingToggle.setChecked(self.settings.get("mouse tracking", "mouse") == "random")
-        self.disableTrackingToggle.setChecked(self.settings.get("mouse tracking", "mouse") == "disable")
+        self.disableTrackingToggle.setChecked(self.settings.get("mouse tracking", "mouse") == "disabled")
         self.hw_acceleration.setChecked(self.settings.get("hardware acceleration", True))
         self.track_mouse_x.setChecked(self.settings.get("track_mouse_x", True))
         self.track_mouse_y.setChecked(self.settings.get("track_mouse_y", True))
