@@ -2343,7 +2343,7 @@ class MainWindow(QtWidgets.QMainWindow):
             size_counter = Counter()
 
             for file_data in files:
-                file_route = file_data["route"]
+                file_route = os.path.join(res_dir, file_data["route"])
                 rotation = file_data["rotation"]
                 posZ = file_data["posZ"]
                 posX = file_data["posX"]
@@ -2390,7 +2390,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         elif method == 2:
             for file_data in files:
-                file_route = file_data["route"]
+                file_route = os.path.join(res_dir, file_data["route"])
+                print(file_route)
                 rotation = file_data["rotation"]
                 posZ = file_data["posZ"]
                 posX = file_data["posX"]

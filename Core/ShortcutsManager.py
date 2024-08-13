@@ -11,7 +11,7 @@ from PyQt6.QtCore import QThread, pyqtSignal, pyqtSlot
 from netifaces import AF_INET, ifaddresses, interfaces
 from websockets.exceptions import ConnectionClosedOK, ConnectionClosedError
 from twitchAPI.type import AuthScope, ChatEvent
-from Core.faceTracking import process_frame
+from Core.faceTracking import process_frame, load_data_face_tracking
 from urllib.parse import urlparse, unquote
 from PyQt6 import QtWidgets, QtCore, uic
 from PyQt6.QtGui import QIcon, QImage
@@ -348,6 +348,7 @@ class MouseTracker(QThread):
         if self.cap is not None:
             self.cap.release()
         if self.tracking_mode == 'face':
+            load_data_face_tracking()
             self.cap = cv2.VideoCapture(self.camera if self.camera is not None else 0)
 
         while self._running:
