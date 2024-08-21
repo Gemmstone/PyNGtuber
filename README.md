@@ -56,6 +56,6 @@ If you're interested in contributing to this project or checking out the code, f
 Your feedback and ideas are valuable. If you have suggestions, issues or questions, please don't hesitate to reach out.
 
 ## Credits
--   Art by Chereverie​, this software was inspired by her Picrew​.
--   Face tracking by Mostafa Nafie with Head-Pose-Estimation. Sadly, not available in the windows version for now :(
+-   Art by [Chereverie](https://chereverie.art)​, this software was inspired by her [Picrew](https://picrew.me/en/image_maker/100365)​.
+-   Face tracking by Mostafa Nafie with [Head-Pose-Estimation](https://github.com/Mostafa-Nafie/Head-Pose-Estimation).
 
