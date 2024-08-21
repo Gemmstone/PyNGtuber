@@ -47,9 +47,12 @@ Make your streams more dynamic with animations, GIFs, controllers, mouse trackin
 -   GIF support!
   
 ## Contributions
-
 If you're interested in contributing to this project or checking out the code, feel free to get involved. Contributions are highly appreciated!
 
 ## Feedback
-
 Your feedback and ideas are valuable. If you have suggestions, issues or questions, please don't hesitate to reach out.
+
+## Credits
+-   Art by Chereverie​, this software was inspired by her Picrew​.
+-   Face tracking by Mostafa Nafie with Head-Pose-Estimation. Sadly, not available in the windows version for now :(
+
