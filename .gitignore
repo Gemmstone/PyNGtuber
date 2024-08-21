@@ -8,3 +8,4 @@ build.sh
 build.bat
 tests.py
 /PyNGtuber.spec
+/Core/__pycache__
