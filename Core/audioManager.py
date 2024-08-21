@@ -1,7 +1,10 @@
 from PyQt6.QtCore import QThread, pyqtSignal, QTimer
 from PyQt6.QtWidgets import QWidget
 import sounddevice as sd
-import noisereduce as nr
+try:
+    import noisereduce as nr
+except BaseException:
+    nr = None
 from PyQt6 import uic
 import numpy as np
 import traceback
@@ -101,7 +104,7 @@ class AudioThread(QThread):
         self.sample_rate_noise_reduction = new_value
 
     def callback_sounddevice(self, indata, outdata, frames, time):
-        if self.noise_reduction:
+        if self.noise_reduction and nr is not None:
             reduced_noise = nr.reduce_noise(y=indata[:, 0], sr=self.sample_rate_noise_reduction)
         else:
             reduced_noise = indata
@@ -120,7 +123,7 @@ class AudioThread(QThread):
             self.audio_stream_error.emit(f"{status}")
 
         audio_data = np.frombuffer(in_data, dtype=np.int16)
-        if self.noise_reduction:
+        if self.noise_reduction and nr is not None:
             reduced_noise = nr.reduce_noise(y=audio_data, sr=self.sample_rate_noise_reduction)
         else:
             reduced_noise = audio_data
@@ -164,6 +167,7 @@ class MicrophoneVolumeWidget(QWidget):
         self.volume.valueChanged.connect(self.settingsChanged.emit)
         self.volume_scream.valueChanged.connect(self.settingsChanged.emit)
         self.delay.valueChanged.connect(self.settingsChanged.emit)
+        self.delay_2.valueChanged.connect(self.settingsChanged.emit)
         self.microphones.currentIndexChanged.connect(self.settingsChanged.emit)
         self.mute.clicked.connect(self.settingsChanged.emit)
 
@@ -192,6 +196,7 @@ class MicrophoneVolumeWidget(QWidget):
         self.volume.setValue(settings["volume threshold"])
         self.volume_scream.setValue(settings["scream threshold"])
         self.delay.setValue(settings["delay threshold"])
+        self.delay_2.setValue(settings.get("delay threshold screaming", settings["scream threshold"]))
         self.microphones.setCurrentIndex(settings["microphone selection"])
         self.mute.setChecked(settings["microphone mute"])
 
@@ -203,6 +208,7 @@ class MicrophoneVolumeWidget(QWidget):
         self.last_microphone = None
 
         self.volume.valueChanged.connect(self.updateDelayView)
+        self.volume.valueChanged.connect(self.updateDelayView_screaming)
 
         self.mute.clicked.connect(self.update_audio_stream)
         self.microphones.currentIndexChanged.connect(self.update_audio_stream)
@@ -216,6 +222,7 @@ class MicrophoneVolumeWidget(QWidget):
         self.audio_thread.audio_stream_error.connect(self.error_handler)
 
         self.updateDelayView()
+        self.updateDelayView_screaming()
         self.update_audio_stream()
 
     def error_handler(self, error_message):
@@ -302,6 +309,10 @@ class MicrophoneVolumeWidget(QWidget):
         self.progressBar_2.setMaximum(self.volume.value())
         self.delay.setMaximum(self.volume.value())
 
+    def updateDelayView_screaming(self):
+        self.progressBar_3.setMaximum(self.volume_scream.value())
+        self.delay.setMaximum(self.volume_scream.value())
+
     def update_volume(self, volume):
         self.inactivity_timer.start()
 
@@ -309,12 +320,13 @@ class MicrophoneVolumeWidget(QWidget):
 
         self.progressbar.setValue(volume)
         self.progressBar_2.setValue(self.progressBar_2.maximum() if volume > self.progressBar_2.maximum() else volume)
+        self.progressBar_3.setValue(self.progressBar_3.maximum() if volume > self.progressBar_3.maximum() else volume)
 
         if volume >= self.volume_scream.value():
             if not self.active_audio_signal == 2:
                 self.active_audio_signal = 2
                 self.activeAudio.emit(self.active_audio_signal)
-        elif volume >= self.volume.value():
+        elif self.delay_2.value() >= volume >= self.volume.value():
             if not self.active_audio_signal == 1:
                 self.active_audio_signal = 1
                 self.activeAudio.emit(self.active_audio_signal)

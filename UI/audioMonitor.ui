@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>267</width>
-    <height>155</height>
+    <height>134</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -120,151 +120,387 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="label_5">
-     <property name="text">
-      <string>Volume:</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QProgressBar" name="progressbar">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>7</height>
-      </size>
-     </property>
-     <property name="value">
-      <number>24</number>
-     </property>
-     <property name="textVisible">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QSlider" name="volume">
-     <property name="cursor">
-      <cursorShape>SizeHorCursor</cursorShape>
-     </property>
-     <property name="toolTip">
-      <string>Volume Threshold</string>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="styleSheet">
-      <string notr="true">*{
+      <string notr="true">QTabBar{  
+    background-color: rgba(255, 255, 255, 0);
+}
+QTabBar::tab {  
+	background-color: rgba(0, 0, 0, 50);
+    min-width: 50px; 
+    min-height:22px;
+    padding: 0px  2px; 
+    color: white;
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 9px;
+	border-top-right-radius: 9px;
+    margin-left:0px;
+    margin-right:4px;
+  	margin-bottom: 3px; 
+}
+QTabBar::tab:selected {  
+    color: white;
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+	background-color: rgb(0, 157, 235);; 
+  	margin-bottom: -1px; 
+}
+QTabBar::tab:hover {  
+    color: white;
+    background-color: rgb(0, 177, 235);
+}
+
+QTabWidget::pane { border: 0; }</string>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Volume</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QFrame" name="frame">
+         <property name="styleSheet">
+          <string notr="true">#frame{
+	border-radius: 0px;
+	background-color: rgb(0, 157, 235);
+}</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>3</number>
+          </property>
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>3</number>
+          </property>
+          <property name="bottomMargin">
+           <number>3</number>
+          </property>
+          <item>
+           <widget class="QProgressBar" name="progressbar">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>7</height>
+             </size>
+            </property>
+            <property name="value">
+             <number>24</number>
+            </property>
+            <property name="textVisible">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSlider" name="volume">
+            <property name="cursor">
+             <cursorShape>SizeHorCursor</cursorShape>
+            </property>
+            <property name="toolTip">
+             <string>Volume Threshold</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">*{
 	background-color: rgba(255, 255, 255, 0);
 }
 * QToolTip {
 	background-color: pink;
 }</string>
-     </property>
-     <property name="maximum">
-      <number>100</number>
-     </property>
-     <property name="value">
-      <number>10</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="tickPosition">
-      <enum>QSlider::NoTicks</enum>
-     </property>
-     <property name="tickInterval">
-      <number>1</number>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QSlider" name="volume_scream">
-     <property name="cursor">
-      <cursorShape>SizeHorCursor</cursorShape>
-     </property>
-     <property name="toolTip">
-      <string>Scream Threshold</string>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">*{
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="value">
+             <number>10</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="tickPosition">
+             <enum>QSlider::NoTicks</enum>
+            </property>
+            <property name="tickInterval">
+             <number>1</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSlider" name="volume_scream">
+            <property name="cursor">
+             <cursorShape>SizeHorCursor</cursorShape>
+            </property>
+            <property name="toolTip">
+             <string>Scream Threshold</string>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">*{
 	background-color: rgba(255, 255, 255, 0);
 }
 * QToolTip {
 	background-color: pink;
 }</string>
-     </property>
-     <property name="maximum">
-      <number>100</number>
-     </property>
-     <property name="value">
-      <number>60</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="tickPosition">
-      <enum>QSlider::NoTicks</enum>
-     </property>
-     <property name="tickInterval">
-      <number>1</number>
-     </property>
-    </widget>
-   </item>
-   <item alignment="Qt::AlignLeft">
-    <widget class="QLabel" name="label_4">
-     <property name="text">
-      <string>Delay:</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QProgressBar" name="progressBar_2">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>7</height>
-      </size>
-     </property>
-     <property name="value">
-      <number>24</number>
-     </property>
-     <property name="textVisible">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QSlider" name="delay">
-     <property name="cursor">
-      <cursorShape>SizeHorCursor</cursorShape>
-     </property>
-     <property name="toolTip">
-      <string>Volume Delay</string>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">*{
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="value">
+             <number>60</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="tickPosition">
+             <enum>QSlider::NoTicks</enum>
+            </property>
+            <property name="tickInterval">
+             <number>1</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Talking Delay</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QFrame" name="frame_2">
+         <property name="styleSheet">
+          <string notr="true">#frame_2{
+	border-radius: 0px;
+	background-color: rgb(0, 157, 235);
+}</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>3</number>
+          </property>
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>3</number>
+          </property>
+          <property name="bottomMargin">
+           <number>3</number>
+          </property>
+          <item>
+           <widget class="QProgressBar" name="progressBar_2">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>7</height>
+             </size>
+            </property>
+            <property name="value">
+             <number>24</number>
+            </property>
+            <property name="textVisible">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSlider" name="delay">
+            <property name="cursor">
+             <cursorShape>SizeHorCursor</cursorShape>
+            </property>
+            <property name="toolTip">
+             <string>Volume Delay</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">*{
 	background-color: rgba(255, 255, 255, 0);
 }
 * QToolTip {
 	background-color: pink;
 }</string>
-     </property>
-     <property name="maximum">
-      <number>10</number>
-     </property>
-     <property name="value">
-      <number>5</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="tickPosition">
-      <enum>QSlider::NoTicks</enum>
-     </property>
-     <property name="tickInterval">
-      <number>1</number>
-     </property>
+            </property>
+            <property name="maximum">
+             <number>10</number>
+            </property>
+            <property name="value">
+             <number>5</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="tickPosition">
+             <enum>QSlider::NoTicks</enum>
+            </property>
+            <property name="tickInterval">
+             <number>1</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_3">
+      <attribute name="title">
+       <string>Screaming Delay</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QFrame" name="frame_3">
+         <property name="styleSheet">
+          <string notr="true">#frame_3{
+	border-radius: 0px;
+	background-color: rgb(0, 157, 235);
+}</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>3</number>
+          </property>
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>3</number>
+          </property>
+          <property name="bottomMargin">
+           <number>3</number>
+          </property>
+          <item>
+           <widget class="QProgressBar" name="progressBar_3">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>7</height>
+             </size>
+            </property>
+            <property name="value">
+             <number>24</number>
+            </property>
+            <property name="textVisible">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSlider" name="delay_2">
+            <property name="cursor">
+             <cursorShape>SizeHorCursor</cursorShape>
+            </property>
+            <property name="toolTip">
+             <string>Volume Delay</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">*{
+	background-color: rgba(255, 255, 255, 0);
+}
+* QToolTip {
+	background-color: pink;
+}</string>
+            </property>
+            <property name="maximum">
+             <number>10</number>
+            </property>
+            <property name="value">
+             <number>5</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="tickPosition">
+             <enum>QSlider::NoTicks</enum>
+            </property>
+            <property name="tickInterval">
+             <number>1</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>

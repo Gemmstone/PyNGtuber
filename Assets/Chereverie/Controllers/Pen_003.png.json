@@ -56,5 +56,7 @@
     "cursorScaleX": 0.03,
     "cursorScaleY": 0.03,
     "track_mouse_x": 1,
-    "track_mouse_y": 1
+    "track_mouse_y": 1,
+    "move": true,
+    "animation_name_screaming": "None"
 }

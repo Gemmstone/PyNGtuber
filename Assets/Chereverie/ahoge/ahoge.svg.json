@@ -68,7 +68,7 @@
     "parent_folder": "ahoge",
     "thumbnail_path": "Assets/Chereverie/ahoge/thumbs/ahoge_001.png",
     "title": "ahoge_001.png",
-    "move": false,
+    "move": true,
     "moveToIDLE": true,
     "moveToTALKING": true,
     "moveToSCREAMING": true,

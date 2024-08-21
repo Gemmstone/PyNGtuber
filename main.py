@@ -106,23 +106,25 @@ def update_nested_dict(dest_data, source_data):
 def update_json_file(source_path, dest_path):
     with open(source_path, 'r') as source_file:
         source_data = json.load(source_file)
-
     if isinstance(source_data, list):
         return
 
     if os.path.exists(dest_path):
-        with open(dest_path, 'r') as dest_file:
-            dest_data = json.load(dest_file)
+        try:
+            with open(dest_path, 'r') as dest_file:
+                dest_data = json.load(dest_file)
 
-        if isinstance(dest_data, list):
-            with open(dest_path, 'w', encoding='utf-8') as dest_file:
-                json.dump(source_data, dest_file, indent=4, ensure_ascii=False)
-        else:
-            pass
-            # dest_data = update_nested_dict(dest_data, source_data)
+            if isinstance(dest_data, list):
+                with open(dest_path, 'w', encoding='utf-8') as dest_file:
+                    json.dump(source_data, dest_file, indent=4, ensure_ascii=False)
+            else:
+                pass
+                # dest_data = update_nested_dict(dest_data, source_data)
 
-            # with open(dest_path, 'w') as dest_file:
-            #     json.dump(dest_data, dest_file, indent=4, ensure_ascii=False)
+                # with open(dest_path, 'w') as dest_file:
+                #     json.dump(dest_data, dest_file, indent=4, ensure_ascii=False)
+        except BaseException:
+            shutil.copyfile(source_path, dest_path)
     else:
         shutil.copyfile(source_path, dest_path)
 
@@ -623,9 +625,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.viewer.div_count_signal.connect(self.update_div_count)
         self.viewerFrame.layout().addWidget(self.viewer)
 
-        if self.second_window_toggle.isChecked():
-            self.hidden_window = HiddenWindow(self.settings)
-
         self.threadpool = QThreadPool()
 
         self.edited = None
@@ -778,6 +777,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.screaming_animation_iteration.valueChanged.connect(self.update_settings)
 
         self.load_settings()
+
+        if self.second_window_toggle.isChecked():
+            self.hidden_window = HiddenWindow(self.settings)
 
         self.comboBox.currentIndexChanged.connect(self.update_settings)
         self.PNGmethod.currentIndexChanged.connect(self.update_settings)
@@ -1005,14 +1007,23 @@ class MainWindow(QtWidgets.QMainWindow):
         self.viewer.obs_websocket = self.web_socket_obs
         self.viewer.obs_websocket_remote = self.web_socket_obs_remote
 
+        if os.path.exists(os.path.join(exe_dir, 'main.exe')):
+            self.noise_reduction.hide()
+            self.faceTrackingToggle.hide()
+        elif os.path.exists(os.path.join(exe_dir, 'main.py')):
+            pass
+        else:
+            pass
+
         self.update_shadow(False)
         self.update_filters(False)
 
         self.check_for_update()
         self.update_viewer(self.current_files, update_gallery=True)
 
-        if self.second_window_toggle.isChecked():
-            self.hidden_window.show()
+        if hasattr(self, 'hidden_window'):
+            if self.second_window_toggle.isChecked():
+                self.hidden_window.show()
 
     def reboot_window(self):
         pass
@@ -1371,10 +1382,11 @@ class MainWindow(QtWidgets.QMainWindow):
             self.viewer.runJavaScript(
                 f"try{{cursorPosition({scaled_x}, {scaled_y}, 0, '{pacing}', {speed});}}catch(e){{}}"""
             )
-            if self.second_window_toggle.isChecked():
-                self.hidden_window.viewer.page().runJavaScript(
-                    f"try{{cursorPosition({scaled_x}, {scaled_y}, 0, '{pacing}', {speed});}}catch(e){{}}"""
-                )
+            if hasattr(self, 'hidden_window'):
+                if self.second_window_toggle.isChecked():
+                    self.hidden_window.viewer.page().runJavaScript(
+                        f"try{{cursorPosition({scaled_x}, {scaled_y}, 0, '{pacing}', {speed});}}catch(e){{}}"""
+                    )
 
             self.label_28.setText(f"X: {scaled_x}, Y: {scaled_y*-1} (Scaled)")
             self.label_19.setText(f"X: {x}, Y: {y*-1}")
@@ -1393,16 +1405,18 @@ class MainWindow(QtWidgets.QMainWindow):
             self.viewer.runJavaScript(
                 f"try{{cursorPosition({scaled_x}, {scaled_y}, 1, '{pacing}', {speed});}}catch(e){{}}"""
             )
-            if self.second_window_toggle.isChecked():
-                self.hidden_window.viewer.page().runJavaScript(
-                    f"try{{cursorPosition({scaled_x}, {scaled_y}, 1, '{pacing}', {speed});}}catch(e){{}}"""
-                )
+            if hasattr(self, 'hidden_window'):
+                if self.second_window_toggle.isChecked():
+                    self.hidden_window.viewer.page().runJavaScript(
+                        f"try{{cursorPosition({scaled_x}, {scaled_y}, 1, '{pacing}', {speed});}}catch(e){{}}"""
+                    )
 
     def on_zoom_delta_changed(self):
         if self.viewer.is_loaded:
             self.viewer.runJavaScript(f"document.body.style.zoom = '{self.generalScale.value()}%';""")
-            if self.second_window_toggle.isChecked():
-                self.hidden_window.viewer.page().runJavaScript(f"document.body.style.zoom = '{self.generalScale.value()}%';""")
+            if hasattr(self, 'hidden_window'):
+                if self.second_window_toggle.isChecked():
+                    self.hidden_window.viewer.page().runJavaScript(f"document.body.style.zoom = '{self.generalScale.value()}%';""")
         self.scaleValue.setText(f"{self.generalScale.value()}")
 
     def update_animations(self, default=None):
@@ -1459,13 +1473,14 @@ class MainWindow(QtWidgets.QMainWindow):
             f"{self.flip_animation_speed.value()}, "
             f"'{self.flip_animation_pacing.currentText()}')"
         )
-        if self.second_window_toggle.isChecked():
-            self.hidden_window.viewer.page().runJavaScript(
-                f"flip_canvas({180 if self.flipCanvasToggleH.isChecked() else 0}, "
-                f"{180 if self.flipCanvasToggleV.isChecked() else 0},"
-                f"{self.flip_animation_speed.value()}, "
-                f"'{self.flip_animation_pacing.currentText()}')"
-            )
+        if hasattr(self, 'hidden_window'):
+            if self.second_window_toggle.isChecked():
+                self.hidden_window.viewer.page().runJavaScript(
+                    f"flip_canvas({180 if self.flipCanvasToggleH.isChecked() else 0}, "
+                    f"{180 if self.flipCanvasToggleV.isChecked() else 0},"
+                    f"{self.flip_animation_speed.value()}, "
+                    f"'{self.flip_animation_pacing.currentText()}')"
+                )
 
     def change_max_reference_volume(self):
         self.audio.change_max_reference_volume(new_value=self.reference_volume.value())
@@ -1516,8 +1531,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def reload_page(self):
         self.viewer.reload()
-        if self.second_window_toggle.isChecked():
-            self.hidden_window.viewer.reload()
+        if hasattr(self, 'hidden_window'):
+            if self.second_window_toggle.isChecked():
+                self.hidden_window.viewer.reload()
         self.update_viewer(self.current_files, update_gallery=True)
         self.audioStatus(0)
 
@@ -1628,7 +1644,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.shadowX.setValue(0)
             self.shadowY.setValue(0)
 
-        self.general_filters = self.settings.get("shadow", None)
+        self.general_filters = self.settings.get("filters", None)
         if self.general_filters is not None:
             self.filters_toggle.setChecked(True)
             self.hue.setValue(self.general_filters["hue"]),
@@ -1707,6 +1723,7 @@ class MainWindow(QtWidgets.QMainWindow):
             "volume threshold": self.audio.volume.value(),
             "scream threshold": self.audio.volume_scream.value(),
             "delay threshold": self.audio.delay.value(),
+            "delay threshold screaming": self.audio.delay_2.value(),
             "microphone selection": self.audio.microphones.currentIndex(),
             "microphone mute": self.audio.mute.isChecked(),
             "background color": self.comboBox.currentIndex(),
@@ -1782,7 +1799,7 @@ class MainWindow(QtWidgets.QMainWindow):
             "remoteTalkDelay": self.remoteTalkDelay.value(),
 
             "filters": self.general_filters,
-            "shadow": self.general_filters,
+            "shadow": self.general_shadow,
 
             "auto_flip": self.auto_flip.isChecked(),
             "flip_camera_x": self.flip_camera_x.value(),
@@ -2281,18 +2298,19 @@ class MainWindow(QtWidgets.QMainWindow):
                     f'{"true" if self.performance.isChecked() else "false"}'
                     f')}}catch{{}}'
                 )
-                if self.second_window_toggle.isChecked():
-                    self.hidden_window.viewer.page().runJavaScript(
-                        f'try{{update_mic('
-                        f'{status}, '
-                        f'"{animation}", '
-                        f'{speed}, '
-                        f'"{direction}", '
-                        f'"{easing}", '
-                        f'{iteration}, '
-                        f'{"true" if self.performance.isChecked() else "false"}'
-                        f')}}catch{{}}'
-                    )
+                if hasattr(self, 'hidden_window'):
+                    if self.second_window_toggle.isChecked():
+                        self.hidden_window.viewer.page().runJavaScript(
+                            f'try{{update_mic('
+                            f'{status}, '
+                            f'"{animation}", '
+                            f'{speed}, '
+                            f'"{direction}", '
+                            f'"{easing}", '
+                            f'{iteration}, '
+                            f'{"true" if self.performance.isChecked() else "false"}'
+                            f')}}catch{{}}'
+                        )
         except AttributeError:
             pass
 
@@ -2475,10 +2493,12 @@ class MainWindow(QtWidgets.QMainWindow):
                 images_list, self.color, self.generalScale.value(), self.edited, self.performance.isChecked(),
                 filters=self.general_filters, shadow=self.general_shadow
             )
-            if self.second_window_toggle.isChecked():
-                self.hidden_window.viewer.updateImages(
-                    images_list, self.color, self.generalScale.value(), None, self.performance.isChecked()
-                )
+            if hasattr(self, 'hidden_window'):
+                if self.second_window_toggle.isChecked():
+                    self.hidden_window.viewer.updateImages(
+                        images_list, self.color, self.generalScale.value(), None, self.performance.isChecked(),
+                        filters=self.general_filters, shadow=self.general_shadow
+                    )
         if self.tabWidget_2.currentIndex() == 1:
             if self.current_files != files or update_settings:
                 self.SettingsGallery.set_items(
@@ -2670,8 +2690,9 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.color = "#b8cdee"
 
         self.viewer.setColor(self.color)
-        if self.second_window_toggle.isChecked():
-            self.hidden_window.viewer.setColor(self.color)
+        if hasattr(self, 'hidden_window'):
+            if self.second_window_toggle.isChecked():
+                self.hidden_window.viewer.setColor(self.color)
         self.update_settings()
 
     def closeEvent(self, event):

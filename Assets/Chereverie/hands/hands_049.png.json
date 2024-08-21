@@ -74,5 +74,6 @@
     "title": "hands_049.png",
     "track_mouse_x": 1,
     "track_mouse_y": 1,
-    "use_css": true
+    "use_css": true,
+    "move": false
 }

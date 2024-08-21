@@ -254,8 +254,7 @@ class LayeredImageViewer(QWebEngineView):
                         """)
                         animation_idle_div['class'] = ["idle_animation"]
 
-                    if (layer.get("animation_name_idle", "None") != "None" or
-                            layer.get("animation_name_talking", "None") != None):
+                    if layer.get("move", False):
                         animation_added_div = soup.new_tag('div', style=f"""
                             position: absolute !important; 
                             animation-direction: normal;

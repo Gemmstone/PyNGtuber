@@ -51,5 +51,7 @@
     "animation_idle": true,
     "originXwhammy": -100,
     "originYwhammy": 280,
-    "degWhammy": -25
+    "degWhammy": -25,
+    "move": true,
+    "animation_name_screaming": "None"
 }

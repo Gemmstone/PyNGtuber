@@ -49,5 +49,7 @@
     "posGuitarDownX": 0,
     "posGuitarDownY": 0,
     "rotationGuitarDown": 0,
-    "animation_idle": false
+    "animation_idle": false,
+    "move": true,
+    "animation_name_screaming": "None"
 }

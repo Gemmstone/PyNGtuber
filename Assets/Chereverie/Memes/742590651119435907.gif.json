@@ -10,5 +10,7 @@
     "use_css": false,
     "hotkeys": [],
     "animation": [],
-    "rotation": 0
+    "rotation": 0,
+    "move": true,
+    "animation_name_screaming": "None"
 }
