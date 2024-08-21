@@ -45,7 +45,7 @@ Make your streams more dynamic with animations, GIFs, controllers, mouse trackin
 -   Per layer animations and settings
 -   HTML, CSS and JS Code editor 
 -   GIF support!
--   Face Tracking! (Sadly, not available in the windows version for now. :(​ )
+-   Face Tracking! ![ Sadly, not available in the windows version for now. :( ]
 
 And so much more!
   
