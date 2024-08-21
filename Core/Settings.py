@@ -457,7 +457,7 @@ class Settings(QWidget):
         if talking_animation in self.animations or updating:
             self.update_value(changed_keys, updating, "animation_name_talking", "talking_animation.setCurrentText", talking_animation, "result_ready")
         if screaming_animation in self.animations or updating:
-            self.update_value(changed_keys, updating, "animation_name_screaming", "talking_animation.setCurrentText", talking_animation, "result_ready")
+            self.update_value(changed_keys, updating, "animation_name_screaming", "screaming_animation.setCurrentText", screaming_animation, "result_ready")
 
         self.update_value(changed_keys, updating, "animation_direction_idle", "idle_animation_direction.setCurrentText", "normal")
         self.update_value(changed_keys, updating, "animation_direction_talking", "talking_animation_direction.setCurrentText", "normal")

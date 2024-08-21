@@ -3742,6 +3742,14 @@ font-weight: bold;
                    </layout>
                   </widget>
                   <widget class="QWidget" name="page_15">
+                   <property name="geometry">
+                    <rect>
+                     <x>0</x>
+                     <y>0</y>
+                     <width>302</width>
+                     <height>284</height>
+                    </rect>
+                   </property>
                    <attribute name="label">
                     <string>Capture</string>
                    </attribute>
@@ -4750,8 +4758,8 @@ QFrame{
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>302</width>
-                     <height>284</height>
+                     <width>173</width>
+                     <height>122</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -5255,8 +5263,8 @@ QFrame{
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>302</width>
-                     <height>284</height>
+                     <width>200</width>
+                     <height>75</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -5531,8 +5539,8 @@ QFrame{
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>302</width>
-                     <height>284</height>
+                     <width>100</width>
+                     <height>30</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -6825,8 +6833,8 @@ font-weight: bold;</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>302</width>
-                     <height>284</height>
+                     <width>90</width>
+                     <height>55</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -7039,8 +7047,8 @@ QFrame{
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>302</width>
-                     <height>284</height>
+                     <width>86</width>
+                     <height>121</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -7906,8 +7914,8 @@ background-color: rgba(0, 0, 0, 40);
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>302</width>
-                 <height>593</height>
+                 <width>100</width>
+                 <height>30</height>
                 </rect>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_4">

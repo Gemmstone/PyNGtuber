@@ -55,7 +55,7 @@
     "parent_folder": "Controllers",
     "thumbnail_path": "Assets/Chereverie/Controllers/thumbs/tabletred.png",
     "title": "tabletred.png",
-    "move": false,
+    "move": true,
     "moveToIDLE": true,
     "moveToTALKING": true,
     "moveToSCREAMING": true,

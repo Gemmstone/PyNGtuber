@@ -61,5 +61,7 @@
     "animation_speed_idle": 6.0,
     "animation_speed_talking": 0.5,
     "animation_direction_idle": "normal",
-    "animation_direction_talking": "normal"
+    "animation_direction_talking": "normal",
+    "move": false,
+    "animation_name_screaming": "None"
 }

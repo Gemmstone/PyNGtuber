@@ -90,5 +90,6 @@
     "animation_pacing_screaming": "ease-in-out",
     "controller": [
         "ignore"
-    ]
+    ],
+    "move": true
 }

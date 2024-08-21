@@ -1,8 +1,9 @@
 {
-    "volume threshold": 17,
-    "scream threshold": 65,
+    "volume threshold": 9,
+    "scream threshold": 67,
     "delay threshold": 4,
-    "microphone selection": 5,
+    "delay threshold screaming": 9,
+    "microphone selection": 2,
     "microphone mute": false,
     "background color": 0,
     "export mode": 0,
@@ -33,8 +34,8 @@
             "direction": "normal"
         }
     },
-    "audio engine": "sounddevice",
-    "mouse tracking": "mouse",
+    "audio engine": "pyaudio",
+    "mouse tracking": "disabled",
     "hardware acceleration": true,
     "track_mouse_x": true,
     "track_mouse_y": true,
