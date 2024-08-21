@@ -26,7 +26,7 @@ import sys
 import os
 import re
 
-current_version = "v1.10.0"
+current_version = "v1.10.1"
 repo_owner = "Gemmstone"
 repo_name = "PyNGtuber"
 
@@ -166,17 +166,6 @@ if prod:
     elif os.name == 'nt':
         process.nice(psutil.REALTIME_PRIORITY_CLASS)
         res_dir = os.path.join(os.getenv("APPDATA"), "PyNGtuber")
-
-        file = os.path.join(res_dir, "Data", "current.json")
-        with open(file, "r") as load_file:
-            assets = json.load(load_file)
-        result = []
-        for asset in assets:
-            if "Chereverie/" not in asset:
-                asset = asset.replace("Assets/", "Assets/Chereverie/")
-            result.append(asset)
-        with open(file, "w") as json_file:
-            json.dump(result, json_file, indent=4)
 
     for directory in directories:
         src_path = os.path.join(exe_dir, directory)
