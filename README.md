@@ -8,7 +8,7 @@ Make your streams more dynamic with animations, GIFs, controllers, mouse trackin
 
 <div id="hot_icon">
   
-![hot icon](https://raw.githubusercontent.com/Gemmstone/PyNGtuber/master/docs/icon.png)
+![hot icon](https://raw.githubusercontent.com/Gemmstone/PyNGtuber/master/icon.ico)
 </div>
 
 
