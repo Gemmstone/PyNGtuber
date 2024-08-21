@@ -1,0 +1,38 @@
+{
+    "shortcuts": [
+        {
+            "command": {
+                "type": "note_on",
+                "time": 0,
+                "note": 2,
+                "velocity": 0,
+                "channel": 0
+            },
+            "type": "Midi",
+            "mode": "enable"
+        }
+    ],
+    "animations": {
+        "idle": {
+            "name": "gelatine2",
+            "speed": 3.0,
+            "iteration": 0,
+            "pacing": "ease-in-out",
+            "direction": "alternate"
+        },
+        "talking": {
+            "name": "gelatine2",
+            "speed": 0.3,
+            "iteration": 0,
+            "pacing": "ease-in-out",
+            "direction": "alternate"
+        },
+        "screaming": {
+            "name": "shake",
+            "speed": 0.1,
+            "iteration": 0,
+            "pacing": "ease-in-out",
+            "direction": "alternate"
+        }
+    }
+}

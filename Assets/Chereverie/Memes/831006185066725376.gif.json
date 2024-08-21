@@ -1,0 +1,16 @@
+{
+    "sizeX": 128,
+    "sizeY": 128,
+    "posX": 0,
+    "posY": -240,
+    "posZ": 40,
+    "blinking": "ignore",
+    "talking": "ignore",
+    "css": "",
+    "use_css": false,
+    "hotkeys": [],
+    "animation": [],
+    "rotation": 0,
+    "move": true,
+    "animation_name_screaming": "None"
+}

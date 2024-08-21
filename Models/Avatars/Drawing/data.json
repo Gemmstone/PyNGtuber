@@ -1,0 +1,26 @@
+{
+    "shortcuts": [],
+    "animations": {
+        "idle": {
+            "name": "floaty",
+            "speed": 6.0,
+            "iteration": 0,
+            "easing": "EaseInOut",
+            "direction": "normal"
+        },
+        "talking": {
+            "name": "floaty",
+            "speed": 0.5,
+            "iteration": 0,
+            "easing": "EaseInOut",
+            "direction": "normal"
+        },
+        "screaming": {
+            "name": "shake",
+            "speed": 0.5,
+            "iteration": 0,
+            "pacing": "EaseInOut",
+            "direction": "normal"
+        }
+    }
+}

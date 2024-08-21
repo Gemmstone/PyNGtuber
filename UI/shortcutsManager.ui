@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1157</width>
-    <height>488</height>
+    <width>275</width>
+    <height>461</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Form</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QWidget{
@@ -52,10 +52,19 @@ QFrame{
 }</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="topMargin">
-    <number>6</number>
+   <property name="leftMargin">
+    <number>9</number>
    </property>
-   <item alignment="Qt::AlignLeft">
+   <property name="topMargin">
+    <number>9</number>
+   </property>
+   <property name="rightMargin">
+    <number>9</number>
+   </property>
+   <property name="bottomMargin">
+    <number>9</number>
+   </property>
+   <item>
     <widget class="QFrame" name="horizontalFrame">
      <layout class="QHBoxLayout" name="horizontalLayout_55">
       <property name="leftMargin">
@@ -70,10 +79,10 @@ QFrame{
       <property name="bottomMargin">
        <number>0</number>
       </property>
-      <item>
+      <item alignment="Qt::AlignLeft">
        <widget class="QPushButton" name="title">
         <property name="styleSheet">
-         <string notr="true">font-size: 18pt;</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string>Assets/wings/wings_001.png</string>
@@ -84,8 +93,8 @@ QFrame{
         </property>
         <property name="iconSize">
          <size>
-          <width>50</width>
-          <height>50</height>
+          <width>20</width>
+          <height>20</height>
          </size>
         </property>
         <property name="flat">
@@ -97,7 +106,7 @@ QFrame{
     </widget>
    </item>
    <item>
-    <widget class="QTabWidget" name="tabWidget">
+    <widget class="QTabWidget" name="tabWidget_7">
      <property name="toolTip">
       <string/>
      </property>
@@ -128,20 +137,22 @@ QTabBar::tab:selected {
 }
 QTabBar::tab:hover {  
     color: white;
-    background-color: black;
-}</string>
+    background-color: rgb(0, 177, 235);
+}
+
+QTabWidget::pane { border: 0; }</string>
      </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
      <property name="documentMode">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="tab_19">
       <attribute name="title">
        <string>Keyboard</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QVBoxLayout" name="verticalLayout_39">
        <property name="leftMargin">
         <number>0</number>
        </property>
@@ -155,9 +166,9 @@ QTabBar::tab:hover {
         <number>0</number>
        </property>
        <item>
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frame_30">
          <property name="styleSheet">
-          <string notr="true">#frame{
+          <string notr="true">#frame_30{
 	border-radius: 0px;
 	background-color: rgb(0, 157, 235);
 }</string>
@@ -168,96 +179,145 @@ QTabBar::tab:hover {
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QLineEdit" name="keyboard">
-            <property name="cursor">
-             <cursorShape>WaitCursor</cursorShape>
+         <layout class="QGridLayout" name="gridLayout_27">
+          <property name="leftMargin">
+           <number>6</number>
+          </property>
+          <property name="topMargin">
+           <number>6</number>
+          </property>
+          <property name="rightMargin">
+           <number>6</number>
+          </property>
+          <property name="bottomMargin">
+           <number>6</number>
+          </property>
+          <item row="0" column="0" colspan="2">
+           <widget class="QFrame" name="frame_3">
+            <property name="styleSheet">
+             <string notr="true">QFrame{
+	border-radius: 9px;
+	background-color: rgba(0, 0, 0, 44);
+}</string>
             </property>
-            <property name="toolTip">
-             <string>Press a keyboard shortcut!</string>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
             </property>
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string>Waiting for keyboard shortcut...</string>
-            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <property name="leftMargin">
+              <number>6</number>
+             </property>
+             <property name="topMargin">
+              <number>6</number>
+             </property>
+             <property name="rightMargin">
+              <number>6</number>
+             </property>
+             <property name="bottomMargin">
+              <number>6</number>
+             </property>
+             <item>
+              <widget class="QLineEdit" name="keyboard">
+               <property name="cursor">
+                <cursorShape>WaitCursor</cursorShape>
+               </property>
+               <property name="toolTip">
+                <string>Press a keyboard shortcut!</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+               <property name="placeholderText">
+                <string>Waiting for keyboard shortcut...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
-          <item>
-           <widget class="QComboBox" name="modeKeyboard">
+          <item row="1" column="0" colspan="2">
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <property name="topMargin">
+             <number>0</number>
+            </property>
             <item>
-             <property name="text">
-              <string>Mode...</string>
-             </property>
+             <widget class="QComboBox" name="modeKeyboard">
+              <item>
+               <property name="text">
+                <string>Mode...</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Toggle</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Enable</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Disable</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Timer</string>
+               </property>
+              </item>
+             </widget>
             </item>
             <item>
-             <property name="text">
-              <string>Toggle</string>
-             </property>
+             <widget class="QSpinBox" name="keyboardTimer">
+              <property name="toolTip">
+               <string>1000 ms = 1 second</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="suffix">
+               <string> ms</string>
+              </property>
+              <property name="maximum">
+               <number>999999999</number>
+              </property>
+              <property name="singleStep">
+               <number>1000</number>
+              </property>
+              <property name="value">
+               <number>1000</number>
+              </property>
+             </widget>
             </item>
             <item>
-             <property name="text">
-              <string>Enable</string>
-             </property>
+             <widget class="QPushButton" name="savekeyboard">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</iconset>
+              </property>
+             </widget>
             </item>
-            <item>
-             <property name="text">
-              <string>Disable</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Timer</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="keyboardTimer">
-            <property name="toolTip">
-             <string>1000 ms = 1 second</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-            <property name="suffix">
-             <string> ms</string>
-            </property>
-            <property name="maximum">
-             <number>999999999</number>
-            </property>
-            <property name="singleStep">
-             <number>1000</number>
-            </property>
-            <property name="value">
-             <number>1000</number>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="savekeyboard">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</iconset>
-            </property>
-           </widget>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -272,11 +332,11 @@ QTabBar::tab:hover {
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1139</width>
-            <height>337</height>
+            <width>257</width>
+            <height>298</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
+          <layout class="QVBoxLayout" name="verticalLayout_42">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -293,14 +353,26 @@ QTabBar::tab:hover {
             <number>0</number>
            </property>
            <item>
-            <widget class="QFrame" name="frame_2">
+            <widget class="QFrame" name="frame_35">
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
              </property>
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_5">
+             <layout class="QVBoxLayout" name="verticalLayout_43">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
               <item>
                <widget class="QFrame" name="frameKeyboard">
                 <property name="frameShape">
@@ -309,7 +381,7 @@ QTabBar::tab:hover {
                 <property name="frameShadow">
                  <enum>QFrame::Raised</enum>
                 </property>
-                <layout class="QVBoxLayout" name="verticalLayout_4">
+                <layout class="QVBoxLayout" name="verticalLayout_44">
                  <property name="leftMargin">
                   <number>0</number>
                  </property>
@@ -322,291 +394,11 @@ QTabBar::tab:hover {
                  <property name="bottomMargin">
                   <number>0</number>
                  </property>
-                 <item>
-                  <widget class="QFrame" name="frame_4">
-                   <property name="styleSheet">
-                    <string notr="true">QFrame{
-	background-color: rgba(0, 0, 0, 44);
-}</string>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_2">
-                    <item>
-                     <widget class="QLabel" name="label">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>TextLabel</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_11">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>Enable</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pushButton_2">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</iconset>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QFrame" name="frame_18">
-                   <property name="styleSheet">
-                    <string notr="true">QFrame{
-	background-color: rgba(0, 0, 0, 44);
-}</string>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_28">
-                    <item>
-                     <widget class="QLabel" name="label_13">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>TextLabel</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_14">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>Disable</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pushButton_15">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</iconset>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QFrame" name="frame_19">
-                   <property name="styleSheet">
-                    <string notr="true">QFrame{
-	background-color: rgba(0, 0, 0, 44);
-}</string>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_29">
-                    <item>
-                     <widget class="QLabel" name="label_15">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>TextLabel</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_30">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>Toggle</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pushButton_16">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</iconset>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QFrame" name="frame_5">
-                   <property name="styleSheet">
-                    <string notr="true">QFrame{
-	background-color: rgba(0, 0, 0, 44);
-}</string>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_4">
-                    <item>
-                     <widget class="QLabel" name="label_3">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>TextLabel</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_12">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>Timer</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_72">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>2000ms</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pushButton_4">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</iconset>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
                 </layout>
                </widget>
               </item>
               <item>
-               <spacer name="verticalSpacer">
+               <spacer name="verticalSpacer_5">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
                 </property>
@@ -627,11 +419,11 @@ QTabBar::tab:hover {
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_2">
+     <widget class="QWidget" name="tab_20">
       <attribute name="title">
        <string>MiDi</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_12">
+      <layout class="QVBoxLayout" name="verticalLayout_45">
        <property name="leftMargin">
         <number>0</number>
        </property>
@@ -645,9 +437,9 @@ QTabBar::tab:hover {
         <number>0</number>
        </property>
        <item>
-        <widget class="QFrame" name="frame_11">
+        <widget class="QFrame" name="frame_48">
          <property name="styleSheet">
-          <string notr="true">#frame_11{
+          <string notr="true">#frame_48{
 	border-radius: 0px;
 	background-color: rgb(0, 157, 235);
 }</string>
@@ -658,13 +450,31 @@ QTabBar::tab:hover {
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_14">
-          <item>
-           <widget class="QFrame" name="frame_16">
+         <layout class="QGridLayout" name="gridLayout_22">
+          <property name="leftMargin">
+           <number>6</number>
+          </property>
+          <property name="topMargin">
+           <number>6</number>
+          </property>
+          <property name="rightMargin">
+           <number>6</number>
+          </property>
+          <property name="bottomMargin">
+           <number>6</number>
+          </property>
+          <item row="0" column="0" colspan="2">
+           <widget class="QFrame" name="frame_2">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>23</height>
+             </size>
+            </property>
             <property name="styleSheet">
-             <string notr="true">#frame_16{
-	border-radius: 0px;
-	background-color: rgb(0, 157, 235);
+             <string notr="true">#frame_2{
+	border-radius: 9px;
+	background-color: rgba(0, 0, 0, 44);
 }</string>
             </property>
             <property name="frameShape">
@@ -673,86 +483,20 @@ QTabBar::tab:hover {
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_14">
+            <layout class="QGridLayout" name="gridLayout_2">
              <property name="leftMargin">
-              <number>0</number>
+              <number>6</number>
              </property>
              <property name="topMargin">
-              <number>0</number>
+              <number>6</number>
              </property>
              <property name="rightMargin">
-              <number>38</number>
+              <number>6</number>
              </property>
              <property name="bottomMargin">
-              <number>0</number>
+              <number>6</number>
              </property>
-             <item>
-              <widget class="QLabel" name="label_16">
-               <property name="styleSheet">
-                <string notr="true">background-color: transparent;
-color: white</string>
-               </property>
-               <property name="text">
-                <string>Type:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="midiType">
-               <item>
-                <property name="text">
-                 <string>note_off</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>note_on</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_2">
-               <property name="styleSheet">
-                <string notr="true">background-color: transparent;
-color: white</string>
-               </property>
-               <property name="text">
-                <string>Time:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="midiTime">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-               <property name="buttonSymbols">
-                <enum>QAbstractSpinBox::NoButtons</enum>
-               </property>
-               <property name="maximum">
-                <number>999999</number>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_17">
-               <property name="styleSheet">
-                <string notr="true">background-color: transparent;
-color: white</string>
-               </property>
-               <property name="text">
-                <string>Note:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
+             <item row="2" column="0">
               <widget class="QSpinBox" name="midiNote">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -766,53 +510,29 @@ color: white</string>
                <property name="buttonSymbols">
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
-               <property name="maximum">
-                <number>999999</number>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_18">
-               <property name="styleSheet">
-                <string notr="true">background-color: transparent;
-color: white</string>
-               </property>
-               <property name="text">
-                <string>Velocity:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="midiVelocity">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-               <property name="buttonSymbols">
-                <enum>QAbstractSpinBox::NoButtons</enum>
+               <property name="prefix">
+                <string>Note: </string>
                </property>
                <property name="maximum">
-                <number>999999</number>
+                <number>127</number>
                </property>
               </widget>
              </item>
-             <item>
-              <widget class="QLabel" name="label_19">
-               <property name="styleSheet">
-                <string notr="true">background-color: transparent;
-color: white</string>
-               </property>
-               <property name="text">
-                <string>Channel:</string>
-               </property>
+             <item row="1" column="0" colspan="2">
+              <widget class="QComboBox" name="midiType">
+               <item>
+                <property name="text">
+                 <string>note_off</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>note_on</string>
+                </property>
+               </item>
               </widget>
              </item>
-             <item>
+             <item row="3" column="0">
               <widget class="QSpinBox" name="midiChannel">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -826,124 +546,153 @@ color: white</string>
                <property name="buttonSymbols">
                 <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
+               <property name="prefix">
+                <string>Channel: </string>
+               </property>
+               <property name="maximum">
+                <number>16</number>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QSpinBox" name="midiVelocity">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="prefix">
+                <string>Velocity: </string>
+               </property>
+               <property name="maximum">
+                <number>127</number>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QSpinBox" name="midiTime">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="prefix">
+                <string>Time: </string>
+               </property>
                <property name="maximum">
                 <number>999999</number>
                </property>
               </widget>
              </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QFrame" name="frame_17">
-            <property name="styleSheet">
-             <string notr="true">#frame_17{
-	border-radius: 0px;
-	background-color: rgb(0, 157, 235);
-}</string>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_15">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QComboBox" name="modeMidi">
-               <item>
-                <property name="text">
-                 <string>Mode...</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Toggle</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Enable</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Disable</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Timer</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="midiTimer">
-               <property name="toolTip">
-                <string>1000 ms = 1 second</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-               <property name="suffix">
-                <string> ms</string>
-               </property>
-               <property name="maximum">
-                <number>999999999</number>
-               </property>
-               <property name="singleStep">
-                <number>1000</number>
-               </property>
-               <property name="value">
-                <number>1000</number>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="saveMidi">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="cursor">
-                <cursorShape>PointingHandCursor</cursorShape>
+             <item row="4" column="0" colspan="2">
+              <widget class="QLabel" name="label_90">
+               <property name="styleSheet">
+                <string notr="true">font-size: 8pt;
+background-color: rgba(255, 255, 255, 0);
+color: rgb(255, 255, 255);</string>
                </property>
                <property name="text">
-                <string/>
+                <string>Waiting for midi signal...</string>
                </property>
-               <property name="icon">
-                <iconset>
-                 <normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</iconset>
+               <property name="wordWrap">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
             </layout>
            </widget>
           </item>
-          <item>
-           <widget class="QLabel" name="label_20">
-            <property name="styleSheet">
-             <string notr="true">font-size: 8pt;</string>
+          <item row="9" column="0" colspan="2">
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <property name="topMargin">
+             <number>0</number>
             </property>
-            <property name="text">
-             <string>Waiting for midi signal...</string>
-            </property>
-           </widget>
+            <item>
+             <widget class="QComboBox" name="modeMidi">
+              <item>
+               <property name="text">
+                <string>Mode...</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Toggle</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Enable</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Disable</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Timer</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="midiTimer">
+              <property name="toolTip">
+               <string>1000 ms = 1 second</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="suffix">
+               <string> ms</string>
+              </property>
+              <property name="maximum">
+               <number>999999999</number>
+              </property>
+              <property name="singleStep">
+               <number>1000</number>
+              </property>
+              <property name="value">
+               <number>1000</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="saveMidi">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</iconset>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -958,11 +707,11 @@ color: white</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1139</width>
-            <height>284</height>
+            <width>257</width>
+            <height>214</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_9">
+          <layout class="QVBoxLayout" name="verticalLayout_47">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -979,14 +728,26 @@ color: white</string>
             <number>0</number>
            </property>
            <item>
-            <widget class="QFrame" name="frame_12">
+            <widget class="QFrame" name="frame_51">
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
              </property>
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_10">
+             <layout class="QVBoxLayout" name="verticalLayout_48">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
               <item>
                <widget class="QFrame" name="frameMidi">
                 <property name="frameShape">
@@ -995,7 +756,7 @@ color: white</string>
                 <property name="frameShadow">
                  <enum>QFrame::Raised</enum>
                 </property>
-                <layout class="QVBoxLayout" name="verticalLayout_11">
+                <layout class="QVBoxLayout" name="verticalLayout_49">
                  <property name="leftMargin">
                   <number>0</number>
                  </property>
@@ -1008,291 +769,11 @@ color: white</string>
                  <property name="bottomMargin">
                   <number>0</number>
                  </property>
-                 <item>
-                  <widget class="QFrame" name="frame_14">
-                   <property name="styleSheet">
-                    <string notr="true">QFrame{
-	background-color: rgba(0, 0, 0, 44);
-}</string>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_9">
-                    <item>
-                     <widget class="QLabel" name="label_6">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>TextLabel</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_43">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>Enable</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pushButton_9">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</iconset>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QFrame" name="frame_41">
-                   <property name="styleSheet">
-                    <string notr="true">QFrame{
-	background-color: rgba(0, 0, 0, 44);
-}</string>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_31">
-                    <item>
-                     <widget class="QLabel" name="label_33">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>TextLabel</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_69">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>Disable</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pushButton_18">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</iconset>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QFrame" name="frame_20">
-                   <property name="styleSheet">
-                    <string notr="true">QFrame{
-	background-color: rgba(0, 0, 0, 44);
-}</string>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_30">
-                    <item>
-                     <widget class="QLabel" name="label_32">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>TextLabel</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_70">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>Toggle</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pushButton_17">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</iconset>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QFrame" name="frame_15">
-                   <property name="styleSheet">
-                    <string notr="true">QFrame{
-	background-color: rgba(0, 0, 0, 44);
-}</string>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_10">
-                    <item>
-                     <widget class="QLabel" name="label_7">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>TextLabel</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_71">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>Timer</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_31">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>2000ms</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pushButton_10">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</iconset>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
                 </layout>
                </widget>
               </item>
               <item>
-               <spacer name="verticalSpacer_3">
+               <spacer name="verticalSpacer_6">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
                 </property>
@@ -1313,11 +794,11 @@ color: white</string>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_3">
+     <widget class="QWidget" name="tab_21">
       <attribute name="title">
        <string>Twitch</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_13">
+      <layout class="QVBoxLayout" name="verticalLayout_50">
        <property name="leftMargin">
         <number>0</number>
        </property>
@@ -1331,9 +812,9 @@ color: white</string>
         <number>0</number>
        </property>
        <item>
-        <widget class="QFrame" name="frame_6">
+        <widget class="QFrame" name="frame_56">
          <property name="styleSheet">
-          <string notr="true">#frame_6{
+          <string notr="true">#frame_56{
 	border-radius: 0px;
 	background-color: rgb(0, 157, 235);
 }</string>
@@ -1344,98 +825,25 @@ color: white</string>
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_5">
-          <item>
-           <widget class="QComboBox" name="twitchSelector">
-            <item>
-             <property name="text">
-              <string>Reward</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Follow</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Cheer</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Raid</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Subscription</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Gifted Subscription</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Chat Message</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item>
-           <widget class="QFrame" name="frameTextTwitch">
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_13">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLineEdit" name="TwitchReward">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="toolTip">
-                <string>Redeem a twitch reward!</string>
-               </property>
-               <property name="readOnly">
-                <bool>false</bool>
-               </property>
-               <property name="placeholderText">
-                <string>Waiting for twitch reward...</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QFrame" name="frameRangeTwitch">
+         <layout class="QGridLayout" name="gridLayout">
+          <property name="leftMargin">
+           <number>6</number>
+          </property>
+          <property name="topMargin">
+           <number>6</number>
+          </property>
+          <property name="rightMargin">
+           <number>6</number>
+          </property>
+          <property name="bottomMargin">
+           <number>6</number>
+          </property>
+          <item row="0" column="0" colspan="2">
+           <widget class="QFrame" name="frame">
             <property name="styleSheet">
-             <string notr="true">#frameRangeTwitch{
-	border-radius: 0px;
-	background-color: rgb(0, 157, 235);
+             <string notr="true">#frame{
+	border-radius: 9px;
+	background-color: rgba(0, 0, 0, 44);
 }</string>
             </property>
             <property name="frameShape">
@@ -1444,397 +852,443 @@ color: white</string>
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_11">
-             <property name="spacing">
-              <number>0</number>
-             </property>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
              <property name="leftMargin">
-              <number>0</number>
+              <number>6</number>
              </property>
              <property name="topMargin">
-              <number>0</number>
+              <number>6</number>
              </property>
              <property name="rightMargin">
-              <number>0</number>
+              <number>6</number>
              </property>
              <property name="bottomMargin">
-              <number>0</number>
+              <number>6</number>
              </property>
              <item>
-              <widget class="QLabel" name="label_8">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
+              <widget class="QComboBox" name="twitchSelector">
+               <item>
+                <property name="text">
+                 <string>Reward</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Follow</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Cheer</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Raid</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Subscription</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Gifted Subscription</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Chat Message</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item>
+              <widget class="QFrame" name="frameTextTwitch">
                <property name="styleSheet">
-                <string notr="true">background-color: transparent;
-color: white</string>
-               </property>
-               <property name="text">
-                <string>From: </string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="TwitchFrom">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-               <property name="minimum">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <number>999999999</number>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_9">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">background-color: transparent;
-color: white</string>
-               </property>
-               <property name="text">
-                <string> To: </string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="TwitchTo">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-               <property name="minimum">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <number>999999999</number>
-               </property>
-               <property name="value">
-                <number>999999999</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QFrame" name="frameTierTwitch">
-            <property name="styleSheet">
-             <string notr="true">#frameTierTwitch{
-	border-radius: 0px;
-	background-color: rgb(0, 157, 235);
+                <string notr="true">QFrame{
+	border-radius: 9px;
+	background-color: rgba(0, 0, 0, 0);
 }</string>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_12">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="label_10">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
                </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_13">
+                <property name="spacing">
+                 <number>6</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QLineEdit" name="TwitchReward">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="toolTip">
+                   <string>Redeem a twitch reward!</string>
+                  </property>
+                  <property name="readOnly">
+                   <bool>false</bool>
+                  </property>
+                  <property name="placeholderText">
+                   <string>Waiting for twitch reward...</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QFrame" name="frameRangeTwitch">
                <property name="styleSheet">
-                <string notr="true">background-color: transparent;
-color: white</string>
-               </property>
-               <property name="text">
-                <string>Tier: </string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="TwitchTier">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-               <property name="minimum">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <number>3</number>
-               </property>
-               <property name="singleStep">
-                <number>1</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QFrame" name="frameMessageTwitch">
-            <property name="styleSheet">
-             <string notr="true">#frameMessageTwitch{
-	border-radius: 0px;
-	background-color: rgb(0, 157, 235);
+                <string notr="true">QFrame{
+	border-radius: 9px;
+	background-color: rgba(0, 0, 0, 0);
 }</string>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_16">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QComboBox" name="TwitchUserType">
-               <item>
-                <property name="text">
-                 <string>Any</string>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout">
+                <property name="leftMargin">
+                 <number>0</number>
                 </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Sub</string>
+                <property name="topMargin">
+                 <number>0</number>
                 </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>VIP</string>
+                <property name="rightMargin">
+                 <number>0</number>
                 </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Mod</string>
+                <property name="bottomMargin">
+                 <number>0</number>
                 </property>
-               </item>
+                <item>
+                 <widget class="QSpinBox" name="TwitchFrom">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                  <property name="prefix">
+                   <string>From: </string>
+                  </property>
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>100000</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="TwitchTo">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                  <property name="prefix">
+                   <string> To: </string>
+                  </property>
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>100000</number>
+                  </property>
+                  <property name="value">
+                   <number>100000</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_21">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
+              <widget class="QFrame" name="frameTierTwitch">
                <property name="styleSheet">
-                <string notr="true">background-color: transparent;
-color: white</string>
+                <string notr="true">QFrame{
+	border-radius: 9px;
+	background-color: rgba(0, 0, 0, 0);
+}</string>
                </property>
-               <property name="text">
-                <string>User: </string>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
                </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_12">
+                <property name="spacing">
+                 <number>6</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QSpinBox" name="TwitchTier">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                  <property name="prefix">
+                   <string>Tier:  </string>
+                  </property>
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>3</number>
+                  </property>
+                  <property name="singleStep">
+                   <number>1</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="TwitchUser">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="toolTip">
-                <string>Redeem a twitch reward!</string>
-               </property>
-               <property name="readOnly">
-                <bool>false</bool>
-               </property>
-               <property name="placeholderText">
-                <string>Write Username</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_22">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
+              <widget class="QFrame" name="frameMessageTwitch">
                <property name="styleSheet">
-                <string notr="true">background-color: transparent;
-color: white</string>
+                <string notr="true">#frameMessageTwitch{
+	border-radius: 9px;
+	background-color: rgba(0, 0, 0, 0);
+}</string>
                </property>
-               <property name="text">
-                <string>Message: </string>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
                </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="TwitchMessage">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
                </property>
-               <property name="toolTip">
-                <string>Redeem a twitch reward!</string>
-               </property>
-               <property name="readOnly">
-                <bool>false</bool>
-               </property>
-               <property name="placeholderText">
-                <string>Write message to detect or leave empty for any message</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="TwitchModal">
-               <item>
-                <property name="text">
-                 <string>Match Modal...</string>
+               <layout class="QGridLayout" name="gridLayout_3">
+                <property name="leftMargin">
+                 <number>0</number>
                 </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Exact</string>
+                <property name="topMargin">
+                 <number>0</number>
                 </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Contains</string>
+                <property name="rightMargin">
+                 <number>0</number>
                 </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Starts With</string>
+                <property name="bottomMargin">
+                 <number>0</number>
                 </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Ends With</string>
-                </property>
-               </item>
+                <item row="0" column="0">
+                 <widget class="QComboBox" name="TwitchUserType">
+                  <item>
+                   <property name="text">
+                    <string>Any</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Sub</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>VIP</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Mod</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLineEdit" name="TwitchUser">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="toolTip">
+                   <string>Redeem a twitch reward!</string>
+                  </property>
+                  <property name="readOnly">
+                   <bool>false</bool>
+                  </property>
+                  <property name="placeholderText">
+                   <string>Write Username</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QLineEdit" name="TwitchMessage">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="toolTip">
+                   <string>Redeem a twitch reward!</string>
+                  </property>
+                  <property name="readOnly">
+                   <bool>false</bool>
+                  </property>
+                  <property name="placeholderText">
+                   <string>Write message to detect or leave empty for any message</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QComboBox" name="TwitchModal">
+                  <item>
+                   <property name="text">
+                    <string>Match...</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Exact</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Contains</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Starts With</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Ends With</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+               </layout>
               </widget>
              </item>
             </layout>
            </widget>
           </item>
-          <item>
-           <widget class="QComboBox" name="modeTwitch">
+          <item row="1" column="0" colspan="2">
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <property name="topMargin">
+             <number>0</number>
+            </property>
             <item>
-             <property name="text">
-              <string>Mode...</string>
-             </property>
+             <widget class="QComboBox" name="modeTwitch">
+              <item>
+               <property name="text">
+                <string>Mode...</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Toggle</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Enable</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Disable</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Timer</string>
+               </property>
+              </item>
+             </widget>
             </item>
             <item>
-             <property name="text">
-              <string>Toggle</string>
-             </property>
+             <widget class="QSpinBox" name="twitchTimer">
+              <property name="toolTip">
+               <string>1000 ms = 1 second</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="suffix">
+               <string> ms</string>
+              </property>
+              <property name="maximum">
+               <number>999999999</number>
+              </property>
+              <property name="singleStep">
+               <number>1000</number>
+              </property>
+              <property name="value">
+               <number>1000</number>
+              </property>
+             </widget>
             </item>
             <item>
-             <property name="text">
-              <string>Enable</string>
-             </property>
+             <widget class="QPushButton" name="saveTwitch">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</iconset>
+              </property>
+             </widget>
             </item>
-            <item>
-             <property name="text">
-              <string>Disable</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Timer</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="twitchTimer">
-            <property name="toolTip">
-             <string>1000 ms = 1 second</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-            <property name="suffix">
-             <string> ms</string>
-            </property>
-            <property name="maximum">
-             <number>999999999</number>
-            </property>
-            <property name="singleStep">
-             <number>1000</number>
-            </property>
-            <property name="value">
-             <number>1000</number>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="saveTwitch">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</normaloff>../Icons/floppy-disk-save-svgrepo-com.svg</iconset>
-            </property>
-           </widget>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -1849,11 +1303,11 @@ color: white</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1139</width>
-            <height>337</height>
+            <width>257</width>
+            <height>143</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_6">
+          <layout class="QVBoxLayout" name="verticalLayout_51">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -1870,14 +1324,29 @@ color: white</string>
             <number>0</number>
            </property>
            <item>
-            <widget class="QFrame" name="frame_7">
+            <widget class="QFrame" name="frame_57">
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
              </property>
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_7">
+             <layout class="QVBoxLayout" name="verticalLayout_52">
+              <property name="spacing">
+               <number>6</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
               <item>
                <widget class="QFrame" name="frameTwitch">
                 <property name="frameShape">
@@ -1886,7 +1355,7 @@ color: white</string>
                 <property name="frameShadow">
                  <enum>QFrame::Raised</enum>
                 </property>
-                <layout class="QVBoxLayout" name="verticalLayout_8">
+                <layout class="QVBoxLayout" name="verticalLayout_54">
                  <property name="leftMargin">
                   <number>0</number>
                  </property>
@@ -1899,291 +1368,11 @@ color: white</string>
                  <property name="bottomMargin">
                   <number>0</number>
                  </property>
-                 <item>
-                  <widget class="QFrame" name="frame_9">
-                   <property name="styleSheet">
-                    <string notr="true">QFrame{
-	background-color: rgba(0, 0, 0, 44);
-}</string>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_6">
-                    <item>
-                     <widget class="QLabel" name="label_4">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>TextLabel</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_38">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>Enable</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pushButton_6">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</iconset>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QFrame" name="frame_46">
-                   <property name="styleSheet">
-                    <string notr="true">QFrame{
-	background-color: rgba(0, 0, 0, 44);
-}</string>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_35">
-                    <item>
-                     <widget class="QLabel" name="label_37">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>TextLabel</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_39">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>Disable</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pushButton_22">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</iconset>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QFrame" name="frame_42">
-                   <property name="styleSheet">
-                    <string notr="true">QFrame{
-	background-color: rgba(0, 0, 0, 44);
-}</string>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_34">
-                    <item>
-                     <widget class="QLabel" name="label_36">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>TextLabel</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_40">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>Toggle</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pushButton_21">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</iconset>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QFrame" name="frame_10">
-                   <property name="styleSheet">
-                    <string notr="true">QFrame{
-	background-color: rgba(0, 0, 0, 44);
-}</string>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Raised</enum>
-                   </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_7">
-                    <item>
-                     <widget class="QLabel" name="label_5">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>TextLabel</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_41">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>Timer</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_42">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                      </property>
-                      <property name="text">
-                       <string>2000ms</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pushButton_7">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</normaloff>../Icons/mobile-trash-ui-svgrepo-com.svg</iconset>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
                 </layout>
                </widget>
               </item>
               <item>
-               <spacer name="verticalSpacer_2">
+               <spacer name="verticalSpacer_7">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
                 </property>

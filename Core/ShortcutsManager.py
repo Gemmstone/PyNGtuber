@@ -1,26 +1,38 @@
+import random
+
 from twitchAPI.object.eventsub import ChannelPointsCustomRewardRedemptionAddEvent, \
     ChannelFollowEvent, ChannelCheerEvent, ChannelRaidEvent, ChannelSubscribeEvent, \
     ChannelSubscriptionGiftEvent
-from twitchAPI.chat import Chat, EventData, ChatMessage
 from twitchAPI.oauth import UserAuthenticationStorageHelper
-from twitchAPI.eventsub.websocket import EventSubWebsocket
-from PyQt6.QtCore import QThread, pyqtSignal, pyqtSlot
 from aiohttp.client_exceptions import ClientConnectionError
-from PyQt6 import QtWidgets, QtCore, uic
-from PyQt6.QtGui import QIcon
-from pynput.keyboard import Listener
+from twitchAPI.eventsub.websocket import EventSubWebsocket
+from twitchAPI.chat import Chat, EventData, ChatMessage
+from PyQt6.QtCore import QThread, pyqtSignal, pyqtSlot
+from netifaces import AF_INET, ifaddresses, interfaces
+from websockets.exceptions import ConnectionClosedOK, ConnectionClosedError
 from twitchAPI.type import AuthScope, ChatEvent
+from Core.faceTracking import process_frame, load_data_face_tracking
+from urllib.parse import urlparse, unquote
+from PyQt6 import QtWidgets, QtCore, uic
+from PyQt6.QtGui import QIcon, QImage
+from pynput.keyboard import Listener
+from websockets.server import serve
 from twitchAPI.twitch import Twitch
 from twitchAPI.helper import first
-try:
-    import pyautogui
-except ValueError:
-    pyautogui = None
+from random import randint
+from copy import deepcopy
+import socketserver
+import http.server
 import os.path
 import asyncio
 import json
 import mido
 import time
+import cv2
+try:
+    import pyautogui
+except ValueError:
+    pyautogui = None
 import os
 
 
@@ -243,9 +255,12 @@ class MidiListener(QThread):
                             self.new_shortcut.emit({"command": message.dict(), "type": "Midi", "mode": self.selected_mode})
                         else:
                             for command in self.commands:
+                                # print(f"{message} == {command["command"]} = {message == command["command"]}")
                                 if message == command["command"]:
-                                    command["source"] = "Midi"
-                                    self.shortcut.emit(command)
+                                    command_copy = deepcopy(command)
+                                    command_copy["source"] = "Midi"
+                                    command_copy["command"] = command_copy["command"].dict()
+                                    self.shortcut.emit(command_copy)
         except BaseException as err:
             print(f"Midi is not supported on this platform:\n{err}")
             self.warning = False
@@ -311,56 +326,283 @@ class KeyboardListener(QThread):
 
 class MouseTracker(QThread):
     mouse_position = pyqtSignal(dict)
+    frame_received = pyqtSignal(QImage)
 
-    def __init__(self, target_fps=20):
+    def __init__(self, camera=None, target_fps=20, tracking_mode='mouse', privacy_mode=True):
         super().__init__()
         self.target_fps = target_fps
+        self.interval = 1.0 / self.target_fps
         self._running = False
+        self.tracking_mode = tracking_mode  # 'mouse' or 'face'
+        self.detector = None
+        self.predictor = None
+        self.cap = None
+        self.camera = camera
+        self.privacy_mode = privacy_mode
 
     def run(self):
-        interval = 1.0 / self.target_fps
         screen_width, screen_height = pyautogui.size()
         center_x, center_y = screen_width // 2, screen_height // 2
         self._running = True
-        error_count = 0  # Initialize the error counter
-        max_errors = 10  # Set the maximum number of allowed errors
+
+        if self.cap is not None:
+            self.cap.release()
+        if self.tracking_mode == 'face':
+            load_data_face_tracking()
+            self.cap = cv2.VideoCapture(self.camera if self.camera is not None else 0)
 
         while self._running:
             start_time = time.time()
-
-            if pyautogui is not None:
-                position = pyautogui.position()
-                adjusted_position = (position[0] - center_x, position[1] - center_y)
-            else:
-                adjusted_position = (0, 0)
-            try:
-                self.mouse_position.emit({
-                    "x": adjusted_position[0], "y": adjusted_position[1]
-                })
-            except AttributeError:
-                pass
-
+            adjusted_position = {"x": 0, "y": 0, "z": 0}
+            if self.tracking_mode == 'mouse':
+                if self.cap is not None:
+                    self.cap.release()
+                if pyautogui is not None:
+                    try:
+                        position = pyautogui.position()
+                    except RuntimeError:
+                        position = (0, 0)
+                    adjusted_position = {
+                        "x": position[0] - center_x,
+                        "y": position[1] - center_y,
+                        "z": 0
+                    }
+            elif self.tracking_mode == 'face':
+                ret, frame = self.cap.read()
+                if ret:
+                    qt_image, adjusted_position = process_frame(frame, self.privacy_mode)
+                    self.frame_received.emit(qt_image)
+            elif self.tracking_mode == 'random':
+                adjusted_position = {
+                    "x": randint(-10, 10),
+                    "y": randint(-10, 10),
+                    "z": 0
+                }
+            self.mouse_position.emit(adjusted_position)
             elapsed = time.time() - start_time
-            if elapsed < interval:
-                result = interval - elapsed
-                try:
-                    time.sleep(result)
-                except SystemError:
-                    error_count += 1
-                    print("Failed to sleep mouse timer, ShortcutsManager.py 344")
-                    if error_count >= max_errors:
-                        print("Maximum error count reached. Breaking the loop.")
-                        adjusted_position = (0, 0)
-                        try:
-                            self.mouse_position.emit({
-                                "x": adjusted_position[0], "y": adjusted_position[1]
-                            })
-                        except AttributeError:
-                            pass
-                        break
+            if elapsed < self.interval:
+                time.sleep(self.interval - elapsed)
+        if self.tracking_mode == 'face' and self.cap is not None:
+            self.cap.release()
 
     def stop(self):
         self._running = False
+
+    def set_camera(self, camera):
+        self.camera = camera
+
+        if self.tracking_mode == 'face':
+            if self.cap is not None:
+                self.cap.release()
+            self.cap = cv2.VideoCapture(self.camera)
+
+    def set_framerate(self, target_fps):
+        self.target_fps = target_fps
+        self.interval = 1.0 / self.target_fps
+
+    def set_privacy_mode(self, privacy_mode):
+        self.privacy_mode = privacy_mode
+
+    def set_tracking_mode(self, mode):
+        if mode == 'face' and self.cap is None:
+            self.cap = cv2.VideoCapture(self.camera)
+
+        self.tracking_mode = mode
+
+
+class WebSocket(QThread):
+    model_command = pyqtSignal(dict)
+    asset_command = pyqtSignal(dict)
+    reload_images = pyqtSignal()
+
+    def __init__(self, res_dir, local=True, port=8765):
+        super().__init__()
+        self.res_dir = res_dir
+        self.port = port
+        self.local = local
+        self.loop = None
+        self.websocket = None
+
+        self.ip_address = "127.0.0.1"
+        if not self.local:
+            for iface in interfaces():
+                try:
+                    ip_address = ifaddresses(iface)[AF_INET][0]['addr']
+                    if ip_address and ip_address != '127.0.0.1':
+                        self.ip_address = ip_address
+                except (KeyError, ValueError):
+                    pass
+
+    async def handler(self, websocket, path):
+        self.websocket = websocket
+        async for message in websocket:
+            if message:
+                await self.process_message(websocket, message)
+
+    async def process_message(self, websocket, message):
+        message_parts = message.split(" ")
+
+        if len(message_parts) < 2:
+            await websocket.send('Invalid command format')
+            return
+
+        command = message_parts[0].lower()
+        command_type = message_parts[1].title()
+
+        try:
+            if command == "get":
+                await self.handle_get_command(websocket, command_type, message_parts)
+            elif command == "model":
+                await self.handle_model_command(websocket, command_type, message_parts)
+            elif command == "asset":
+                await self.handle_asset_command(websocket, command_type, message_parts)
+            elif command == "reload":
+                await self.handle_reload_command(websocket, command_type)
+            else:
+                await websocket.send(f'Command "{command}" not recognized')
+        except Exception as err:
+            await websocket.send(f'Command error: {err}')
+
+    async def handle_reload_command(self, websocket, command_type):
+        match command_type.lower():
+            case "images":
+                self.reload_images.emit()
+
+    async def handle_get_command(self, websocket, command_type, message_parts):
+        valid_types = ["Expressions", "Avatars", "Collections", "Categories", "Assets"]
+        if command_type not in valid_types:
+            await websocket.send(f'Type of data "{command_type}" not found')
+            return
+
+        dir_path = self.get_directory_path(command_type, message_parts)
+        if not dir_path:
+            await websocket.send(f'Invalid command format for type "{command_type}"')
+            return
+
+        if command_type == "Assets":
+            valid_extensions = (".png", ".jpg", ".jpeg", ".gif", ".webp")
+            items = [name for name in os.listdir(dir_path)
+                     if os.path.isfile(os.path.join(dir_path, name)) and name.lower().endswith(valid_extensions)]
+        else:
+            items = [name for name in os.listdir(dir_path) if os.path.isdir(os.path.join(dir_path, name))]
+
+        await websocket.send(",".join(items))
+
+    def get_directory_path(self, command_type, message_parts):
+        if command_type == "Expressions":
+            return os.path.join(self.res_dir, "Models", "Expressions")
+        elif command_type == "Avatars":
+            return os.path.join(self.res_dir, "Models", "Avatars")
+        elif command_type == "Collections":
+            return os.path.join(self.res_dir, "Assets")
+        elif command_type == "Categories" and len(message_parts) == 3:
+            return os.path.join(self.res_dir, "Assets", message_parts[2])
+        elif command_type == "Assets" and len(message_parts) == 4:
+            return os.path.join(self.res_dir, "Assets", message_parts[2], message_parts[3])
+        return None
+
+    async def handle_model_command(self, websocket, command_type, message_parts):
+        if len(message_parts) < 3:
+            await websocket.send('Invalid model command format')
+            return
+
+        model_name = message_parts[2]
+        if command_type in ["Avatars", "Expressions"]:
+            model_path = os.path.join(self.res_dir, "Models", command_type, model_name)
+            if os.path.isdir(model_path):
+                self.model_command.emit({"type": command_type, "name": model_name})
+            else:
+                await websocket.send(f'"{model_name}" not found in {command_type}')
+        else:
+            await websocket.send(f'Type of model "{command_type}" not found')
+
+    async def handle_asset_command(self, websocket, command_type, message_parts):
+        if len(message_parts) not in [5, 6]:
+            await websocket.send('Invalid asset command format')
+            return
+
+        collection, category, asset = message_parts[2:5]
+        asset_path = os.path.join(self.res_dir, "Assets", collection, category, asset)
+        if not os.path.isfile(asset_path):
+            await websocket.send(f'Asset "{asset}" not found in category "{collection}/{category}"')
+            return
+
+        command_data = {
+            "path": os.path.join("Assets", collection, category, asset),
+            "type": "Asset",
+            "mode": command_type.lower(),
+            "command": "WebSocket"
+        }
+
+        if command_type == "Timer" and len(message_parts) == 6:
+            try:
+                command_data["time"] = int(message_parts[5])
+            except ValueError:
+                await websocket.send(f'"{message_parts[5]}" is not a valid time value (in milliseconds)')
+                return
+
+        self.asset_command.emit(command_data)
+
+    async def send_js_command(self, js_code):
+        if self.websocket:
+            try:
+                await self.websocket.send(js_code)
+            except ConnectionClosedOK:
+                pass
+            except ConnectionClosedError:
+                pass
+
+    async def run_server(self):
+        async with serve(self.handler, self.ip_address, self.port):
+            await asyncio.Future()  # run forever
+
+    def run(self):
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
+        self.loop.run_until_complete(self.run_server())
+
+
+class HTTPServerThread(QThread):
+    server_started = pyqtSignal(str)
+
+    def __init__(self, ip, port, res_dir):
+        super().__init__()
+        self.ip = ip
+        self.port = port
+        self.res_dir = res_dir
+        self.server_url = None
+        self.httpd = None
+
+    def run(self):
+        res_dir = self.res_dir
+
+        class Handler(http.server.SimpleHTTPRequestHandler):
+            def translate_path(self, path):
+                parsed_path = urlparse(path)
+                path = unquote(parsed_path.path)
+                # path = parsed_path.path.lstrip('/')
+                path = path.lstrip('/')
+                return os.path.join(res_dir, path)
+
+        while True:
+            try:
+                with socketserver.TCPServer((self.ip, self.port), Handler) as httpd:
+                    self.httpd = httpd
+                    self.server_url = f"http://{self.ip}:{self.port}"
+                    self.server_started.emit(self.server_url)
+                    print(f"Serving at: {self.server_url}")
+                    httpd.serve_forever()
+            except OSError as e:
+                if e.errno == 98:  # Address already in use
+                    print(f"Port {self.port} is already in use. Retrying in 5 seconds...")
+                    time.sleep(5)
+                else:
+                    raise e
+
+    def shutdown(self):
+        if self.httpd:
+            self.httpd.shutdown()
+            self.httpd.server_close()
 
 
 def find_shortcut_usages(main_folder, current_folder, new_shortcut):

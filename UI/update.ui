@@ -251,6 +251,10 @@ font-weight: bold;</string>
        <property name="text">
         <string>Go to page</string>
        </property>
+       <property name="icon">
+        <iconset resource="../icons.qrc">
+         <normaloff>:/Icons/Icons/460560-browse.svg</normaloff>:/Icons/Icons/460560-browse.svg</iconset>
+       </property>
       </widget>
      </item>
      <item>
@@ -271,6 +275,10 @@ font-weight: bold;</string>
        <property name="text">
         <string>Later</string>
        </property>
+       <property name="icon">
+        <iconset resource="../icons.qrc">
+         <normaloff>:/Icons/Icons/463001-sand-clock.svg</normaloff>:/Icons/Icons/463001-sand-clock.svg</iconset>
+       </property>
       </widget>
      </item>
      <item>
@@ -278,12 +286,18 @@ font-weight: bold;</string>
        <property name="text">
         <string>Update</string>
        </property>
+       <property name="icon">
+        <iconset resource="../icons.qrc">
+         <normaloff>:/Icons/Icons/462736-update.svg</normaloff>:/Icons/Icons/462736-update.svg</iconset>
+       </property>
       </widget>
      </item>
     </layout>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

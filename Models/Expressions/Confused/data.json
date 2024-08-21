@@ -1,0 +1,26 @@
+{
+    "shortcuts": [],
+    "animations": {
+        "idle": {
+            "name": "wobble",
+            "speed": 6.0,
+            "iteration": 0,
+            "pacing": "ease-in-out",
+            "direction": "normal"
+        },
+        "talking": {
+            "name": "wobble",
+            "speed": 0.5,
+            "iteration": 0,
+            "pacing": "ease-in-out",
+            "direction": "normal"
+        },
+        "screaming": {
+            "name": "ears",
+            "speed": 0.20000000000000004,
+            "iteration": 0,
+            "pacing": "ease-in-out",
+            "direction": "normal"
+        }
+    }
+}

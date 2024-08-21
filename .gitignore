@@ -1,5 +1,6 @@
 /Assets/Memes/
 /venv/
+/.venv/
 /Builds/
 /.idea/
 /Data/user_token.json
@@ -7,3 +8,4 @@ build.sh
 build.bat
 tests.py
 /PyNGtuber.spec
+/Core/__pycache__
