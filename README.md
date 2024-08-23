@@ -16,7 +16,7 @@ Make your streams more dynamic with animations, GIFs, controllers, mouse trackin
 
 🔥 Open-source and completely FREE to use!
 
-[![Python 3.12](https://img.shields.io/badge/python-3670A0?style=flat&logo=python&logoColor=ffdd54&label=3.11)](https://www.python.org/downloads/release/python-3110/)
+[![Python 3.12](https://img.shields.io/badge/python-3670A0?style=flat&logo=python&logoColor=ffdd54&label=3.12)](https://www.python.org/downloads/release/python-3110/)
 [![Qt](https://img.shields.io/badge/Qt-%23217346.svg?style=flat&logo=Qt&logoColor=white&label=6)](https://doc.qt.io/qtforpython-6/)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=flat&logo=javascript&logoColor=%23F7DF1E)
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=flat&logo=html5&logoColor=white)
