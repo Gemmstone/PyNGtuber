@@ -326,12 +326,20 @@ class MicrophoneVolumeWidget(QWidget):
             if not self.active_audio_signal == 2:
                 self.active_audio_signal = 2
                 self.activeAudio.emit(self.active_audio_signal)
-        elif self.delay_2.value() >= volume >= self.volume.value():
-            if not self.active_audio_signal == 1:
+        elif volume >= self.volume.value():
+            if self.active_audio_signal == 2:
+                if self.delay_2.value() > volume:
+                    self.active_audio_signal = 1
+                    self.activeAudio.emit(self.active_audio_signal)
+            elif not self.active_audio_signal == 1:
                 self.active_audio_signal = 1
                 self.activeAudio.emit(self.active_audio_signal)
         elif volume <= self.delay.value():
-            if not self.active_audio_signal == 0:
+            if self.active_audio_signal == 1:
+                if self.delay_2.value() > volume:
+                    self.active_audio_signal = 0
+                    self.activeAudio.emit(self.active_audio_signal)
+            elif not self.active_audio_signal == 0:
                 self.active_audio_signal = 0
                 self.activeAudio.emit(self.active_audio_signal)
 
