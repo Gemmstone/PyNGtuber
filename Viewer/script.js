@@ -21,10 +21,12 @@ let mouseMovementY = 0;
 
 let serverAddress = null;
 
+
 // Function to establish WebSocket connection
 function connectWebSocket() {
     if (!serverAddress) {
         // console.error('WebSocket server address not provided');
+        // file:////home/gemmstone/.config/PyNGtuber/Viewer/viewer.html?server_address=127.0.0.1:8765
         return;
     }
     document.body.style.backgroundColor = "transparent";
@@ -39,7 +41,7 @@ function connectWebSocket() {
         console.log('Message from server:', event.data);
 
         try {
-            const result = eval(event.data);
+            eval(event.data);
         } catch (error) {
             console.error('Error evaluating JavaScript:', error);
         }
@@ -125,7 +127,7 @@ function applyAnimation(animationName, image, config, destroy = false) {
     }
 }
 
-async function update_mic(status, animation, speed, direction, pacing, iteration, performance) {
+async function update_mic(status, animation, speed, direction, pacing, iteration, performance, opacity_speed) {
     var elements = document.getElementsByClassName("talking");
     var elements_not_being_edited = document.getElementsByClassName("talking_not_being_edited");
     var elements_being_edited = document.getElementsByClassName("talking_being_edited");
@@ -141,19 +143,19 @@ async function update_mic(status, animation, speed, direction, pacing, iteration
 
     for (var i = 0; i < elements.length; i++) {
         var states = elements[i].attributes.talking.value.split(" ");
-        elements[i].style.transition = "opacity 0.2s";
+        elements[i].style.transition = `opacity ${opacity_speed}s`;
         elements[i].style.opacity = (states.includes(stateMap[status])) ? 1 : 0;
     }
 
     for (var i = 0; i < elements_not_being_edited.length; i++) {
         var states = elements_not_being_edited[i].attributes.talking.value.split(" ");
-        elements_not_being_edited[i].style.transition = "opacity 0.2s";
+        elements_not_being_edited[i].style.transition = `opacity ${opacity_speed}s`;
         elements_not_being_edited[i].style.opacity = (states.includes(stateMap[status])) ? 0.7 : 0.3;
     }
 
     for (var i = 0; i < elements_being_edited.length; i++) {
         var states = elements_being_edited[i].attributes.talking.value.split(" ");
-        elements_being_edited[i].style.transition = "opacity 0.2s";
+        elements_being_edited[i].style.transition = `opacity ${opacity_speed}s`;
         elements_being_edited[i].style.opacity = (states.includes(stateMap[status])) ? 1 : 0.5;
     }
 
