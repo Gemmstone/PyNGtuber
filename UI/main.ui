@@ -2403,7 +2403,7 @@ QTabBar::tab:hover {
                      <x>0</x>
                      <y>0</y>
                      <width>288</width>
-                     <height>590</height>
+                     <height>621</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -2651,6 +2651,32 @@ QTabBar::tab:hover {
                               <string>None</string>
                              </property>
                             </item>
+                           </widget>
+                          </item>
+                          <item row="2" column="0">
+                           <widget class="QLabel" name="label_29">
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
+                            </property>
+                            <property name="text">
+                             <string>Mouth Opacity Speed:</string>
+                            </property>
+                           </widget>
+                          </item>
+                          <item row="2" column="1">
+                           <widget class="QDoubleSpinBox" name="opacity_speed">
+                            <property name="alignment">
+                             <set>Qt::AlignCenter</set>
+                            </property>
+                            <property name="decimals">
+                             <number>4</number>
+                            </property>
+                            <property name="value">
+                             <double>0.200000000000000</double>
+                            </property>
                            </widget>
                           </item>
                          </layout>
@@ -5621,7 +5647,7 @@ QFrame{
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>288</width>
+                     <width>254</width>
                      <height>893</height>
                     </rect>
                    </property>
