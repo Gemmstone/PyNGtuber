@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>270</width>
-    <height>371</height>
+    <height>463</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -247,7 +247,7 @@ QTabWidget::pane { border: 0; }</string>
             <x>0</x>
             <y>0</y>
             <width>268</width>
-            <height>227</height>
+            <height>319</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_42">
