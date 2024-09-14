@@ -31,12 +31,15 @@ class Settings(QWidget):
         self.viewer = viewer
         self.anim_file = anim_file
         self.animations = animations
+        self.sender_general = None
+        self.parameters_general = {}
 
         if self.parameters["route"] != "General Settings":
             self.warning.hide()
             self.warning_2.hide()
         else:
             self.frame_2.hide()
+            self.saveDefault.hide()
 
         self.set_data(changed_keys=[])
 
@@ -254,6 +257,14 @@ class Settings(QWidget):
             obj = getattr(self, obj_name)
             method = getattr(obj, method_name)
 
+            if self.sender_general != None:
+                print(obj_name, self.sender_general, obj_name != self.sender_general)
+                if obj_name != self.sender_general:
+                    return
+                parameters = self.parameters_general
+            else:
+                parameters = self.parameters
+
             if hasattr(obj, 'blockSignals'):
                 obj.blockSignals(True)
 
@@ -261,28 +272,28 @@ class Settings(QWidget):
                 case "result_ready":
                     method(default)
                 case "invert":
-                    method(self.parameters.get(key, default) * -1)
+                    method(parameters.get(key, default) * -1)
                 case "compare to 1":
-                    method(self.parameters.get(key, default) == 1)
+                    method(parameters.get(key, default) == 1)
                 case "Green" | "Red" | "Yellow" | "Blue" | "Orange":
-                    method(type in self.parameters.get(key, default))
+                    method(type in parameters.get(key, default))
                 case "is not ignore":
-                    method(self.parameters.get(key, default) != "ignore")
+                    method(parameters.get(key, default) != "ignore")
                 case "ignore not in":
-                    method("ignore" not in self.parameters.get(key, default))
+                    method("ignore" not in parameters.get(key, default))
                 case "controller_buttons" | "controller_wheel":
-                    method(type in self.parameters.get(key, default) or "guitar_buttons" in self.parameters.get(key, default))
+                    method(type in parameters.get(key, default) or "guitar_buttons" in self.parameters.get(key, default))
                 case "blinking_open" | "blinking_closed" | "display" | "move" | "guitar":
-                    method(type == self.parameters.get(key, default))
+                    method(type == parameters.get(key, default))
                 case "talking_open" | "talking_closed" | "talking_screaming":
                     method(
-                        type in self.parameters.get(key, default)
-                        or self.parameters.get(key, default) == ["ignore"]
-                        or self.parameters.get(key, default) == "ignore"
-                        or type == self.parameters.get(key, default)
+                        type in parameters.get(key, default)
+                        or parameters.get(key, default) == ["ignore"]
+                        or parameters.get(key, default) == "ignore"
+                        or type == parameters.get(key, default)
                     )
                 case _:
-                    method(self.parameters.get(key, default))
+                    method(parameters.get(key, default))
 
             if hasattr(obj, 'blockSignals'):
                 obj.blockSignals(False)
@@ -718,8 +729,9 @@ class Settings(QWidget):
         return chords
 
     def save_current(self):
+        sender = self.sender().objectName()
         self.save()
-        self.settings_changed.emit(self.parameters)
+        self.settings_changed.emit({"sender": sender, "parameters": self.parameters})
 
     def save_default(self):
         self.save()
@@ -806,19 +818,26 @@ class Settings(QWidget):
         if result is not None:
             self.og_height_screaming = result
 
-    def update_data(self, value, default=False):
+    def update_data(self, value, default=False, sender=None):
         exclusion_list = ['route', 'filename', "parent_folder", "thumbnail_path", "title", "hotkeys"]
         changed_keys = []
+
+        self.parameters_general = {}
+
         for key, val in value.items():
             if key not in exclusion_list:
                 if self.parameters.get(key) != val:
-                    self.parameters[key] = deepcopy(val)
+                    self.parameters_general[key] = deepcopy(val)
                     changed_keys.append(key)
+
+        self.sender_general = sender
         self.set_data(changed_keys, True)
+        self.sender_general = None
+        self.save()
         if default:
             self.settings_changed_default.emit(self.parameters)
         else:
-            self.settings_changed.emit(self.parameters)
+            self.settings_changed.emit({"sender": None, "parameters": self.parameters})
 
 
 class SettingsToolBox(QToolBox):
@@ -980,7 +999,7 @@ class SettingsToolBox(QToolBox):
 
                 filtered_items_category.append(result)
 
-        if len(filtered_items_category) > 2:
+        if len(filtered_items_category) > 1:
             general_settings_data = deepcopy(filtered_items_category[0])
             general_settings_data["route"] = "General Settings"
             general_settings_data["filename"] = "General Settings"
@@ -1057,7 +1076,7 @@ class SettingsToolBox(QToolBox):
     def update_childs(self, value):
         self.general_settings_changed = True
         for child in self.childs:
-            self.childs[child].update_data(value)
+            self.childs[child].update_data(value["parameters"], sender=value["sender"])
         self.general_settings_changed = False
 
     def save_as_default_childs(self, value):
@@ -1068,9 +1087,9 @@ class SettingsToolBox(QToolBox):
 
     def save(self, value):
         if self.general_settings_changed:
-            self.addValue({"value": value, "default": False})
+            self.addValue({"value": value["parameters"], "default": False})
         else:
-            self.settings_changed.emit({"value": value, "default": False})
+            self.settings_changed.emit({"value": value["parameters"], "default": False})
 
     def save_as_default(self, value):
         if self.general_settings_changed:

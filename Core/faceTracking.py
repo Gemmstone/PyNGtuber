@@ -56,8 +56,13 @@ def extract_features(img, face_mesh):
     RIGHT_EYE = 263
     MOUTH_RIGHT = 291
 
-    result = face_mesh.process(img)
     face_features = []
+
+    try:
+        result = face_mesh.process(img)
+    except ValueError as err:
+        print(f"Camera error: {err}")
+        return face_features
 
     if result.multi_face_landmarks is not None:
         for face_landmarks in result.multi_face_landmarks:

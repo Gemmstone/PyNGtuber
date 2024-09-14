@@ -68,7 +68,7 @@
         "animation_direction_talking": "reverse",
         "filename": "ahoge_027.png",
         "parent_folder": "ahoge",
-        "thumbnail_path": "Assets/Chereverie/ahoge/thumbs/ahoge_027.png",
+        "thumbnail_path": "/home/gemmstone/PycharmProjects/PNGtubing/Assets/Chereverie/ahoge/thumbs/ahoge_027.png",
         "title": "ahoge_027.png",
         "idle_position_speed": 0.2,
         "idle_position_pacing": "ease-in-out",
@@ -86,16 +86,16 @@
         "rotation_screaming": 0,
         "screaming_position_speed": 0.2,
         "screaming_position_pacing": "ease-in-out",
-        "animation_name_screaming": "None",
+        "animation_name_screaming": "gelatine2",
         "animation_speed_screaming": 0.5,
         "animation_direction_screaming": "normal",
         "animation_iteration_idle": 0,
         "animation_iteration_talking": 0,
         "animation_iteration_screaming": 0,
-        "animation_pacing_idle": "EaseInOut",
-        "animation_pacing_talking": "EaseInOut",
-        "animation_pacing_screaming": "EaseInOut",
-        "move": false,
+        "animation_pacing_idle": "ease-in-out",
+        "animation_pacing_talking": "ease-in-out",
+        "animation_pacing_screaming": "ease-in-out",
+        "move": true,
         "moveToIDLE": true,
         "moveToTALKING": true,
         "moveToSCREAMING": true,
@@ -131,7 +131,7 @@
         "animation_iteration_screaming": 0,
         "animation_iteration_talking": 0,
         "animation_name_idle": "None",
-        "animation_name_screaming": "None",
+        "animation_name_screaming": "gelatine2",
         "animation_name_talking": "gelatine2",
         "animation_pacing_idle": "ease-in-out",
         "animation_pacing_screaming": "ease-in-out",
@@ -200,7 +200,7 @@
         "track_mouse_x": 1,
         "track_mouse_y": 1,
         "use_css": false,
-        "move": false,
+        "move": true,
         "moveToIDLE": true,
         "moveToTALKING": true,
         "moveToSCREAMING": true,
@@ -301,7 +301,9 @@
         "animation_speed_idle": 6.0,
         "animation_speed_talking": 0.5,
         "animation_direction_idle": "normal",
-        "animation_direction_talking": "normal"
+        "animation_direction_talking": "normal",
+        "move": false,
+        "animation_name_screaming": "None"
     },
     {
         "route": "Assets/Chereverie/Controllers/hands_017.png",
@@ -314,7 +316,7 @@
         "animation_iteration_screaming": 0,
         "animation_iteration_talking": 0,
         "animation_name_idle": "floaty",
-        "animation_name_screaming": "None",
+        "animation_name_screaming": "floaty",
         "animation_name_talking": "floaty",
         "animation_pacing_idle": "BackEaseIn",
         "animation_pacing_screaming": "BackEaseIn",
@@ -384,7 +386,7 @@
         "track_mouse_x": 1,
         "track_mouse_y": 1,
         "use_css": false,
-        "move": false,
+        "move": true,
         "moveToIDLE": true,
         "moveToTALKING": true,
         "moveToSCREAMING": true,
@@ -488,7 +490,9 @@
         "animation_speed_idle": 6.0,
         "animation_speed_talking": 0.5,
         "animation_direction_idle": "normal",
-        "animation_direction_talking": "normal"
+        "animation_direction_talking": "normal",
+        "move": false,
+        "animation_name_screaming": "None"
     },
     {
         "route": "Assets/Chereverie/freckles/freckles_001.png",
@@ -554,7 +558,9 @@
         "animation_speed_idle": 6.0,
         "animation_speed_talking": 0.5,
         "animation_direction_idle": "normal",
-        "animation_direction_talking": "normal"
+        "animation_direction_talking": "normal",
+        "move": false,
+        "animation_name_screaming": "None"
     },
     {
         "route": "Assets/Chereverie/freckles/freckles_002.png",
@@ -620,7 +626,9 @@
         "animation_speed_idle": 6.0,
         "animation_speed_talking": 0.5,
         "animation_direction_idle": "normal",
-        "animation_direction_talking": "normal"
+        "animation_direction_talking": "normal",
+        "move": false,
+        "animation_name_screaming": "None"
     },
     {
         "route": "Assets/Chereverie/glasses/glasses_064.png",
@@ -820,7 +828,8 @@
         "title": "hairback_189.png",
         "track_mouse_x": 1,
         "track_mouse_y": 1,
-        "use_css": false
+        "use_css": false,
+        "move": true
     },
     {
         "route": "Assets/Chereverie/hairbows/hairbows_360.png",
@@ -899,7 +908,8 @@
         "title": "hairbows_360.png",
         "track_mouse_x": 1,
         "track_mouse_y": 1,
-        "use_css": false
+        "use_css": false,
+        "move": true
     },
     {
         "route": "Assets/Chereverie/nose/[nose]_012.PNG",
@@ -965,7 +975,9 @@
         "animation_speed_idle": 6.0,
         "animation_speed_talking": 0.5,
         "animation_direction_idle": "normal",
-        "animation_direction_talking": "normal"
+        "animation_direction_talking": "normal",
+        "move": false,
+        "animation_name_screaming": "None"
     },
     {
         "route": "Assets/Chereverie/overshirts/overshirts_109.png",
@@ -1031,7 +1043,9 @@
         "animation_speed_idle": 6.0,
         "animation_speed_talking": 0.5,
         "animation_direction_idle": "normal",
-        "animation_direction_talking": "normal"
+        "animation_direction_talking": "normal",
+        "move": false,
+        "animation_name_screaming": "None"
     },
     {
         "route": "Assets/Chereverie/ponytails/ponytails_143.png",
@@ -1110,7 +1124,8 @@
         "title": "ponytails_143.png",
         "track_mouse_x": 1,
         "track_mouse_y": 1,
-        "use_css": false
+        "use_css": false,
+        "move": true
     },
     {
         "route": "Assets/Chereverie/ponytails/ponytails_144.png",
@@ -1189,7 +1204,8 @@
         "title": "ponytails_144.png",
         "track_mouse_x": 1,
         "track_mouse_y": 1,
-        "use_css": false
+        "use_css": false,
+        "move": true
     },
     {
         "route": "Assets/Chereverie/short bangs/short bangs_099.png",
@@ -1255,7 +1271,9 @@
         "animation_speed_idle": 6.0,
         "animation_speed_talking": 0.5,
         "animation_direction_idle": "normal",
-        "animation_direction_talking": "normal"
+        "animation_direction_talking": "normal",
+        "move": false,
+        "animation_name_screaming": "None"
     },
     {
         "route": "Assets/Chereverie/side pieces/side pieces_017.png",
@@ -1268,7 +1286,7 @@
         "animation_iteration_screaming": 0,
         "animation_iteration_talking": 0,
         "animation_name_idle": "None",
-        "animation_name_screaming": "None",
+        "animation_name_screaming": "gelatine2",
         "animation_name_talking": "gelatine2",
         "animation_pacing_idle": "ease-in-out",
         "animation_pacing_screaming": "ease-in-out",
@@ -1337,7 +1355,7 @@
         "track_mouse_x": 1,
         "track_mouse_y": 1,
         "use_css": false,
-        "move": false,
+        "move": true,
         "moveToIDLE": true,
         "moveToTALKING": true,
         "moveToSCREAMING": true,
@@ -1385,7 +1403,7 @@
         "animation_iteration_screaming": 0,
         "animation_iteration_talking": 0,
         "animation_name_idle": "None",
-        "animation_name_screaming": "None",
+        "animation_name_screaming": "gelatine2",
         "animation_name_talking": "gelatine2",
         "animation_pacing_idle": "ease-in-out",
         "animation_pacing_screaming": "ease-in-out",
@@ -1454,7 +1472,7 @@
         "track_mouse_x": 1,
         "track_mouse_y": 1,
         "use_css": false,
-        "move": false,
+        "move": true,
         "moveToIDLE": true,
         "moveToTALKING": true,
         "moveToSCREAMING": true,
@@ -1555,7 +1573,9 @@
         "animation_speed_idle": 6.0,
         "animation_speed_talking": 0.5,
         "animation_direction_idle": "normal",
-        "animation_direction_talking": "normal"
+        "animation_direction_talking": "normal",
+        "move": false,
+        "animation_name_screaming": "None"
     },
     {
         "route": "Assets/Chereverie/undershirts/undershirts_136.png",
@@ -1621,6 +1641,8 @@
         "animation_speed_idle": 6.0,
         "animation_speed_talking": 0.5,
         "animation_direction_idle": "normal",
-        "animation_direction_talking": "normal"
+        "animation_direction_talking": "normal",
+        "move": false,
+        "animation_name_screaming": "None"
     }
 ]

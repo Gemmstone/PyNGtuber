@@ -179,7 +179,7 @@ class LayeredImageViewer(QWebEngineView):
         soup = BeautifulSoup('<div id="image-wrapper"></div>', 'html.parser')
         image_wrapper = soup.find(id="image-wrapper")
         if performance:
-            image_wrapper['class'] = ["flipper", "idle_animation"]
+            image_wrapper['class'] = ["idle_animation"]
 
         flipper_div = soup.new_tag("div", style=f"""
             position: absolute !important;
@@ -444,36 +444,37 @@ class LayeredImageViewer(QWebEngineView):
                 editing_div["editing"] = editing
                 editing_div["default"] = "editing_div_nope"
 
-                if layer.get("filters", False):
-                    filters_div = soup.new_tag(
-                        "div",
-                        style=f"filter: "
-                              f"blur({layer.get('blur', 0.0)}px) "
-                              f"brightness({layer.get('brightness', 100.0)}%) "
-                              f"contrast({layer.get('contrast', 100.0)}%) "
-                              f"grayscale({layer.get('grayscale', 0.0)}%) "
-                              f"hue-rotate({layer.get('hue', 0.0)}deg) "
-                              f"invert({layer.get('invert', 0.0)}%) "
-                              f"opacity({layer.get('opacity', 100.0)}%) "
-                              f"saturate({layer.get('saturate', 100.0)}%) "
-                              f"sepia({layer.get('sepia', 0.0)}%);"
-                    )
+                if not performance:
+                    if layer.get("filters", False):
+                        filters_div = soup.new_tag(
+                            "div",
+                            style=f"filter: "
+                                  f"blur({layer.get('blur', 0.0)}px) "
+                                  f"brightness({layer.get('brightness', 100.0)}%) "
+                                  f"contrast({layer.get('contrast', 100.0)}%) "
+                                  f"grayscale({layer.get('grayscale', 0.0)}%) "
+                                  f"hue-rotate({layer.get('hue', 0.0)}deg) "
+                                  f"invert({layer.get('invert', 0.0)}%) "
+                                  f"opacity({layer.get('opacity', 100.0)}%) "
+                                  f"saturate({layer.get('saturate', 100.0)}%) "
+                                  f"sepia({layer.get('sepia', 0.0)}%);"
+                        )
 
-                if layer.get("shadow", False):
-                    color = [int(i) for i in layer.get('shadowColor', '0, 0, 0, 255').replace("(", "").replace(")", "").split(", ")]
-                    color = f"({color[0]}, {color[1]}, {color[2]}, {color[3] / 255})"
-                    shadow_div = soup.new_tag(
-                        "div",
-                        style=f"filter: drop-shadow("
-                              f"{layer.get('shadowX', 5)}px "
-                              f"{layer.get('shadowY', -5) * -1}px "
-                              f"{layer.get('shadowBlur', 0)}px "
-                              f"rgba{color if '#' not in color else '(0, 0, 0, 255)'});"
-                    )
+                    if layer.get("shadow", False):
+                        color = [int(i) for i in layer.get('shadowColor', '0, 0, 0, 255').replace("(", "").replace(")", "").split(", ")]
+                        color = f"({color[0]}, {color[1]}, {color[2]}, {color[3] / 255})"
+                        shadow_div = soup.new_tag(
+                            "div",
+                            style=f"filter: drop-shadow("
+                                  f"{layer.get('shadowX', 5)}px "
+                                  f"{layer.get('shadowY', -5) * -1}px "
+                                  f"{layer.get('shadowBlur', 0)}px "
+                                  f"rgba{color if '#' not in color else '(0, 0, 0, 255)'});"
+                        )
 
                 img_tag = soup.new_tag(
                     'img',
-                    src=f"{os.path.join(self.res_dir, layer['route']).replace("\\", "/")}",
+                    src=str(os.path.join(self.res_dir, layer['route'])).replace("\\", "/"),
                     # type="image/webp",
                     style=f"""
                         position: absolute !important;

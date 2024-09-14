@@ -68,7 +68,7 @@
         "animation_direction_talking": "reverse",
         "filename": "ahoge_027.png",
         "parent_folder": "ahoge",
-        "thumbnail_path": "Assets/Chereverie/ahoge/thumbs/ahoge_027.png",
+        "thumbnail_path": "/home/gemmstone/PycharmProjects/PNGtubing/Assets/Chereverie/ahoge/thumbs/ahoge_027.png",
         "title": "ahoge_027.png",
         "idle_position_speed": 0.2,
         "idle_position_pacing": "ease-in-out",
@@ -86,7 +86,7 @@
         "rotation_screaming": 0,
         "screaming_position_speed": 0.2,
         "screaming_position_pacing": "ease-in-out",
-        "animation_name_screaming": "None",
+        "animation_name_screaming": "gelatine2",
         "animation_speed_screaming": 0.5,
         "animation_direction_screaming": "normal",
         "animation_iteration_idle": 0,
@@ -94,7 +94,31 @@
         "animation_iteration_screaming": 0,
         "animation_pacing_idle": "ease-in-out",
         "animation_pacing_talking": "ease-in-out",
-        "animation_pacing_screaming": "ease-in-out"
+        "animation_pacing_screaming": "ease-in-out",
+        "move": true,
+        "moveToIDLE": true,
+        "moveToTALKING": true,
+        "moveToSCREAMING": true,
+        "shadow": false,
+        "color": "#000000",
+        "shadowBlur": 5,
+        "shadowOpacity": 100,
+        "shadowX": 0,
+        "shadowY": 0,
+        "filters": false,
+        "blend": "source-over",
+        "hue": 0.0,
+        "saturation": 0.0,
+        "brightness": 0.0,
+        "contrast": 0.0,
+        "opacity": 100.0,
+        "blur": 0.0,
+        "pixelate": 0,
+        "grayscale": 0.0,
+        "invert": 0.0,
+        "forced_mouse_tracking": 0,
+        "shadowColor": "0, 0, 0, 255",
+        "sepia": 0.0
     },
     {
         "route": "Assets/Chereverie/bangs/bangs_189.png",
@@ -173,7 +197,8 @@
         "title": "bangs_189.png",
         "track_mouse_x": 1,
         "track_mouse_y": 1,
-        "use_css": false
+        "use_css": false,
+        "move": true
     },
     {
         "route": "Assets/Chereverie/glasses/glasses_064.png",
@@ -251,48 +276,50 @@
         "moveToTALKING": true,
         "moveToSCREAMING": true,
         "idle_position_speed": 0.2,
-        "idle_position_pacing": "EaseInOut",
+        "idle_position_pacing": "ease-in-out",
         "sizeX_talking": 600,
         "sizeY_talking": 600,
         "posX_talking": 0,
         "posY_talking": 0,
         "rotation_talking": 0,
         "talking_position_speed": 0.2,
-        "talking_position_pacing": "EaseInOut",
+        "talking_position_pacing": "ease-in-out",
         "sizeX_screaming": 600,
         "sizeY_screaming": 600,
         "posX_screaming": 0,
         "posY_screaming": 0,
         "rotation_screaming": 0,
         "screaming_position_speed": 0.2,
-        "screaming_position_pacing": "EaseInOut",
+        "screaming_position_pacing": "ease-in-out",
         "animation_name_screaming": "None",
         "animation_speed_screaming": 0.5,
         "animation_direction_screaming": "normal",
         "animation_iteration_idle": 0,
         "animation_iteration_talking": 0,
         "animation_iteration_screaming": 0,
-        "animation_pacing_idle": "EaseInOut",
-        "animation_pacing_talking": "EaseInOut",
-        "animation_pacing_screaming": "EaseInOut",
-        "shadow": false,
+        "animation_pacing_idle": "ease-in-out",
+        "animation_pacing_talking": "ease-in-out",
+        "animation_pacing_screaming": "ease-in-out",
+        "shadow": true,
         "color": "#000000",
-        "shadowBlur": 20,
+        "shadowBlur": 5,
         "shadowOpacity": 100,
         "shadowX": 5,
         "shadowY": -5,
         "filters": false,
         "blend": "source-over",
-        "hue": 0,
-        "saturation": 0,
-        "brightness": 0,
-        "contrast": 0,
-        "opacity": 100,
-        "blur": 0,
+        "hue": 0.0,
+        "saturation": 0.0,
+        "brightness": 0.0,
+        "contrast": 0.0,
+        "opacity": 100.0,
+        "blur": 0.0,
         "pixelate": 0,
-        "grayscale": false,
-        "invert": false,
-        "forced_mouse_tracking": 0
+        "grayscale": 0.0,
+        "invert": 0.0,
+        "forced_mouse_tracking": 0,
+        "shadowColor": "0, 0, 0, 100",
+        "sepia": 0.0
     },
     {
         "route": "Assets/Chereverie/short bangs/short bangs_063.png",
@@ -358,7 +385,9 @@
         "animation_speed_idle": 6.0,
         "animation_speed_talking": 0.5,
         "animation_direction_idle": "normal",
-        "animation_direction_talking": "normal"
+        "animation_direction_talking": "normal",
+        "move": false,
+        "animation_name_screaming": "None"
     },
     {
         "route": "Assets/Chereverie/face assc/face assc_162.png",
@@ -424,7 +453,9 @@
         "animation_speed_idle": 6.0,
         "animation_speed_talking": 0.5,
         "animation_direction_idle": "normal",
-        "animation_direction_talking": "normal"
+        "animation_direction_talking": "normal",
+        "move": false,
+        "animation_name_screaming": "None"
     },
     {
         "route": "Assets/Chereverie/nose/[nose]_005.PNG",
@@ -490,7 +521,9 @@
         "animation_speed_idle": 6.0,
         "animation_speed_talking": 0.5,
         "animation_direction_idle": "normal",
-        "animation_direction_talking": "normal"
+        "animation_direction_talking": "normal",
+        "move": false,
+        "animation_name_screaming": "None"
     },
     {
         "route": "Assets/Chereverie/undershirt style/undershirt style_015.png",
@@ -556,7 +589,9 @@
         "animation_speed_idle": 6.0,
         "animation_speed_talking": 0.5,
         "animation_direction_idle": "normal",
-        "animation_direction_talking": "normal"
+        "animation_direction_talking": "normal",
+        "move": false,
+        "animation_name_screaming": "None"
     },
     {
         "route": "Assets/Chereverie/undershirts/undershirts_118.png",
@@ -622,7 +657,9 @@
         "animation_speed_idle": 6.0,
         "animation_speed_talking": 0.5,
         "animation_direction_idle": "normal",
-        "animation_direction_talking": "normal"
+        "animation_direction_talking": "normal",
+        "move": false,
+        "animation_name_screaming": "None"
     },
     {
         "route": "Assets/Chereverie/freckles/freckles_001.png",
@@ -688,7 +725,9 @@
         "animation_speed_idle": 6.0,
         "animation_speed_talking": 0.5,
         "animation_direction_idle": "normal",
-        "animation_direction_talking": "normal"
+        "animation_direction_talking": "normal",
+        "move": false,
+        "animation_name_screaming": "None"
     },
     {
         "route": "Assets/Chereverie/freckles/freckles_002.png",
@@ -754,7 +793,9 @@
         "animation_speed_idle": 6.0,
         "animation_speed_talking": 0.5,
         "animation_direction_idle": "normal",
-        "animation_direction_talking": "normal"
+        "animation_direction_talking": "normal",
+        "move": false,
+        "animation_name_screaming": "None"
     },
     {
         "route": "Assets/Chereverie/body/body_068.png",
@@ -820,7 +861,9 @@
         "animation_speed_idle": 6.0,
         "animation_speed_talking": 0.5,
         "animation_direction_idle": "normal",
-        "animation_direction_talking": "normal"
+        "animation_direction_talking": "normal",
+        "move": false,
+        "animation_name_screaming": "None"
     },
     {
         "route": "Assets/Chereverie/hairback/hairback_315.png",
@@ -899,7 +942,8 @@
         "title": "hairback_315.png",
         "track_mouse_x": 1,
         "track_mouse_y": 1,
-        "use_css": false
+        "use_css": false,
+        "move": true
     },
     {
         "route": "Assets/Chereverie/Controllers/Pen_005.png",
@@ -960,7 +1004,9 @@
         "cursorScaleX": 0.03,
         "cursorScaleY": 0.03,
         "track_mouse_x": 1,
-        "track_mouse_y": 1
+        "track_mouse_y": 1,
+        "move": true,
+        "animation_name_screaming": "None"
     },
     {
         "route": "Assets/Chereverie/Controllers/tabletwhite.png",
@@ -1013,6 +1059,8 @@
         "posGuitarDownX": 0,
         "posGuitarDownY": 0,
         "rotationGuitarDown": 0,
-        "animation_idle": false
+        "animation_idle": false,
+        "move": true,
+        "animation_name_screaming": "None"
     }
 ]

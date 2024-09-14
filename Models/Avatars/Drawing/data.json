@@ -5,21 +5,21 @@
             "name": "floaty",
             "speed": 6.0,
             "iteration": 0,
-            "easing": "EaseInOut",
+            "easing": "ease-in-out",
             "direction": "normal"
         },
         "talking": {
             "name": "floaty",
             "speed": 0.5,
             "iteration": 0,
-            "easing": "EaseInOut",
+            "easing": "ease-in-out",
             "direction": "normal"
         },
         "screaming": {
             "name": "shake",
             "speed": 0.5,
             "iteration": 0,
-            "pacing": "EaseInOut",
+            "pacing": "ease-in-out",
             "direction": "normal"
         }
     }

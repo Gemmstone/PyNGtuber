@@ -26,12 +26,12 @@ import sys
 import os
 import re
 
-current_version = "v1.10.1"
+current_version = "v1.10.2"
 repo_owner = "Gemmstone"
 repo_name = "PyNGtuber"
 
 directories = ["Data", "Models", "Assets", "Viewer"]
-directories_skip = ["Models"]
+directories_skip = ["Models", "Assets"]
 overwrite_files = ["script.js", "animations.js", "viewer.html"]
 
 os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = '4864'
@@ -158,10 +158,8 @@ if prod:
     process = psutil.Process(os.getpid())
     if os.name == 'posix':
         if sys.platform == 'darwin':
-            # process.nice(20)
             res_dir = os.path.expanduser("~/Library/Application Support/PyNGtuber")
         else:
-            # process.nice(psutil.IOPRIO_HIGH)
             res_dir = os.path.expanduser("~/.config/PyNGtuber")
     elif os.name == 'nt':
         process.nice(psutil.REALTIME_PRIORITY_CLASS)
@@ -172,6 +170,7 @@ if prod:
         dest_path = os.path.join(res_dir, directory)
 
         if not os.path.exists(dest_path):
+
             shutil.copytree(src_path, dest_path)
         elif directory not in directories_skip:
             update_directory(src_path, dest_path)
@@ -244,9 +243,9 @@ class UpdateDialog(QtWidgets.QDialog):
         return formatted_text.strip()
 
     def download(self):
-        if os.path.exists(os.path.join(exe_dir, 'main.exe')):
+        if os.path.isfile(os.path.join(exe_dir, 'main.exe')):
             self.download_app('Windows')
-        elif os.path.exists(os.path.join(exe_dir, 'main.py')):
+        elif os.path.isfile(os.path.join(exe_dir, 'main.py')):
             self.download_app('Python')
         else:
             self.download_app('Linux')
@@ -375,7 +374,7 @@ class HiddenWindow(QtWidgets.QWidget):
     def __init__(self, settings):
         super().__init__()
         self.setWindowTitle("PyNGtuber Capture")
-        self.setWindowFlag(QtCore.Qt.WindowType.Tool)
+        # self.setWindowFlag(QtCore.Qt.WindowType.Tool)    Windows and Discord don't like this!
         self.setWindowFlag(QtCore.Qt.WindowType.WindowStaysOnBottomHint)
         self.viewer = LayeredImageViewer(exe_dir=res_dir, hw_acceleration=settings.get("hardware acceleration", False))
 
@@ -517,8 +516,11 @@ class FileParametersDefault:
 
     def _create_json_file(self, route, settings):
         json_path = os.path.join(self.base_path, f"{route}.json")
-        with open(json_path, 'w') as file:
-            json.dump(settings, file, indent=4)
+        try:
+            with open(json_path, 'w') as file:
+                json.dump(settings, file, indent=4)
+        except FileNotFoundError:
+            pass
         return settings
 
     def __getitem__(self, route):
@@ -790,6 +792,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.alphaSelector.valueChanged.connect(self.update_settings)
         self.speed_movement.valueChanged.connect(self.update_settings)
         self.scale_x.valueChanged.connect(self.update_settings)
+        self.opacity_speed.valueChanged.connect(self.update_settings)
         self.scale_camera_x.valueChanged.connect(self.update_settings)
         self.scale_y.valueChanged.connect(self.update_settings)
         self.scale_camera_y.valueChanged.connect(self.update_settings)
@@ -969,7 +972,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.webSocketToggle.isChecked():
             self.web_socket.start()
 
-        self.web_socket_obs = WebSocket(res_dir, 4863 if prod else 4853)
+        self.web_socket_obs = WebSocket(res_dir, port=4863 if prod else 4853)
         self.web_socket_obs.reload_images.connect(self.reload_images)
         if self.local_obs_source_toggle.isChecked():
             self.web_socket_obs.start()
@@ -996,10 +999,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.viewer.obs_websocket = self.web_socket_obs
         self.viewer.obs_websocket_remote = self.web_socket_obs_remote
 
-        if os.path.exists(os.path.join(exe_dir, 'main.exe')):
+        if os.path.isfile(os.path.join(exe_dir, 'main.exe')):
             self.noise_reduction.hide()
             self.faceTrackingToggle.hide()
-        elif os.path.exists(os.path.join(exe_dir, 'main.py')):
+        elif os.path.isfile(os.path.join(exe_dir, 'main.py')):
             pass
         else:
             pass
@@ -1663,6 +1666,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.scale_random_x.setValue(self.settings.get("scale_random_x", 100))
         self.scale_random_y.setValue(self.settings.get("scale_random_y", 100))
 
+        self.opacity_speed.setValue(self.settings.get("opacity_speed", 0.2)),
+
         self.move_idle_random.setChecked(self.settings.get("move_idle_random", False))
         self.move_talking_random.setChecked(self.settings.get("move_talking_random", True))
         self.move_screaming_random.setChecked(self.settings.get("move_screaming_random", True))
@@ -1756,6 +1761,8 @@ class MainWindow(QtWidgets.QMainWindow):
             "collection": self.collection.currentText(),
             "flip_animation_speed": self.flip_animation_speed.value(),
             "flip_animation_pacing": self.flip_animation_pacing.currentText(),
+
+            "opacity_speed": self.opacity_speed.value(),
 
             "camera": self.cameraSelector.value(),
             "target_fps": self.alphaSelector.value(),
@@ -2103,10 +2110,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def OpenAssetsFolder(self):
         path = os.path.join(res_dir, "Assets")
-        if os.name == "posix":
-            subprocess.run(["xdg-open", path])
-        elif os.name == "nt":
-            subprocess.run(["explorer", path])
+        if sys.platform == 'darwin':
+            subprocess.run(['open', path])
+        elif sys.platform in ['linux', 'linux2']:
+            subprocess.run(['xdg-open', path])
+        elif sys.platform == 'win32':
+            subprocess.run(['explorer', path])
         else:
             print("Unsupported operating system")
 
@@ -2468,10 +2477,13 @@ class MainWindow(QtWidgets.QMainWindow):
                     }
 
                 self.file_parameters_current[file] = parameters
-            images_list.append({
-                "route": os.path.normpath(file),
-                **parameters
-            })
+            try:
+                images_list.append({
+                    "route": os.path.normpath(file),
+                    **parameters
+                })
+            except TypeError:
+                pass
         return images_list
 
     def update_viewer(self, files=None, update_gallery=False, update_settings=False):
