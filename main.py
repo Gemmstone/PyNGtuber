@@ -1666,7 +1666,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.scale_random_x.setValue(self.settings.get("scale_random_x", 100))
         self.scale_random_y.setValue(self.settings.get("scale_random_y", 100))
 
-        self.opacity_speed.setValue(self.settings.get("opacity_speed", 0.2)),
+        self.opacity_speed.setValue(self.settings.get("opacity_speed", 0.0)),
 
         self.move_idle_random.setChecked(self.settings.get("move_idle_random", False))
         self.move_talking_random.setChecked(self.settings.get("move_talking_random", True))
