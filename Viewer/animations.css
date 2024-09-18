@@ -71,6 +71,14 @@
     animation: blinkOpen 20s infinite, hideOpen 3s infinite;
 }
 
+.show {
+    opacity: 1;
+}
+
+.hide {
+    opacity: 0;
+}
+
 
 /* Define the keyframes for the blinking animation */
 @keyframes blinkOpen {
