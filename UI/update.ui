@@ -247,17 +247,6 @@ font-weight: bold;</string>
       <number>0</number>
      </property>
      <item>
-      <widget class="QPushButton" name="gotopage">
-       <property name="text">
-        <string>Go to page</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../icons.qrc">
-         <normaloff>:/Icons/Icons/460560-browse.svg</normaloff>:/Icons/Icons/460560-browse.svg</iconset>
-       </property>
-      </widget>
-     </item>
-     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -271,24 +260,35 @@ font-weight: bold;</string>
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="skip">
-       <property name="text">
-        <string>Later</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../icons.qrc">
-         <normaloff>:/Icons/Icons/463001-sand-clock.svg</normaloff>:/Icons/Icons/463001-sand-clock.svg</iconset>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="update">
        <property name="text">
         <string>Update</string>
        </property>
        <property name="icon">
-        <iconset resource="../icons.qrc">
+        <iconset>
          <normaloff>:/Icons/Icons/462736-update.svg</normaloff>:/Icons/Icons/462736-update.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="skip">
+       <property name="text">
+        <string>Later</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>:/Icons/Icons/463001-sand-clock.svg</normaloff>:/Icons/Icons/463001-sand-clock.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="gotopage">
+       <property name="text">
+        <string>Go to page</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>:/Icons/Icons/460560-browse.svg</normaloff>:/Icons/Icons/460560-browse.svg</iconset>
        </property>
       </widget>
      </item>
