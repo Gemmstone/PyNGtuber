@@ -3772,8 +3772,8 @@ font-weight: bold;
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>302</width>
-                     <height>284</height>
+                     <width>266</width>
+                     <height>182</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -4391,8 +4391,8 @@ QFrame{
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>302</width>
-                     <height>284</height>
+                     <width>202</width>
+                     <height>143</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -7940,8 +7940,8 @@ background-color: rgba(0, 0, 0, 40);
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>100</width>
-                 <height>30</height>
+                 <width>302</width>
+                 <height>593</height>
                 </rect>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -7980,189 +7980,150 @@ background-color: rgba(0, 0, 0, 40);
             <property name="bottomMargin">
              <number>0</number>
             </property>
-            <item row="1" column="0">
-             <widget class="QGroupBox" name="groupBox_21">
-              <property name="styleSheet">
-               <string notr="true">* QToolTip {
-	background-color: pink;
-	color: black;
-}
-QTabBar{  
-    background-color: rgba(255, 255, 255, 0);
-}
-QTabBar::tab {  
-	background-color: rgba(0, 0, 0, 50);
-    min-width: 50px; 
-    min-height:22px;
-    padding: 0px  3px; 
-    color: white;
-	border-bottom-left-radius: 9px;
-	border-bottom-right-radius: 9px;
-	border-top-left-radius: 9px;
-	border-top-right-radius: 9px;
-    margin-left:2px;
-    margin-right:2px;
-    margin-bottom:2px;
-}
-QTabBar::tab:selected {  
-    color: white;
-	background-color: rgb(0, 157, 235);;
-}
-QTabBar::tab:hover {  
-    color: white;
-    background-color: rgb(0, 177, 235);
-}
-*{
-	color: black;
-}
-
-QGroupBox {
-border-color: #FF17365D;
-font-size: 14px;
-border-radius: 15px;
-}
-
-QGroupBox::title {
-border-top-left-radius: 9px;
-border-top-right-radius: 9px;
-padding: 2px 20px;
-background-color: #FF17365D;
-color: rgb(255, 255, 255);
-}
-
-QFrame{
-	border-top-right-radius: 9px;
-	border-bottom-right-radius: 9px;
-	border-bottom-left-radius: 9px;
-	background-color: rgb(255, 255, 255);
-}
-
-#creditsFrame{
-	background-color: rgba(255, 255, 255, 0);
-}
-
-* QCheckBox, * QRadioButton {
-    background: transparent;
-}
-* QCheckBox::indicator, * QRadioButton::indicator {
-    width: 25px;
-    height: 25px;
-}
-* QCheckBox::indicator:unchecked {
-	image: url(./Icons/checkbox-svgrepo-com.svg);
-}
-* QCheckBox::indicator:checked {
-	image: url(./Icons/checked-checkbox-svgrepo-com.svg);
-}
-* QRadioButton::indicator:unchecked {
-	image: url(./Icons/circle-svgrepo-com.svg);
-}
-* QRadioButton::indicator:checked {
-	border-image: url(./Icons/checked-radio-svgrepo-com.svg);
-}
-QTabWidget::pane { border: 0; }</string>
-              </property>
-              <property name="title">
-               <string>Mouth</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_81">
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>23</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QFrame" name="audioFrame_7">
-                 <property name="styleSheet">
-                  <string notr="true"/>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <layout class="QHBoxLayout" name="horizontalLayout_37">
-                  <item>
-                   <widget class="QRadioButton" name="closedMouth">
-                    <property name="styleSheet">
-                     <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                    </property>
-                    <property name="text">
-                     <string>Closed</string>
-                    </property>
-                    <property name="checked">
-                     <bool>false</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="openMouth">
-                    <property name="styleSheet">
-                     <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                    </property>
-                    <property name="text">
-                     <string>Open</string>
-                    </property>
-                    <property name="checked">
-                     <bool>false</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="screamingMouth">
-                    <property name="styleSheet">
-                     <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                    </property>
-                    <property name="text">
-                     <string>Screaming</string>
-                    </property>
-                    <property name="checked">
-                     <bool>false</bool>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <spacer name="verticalSpacer_8">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="2" column="0">
-             <widget class="QPushButton" name="exportToPNG">
-              <property name="text">
-               <string>Export to PNG</string>
-              </property>
-              <property name="icon">
-               <iconset>
-                <normaloff>../Icons/save-left-svgrepo-com.svg</normaloff>../Icons/save-left-svgrepo-com.svg</iconset>
-              </property>
-             </widget>
-            </item>
             <item row="0" column="0">
-             <widget class="QGroupBox" name="groupBox_15">
+             <widget class="QTabWidget" name="tabWidget_4">
               <property name="styleSheet">
-               <string notr="true">* QToolTip {
+               <string notr="true">QTabBar{  
+    background-color: rgba(255, 255, 255, 0);
+}
+QTabBar::tab {  
+	background-color: rgba(0, 0, 0, 50);
+    min-width: 50px; 
+    min-height:22px;
+    padding: 0px  3px; 
+    color: white;
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 9px;
+	border-top-right-radius: 9px;
+    margin-left:2px;
+    margin-right:2px;
+    margin-bottom:2px;
+}
+QTabBar::tab:selected {  
+    color: white;
+	background-color: rgb(0, 157, 235);;
+}
+QTabBar::tab:hover {  
+    color: white;
+    background-color: rgb(0, 177, 235);
+}
+QTabWidget::pane { border: 0; }</string>
+              </property>
+              <property name="currentIndex">
+               <number>0</number>
+              </property>
+              <widget class="QWidget" name="tab_13">
+               <attribute name="title">
+                <string> Export to Image: </string>
+               </attribute>
+               <layout class="QVBoxLayout" name="verticalLayout_61">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>6</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QScrollArea" name="scrollArea_5">
+                  <property name="styleSheet">
+                   <string notr="true">QTabBar{  
+    background-color: rgba(255, 255, 255, 0);
+}
+QTabBar::tab {  
+    background-color: rgba(255, 255, 255, 40);
+	background-color: rgb(0, 157, 235);
+    min-width: 70px; 
+    min-height:22px;
+    padding: 0px  2px; 
+    color: white;
+	border-radius: 10px;
+    margin-left:2px;
+    margin-right:2px;
+}
+QTabBar::tab:selected {  
+    color: white;
+	background-color: black;;
+}
+QTabBar::tab:hover {  
+    color: black;
+    background-color: rgba(255, 0, 0, 100);
+}
+*{
+	color: black;
+}
+
+QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}
+
+#creditsFrame{
+	background-color: rgba(255, 255, 255, 0);
+}
+
+* QToolTip {
+	background-color: pink;
+	color: black;
+}</string>
+                  </property>
+                  <property name="widgetResizable">
+                   <bool>true</bool>
+                  </property>
+                  <widget class="QWidget" name="scrollAreaWidgetContents_5">
+                   <property name="geometry">
+                    <rect>
+                     <x>0</x>
+                     <y>0</y>
+                     <width>302</width>
+                     <height>532</height>
+                    </rect>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_87">
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QGroupBox" name="talkingGroup">
+                      <property name="cursor">
+                       <cursorShape>ArrowCursor</cursorShape>
+                      </property>
+                      <property name="toolTip">
+                       <string/>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">* QToolTip {
 	background-color: pink;
 	color: black;
 }
@@ -8240,65 +8201,1069 @@ QFrame{
 	border-image: url(./Icons/checked-radio-svgrepo-com.svg);
 }
 QTabWidget::pane { border: 0; }</string>
-              </property>
-              <property name="title">
-               <string>Eyes</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_80">
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>23</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QFrame" name="audioFrame_6">
-                 <property name="styleSheet">
-                  <string notr="true"/>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <layout class="QHBoxLayout" name="horizontalLayout_36">
-                  <item>
-                   <widget class="QRadioButton" name="closedEyes">
-                    <property name="styleSheet">
-                     <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                    </property>
-                    <property name="text">
-                     <string>Closed</string>
-                    </property>
-                    <property name="checked">
-                     <bool>false</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="openEyes">
-                    <property name="styleSheet">
-                     <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
-                    </property>
-                    <property name="text">
-                     <string>Open</string>
-                    </property>
-                    <property name="checked">
-                     <bool>false</bool>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-              </layout>
+                      </property>
+                      <property name="title">
+                       <string>Avatar</string>
+                      </property>
+                      <property name="flat">
+                       <bool>false</bool>
+                      </property>
+                      <property name="checkable">
+                       <bool>false</bool>
+                      </property>
+                      <property name="checked">
+                       <bool>false</bool>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_85">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>23</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QFrame" name="frame_32">
+                         <property name="styleSheet">
+                          <string notr="true">QLabel{
+	background-color: transparent;
+}</string>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                         <layout class="QVBoxLayout" name="verticalLayout_93">
+                          <property name="spacing">
+                           <number>6</number>
+                          </property>
+                          <property name="leftMargin">
+                           <number>6</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>6</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>6</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>6</number>
+                          </property>
+                          <item>
+                           <widget class="QFrame" name="frame_45">
+                            <property name="frameShape">
+                             <enum>QFrame::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Raised</enum>
+                            </property>
+                            <layout class="QHBoxLayout" name="horizontalLayout_31">
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QCheckBox" name="photoAvatarBody">
+                               <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                                 <horstretch>0</horstretch>
+                                 <verstretch>0</verstretch>
+                                </sizepolicy>
+                               </property>
+                               <property name="cursor">
+                                <cursorShape>PointingHandCursor</cursorShape>
+                               </property>
+                               <property name="toolTip">
+                                <string>Use this layer as a closed mouth layer</string>
+                               </property>
+                               <property name="text">
+                                <string>Body</string>
+                               </property>
+                               <property name="checked">
+                                <bool>true</bool>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QCheckBox" name="photoAvatarFace">
+                               <property name="cursor">
+                                <cursorShape>PointingHandCursor</cursorShape>
+                               </property>
+                               <property name="toolTip">
+                                <string>Use this layer as a open mouth layer</string>
+                               </property>
+                               <property name="text">
+                                <string>Face</string>
+                               </property>
+                               <property name="checked">
+                                <bool>true</bool>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QGroupBox" name="groupBox_15">
+                      <property name="styleSheet">
+                       <string notr="true">* QToolTip {
+	background-color: pink;
+	color: black;
+}
+QTabBar{  
+    background-color: rgba(255, 255, 255, 0);
+}
+QTabBar::tab {  
+	background-color: rgba(0, 0, 0, 50);
+    min-width: 50px; 
+    min-height:22px;
+    padding: 0px  3px; 
+    color: white;
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 9px;
+	border-top-right-radius: 9px;
+    margin-left:2px;
+    margin-right:2px;
+    margin-bottom:2px;
+}
+QTabBar::tab:selected {  
+    color: white;
+	background-color: rgb(0, 157, 235);;
+}
+QTabBar::tab:hover {  
+    color: white;
+    background-color: rgb(0, 177, 235);
+}
+*{
+	color: black;
+}
+
+QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}
+
+#creditsFrame{
+	background-color: rgba(255, 255, 255, 0);
+}
+
+* QCheckBox, * QRadioButton {
+    background: transparent;
+}
+* QCheckBox::indicator, * QRadioButton::indicator {
+    width: 25px;
+    height: 25px;
+}
+* QCheckBox::indicator:unchecked {
+	image: url(./Icons/checkbox-svgrepo-com.svg);
+}
+* QCheckBox::indicator:checked {
+	image: url(./Icons/checked-checkbox-svgrepo-com.svg);
+}
+* QRadioButton::indicator:unchecked {
+	image: url(./Icons/circle-svgrepo-com.svg);
+}
+* QRadioButton::indicator:checked {
+	border-image: url(./Icons/checked-radio-svgrepo-com.svg);
+}
+QTabWidget::pane { border: 0; }</string>
+                      </property>
+                      <property name="title">
+                       <string>Eyes</string>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_80">
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>23</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QFrame" name="audioFrame_6">
+                         <property name="styleSheet">
+                          <string notr="true"/>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_36">
+                          <item>
+                           <widget class="QRadioButton" name="photoEyesOpen">
+                            <property name="cursor">
+                             <cursorShape>PointingHandCursor</cursorShape>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                            </property>
+                            <property name="text">
+                             <string>Open</string>
+                            </property>
+                            <property name="checked">
+                             <bool>true</bool>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QRadioButton" name="photoEyesClosed">
+                            <property name="cursor">
+                             <cursorShape>PointingHandCursor</cursorShape>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                            </property>
+                            <property name="text">
+                             <string>Closed</string>
+                            </property>
+                            <property name="checked">
+                             <bool>false</bool>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QGroupBox" name="groupBox_21">
+                      <property name="styleSheet">
+                       <string notr="true">* QToolTip {
+	background-color: pink;
+	color: black;
+}
+QTabBar{  
+    background-color: rgba(255, 255, 255, 0);
+}
+QTabBar::tab {  
+	background-color: rgba(0, 0, 0, 50);
+    min-width: 50px; 
+    min-height:22px;
+    padding: 0px  3px; 
+    color: white;
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 9px;
+	border-top-right-radius: 9px;
+    margin-left:2px;
+    margin-right:2px;
+    margin-bottom:2px;
+}
+QTabBar::tab:selected {  
+    color: white;
+	background-color: rgb(0, 157, 235);;
+}
+QTabBar::tab:hover {  
+    color: white;
+    background-color: rgb(0, 177, 235);
+}
+*{
+	color: black;
+}
+
+QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}
+
+#creditsFrame{
+	background-color: rgba(255, 255, 255, 0);
+}
+
+* QCheckBox, * QRadioButton {
+    background: transparent;
+}
+* QCheckBox::indicator, * QRadioButton::indicator {
+    width: 25px;
+    height: 25px;
+}
+* QCheckBox::indicator:unchecked {
+	image: url(./Icons/checkbox-svgrepo-com.svg);
+}
+* QCheckBox::indicator:checked {
+	image: url(./Icons/checked-checkbox-svgrepo-com.svg);
+}
+* QRadioButton::indicator:unchecked {
+	image: url(./Icons/circle-svgrepo-com.svg);
+}
+* QRadioButton::indicator:checked {
+	border-image: url(./Icons/checked-radio-svgrepo-com.svg);
+}
+QTabWidget::pane { border: 0; }</string>
+                      </property>
+                      <property name="title">
+                       <string>Mouth</string>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_81">
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>23</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QFrame" name="audioFrame_7">
+                         <property name="styleSheet">
+                          <string notr="true"/>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_37">
+                          <item>
+                           <widget class="QRadioButton" name="photoMouthClosed">
+                            <property name="cursor">
+                             <cursorShape>PointingHandCursor</cursorShape>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                            </property>
+                            <property name="text">
+                             <string>Closed</string>
+                            </property>
+                            <property name="checked">
+                             <bool>true</bool>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QRadioButton" name="photoMouthOpen">
+                            <property name="cursor">
+                             <cursorShape>PointingHandCursor</cursorShape>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                            </property>
+                            <property name="text">
+                             <string>Open</string>
+                            </property>
+                            <property name="checked">
+                             <bool>false</bool>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QRadioButton" name="photoMouthScreaming">
+                            <property name="cursor">
+                             <cursorShape>PointingHandCursor</cursorShape>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                            </property>
+                            <property name="text">
+                             <string>Screaming</string>
+                            </property>
+                            <property name="checked">
+                             <bool>false</bool>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QGroupBox" name="groupBox_24">
+                      <property name="styleSheet">
+                       <string notr="true">* QToolTip {
+	background-color: pink;
+	color: black;
+}
+QTabBar{  
+    background-color: rgba(255, 255, 255, 0);
+}
+QTabBar::tab {  
+	background-color: rgba(0, 0, 0, 50);
+    min-width: 50px; 
+    min-height:22px;
+    padding: 0px  3px; 
+    color: white;
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 9px;
+	border-top-right-radius: 9px;
+    margin-left:2px;
+    margin-right:2px;
+    margin-bottom:2px;
+}
+QTabBar::tab:selected {  
+    color: white;
+	background-color: rgb(0, 157, 235);;
+}
+QTabBar::tab:hover {  
+    color: white;
+    background-color: rgb(0, 177, 235);
+}
+*{
+	color: black;
+}
+
+QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}
+
+#creditsFrame{
+	background-color: rgba(255, 255, 255, 0);
+}
+
+* QCheckBox, * QRadioButton {
+    background: transparent;
+}
+* QCheckBox::indicator, * QRadioButton::indicator {
+    width: 25px;
+    height: 25px;
+}
+* QCheckBox::indicator:unchecked {
+	image: url(./Icons/checkbox-svgrepo-com.svg);
+}
+* QCheckBox::indicator:checked {
+	image: url(./Icons/checked-checkbox-svgrepo-com.svg);
+}
+* QRadioButton::indicator:unchecked {
+	image: url(./Icons/circle-svgrepo-com.svg);
+}
+* QRadioButton::indicator:checked {
+	border-image: url(./Icons/checked-radio-svgrepo-com.svg);
+}
+QTabWidget::pane { border: 0; }</string>
+                      </property>
+                      <property name="title">
+                       <string>Filters</string>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_90">
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>23</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QFrame" name="audioFrame_11">
+                         <property name="styleSheet">
+                          <string notr="true"/>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_44">
+                          <item>
+                           <widget class="QRadioButton" name="photoFiltersEnabled">
+                            <property name="cursor">
+                             <cursorShape>PointingHandCursor</cursorShape>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                            </property>
+                            <property name="text">
+                             <string>Enabled</string>
+                            </property>
+                            <property name="checked">
+                             <bool>false</bool>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QRadioButton" name="photoFiltersDisabled">
+                            <property name="cursor">
+                             <cursorShape>PointingHandCursor</cursorShape>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                            </property>
+                            <property name="text">
+                             <string>Disabled</string>
+                            </property>
+                            <property name="checked">
+                             <bool>true</bool>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QGroupBox" name="groupBox_25">
+                      <property name="styleSheet">
+                       <string notr="true">* QToolTip {
+	background-color: pink;
+	color: black;
+}
+QTabBar{  
+    background-color: rgba(255, 255, 255, 0);
+}
+QTabBar::tab {  
+	background-color: rgba(0, 0, 0, 50);
+    min-width: 50px; 
+    min-height:22px;
+    padding: 0px  3px; 
+    color: white;
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 9px;
+	border-top-right-radius: 9px;
+    margin-left:2px;
+    margin-right:2px;
+    margin-bottom:2px;
+}
+QTabBar::tab:selected {  
+    color: white;
+	background-color: rgb(0, 157, 235);;
+}
+QTabBar::tab:hover {  
+    color: white;
+    background-color: rgb(0, 177, 235);
+}
+*{
+	color: black;
+}
+
+QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}
+
+#creditsFrame{
+	background-color: rgba(255, 255, 255, 0);
+}
+
+* QCheckBox, * QRadioButton {
+    background: transparent;
+}
+* QCheckBox::indicator, * QRadioButton::indicator {
+    width: 25px;
+    height: 25px;
+}
+* QCheckBox::indicator:unchecked {
+	image: url(./Icons/checkbox-svgrepo-com.svg);
+}
+* QCheckBox::indicator:checked {
+	image: url(./Icons/checked-checkbox-svgrepo-com.svg);
+}
+* QRadioButton::indicator:unchecked {
+	image: url(./Icons/circle-svgrepo-com.svg);
+}
+* QRadioButton::indicator:checked {
+	border-image: url(./Icons/checked-radio-svgrepo-com.svg);
+}
+QTabWidget::pane { border: 0; }</string>
+                      </property>
+                      <property name="title">
+                       <string>Shadows</string>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_91">
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>23</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QFrame" name="audioFrame_12">
+                         <property name="styleSheet">
+                          <string notr="true"/>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_45">
+                          <item>
+                           <widget class="QRadioButton" name="photoShadowsEnabled">
+                            <property name="cursor">
+                             <cursorShape>PointingHandCursor</cursorShape>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                            </property>
+                            <property name="text">
+                             <string>Enabled</string>
+                            </property>
+                            <property name="checked">
+                             <bool>false</bool>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QRadioButton" name="photoShadowsDisabled">
+                            <property name="cursor">
+                             <cursorShape>PointingHandCursor</cursorShape>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                            </property>
+                            <property name="text">
+                             <string>Disabled</string>
+                            </property>
+                            <property name="checked">
+                             <bool>true</bool>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QGroupBox" name="groupBox_26">
+                      <property name="styleSheet">
+                       <string notr="true">* QToolTip {
+	background-color: pink;
+	color: black;
+}
+QTabBar{  
+    background-color: rgba(255, 255, 255, 0);
+}
+QTabBar::tab {  
+	background-color: rgba(0, 0, 0, 50);
+    min-width: 50px; 
+    min-height:22px;
+    padding: 0px  3px; 
+    color: white;
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 9px;
+	border-top-right-radius: 9px;
+    margin-left:2px;
+    margin-right:2px;
+    margin-bottom:2px;
+}
+QTabBar::tab:selected {  
+    color: white;
+	background-color: rgb(0, 157, 235);;
+}
+QTabBar::tab:hover {  
+    color: white;
+    background-color: rgb(0, 177, 235);
+}
+*{
+	color: black;
+}
+
+QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}
+
+#creditsFrame{
+	background-color: rgba(255, 255, 255, 0);
+}
+
+* QCheckBox, * QRadioButton {
+    background: transparent;
+}
+* QCheckBox::indicator, * QRadioButton::indicator {
+    width: 25px;
+    height: 25px;
+}
+* QCheckBox::indicator:unchecked {
+	image: url(./Icons/checkbox-svgrepo-com.svg);
+}
+* QCheckBox::indicator:checked {
+	image: url(./Icons/checked-checkbox-svgrepo-com.svg);
+}
+* QRadioButton::indicator:unchecked {
+	image: url(./Icons/circle-svgrepo-com.svg);
+}
+* QRadioButton::indicator:checked {
+	border-image: url(./Icons/checked-radio-svgrepo-com.svg);
+}
+QTabWidget::pane { border: 0; }</string>
+                      </property>
+                      <property name="title">
+                       <string>Custom CSS</string>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_92">
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>23</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QFrame" name="audioFrame_13">
+                         <property name="styleSheet">
+                          <string notr="true"/>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_46">
+                          <item>
+                           <widget class="QRadioButton" name="photoCSSEnabled">
+                            <property name="cursor">
+                             <cursorShape>PointingHandCursor</cursorShape>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                            </property>
+                            <property name="text">
+                             <string>Enabled</string>
+                            </property>
+                            <property name="checked">
+                             <bool>true</bool>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QRadioButton" name="photoCSSDisabled">
+                            <property name="cursor">
+                             <cursorShape>PointingHandCursor</cursorShape>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                            </property>
+                            <property name="text">
+                             <string>Disabled</string>
+                            </property>
+                            <property name="checked">
+                             <bool>false</bool>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QGroupBox" name="groupBox_27">
+                      <property name="styleSheet">
+                       <string notr="true">* QToolTip {
+	background-color: pink;
+	color: black;
+}
+QTabBar{  
+    background-color: rgba(255, 255, 255, 0);
+}
+QTabBar::tab {  
+	background-color: rgba(0, 0, 0, 50);
+    min-width: 50px; 
+    min-height:22px;
+    padding: 0px  3px; 
+    color: white;
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-top-left-radius: 9px;
+	border-top-right-radius: 9px;
+    margin-left:2px;
+    margin-right:2px;
+    margin-bottom:2px;
+}
+QTabBar::tab:selected {  
+    color: white;
+	background-color: rgb(0, 157, 235);;
+}
+QTabBar::tab:hover {  
+    color: white;
+    background-color: rgb(0, 177, 235);
+}
+*{
+	color: black;
+}
+
+QGroupBox {
+border-color: #FF17365D;
+font-size: 14px;
+border-radius: 15px;
+}
+
+QGroupBox::title {
+border-top-left-radius: 9px;
+border-top-right-radius: 9px;
+padding: 2px 20px;
+background-color: #FF17365D;
+color: rgb(255, 255, 255);
+}
+
+QFrame{
+	border-top-right-radius: 9px;
+	border-bottom-right-radius: 9px;
+	border-bottom-left-radius: 9px;
+	background-color: rgb(255, 255, 255);
+}
+
+#creditsFrame{
+	background-color: rgba(255, 255, 255, 0);
+}
+
+* QCheckBox, * QRadioButton {
+    background: transparent;
+}
+* QCheckBox::indicator, * QRadioButton::indicator {
+    width: 25px;
+    height: 25px;
+}
+* QCheckBox::indicator:unchecked {
+	image: url(./Icons/checkbox-svgrepo-com.svg);
+}
+* QCheckBox::indicator:checked {
+	image: url(./Icons/checked-checkbox-svgrepo-com.svg);
+}
+* QRadioButton::indicator:unchecked {
+	image: url(./Icons/circle-svgrepo-com.svg);
+}
+* QRadioButton::indicator:checked {
+	border-image: url(./Icons/checked-radio-svgrepo-com.svg);
+}
+QTabWidget::pane { border: 0; }</string>
+                      </property>
+                      <property name="title">
+                       <string>Animations</string>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_96">
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>23</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QFrame" name="audioFrame_14">
+                         <property name="styleSheet">
+                          <string notr="true"/>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_47">
+                          <item>
+                           <widget class="QRadioButton" name="photoAnimationsDisabled">
+                            <property name="cursor">
+                             <cursorShape>PointingHandCursor</cursorShape>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                            </property>
+                            <property name="text">
+                             <string>Disabled</string>
+                            </property>
+                            <property name="checked">
+                             <bool>true</bool>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QRadioButton" name="photoAnimationsEnabled">
+                            <property name="cursor">
+                             <cursorShape>PointingHandCursor</cursorShape>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+                            </property>
+                            <property name="text">
+                             <string>Enabled</string>
+                            </property>
+                            <property name="checked">
+                             <bool>false</bool>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer_8">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
+                  </widget>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="exportToPNG">
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                  <property name="text">
+                   <string>Export to PNG</string>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../Icons/save-left-svgrepo-com.svg</normaloff>../Icons/save-left-svgrepo-com.svg</iconset>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
              </widget>
             </item>
            </layout>

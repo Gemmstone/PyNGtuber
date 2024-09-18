@@ -81,6 +81,29 @@ function get(object, key, defaultValue) {
     return key in object ? object[key] : defaultValue;
 }
 
+function save_image(){
+    element = document.querySelector("#images_container")
+    html2canvas(element, {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        logging: false,
+        backgroundColor: null,
+        scale: window.devicePixelRatio * 2
+    }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png', 1.0);
+
+        const downloadLink = document.createElement("a")
+        downloadLink.href = imgData;
+
+        downloadLink.download = "image.png";
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    });
+}
+
+
 async function flip_canvas(valueH, valueV, seg, timing) {
     document.body.style.transition = `all ${seg}s ${timing}`;
     document.body.style.transform = `rotateY(${valueH}deg) rotateX(${valueV}deg)`;

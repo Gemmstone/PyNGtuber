@@ -1,6 +1,7 @@
 from PyQt6.QtCore import QUrl, pyqtSignal, QThreadPool, pyqtSlot, QRunnable, QObject
-from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEnginePage
+from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEnginePage, QWebEngineDownloadRequest
 from PyQt6.QtWebEngineWidgets import QWebEngineView
+from PyQt6.QtWidgets import QFileDialog
 from bs4 import BeautifulSoup
 import traceback
 import asyncio
@@ -43,6 +44,11 @@ class Worker(QRunnable):
 class WebEnginePage(QWebEnginePage):
     failed_to_load_images = pyqtSignal()
 
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self.profile().downloadRequested.connect(self.on_downloadRequested)
+
     def javaScriptConsoleMessage(self, level, message, lineNumber, sourceID):
         if "update_images is not defined" in message or "addImagesToCanvas is not defined" in message:
             self.failed_to_load_images.emit()
@@ -56,6 +62,11 @@ class WebEnginePage(QWebEnginePage):
                 f"\tsourceID:\t'{sourceID}'\n"
             )
 
+    def on_downloadRequested(self, download: QWebEngineDownloadRequest):
+        file_path, _ = QFileDialog.getSaveFileName(None, "Save File As", download.downloadFileName())
+        if file_path:
+            download.setDownloadFileName(file_path)
+            download.accept()
 
 class LayeredImageViewer(QWebEngineView):
     loadFinishedSignal = pyqtSignal(bool)
@@ -156,9 +167,9 @@ class LayeredImageViewer(QWebEngineView):
 
     def updateImages(
             self, image_list=None, bg_color="#b8cdee", scale=100, edited=None, performance=False,
-            filters=None, shadow=None
+            filters=None, shadow=None, photo_mode=None
     ):
-        worker = Worker(self.update_thread, image_list, bg_color, scale, edited, performance, filters, shadow)
+        worker = Worker(self.update_thread, image_list, bg_color, scale, edited, performance, filters, shadow, photo_mode)
         worker.signals.result.connect(self.print_output)
         worker.signals.finished.connect(self.thread_complete)
         self.threadpool.start(worker)
@@ -174,7 +185,7 @@ class LayeredImageViewer(QWebEngineView):
 
     def update_thread(
             self, image_list=None, bg_color="#b8cdee", scale=100, edited=None, performance=False,
-            filters=None, shadow=None
+            filters=None, shadow=None, photo_mode=None
     ):
         soup = BeautifulSoup('<div id="image-wrapper"></div>', 'html.parser')
         image_wrapper = soup.find(id="image-wrapper")
@@ -236,6 +247,16 @@ class LayeredImageViewer(QWebEngineView):
                 filters_div = None
                 editing = "not_in_editor"
 
+                photo_animations = True
+                photo_filters = True
+                photo_shadows = True
+                photo_css = True
+                if photo_mode is not None:
+                    photo_filters = photo_mode["filters"]
+                    photo_animations = photo_mode["animations"]
+                    photo_shadows = photo_mode["shadows"]
+                    photo_css = photo_mode["css"]
+
                 if edited is not None:
                     if edited["type"] == "general":
                         editing = "being_edited" \
@@ -255,46 +276,47 @@ class LayeredImageViewer(QWebEngineView):
                         animation_idle_div['class'] = ["idle_animation"]
 
                     if layer.get("move", False):
-                        animation_added_div = soup.new_tag('div', style=f"""
-                            position: absolute !important; 
-                            animation-direction: normal;
-                            z-index: {layer['posZ']}0;
-                        """)
-                        animation_added_div['class'] = ["added_animation"]
-                        animation_added_div['animation_name_idle'] = layer.get("animation_name_idle", "None")
-                        animation_added_div['animation_name_talking'] = layer.get("animation_name_talking", "None")
-                        animation_added_div['animation_name_screaming'] = layer.get(
-                            "animation_name_screaming", animation_added_div['animation_name_talking']
-                        )
+                        if photo_animations:
+                            animation_added_div = soup.new_tag('div', style=f"""
+                                position: absolute !important; 
+                                animation-direction: normal;
+                                z-index: {layer['posZ']}0;
+                            """)
+                            animation_added_div['class'] = ["added_animation"]
+                            animation_added_div['animation_name_idle'] = layer.get("animation_name_idle", "None")
+                            animation_added_div['animation_name_talking'] = layer.get("animation_name_talking", "None")
+                            animation_added_div['animation_name_screaming'] = layer.get(
+                                "animation_name_screaming", animation_added_div['animation_name_talking']
+                            )
 
-                        animation_added_div['animation_speed_idle'] = layer.get("animation_speed_idle", 6)
-                        animation_added_div['animation_speed_talking'] = layer.get("animation_speed_talking", 0.5)
-                        animation_added_div['animation_speed_screaming'] = layer.get(
-                            "animation_speed_screaming", animation_added_div['animation_speed_talking']
-                        )
+                            animation_added_div['animation_speed_idle'] = layer.get("animation_speed_idle", 6)
+                            animation_added_div['animation_speed_talking'] = layer.get("animation_speed_talking", 0.5)
+                            animation_added_div['animation_speed_screaming'] = layer.get(
+                                "animation_speed_screaming", animation_added_div['animation_speed_talking']
+                            )
 
-                        animation_added_div['animation_direction_idle'] = layer.get(
-                            'animation_direction_idle', "normal"
-                        )
-                        animation_added_div['animation_direction_talking'] = layer.get(
-                            'animation_direction_talking', "normal"
-                        )
-                        animation_added_div['animation_direction_screaming'] = layer.get(
-                            'animation_direction_screaming', animation_added_div['animation_direction_talking']
-                        )
+                            animation_added_div['animation_direction_idle'] = layer.get(
+                                'animation_direction_idle', "normal"
+                            )
+                            animation_added_div['animation_direction_talking'] = layer.get(
+                                'animation_direction_talking', "normal"
+                            )
+                            animation_added_div['animation_direction_screaming'] = layer.get(
+                                'animation_direction_screaming', animation_added_div['animation_direction_talking']
+                            )
 
-                        animation_added_div['animation_iteration_idle'] = layer.get("animation_iteration_idle", 0)
-                        animation_added_div['animation_iteration_talking'] = layer.get("animation_iteration_talking", 0)
-                        animation_added_div['animation_iteration_screaming'] = layer.get(
-                            "animation_iteration_screaming", animation_added_div['animation_iteration_talking']
-                        )
+                            animation_added_div['animation_iteration_idle'] = layer.get("animation_iteration_idle", 0)
+                            animation_added_div['animation_iteration_talking'] = layer.get("animation_iteration_talking", 0)
+                            animation_added_div['animation_iteration_screaming'] = layer.get(
+                                "animation_iteration_screaming", animation_added_div['animation_iteration_talking']
+                            )
 
-                        animation_added_div['animation_pacing_idle'] = layer.get('animation_pacing_idle', "ease-in-out")
-                        animation_added_div['animation_pacing_talking'] = layer.get('animation_pacing_talking',
-                                                                                    "ease-in-out")
-                        animation_added_div['animation_pacing_screaming'] = layer.get(
-                            'animation_pacing_screaming', animation_added_div['animation_pacing_talking']
-                        )
+                            animation_added_div['animation_pacing_idle'] = layer.get('animation_pacing_idle', "ease-in-out")
+                            animation_added_div['animation_pacing_talking'] = layer.get('animation_pacing_talking',
+                                                                                        "ease-in-out")
+                            animation_added_div['animation_pacing_screaming'] = layer.get(
+                                'animation_pacing_screaming', animation_added_div['animation_pacing_talking']
+                            )
 
                     if layer.get("cursor", False):
                         cursor_div = soup.new_tag('div', style=f"""
@@ -420,8 +442,8 @@ class LayeredImageViewer(QWebEngineView):
                     )
                     blinking = str(layer.get("blinking", "ignore"))
                     animation_blinking_div["class"] = ["editing_div"]
-                    animation_blinking_div["editing"] = blinking + ("" if editing == "not_in_editor" else f"_{editing}")
-                    animation_blinking_div["default"] = blinking
+                    animation_blinking_div["editing"] = blinking + ("" if editing == "not_in_editor" else f"_{editing}") if photo_mode is None else "show" if blinking in photo_mode["eyes"] else "hide"
+                    animation_blinking_div["default"] = blinking if photo_mode is None else "show" if blinking in photo_mode["eyes"] else "hide"
 
                 talking = layer.get("talking", ["ignore"])
                 if type(talking) == str:
@@ -445,37 +467,38 @@ class LayeredImageViewer(QWebEngineView):
                 editing_div["default"] = "editing_div_nope"
 
                 if not performance:
-                    if layer.get("filters", False):
-                        filters_div = soup.new_tag(
-                            "div",
-                            style=f"filter: "
-                                  f"blur({layer.get('blur', 0.0)}px) "
-                                  f"brightness({layer.get('brightness', 100.0)}%) "
-                                  f"contrast({layer.get('contrast', 100.0)}%) "
-                                  f"grayscale({layer.get('grayscale', 0.0)}%) "
-                                  f"hue-rotate({layer.get('hue', 0.0)}deg) "
-                                  f"invert({layer.get('invert', 0.0)}%) "
-                                  f"opacity({layer.get('opacity', 100.0)}%) "
-                                  f"saturate({layer.get('saturate', 100.0)}%) "
-                                  f"sepia({layer.get('sepia', 0.0)}%);"
-                        )
+                    if photo_filters:
+                        if layer.get("filters", False):
+                            filters_div = soup.new_tag(
+                                "div",
+                                style=f"filter: "
+                                      f"blur({layer.get('blur', 0.0)}px) "
+                                      f"brightness({layer.get('brightness', 100.0)}%) "
+                                      f"contrast({layer.get('contrast', 100.0)}%) "
+                                      f"grayscale({layer.get('grayscale', 0.0)}%) "
+                                      f"hue-rotate({layer.get('hue', 0.0)}deg) "
+                                      f"invert({layer.get('invert', 0.0)}%) "
+                                      f"opacity({layer.get('opacity', 100.0)}%) "
+                                      f"saturate({layer.get('saturate', 100.0)}%) "
+                                      f"sepia({layer.get('sepia', 0.0)}%);"
+                            )
 
                     if layer.get("shadow", False):
-                        color = [int(i) for i in layer.get('shadowColor', '0, 0, 0, 255').replace("(", "").replace(")", "").split(", ")]
-                        color = f"({color[0]}, {color[1]}, {color[2]}, {color[3] / 255})"
-                        shadow_div = soup.new_tag(
-                            "div",
-                            style=f"filter: drop-shadow("
-                                  f"{layer.get('shadowX', 5)}px "
-                                  f"{layer.get('shadowY', -5) * -1}px "
-                                  f"{layer.get('shadowBlur', 0)}px "
-                                  f"rgba{color if '#' not in color else '(0, 0, 0, 255)'});"
-                        )
+                        if photo_shadows:
+                            color = [int(i) for i in layer.get('shadowColor', '0, 0, 0, 255').replace("(", "").replace(")", "").split(", ")]
+                            color = f"({color[0]}, {color[1]}, {color[2]}, {color[3] / 255})"
+                            shadow_div = soup.new_tag(
+                                "div",
+                                style=f"filter: drop-shadow("
+                                      f"{layer.get('shadowX', 5)}px "
+                                      f"{layer.get('shadowY', -5) * -1}px "
+                                      f"{layer.get('shadowBlur', 0)}px "
+                                      f"rgba{color if '#' not in color else '(0, 0, 0, 255)'});"
+                            )
 
                 img_tag = soup.new_tag(
                     'img',
                     src=str(os.path.join(self.res_dir, layer['route'])).replace("\\", "/"),
-                    # type="image/webp",
                     style=f"""
                         position: absolute !important;
                         left: calc(50% + {layer['posX']}px);
@@ -484,7 +507,7 @@ class LayeredImageViewer(QWebEngineView):
                         transform: translate(-50%, -50%) rotate({layer['rotation']}deg);
                         width: {layer['sizeX']}px; 
                         height: {layer['sizeY']}px;
-                        {layer['css']}
+                        {layer['css'] if photo_css else ""}
                     """
                 )
 
