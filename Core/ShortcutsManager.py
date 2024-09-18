@@ -15,7 +15,10 @@ from Core.faceTracking import process_frame, load_data_face_tracking
 from urllib.parse import urlparse, unquote
 from PyQt6 import QtWidgets, QtCore, uic
 from PyQt6.QtGui import QIcon, QImage
-from pynput.keyboard import Listener
+try:
+    from pynput.keyboard import Listener
+except BaseException:
+    Listener = None
 from websockets.server import serve
 from twitchAPI.twitch import Twitch
 from twitchAPI.helper import first
@@ -290,8 +293,9 @@ class KeyboardListener(QThread):
         self.selected_mode = mode
 
     def run(self):
-        with Listener(on_press=self.on_key_press, on_release=self.on_key_release) as listener:
-            listener.join()
+        if Listener is not None:
+            with Listener(on_press=self.on_key_press, on_release=self.on_key_release) as listener:
+                listener.join()
 
     def update_shortcuts(self, commands):
         self.commands = commands
