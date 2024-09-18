@@ -28,6 +28,8 @@ import re
 
 current_version = "v1.10.2"
 repo_owner = "Gemmstone"
+itch_owner = "gemmstone"
+itch_page = "pyngtuber"
 repo_name = "PyNGtuber"
 
 directories = ["Data", "Models", "Assets", "Viewer"]
@@ -223,6 +225,7 @@ class UpdateDialog(QtWidgets.QDialog):
         self.label_3.setText(f" {latest_version} ")
         self.label_5.setText(f"{self.data['published_at'].split('T')[0].replace('-', '/')}")
 
+        self.update.hide()
         self.update.clicked.connect(self.download)
         self.gotopage.clicked.connect(self.go_to_page)
         self.skip.clicked.connect(self.ignore)
@@ -299,7 +302,8 @@ class UpdateDialog(QtWidgets.QDialog):
         self.accept()
 
     def go_to_page(self):
-        webbrowser.open(f"https://github.com/{repo_owner}/{repo_name}/releases/tag/{self.data['tag_name']}")
+        # webbrowser.open(f"https://github.com/{repo_owner}/{repo_name}/releases/tag/{self.data['tag_name']}")
+        webbrowser.open(f"https://{itch_owner}.itch.io/{itch_page}")
 
     def ignore(self):
         self.reject()
@@ -582,7 +586,11 @@ class MainWindow(QtWidgets.QMainWindow):
         uic.loadUi(os.path.join(exe_dir, f"UI", "main.ui"), self)
         self.setWindowFlag(QtCore.Qt.WindowType.WindowMinimizeButtonHint)
 
-        self.tabWidget_2.setTabVisible(2, False)
+        # self.tabWidget_2.setTabVisible(2, False)
+        self.groupBox_24.hide()
+        self.groupBox_25.hide()
+        self.groupBox_27.hide()
+
 
         self.settings_json_file = os.path.join(res_dir, "Data", "settings.json")
         try:
@@ -619,6 +627,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.threadpool = QThreadPool()
 
         self.edited = None
+        self.photoMode = None
         self.color = "limegreen"
         self.viewerFrame_2.setStyleSheet(f"background-color: {self.color}")
 
@@ -812,6 +821,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.local_obs_source_toggle.toggled.connect(self.hide_local_obs_source_toggle)
         self.remote_obs_source_toggle.toggled.connect(self.hide_remote_obs_source_toggle)
 
+        self.exportToPNG.clicked.connect(self.save_canvas_image)
+
         self.webSocketToggle.toggled.connect(self.hide_webSocket)
         self.auto_flip.toggled.connect(self.auto_flip_hide)
 
@@ -922,6 +933,23 @@ class MainWindow(QtWidgets.QMainWindow):
         self.grayscale.valueChanged.connect(self.update_filters)
         self.invert.valueChanged.connect(self.update_filters)
         self.sepia.valueChanged.connect(self.update_filters)
+
+        self.photoAvatarBody.toggled.connect(self.being_edited)
+        self.photoAvatarFace.toggled.connect(self.being_edited)
+        self.photoAvatarBody.toggled.connect(self.show_model_photo_mode)
+        self.photoAvatarFace.toggled.connect(self.show_model_photo_mode)
+        self.photoEyesOpen.toggled.connect(self.being_edited)
+        self.photoMouthClosed.toggled.connect(self.being_edited)
+        self.photoMouthOpen.toggled.connect(self.being_edited)
+        self.photoMouthScreaming.toggled.connect(self.being_edited)
+        self.photoFiltersEnabled.toggled.connect(self.being_edited)
+        self.photoFiltersDisabled.toggled.connect(self.being_edited)
+        self.photoShadowsEnabled.toggled.connect(self.being_edited)
+        self.photoShadowsDisabled.toggled.connect(self.being_edited)
+        self.photoCSSEnabled.toggled.connect(self.being_edited)
+        self.photoCSSDisabled.toggled.connect(self.being_edited)
+        self.photoAnimationsEnabled.toggled.connect(self.being_edited)
+        self.photoAnimationsDisabled.toggled.connect(self.being_edited)
 
         self.mouseTrackingToggle.toggled.connect(self.mouse_tracking_changed)
         self.randomTrackingToggle.toggled.connect(self.mouse_tracking_changed)
@@ -1157,11 +1185,32 @@ class MainWindow(QtWidgets.QMainWindow):
     def update_div_count(self, count):
         self.div_count.setText(count)
 
+    def show_model_photo_mode(self):
+        if not self.photoAvatarBody.isChecked() and not self.photoAvatarFace.isChecked():
+            sender = self.sender()
+            sender.setChecked(True)
+
     def being_edited(self):
         last = copy.deepcopy(self.edited)
+        last_2 = copy.deepcopy(self.photoMode)
 
-        if self.tabWidget_2.currentIndex() != 1 or not self.transparency.isChecked():
+        if self.tabWidget_2.currentIndex() == 0 or not self.transparency.isChecked():
             self.edited = None
+            self.photoMode = None
+        elif self.tabWidget_2.currentIndex() == 2:
+            self.edited = None
+            self.photoMode = {
+                "avatar": {
+                    "body": self.photoAvatarBody.isChecked(),
+                    "face": self.photoAvatarFace.isChecked()
+                },
+                "eyes": "photo_blinking_open" if self.photoEyesOpen.isChecked() else "photo_blinking_closed",
+                "mouth": 0 if self.photoMouthClosed.isChecked() else 1 if self.photoMouthOpen.isChecked() else 2,
+                "filters": self.photoFiltersEnabled.isChecked(),
+                "shadows": self.photoShadowsEnabled.isChecked(),
+                "css": self.photoCSSEnabled.isChecked(),
+                "animations": self.photoAnimationsEnabled.isChecked()
+            }
         else:
             current = self.SettingsGallery.currentWidget()
             if current is not None:
@@ -1176,8 +1225,9 @@ class MainWindow(QtWidgets.QMainWindow):
                     self.edited = {"type": "layer", "value": result, "collection": None}
             else:
                 self.edited = {"type": "layer", "value": None, "collection": None}
-
-        if last != self.edited:
+            self.photoMode = None
+        self.audioStatus()
+        if last != self.edited or last_2 != self.photoMode:
             QtCore.QTimer.singleShot(500, lambda: self.update_viewer(self.current_files, update_gallery=False))
         self.showUI()
 
@@ -2275,6 +2325,9 @@ class MainWindow(QtWidgets.QMainWindow):
     def reboot_audio(self):
         self.audio.active_audio_signal = -1
 
+    def save_canvas_image(self):
+        self.viewer.runJavaScript("try{save_image()}catch{}")
+
     def audioStatus(self, status=0):
         self.status_audio = status
         try:
@@ -2287,8 +2340,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
                 self.viewer.runJavaScript(
                     f'try{{update_mic('
-                    f'{status}, '
-                    f'"{animation}", '
+                    f'{status if self.photoMode is None else self.photoMode["mouth"]}, '
+                    f'"{animation if self.photoMode is None else animation if self.photoMode["animations"] else "None"}", '
                     f'{speed}, '
                     f'"{direction}", '
                     f'"{easing}", '
@@ -2490,9 +2543,22 @@ class MainWindow(QtWidgets.QMainWindow):
         images_list = self.getFiles(files)
 
         if not update_settings:
+            filtered_photo = copy.deepcopy(images_list)
+            if self.photoMode is not None:
+                if not self.photoMode["avatar"]["body"]:
+                    filtered_photo = [
+                        file for file in filtered_photo
+                        if any(route in file["route"] for route in self.expressionSelector.selected_folders)
+                    ]
+                elif not self.photoMode["avatar"]["face"]:
+                    filtered_photo = [
+                        file for file in filtered_photo
+                        if not any(route in file["route"] for route in self.expressionSelector.selected_folders)
+                    ]
+
             self.viewer.updateImages(
-                images_list, self.color, self.generalScale.value(), self.edited, self.performance.isChecked(),
-                filters=self.general_filters, shadow=self.general_shadow
+                filtered_photo, self.color, self.generalScale.value(), self.edited, self.performance.isChecked(),
+                filters=self.general_filters, shadow=self.general_shadow, photo_mode=self.photoMode
             )
             if hasattr(self, 'hidden_window'):
                 if self.second_window_toggle.isChecked():
