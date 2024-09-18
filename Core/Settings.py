@@ -780,7 +780,10 @@ class Settings(QWidget):
 
     def maintain_aspect_ratio(self, value, aspect_ratio, size, og_size):
         if aspect_ratio.isChecked():
-            ratio = value / og_size
+            try:
+                ratio = value / og_size
+            except ZeroDivisionError:
+                return value
             size.blockSignals(True)
             result = int(size.value() * ratio)
             size.setValue(result)
