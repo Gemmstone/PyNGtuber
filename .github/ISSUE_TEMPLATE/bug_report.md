@@ -2,13 +2,12 @@
 name: Bug report
 about: Create a report to help us improve
 title: "[BUG] "
-labels: ''
+labels: bug
 assignees: Gemmstone
 
 ---
 
 ## Description
-A clear and concise description of what the bug is.
 <!-- A clear and concise description of what the bug is. -->
 
 ## Steps to Reproduce
@@ -19,14 +18,13 @@ A clear and concise description of what the bug is.
 4. See error
 
 ## Expected Behavior
-A clear and concise description of what you expected to happen.
+<!-- A clear and concise description of what you expected to happen. -->
 
 ## Actual Behavior
 <!-- A clear and concise description of what actually happened. -->
 
-## Screenshots (if applicable)
-<!-- If the issue is visual, please include screenshots to help explain. -->
-If applicable, add screenshots to help explain your problem.
+## Screenshots
+<!-- If applicable, please include screenshots to help explain the issue. -->
 
 ## Environment
  - OS: [e.g. Windows, Linux]
