@@ -216,7 +216,8 @@ class ImageGallery(QToolBox):
                 widget.setParent(None)
             self.removeItem(index)
 
-        if not os.path.exists(self.folder_path) and os.path.isdir(self.folder_path):
+        # Check if folder exists and is a directory
+        if not os.path.exists(self.folder_path) or not os.path.isdir(self.folder_path):
             page_widget = QFrame()
             page_layout = QVBoxLayout(page_widget)
             page_layout.setContentsMargins(0, 0, 0, 0)
@@ -230,7 +231,7 @@ class ImageGallery(QToolBox):
         for subdir, dirs, files in os.walk(self.folder_path):
             if "thumb" not in subdir.lower():
                 folder_name = os.path.basename(subdir)
-                if folder_name.lower() not in ["Assets", self.collection.lower(), "webp"]:
+                if folder_name.lower() not in ["assets", self.collection.lower(), "webp"]:
                     dirs_.append([folder_name.lower(), folder_name, subdir, dirs, files])
 
         for i, folder_name, subdir, dir, files in sorted(dirs_, key=lambda x: x[0]):
