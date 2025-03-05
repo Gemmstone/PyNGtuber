@@ -147,10 +147,11 @@ def update_directory(source_dir, dest_dir):
             shutil.copyfile(source_path, dest_path)
 
 
-exe_dir = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
+exe_dir = os.path.abspath(os.path.dirname(sys.executable)) if getattr(sys, 'frozen', False) else os.path.abspath(os.path.dirname(__file__))
 res_dir = exe_dir
 prod = True if not os.path.isfile(os.path.join(exe_dir, ".gitignore")) else False
 
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = '4864' if prod else '4854'
 os.environ['QTWEBENGINE_CHROMIUM_FLAGS'] = '--no-sandbox'
 
