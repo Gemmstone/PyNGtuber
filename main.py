@@ -850,7 +850,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.animations_list = []
         self.update_animations(self.settings["animations"])
 
-        self.expressionSelector = ExpressionSelector("Assets")
+        self.expressionSelector = ExpressionSelector(res_dir)
         self.frame_46.layout().addWidget(self.expressionSelector)
 
         self.savedAvatars = [folder for folder in os.listdir(os.path.join(res_dir, "Models", "Avatars")) if "." not in folder]

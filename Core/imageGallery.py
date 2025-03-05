@@ -536,14 +536,14 @@ class ModelGallery(QWidget):
 
 
 class ExpressionSelector(QWidget):
-    def __init__(self, folder_path):
+    def __init__(self, res_dir):
         super().__init__()
-
+        self.res_dir=res_dir
         self.selected_folders = []
 
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
-
+        folder_path= os.path.join(res_dir,"Assets")
         collections = [folder for folder in os.listdir(folder_path) if "." not in folder]
 
         folders = []
@@ -574,12 +574,12 @@ class ExpressionSelector(QWidget):
                 self.selected_folders.remove(sender.text())
 
         if self.selected_folders:
-            with open(os.path.join("Data", "expressionFolders.json"), "w") as json_file:
+            with open(os.path.join(self.res_dir,"Data", "expressionFolders.json"), "w") as json_file:
                 json.dump(self.selected_folders, json_file, indent=4)
 
     def load_from_json(self):
         try:
-            with open(os.path.join("Data", "expressionFolders.json"), "r") as json_file:
+            with open(os.path.join(self.res_dir,"Data", "expressionFolders.json"), "r") as json_file:
                 selected_folders_unormalized = json.load(json_file)
                 self.selected_folders = []
                 for i in range(len(selected_folders_unormalized)):
