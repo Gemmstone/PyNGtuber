@@ -216,7 +216,8 @@ class ImageGallery(QToolBox):
                 widget.setParent(None)
             self.removeItem(index)
 
-        if not os.path.exists(self.folder_path) and os.path.isdir(self.folder_path):
+        # Check if folder exists and is a directory
+        if not os.path.exists(self.folder_path) or not os.path.isdir(self.folder_path):
             page_widget = QFrame()
             page_layout = QVBoxLayout(page_widget)
             page_layout.setContentsMargins(0, 0, 0, 0)
@@ -230,7 +231,7 @@ class ImageGallery(QToolBox):
         for subdir, dirs, files in os.walk(self.folder_path):
             if "thumb" not in subdir.lower():
                 folder_name = os.path.basename(subdir)
-                if folder_name.lower() not in ["Assets", self.collection.lower(), "webp"]:
+                if folder_name.lower() not in ["assets", self.collection.lower(), "webp"]:
                     dirs_.append([folder_name.lower(), folder_name, subdir, dirs, files])
 
         for i, folder_name, subdir, dir, files in sorted(dirs_, key=lambda x: x[0]):
@@ -536,14 +537,14 @@ class ModelGallery(QWidget):
 
 
 class ExpressionSelector(QWidget):
-    def __init__(self, folder_path):
+    def __init__(self, res_dir):
         super().__init__()
-
+        self.res_dir=res_dir
         self.selected_folders = []
 
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
-
+        folder_path= os.path.join(res_dir,"Assets")
         collections = [folder for folder in os.listdir(folder_path) if "." not in folder]
 
         folders = []
@@ -574,12 +575,12 @@ class ExpressionSelector(QWidget):
                 self.selected_folders.remove(sender.text())
 
         if self.selected_folders:
-            with open(os.path.join("Data", "expressionFolders.json"), "w") as json_file:
+            with open(os.path.join(self.res_dir,"Data", "expressionFolders.json"), "w") as json_file:
                 json.dump(self.selected_folders, json_file, indent=4)
 
     def load_from_json(self):
         try:
-            with open(os.path.join("Data", "expressionFolders.json"), "r") as json_file:
+            with open(os.path.join(self.res_dir,"Data", "expressionFolders.json"), "r") as json_file:
                 selected_folders_unormalized = json.load(json_file)
                 self.selected_folders = []
                 for i in range(len(selected_folders_unormalized)):
